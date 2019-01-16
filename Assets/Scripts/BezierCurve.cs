@@ -12,16 +12,18 @@ public class BezierCurve : MonoBehaviour
 	public Transform deformP2;
 	public Transform player2;
 
-	static private int numberPoints = 50;
-	private Vector3[] positions = new Vector3[numberPoints + 1];
+	static private int numberPoints = 20;
+	private Vector3[] positions = new Vector3[numberPoints];
 
-	void Start()
+	void Awake()
 	{
 		lineRenderer = GetComponent<LineRenderer>();
 		lineRenderer.positionCount = numberPoints;
+		DrawCubicCurve();
+		transform.position = player1.position + (player2.position - player1.position) / 2;
 	}
 
-	void Update()
+	void FixedUpdate()
 	{
 		DrawCubicCurve();
 		transform.position = player1.position + (player2.position - player1.position) / 2;
@@ -31,7 +33,7 @@ public class BezierCurve : MonoBehaviour
 	{
 		for (int i = 0; i < positions.Length; i++)
 		{
-			float t = i / (float)numberPoints;
+			float t = i / (float)(numberPoints-1);
 			positions[i] = CalculateCubicBezierPoint(t, player1.position, deformP1.position, deformP2.position, player2.position);
 		}
 		lineRenderer.SetPositions(positions);
