@@ -2,21 +2,19 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(Rigidbody))]
 public class PlayerController : MonoBehaviour
 {
-
 	public bool player1;
 	public float speed;
 
 	Rigidbody rb;
-
-	// Use this for initialization
+	
 	void Start()
 	{
 		rb = GetComponent<Rigidbody>();
 	}
-
-	// Update is called once per frame
+	
 	void Update()
 	{
 		Move();

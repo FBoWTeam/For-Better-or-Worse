@@ -2,11 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-
-[RequireComponent(typeof(Camera))]
+[RequireComponent(typeof(LineRenderer))]
 public class CameraMovement : MonoBehaviour
 {
-
 	public Transform Player1;
 	public Transform Player2;
 
@@ -19,14 +17,12 @@ public class CameraMovement : MonoBehaviour
 	public float zoomLimiter = 45f;
 
 	private Camera cam;
-
-	// Use this for initialization
+	
 	void Start()
 	{
 		cam = GetComponent<Camera>();
 	}
-
-	// Update is called once per frame
+	
 	void LateUpdate()
 	{
 		Move();
