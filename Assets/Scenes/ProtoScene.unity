@@ -216,6 +216,7 @@ GameObject:
   - component: {fileID: 157861086}
   - component: {fileID: 157861085}
   - component: {fileID: 157861089}
+  - component: {fileID: 157861090}
   m_Layer: 0
   m_Name: Player2
   m_TagString: Untagged
@@ -311,7 +312,21 @@ Rigidbody:
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 116
-  m_CollisionDetection: 0
+  m_CollisionDetection: 3
+--- !u!114 &157861090
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 157861084}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f582c52f9f815b44dac10c14a7134c9f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  player1: 0
+  speed: 15
 --- !u!1 &162246385
 GameObject:
   m_ObjectHideFlags: 0
@@ -1071,6 +1086,7 @@ GameObject:
   - component: {fileID: 534669905}
   - component: {fileID: 534669904}
   - component: {fileID: 534669903}
+  - component: {fileID: 534669906}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -1142,6 +1158,25 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 45, y: 0, z: 0}
+--- !u!114 &534669906
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 534669902}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3e382acec4f810344b09d7b6bd530ea9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Player1: {fileID: 1594032063}
+  Player2: {fileID: 157861088}
+  offset: {x: 0, y: 100, z: -100}
+  smoothTime: 0.25
+  minZoom: 25
+  maxZoom: 8
+  zoomLimiter: 85
 --- !u!1 &1267281121
 GameObject:
   m_ObjectHideFlags: 0
@@ -1246,6 +1281,7 @@ GameObject:
   - component: {fileID: 1594032061}
   - component: {fileID: 1594032060}
   - component: {fileID: 1594032064}
+  - component: {fileID: 1594032065}
   m_Layer: 0
   m_Name: Player1
   m_TagString: Untagged
@@ -1341,7 +1377,21 @@ Rigidbody:
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 116
-  m_CollisionDetection: 0
+  m_CollisionDetection: 3
+--- !u!114 &1594032065
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1594032059}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f582c52f9f815b44dac10c14a7134c9f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  player1: 1
+  speed: 15
 --- !u!1 &1932505087
 GameObject:
   m_ObjectHideFlags: 0
