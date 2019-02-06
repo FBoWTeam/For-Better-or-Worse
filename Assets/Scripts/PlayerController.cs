@@ -7,9 +7,10 @@ public class PlayerController : MonoBehaviour
 {
 	public bool player1;
 	public float speed;
+    
 
 	Rigidbody rb;
-	
+
 	void Awake()
 	{
 		rb = GetComponent<Rigidbody>();
@@ -35,7 +36,7 @@ public class PlayerController : MonoBehaviour
 		}
 
 		Vector3 velocity = new Vector3(x, 0, z) * speed * Time.deltaTime;
-
-		rb.MovePosition(transform.position + velocity);
+        
+        rb.MovePosition(transform.position + velocity);
 	}
 }
