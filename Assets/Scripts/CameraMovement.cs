@@ -5,20 +5,19 @@ using UnityEngine;
 [RequireComponent(typeof(LineRenderer))]
 public class CameraMovement : MonoBehaviour
 {
-	public Transform Player1;
-	public Transform Player2;
+	public Transform player1, player2;
 
 	public Vector3 offset;
 	public float smoothTime = 0.5f;
-	private Vector3 velocity;
+	Vector3 velocity;
 
 	public float minZoom = 25f;
 	public float maxZoom = 10f;
 	public float zoomLimiter = 45f;
 
-	private Camera cam;
+	Camera cam;
 	
-	void Start()
+	void Awake()
 	{
 		cam = GetComponent<Camera>();
 	}
@@ -31,7 +30,7 @@ public class CameraMovement : MonoBehaviour
 
 	void Zoom()
 	{
-		float distancePlayer = Vector3.Distance(Player1.transform.position, Player2.transform.position);
+		float distancePlayer = Vector3.Distance(player1.transform.position, player2.transform.position);
 		float newZoom = Mathf.Lerp(maxZoom, minZoom, distancePlayer / zoomLimiter);
 		cam.orthographicSize = Mathf.Lerp(cam.orthographicSize, newZoom, Time.deltaTime);
 	}
@@ -46,7 +45,7 @@ public class CameraMovement : MonoBehaviour
 
 	Vector3 GetCenterPoint()
 	{
-		return (Player1.transform.position + Player2.transform.position) / 2;
+		return (player1.transform.position + player2.transform.position) / 2;
 	}
 
 }

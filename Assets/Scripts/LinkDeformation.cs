@@ -5,8 +5,16 @@ using UnityEngine;
 public class LinkDeformation : MonoBehaviour
 {
 	public Transform player1, player2;
-	public Transform minDeform, maxDeform;
-	public Transform deformPoint1, deformPoint2;
+	Transform minDeform, maxDeform;
+	Transform deformPoint1, deformPoint2;
+
+	private void Awake()
+	{
+		minDeform = transform.GetChild(0);
+		maxDeform = transform.GetChild(1);
+		deformPoint1 = transform.GetChild(2);
+		deformPoint2 = transform.GetChild(3);
+	}
 
 	void Update()
 	{

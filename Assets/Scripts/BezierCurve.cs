@@ -7,10 +7,9 @@ public class BezierCurve : MonoBehaviour
 {
 	LineRenderer lineRenderer;
 
-	public Transform player1;
-	public Transform deformP1;
-	public Transform deformP2;
-	public Transform player2;
+	public Transform player1, player2;
+	Transform deformP1;
+	Transform deformP2;
 
 	static private int numberPoints = 20;
 	private Vector3[] positions = new Vector3[numberPoints];

@@ -10,7 +10,7 @@ public class PlayerController : MonoBehaviour
 
 	Rigidbody rb;
 	
-	void Start()
+	void Awake()
 	{
 		rb = GetComponent<Rigidbody>();
 	}
