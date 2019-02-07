@@ -58,8 +58,10 @@ public class Enemy : MonoBehaviour {
     [DrawIf(new string[] { "skillOne", "skillTwo" }, Skill.Distance)]
     public float turnSpeed = 6.5f;// Rotation Speed
 
-    [DrawIf(new string[] { "skillOne", "skillTwo" }, Skill.Distance)]
-    public float fireCountdown = 0f;
+    
+    private float fireCountdown = 0f;
+
+    //public Transform partToRotate;
 
     [DrawIf(new string[] { "skillOne", "skillTwo" }, Skill.Distance)]
     public GameObject bulletPrefab;
@@ -77,7 +79,7 @@ public class Enemy : MonoBehaviour {
 
 
 
-
+    public bool mooving = true;
 
     // Start is called before the first frame update
     void Start()
@@ -88,12 +90,19 @@ public class Enemy : MonoBehaviour {
     // Update is called once per frame
     void Update()
     {
+        Vector3 dir;
+        if (mooving) {
+            dir = GameObject.FindGameObjectWithTag("Player").transform.position - transform.position;
+            transform.Translate(dir.normalized * 3.5f * Time.deltaTime);
+        }
 
+        DoSkill(skillOne);
+        DoSkill(skillTwo);
     }
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (CompareTag("Player"))
+        if (collision.gameObject.CompareTag("Player"))
         {
             coliding = true;
         }
@@ -106,12 +115,14 @@ public class Enemy : MonoBehaviour {
     /// <param name="skill"></param>
     void DoSkill(Skill skill)
     {
+       
         switch (skill)
         {
             case Skill.Impact:
+              
                 //dégat a l'impact
                 if (coliding)
-                {
+                {            
                     GameManager.gameManager.takeDamage(impactDamage);
                 }
                 break;
@@ -119,14 +130,17 @@ public class Enemy : MonoBehaviour {
                 AoeDamage(transform.position, aoeRange, aeoDamage);
                 break;
             case Skill.Distance:
+               
                 GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
                 //recup le plus porhce
                 GameObject nearest = GetNearestGO(players);
                 float distanceto = Vector3.Distance(transform.position, nearest.transform.position);
+                
                 // if inRange && isVisible
-                if (nearest != null && (distanceto <= distanceRange) && !Physics.Linecast(transform.position, nearest.transform.position))
+                
+                if (nearest != null && (distanceto <= distanceRange) && isVisible(transform.position,nearest.transform.position))
                 {
-
+                   
                     Vector3 dir = nearest.transform.position - transform.position;
                     Quaternion lookRotation = Quaternion.LookRotation(dir);
                     Vector3 rotation = Quaternion.Lerp(transform.rotation, lookRotation, Time.deltaTime * turnSpeed).eulerAngles; //tourner l'ennemy vers le jouer
@@ -187,7 +201,7 @@ public class Enemy : MonoBehaviour {
         foreach (Collider item in hits)
         {
 
-            if (CompareTag("Player"))
+            if (item.CompareTag("Player"))
             {
                 GameManager.gameManager.takeDamage(damage);
             }
@@ -225,6 +239,62 @@ public class Enemy : MonoBehaviour {
         if (bullet != null)
         {
             bullet.Seek(target, damage);//
+        }
+    }
+
+    /// <summary>
+    /// return true if a Player is "visible"
+    /// </summary>
+    /// <param name="start"></param>
+    /// <param name="end"></param>
+    /// <returns></returns>
+    bool isVisible(Vector3 start, Vector3 end) {
+        RaycastHit hitInfo;
+        if (Physics.Linecast(start, end,out hitInfo)) {
+            if (hitInfo.transform.CompareTag("Player")) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+
+    private void OnDrawGizmos() {
+        Gizmos.color = Color.white;
+        switch (skillTwo) {
+            case Skill.Impact:
+                break;
+            case Skill.AOE:              
+                Gizmos.DrawWireSphere(transform.position, aoeRange);
+                break;
+            case Skill.Distance:
+                Gizmos.DrawLine(transform.position, new Vector3(-17.3f,1.0f,0));
+                Gizmos.DrawWireSphere(transform.position, distanceRange);
+                break;
+            case Skill.Bloc:
+                break;
+            case Skill.MudThrow:
+                break;
+            case Skill.Vortex:
+                break;
+            case Skill.Inverse:
+                break;
+            case Skill.Mentaliste:
+                break;
+            case Skill.Shield:
+                break;
+            case Skill.PreciousWater:
+                break;
+            case Skill.Rooting:
+                break;
+            case Skill.Silence:
+                break;
+            case Skill.Magnet:
+                break;
+            case Skill.None:
+                break;
+            default:
+                break;
         }
     }
 }
