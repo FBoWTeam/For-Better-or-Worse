@@ -12,7 +12,7 @@ public class GameManager : MonoBehaviour {
     void Awake()
     {
         if (gameManager == null)
-        {           
+        {
             gameManager = this;
         } else if (gameManager != this)
         {
@@ -31,8 +31,8 @@ public class GameManager : MonoBehaviour {
     /// </summary>
     /// <param name="impactDamage"></param>
     public void takeDamage(int damage)
-    {      
-        pv -= damage;        
+    {
+        pv -= damage;
         if (pv <= 0)
         {
             throw new NotImplementedException();
