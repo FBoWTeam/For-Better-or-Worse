@@ -5,38 +5,60 @@ using UnityEngine;
 public class LinkDeformation : MonoBehaviour
 {
 	public Transform player1, player2;
+	Transform deformPoint1, deformPointMid, deformPoint2;
 	Transform minDeform, maxDeform;
-	Transform deformPoint1, deformPoint2;
+
+	public float maxDeformHeight;
 
 	private void Awake()
 	{
-		minDeform = transform.GetChild(0);
-		maxDeform = transform.GetChild(1);
-		deformPoint1 = transform.GetChild(2);
-		deformPoint2 = transform.GetChild(3);
+		deformPoint1 = transform.GetChild(0);
+		deformPointMid = transform.GetChild(1);
+		deformPoint2 = transform.GetChild(2);
+
+		minDeform = transform.GetChild(3);
+		maxDeform = transform.GetChild(4);
+
+		FixPosition();
 	}
 
 	void Update()
 	{
-		Vector3 p1 = player1.localPosition;
-		p1.y = 1;
-		Vector3 p2 = player2.localPosition;
-		p2.y = 1;
-		transform.position = p1 + (p2 - p1) / 2;
-		transform.LookAt(p1);
+		FixPosition();
 
-		Vector3 player1DeformDir = new Vector3(Input.GetAxis("DeformP1X"), 0.0f, Input.GetAxis("DeformP1Z"));
-		Vector3 player2DeformDir = new Vector3(Input.GetAxis("DeformP2X"), 0.0f, Input.GetAxis("DeformP2Z"));
+		(float player1DeformAmount, float player2DeformAmount) = GetDeformAmount();
 
-		Vector3 player1DeformAxis = maxDeform.position - transform.position;
-		player1DeformAxis = player1DeformAxis.normalized;
-		Vector3 player2DeformAxis = maxDeform.position - transform.position;
-		player2DeformAxis = player2DeformAxis.normalized;
+		float playersDistance = Vector3.Distance(player1.position, player2.position);
 
-		float player1DeformAmount = Vector3.Dot(player1DeformAxis, player1DeformDir);
-		float player2DeformAmount = Vector3.Dot(player2DeformAxis, player2DeformDir);
+		deformPoint1.localPosition = new Vector3(player1DeformAmount * maxDeformHeight, 0.0f, (playersDistance / 4.0f));
+		deformPoint2.localPosition = new Vector3(player2DeformAmount * maxDeformHeight, 0.0f, -(playersDistance / 4.0f));
+		deformPointMid.localPosition = new Vector3(((deformPoint1.localPosition.x + deformPoint2.localPosition.x) / 2.0f), 0.0f, 0.0f);
+	}
 
-		deformPoint1.position = Vector3.Lerp(minDeform.position, maxDeform.position, (player1DeformAmount + 1) / 2);
-		deformPoint2.position = Vector3.Lerp(minDeform.position, maxDeform.position, (player2DeformAmount + 1) / 2);
+	/// <summary>
+	///	Set the position of the gameobject between player 1 and 2 looking at player 1
+	/// </summary>
+	void FixPosition()
+	{
+		transform.position = player1.position + (player2.position - player1.position) / 2;
+		transform.LookAt(player1.position);
+
+		minDeform.localPosition = new Vector3(transform.localPosition.x - maxDeformHeight, transform.localPosition.y, transform.localPosition.z);
+		maxDeform.localPosition = new Vector3(transform.localPosition.x + maxDeformHeight, transform.localPosition.y, transform.localPosition.z);
+	}
+
+	/// <summary>
+	///	return a tuple of the deformation amounts ([-1; 1]) of player 1 and 2 based on their inputs
+	/// </summary>
+	/// <returns></returns>
+	(float, float) GetDeformAmount()
+	{
+		Vector3 player1DeformInput = new Vector3(Input.GetAxis("DeformP1X"), 0.0f, Input.GetAxis("DeformP1Z"));
+		Vector3 player2DeformInput = new Vector3(Input.GetAxis("DeformP2X"), 0.0f, Input.GetAxis("DeformP2Z"));
+
+		Vector3 deformAxis = maxDeform.position - transform.position;
+		deformAxis = deformAxis.normalized;
+
+		return (Vector3.Dot(deformAxis, player1DeformInput), Vector3.Dot(deformAxis, player2DeformInput));
 	}
 }

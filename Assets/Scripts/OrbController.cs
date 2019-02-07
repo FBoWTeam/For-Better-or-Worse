@@ -15,7 +15,6 @@ public class OrbController : MonoBehaviour
 	
     void Start()
     {
-		Debug.Log(link.positionCount);
 		ascending = true;
 		start = link.positionCount/2;
 		end = link.positionCount/2 + 1;

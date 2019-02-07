@@ -9,17 +9,20 @@ public class PlayerController : MonoBehaviour
 	public float speed;
 
 	Rigidbody rb;
-	
+
 	void Awake()
 	{
 		rb = GetComponent<Rigidbody>();
 	}
-	
+
 	void Update()
 	{
 		Move();
 	}
 
+	/// <summary>
+	/// Move the player based on their inputs
+	/// </summary>
 	public void Move()
 	{
 		float x, z;
@@ -38,4 +41,6 @@ public class PlayerController : MonoBehaviour
 
 		rb.MovePosition(transform.position + velocity);
 	}
+
+
 }
