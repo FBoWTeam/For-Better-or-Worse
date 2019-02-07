@@ -26,7 +26,7 @@ public class PlayerController : MonoBehaviour
     }
 
     /// <summary>
-    /// Gere les déplacements du joueurs (clavier et manette) + gestion du dash
+    /// manage the player movement and dash (keyboard and controller)
     /// Player 1 : ZQSD + Space ; Player2 : OKLM + I
     /// </summary>
 	public void Move()
@@ -36,7 +36,7 @@ public class PlayerController : MonoBehaviour
             if (player1)
             {
                 direction = new Vector3(Input.GetAxis("HorizontalP1"), 0.0f, Input.GetAxis("VerticalP1"));
-                if (Input.GetKeyDown(KeyCode.Space))
+                if (Input.GetKeyDown(KeyCode.LeftShift) && !isDashing)
                 {
                     StartCoroutine(DashCoroutine());
                 }
@@ -44,7 +44,7 @@ public class PlayerController : MonoBehaviour
             else
             {
                 direction = new Vector3(Input.GetAxis("HorizontalP2"), 0.0f, Input.GetAxis("VerticalP2"));
-                if (Input.GetKeyDown(KeyCode.I))
+                if (Input.GetKeyDown(KeyCode.RightShift) && !isDashing)
                 {
                     StartCoroutine(DashCoroutine());
                 }
@@ -52,9 +52,42 @@ public class PlayerController : MonoBehaviour
         }
 
         Vector3 velocity = direction * speed * Time.deltaTime;
-        rb.MovePosition(transform.position + velocity);
+
+
+        ApplyVelocity(velocity);
+
+    }
+    
+    /// <summary>
+    /// function that prevents the player from dashing through walls with a high velocity
+    /// if the player is not dashing, the function simply apply the normal velocity
+    /// </summary>
+    /// <param name="velocity"></param>
+    void ApplyVelocity(Vector3 velocity)
+    {
+        if (isDashing)
+        {
+            RaycastHit hit;
+            if (Physics.Raycast(transform.position, direction.normalized, out hit, velocity.magnitude, LayerMask.GetMask("DistanceLimiter", "Wall")))
+            {
+                transform.position = hit.point - (direction * GetComponent<CapsuleCollider>().radius);
+            }
+            else
+            {
+                rb.MovePosition(transform.position + velocity);
+            }
+        }
+        else
+        {
+            rb.MovePosition(transform.position + velocity);
+        }
     }
 
+
+    /// <summary>
+    /// co routine that handle the dash
+    /// </summary>
+    /// <returns></returns>
 	IEnumerator DashCoroutine()
     {
         isDashing = true;
