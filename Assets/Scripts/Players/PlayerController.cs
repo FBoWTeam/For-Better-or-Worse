@@ -55,8 +55,19 @@ public class PlayerController : MonoBehaviour
         rb.MovePosition(transform.position + velocity);
     }
 
+	/*private void OnCollisionEnter(Collision collision)
+	{
+		if(collision.collider.CompareTag("DistanceLimiter"))
+			speed *= 0.01f;
+	}
 
-    IEnumerator DashCoroutine()
+	private void OnCollisionExit(Collision collision)
+	{
+		if (collision.collider.CompareTag("DistanceLimiter"))
+			speed /= 0.01f;
+	}*/
+
+	IEnumerator DashCoroutine()
     {
         isDashing = true;
         speed *= dashSpeed;
