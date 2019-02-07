@@ -6,7 +6,8 @@ public class OrbController2 : MonoBehaviour
 {
 	public float speed;
 
-	bool ascending;
+    [HideInInspector]
+	public bool ascending;
 	float progression;
 	float step;
 

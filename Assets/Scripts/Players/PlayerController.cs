@@ -36,7 +36,7 @@ public class PlayerController : MonoBehaviour
             if (player1)
             {
                 direction = new Vector3(Input.GetAxis("HorizontalP1"), 0.0f, Input.GetAxis("VerticalP1"));
-                if (Input.GetKeyDown(KeyCode.Space) && !isDashing)
+                if (Input.GetKeyDown(KeyCode.LeftShift) && !isDashing)
                 {
                     StartCoroutine(DashCoroutine());
                 }
@@ -44,7 +44,7 @@ public class PlayerController : MonoBehaviour
             else
             {
                 direction = new Vector3(Input.GetAxis("HorizontalP2"), 0.0f, Input.GetAxis("VerticalP2"));
-                if (Input.GetKeyDown(KeyCode.I) && !isDashing)
+                if (Input.GetKeyDown(KeyCode.RightShift) && !isDashing)
                 {
                     StartCoroutine(DashCoroutine());
                 }

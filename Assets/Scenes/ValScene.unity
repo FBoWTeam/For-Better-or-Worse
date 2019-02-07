@@ -264,6 +264,7 @@ GameObject:
   - component: {fileID: 157861085}
   - component: {fileID: 157861089}
   - component: {fileID: 157861090}
+  - component: {fileID: 157861091}
   m_Layer: 10
   m_Name: Player2
   m_TagString: Untagged
@@ -376,6 +377,20 @@ MonoBehaviour:
   speed: 15
   dashTime: 0.05
   dashSpeed: 5
+--- !u!114 &157861091
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 157861084}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ab621ecd84971ef41a1027676d2a8f3a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  orb: {fileID: 1713871434}
+  hitZone: 2
 --- !u!1 &162246385
 GameObject:
   m_ObjectHideFlags: 0
@@ -1921,6 +1936,7 @@ GameObject:
   - component: {fileID: 1594032060}
   - component: {fileID: 1594032064}
   - component: {fileID: 1594032065}
+  - component: {fileID: 1594032066}
   m_Layer: 10
   m_Name: Player1
   m_TagString: Untagged
@@ -2033,6 +2049,20 @@ MonoBehaviour:
   speed: 15
   dashTime: 0.05
   dashSpeed: 5
+--- !u!114 &1594032066
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1594032059}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ab621ecd84971ef41a1027676d2a8f3a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  orb: {fileID: 1713871434}
+  hitZone: 2
 --- !u!1 &1713871434
 GameObject:
   m_ObjectHideFlags: 0
@@ -2139,6 +2169,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 10
+  ascending: 0
 --- !u!1 &1744453972
 GameObject:
   m_ObjectHideFlags: 0
