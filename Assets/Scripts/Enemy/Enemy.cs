@@ -24,13 +24,38 @@ public class Enemy : MonoBehaviour
         Magnet
     };
 
-    // Est-ce que les skill font des damages différentes
-    // si oui...
-    //TODO Cacher/Afficher les variable de dam
-    public int impactDamage = 5;
+   
 
     public Skill skillOne;
     public Skill skillTwo;
+
+
+    // Est-ce que les skill font des damages différentes
+    // si oui...
+    //TODO Cacher/Afficher les variable de dam
+    [DrawIf("skillOne", Skill.Impact)]
+    public int impactDamage = 5;
+
+    [DrawIf("skillTwo", Skill.AOE)][DrawIf("skillOne", Skill.AOE)]
+    public float aoeRange = 5f;
+    public int aeoDamage = 5;
+
+    #region DistanceVariables
+    [DrawIf("skillTwo", Skill.AOE)]
+        public float distanceRange = 5f;
+    [DrawIf("skillTwo", Skill.AOE)]
+    public int distanceDamage = 3;
+    [DrawIf("skillTwo", Skill.AOE)]
+    public float fireRate = 1f;
+    [DrawIf("skillTwo", Skill.AOE)]
+    private float turnSpeed = 6.5f;// Rotation Speed
+    [DrawIf("skillTwo", Skill.AOE)]
+    private float fireCountdown = 0f;
+    [DrawIf("skillTwo", Skill.AOE)]
+    public GameObject bulletPrefab;
+    [DrawIf("skillTwo", Skill.AOE)]
+    public Transform firePoint;
+    #endregion
 
     public enum Bonus { Mirror}
     public Bonus bonusOne;
@@ -38,9 +63,9 @@ public class Enemy : MonoBehaviour
 
 
     private bool coliding = false;
+
+
     
-
-
 
 
     // Start is called before the first frame update
@@ -66,7 +91,7 @@ public class Enemy : MonoBehaviour
     /// Activate the skill passed in parameters
     /// </summary>
     /// <param name="skill"></param>
-    void doSkill(Skill skill) {
+    void DoSkill(Skill skill) {
         switch (skill) {
             case Skill.Impact:
                 //dégat a l'impact
@@ -75,9 +100,37 @@ public class Enemy : MonoBehaviour
                 }
                 break;
             case Skill.AOE:
-                //Colliders d'un rayon parametrable
+                AoeDamage(transform.position, aoeRange,aeoDamage);
                 break;
             case Skill.Distance:
+                GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
+                //recup le plus porhce
+                GameObject nearest = GetNearestGO(players);
+                float distanceto = Vector3.Distance(transform.position, nearest.transform.position);
+                // if inRange && isVisible
+                if (nearest != null  && (distanceto <= distanceRange) && !Physics.Linecast(transform.position,nearest.transform.position)) {
+
+                    Vector3 dir = nearest.transform.position - transform.position;
+                    Quaternion lookRotation = Quaternion.LookRotation(dir);
+                    Vector3 rotation = Quaternion.Lerp(transform.rotation, lookRotation, Time.deltaTime * turnSpeed).eulerAngles; //tourner l'ennemy vers le jouer
+
+                    //Vector3 rotation = Quaternion.Lerp(partToRotate.rotation, lookRotation, Time.deltaTime * turnSpeed).eulerAngles; // tourne le gun/arc/arme de l'ennemi 
+                    //partToRotate.rotation = Quaternion.Euler(0f, rotation.y, 0f); // idem
+
+                    
+                    //1 Throw projectile
+                    // 2 check if projectile hits
+                    //   2.1 do domage
+                    
+                    if (fireCountdown <= 0f) {//active le tir si le countdown avant de tirer est inférieur ou égal à 0
+
+                        Shoot(bulletPrefab,firePoint,nearest.transform,distanceDamage);
+                        fireCountdown = 1 / fireRate;//réinitialise le countdown
+                    }
+
+                    fireCountdown -= Time.deltaTime;
+                
+                }
                 break;
             case Skill.Bloc:
                 break;
@@ -105,4 +158,47 @@ public class Enemy : MonoBehaviour
     }
     #endregion 
 
+    /// <summary>
+    /// do damage to all gameObject inside a sphereCollider of center in radius
+    /// </summary>
+    /// <param name="center"></param>
+    /// <param name="radius"></param>
+    void AoeDamage(Vector3 center, float radius,int damage) {
+        Collider[] hits = Physics.OverlapSphere(center, radius);
+        foreach (Collider item in hits) {
+            
+            if (CompareTag("Player")) {
+                GameManager.gameManager.takeDamage(damage);
+            }
+        }
+    }
+
+    GameObject GetNearestGO(GameObject[] gos) {
+        float min = Mathf.Infinity;
+        GameObject nearest = null;
+        foreach (var item in gos) {
+            float dist = Vector3.Distance(transform.position, item.transform.position);
+            if (dist < min) {
+                min = dist;
+                nearest = item.gameObject;
+            }
+        }
+        return nearest;
+    }
+
+    /// <summary>
+    /// Shoot a bulletPrefab from firePoint to target in order to do damage onHit
+    /// </summary>
+    /// <param name="bulletPrefab"></param>
+    /// <param name="firePoint"></param>
+    /// <param name="target"></param>
+    /// <param name="damage"></param>
+    void Shoot(GameObject bulletPrefab,Transform firePoint,Transform target,int damage) {
+        GameObject bulletGO = (GameObject)Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
+        Bullet bullet = bulletGO.GetComponent<Bullet>();//instancie un objet bullet à partir du prefab défini
+
+        if (bullet != null) {
+            bullet.Seek(target, damage);//
+        }
+    }
 }
