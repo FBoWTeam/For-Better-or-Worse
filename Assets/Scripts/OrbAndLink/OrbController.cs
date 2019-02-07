@@ -4,39 +4,26 @@ using UnityEngine;
 
 public class OrbController : MonoBehaviour
 {
-	public LineRenderer link;
-
 	public float speed;
 
-	bool ascending;
-	int start, end;
+	bool toPlayer1;
 	float progression;
 	float step;
-	
-    void Start()
-    {
-		ascending = true;
-		start = link.positionCount/2;
-		end = link.positionCount/2 + 1;
-		transform.position = link.GetPosition(start);
-		progression = 0.0f;
-    }
-	
-    void FixedUpdate()
-    {
-		if (progression < 1.0f)
-		{
-			step = (speed*Time.fixedDeltaTime) / (link.GetPosition(end) - link.GetPosition(start)).magnitude;
-			progression += step;
-			transform.position = Vector3.LerpUnclamped(link.GetPosition(start), link.GetPosition(end), progression);
-		}
-		else
-		{
-			progression = progression-1.0f;
-			start = end;
-			if (end == link.positionCount - 1 || end == 0)
-				ascending = !ascending;
-			end = ascending ? end + 1 : end - 1;
-		}
-    }
+
+	void Start()
+	{
+		toPlayer1 = true;
+		progression = 0.5f;
+		transform.position = BezierCurve.CalculateCubicBezierPoint(progression);
+	}
+
+	void FixedUpdate()
+	{
+		step = (speed / BezierCurve.GetPlayersDistance()) * Time.deltaTime;
+		progression = toPlayer1 ? progression + step : progression - step;
+		transform.position = BezierCurve.CalculateCubicBezierPoint(progression);
+
+		if (progression >= 1.0f || progression <= 0.0f)
+			toPlayer1 = !toPlayer1;
+	}
 }
