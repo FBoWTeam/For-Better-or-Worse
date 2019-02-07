@@ -10,11 +10,15 @@ public class GameManager : MonoBehaviour
     public int pv = 100;
 
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         if(gameManager == null) {
+            
             gameManager = this;
+        } else if (gameManager != this) {
+            Destroy(this);
         }
+        DontDestroyOnLoad(gameManager);
     }
 
     // Update is called once per frame
