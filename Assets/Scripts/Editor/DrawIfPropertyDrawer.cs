@@ -1,4 +1,5 @@
 
+using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
  
@@ -15,9 +16,9 @@ public class DrawIfPropertyDrawer : PropertyDrawer
  
     // Field that is being compared.
     SerializedProperty comparedField;
- 
+
     #endregion
- 
+
     public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
     {
         if (!ShowMe(property) && drawIf.disablingType == DrawIfAttribute.DisablingType.DontDraw)
@@ -32,29 +33,48 @@ public class DrawIfPropertyDrawer : PropertyDrawer
     /// </summary>
     private bool ShowMe(SerializedProperty property)
     {
+        List<bool> check = new List<bool>();
         drawIf = attribute as DrawIfAttribute;
         // Replace propertyname to the value from the parameter
-        string path = property.propertyPath.Contains(".") ? System.IO.Path.ChangeExtension(property.propertyPath, drawIf.comparedPropertyName) : drawIf.comparedPropertyName;
- 
-        comparedField = property.serializedObject.FindProperty(path);
- 
-        if (comparedField == null)
-        {
-            Debug.LogError("Cannot find property with name: " + path);
-            return true;
-        }
- 
-        // get the value & compare based on types
-        switch (comparedField.type)
-        { // Possible extend cases to support your own type
-            case "bool":
-                return comparedField.boolValue.Equals(drawIf.comparedValue);
-            case "Enum":
-                return comparedField.enumValueIndex.Equals((int)drawIf.comparedValue);
-            default:
-                Debug.LogError("Error: " + comparedField.type + " is not supported of " + path);
+        foreach (string item in drawIf.comparedPropertyName)
+        {          
+            string path = property.propertyPath.Contains(".") ? System.IO.Path.ChangeExtension(property.propertyPath, item) : item;
+
+            comparedField = property.serializedObject.FindProperty(path);
+
+            if (comparedField == null)
+            {
+                Debug.LogError("Cannot find property with name: " + path);
                 return true;
+            }
+
+            // get the value & compare based on types
+            switch (comparedField.type)
+            { // Possible extend cases to support your own type
+                case "bool":
+                    return comparedField.boolValue.Equals(drawIf.comparedValue);
+                case "Enum":
+                    check.Add(comparedField.enumValueIndex.Equals((int)drawIf.comparedValue));
+                    //return comparedField.enumValueIndex.Equals((int)drawIf.comparedValue);
+                    break;
+                default:
+                    Debug.LogError("Error: " + comparedField.type + " is not supported of " + path);
+                    return true;
+            }
+
+
         }
+
+        foreach (bool item in check)
+        {
+            if (item)
+            {
+                return true;
+            }
+        }
+
+        return false;
+       
     }
  
     public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)

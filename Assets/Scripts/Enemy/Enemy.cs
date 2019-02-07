@@ -20,7 +20,8 @@ public class Enemy : MonoBehaviour {
         PreciousWater,
         Rooting,
         Silence,
-        Magnet
+        Magnet,
+        None,
     };
 
 
@@ -32,31 +33,41 @@ public class Enemy : MonoBehaviour {
     // Est-ce que les skill font des damages différentes
     // si oui...
     //TODO Cacher/Afficher les variable de dam
-    [DrawIf("skillOne", Skill.Impact)]
+    #region ImpactFields
+    [DrawIf(new string[]{"skillOne", "skillTwo" }, Skill.Impact)]
     public int impactDamage = 5;
-
-    [DrawIf("skillTwo", Skill.AOE)]
-    [DrawIf("skillOne", Skill.AOE)]
-    public float aoeRange = 5f;
-    public int aeoDamage = 5;
-
-    #region DistanceVariables
-    [DrawIf("skillTwo", Skill.AOE)]
-    public float distanceRange = 5f;
-    [DrawIf("skillTwo", Skill.AOE)]
-    public int distanceDamage = 3;
-    [DrawIf("skillTwo", Skill.AOE)]
-    public float fireRate = 1f;
-    [DrawIf("skillTwo", Skill.AOE)]
-    private float turnSpeed = 6.5f;// Rotation Speed
-    [DrawIf("skillTwo", Skill.AOE)]
-    private float fireCountdown = 0f;
-    [DrawIf("skillTwo", Skill.AOE)]
-    public GameObject bulletPrefab;
-    [DrawIf("skillTwo", Skill.AOE)]
-    public Transform firePoint;
     #endregion
 
+    #region AoeFields
+    [DrawIf(new string[] { "skillOne", "skillTwo" }, Skill.AOE)]
+    public float aoeRange = 5f;
+    [DrawIf(new string[] { "skillOne", "skillTwo" }, Skill.AOE)]
+    public int aeoDamage = 5;
+    #endregion
+
+    #region DistanceFields
+    [DrawIf(new string[] { "skillOne", "skillTwo" }, Skill.Distance)]
+    public float distanceRange = 5f;
+
+    [DrawIf(new string[] { "skillOne", "skillTwo" }, Skill.Distance)]
+    public int distanceDamage = 3;
+
+    [DrawIf(new string[] { "skillOne", "skillTwo" }, Skill.Distance)]
+    public float fireRate = 1f;
+
+    [DrawIf(new string[] { "skillOne", "skillTwo" }, Skill.Distance)]
+    public float turnSpeed = 6.5f;// Rotation Speed
+
+    [DrawIf(new string[] { "skillOne", "skillTwo" }, Skill.Distance)]
+    public float fireCountdown = 0f;
+
+    [DrawIf(new string[] { "skillOne", "skillTwo" }, Skill.Distance)]
+    public GameObject bulletPrefab;
+
+    [DrawIf(new string[] { "skillOne", "skillTwo" }, Skill.Distance)]
+    public Transform firePoint;
+    #endregion
+    
     public enum Bonus { Mirror }
     public Bonus bonusOne;
     public Bonus bonusTwo;
@@ -87,7 +98,7 @@ public class Enemy : MonoBehaviour {
             coliding = true;
         }
     }
-
+    
     #region Skill
     /// <summary>
     /// Activate the skill passed in parameters
@@ -164,7 +175,7 @@ public class Enemy : MonoBehaviour {
         }
     }
     #endregion 
-
+    
     /// <summary>
     /// do damage to all gameObject inside a sphereCollider of center in radius
     /// </summary>
