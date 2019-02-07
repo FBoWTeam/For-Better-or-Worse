@@ -19,13 +19,17 @@ public class DistanceLimiter : MonoBehaviour
     /// Distance Min gérée avec une sphere colliders situé entre les joueurs
     /// Distance Max gérée avec deux box colliders situés deriere chaque joueurs
     /// </summary>
-    private void Start()
+    private void Awake()
     {
         boxList = gameObject.GetComponents<BoxCollider>();
-        boxList[0].center = new Vector3(0.0f, 0.0f, maxDistance / 2);
-        boxList[1].center = new Vector3(0.0f, 0.0f, -maxDistance / 2);
-        gameObject.GetComponent<SphereCollider>().radius = minDistance / 2;
+        if (boxList.Length > 0)
+        {
+            boxList[0].center = new Vector3(0.0f, 0.0f, maxDistance / 2);
+            boxList[1].center = new Vector3(0.0f, 0.0f, -maxDistance / 2);
+            gameObject.GetComponent<SphereCollider>().radius = minDistance / 2;
+        }
     }
+
     void Update()
     {
         Vector3 p1 = player1.transform.position;
@@ -33,12 +37,5 @@ public class DistanceLimiter : MonoBehaviour
 
         transform.position = p1 + (p2 - p1) / 2;
         transform.LookAt(p1);
-    }
-
-    private void OnValidate()
-    {
-        boxList[0].center = new Vector3(0.0f, 0.0f, maxDistance / 2);
-        boxList[1].center = new Vector3(0.0f, 0.0f, -maxDistance / 2);
-        gameObject.GetComponent<SphereCollider>().radius = minDistance / 2;
     }
 }
