@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody))]
-public class Enemy : MonoBehaviour {
+public class Enemy : MonoBehaviour
+{
     public enum Movement { Immobile, Classic };
     public Movement movement;
 
-    public enum Skill {
+    public enum Skill
+    {
         Impact,
         AOE,
         Distance,
@@ -23,8 +25,6 @@ public class Enemy : MonoBehaviour {
         Magnet,
         None,
     };
-
-
 
     public Skill skillOne;
     public Skill skillTwo;
@@ -77,29 +77,38 @@ public class Enemy : MonoBehaviour {
 
     private bool coliding = false;
 
+    public bool moving = true;
 
-
-    public bool mooving = true;
 
     // Start is called before the first frame update
-    void Start() {
+    void Start()
+    {
 
     }
 
     // Update is called once per frame
-    void Update() {
-        Vector3 dir;
-        if (mooving) {
-            dir = GameObject.FindGameObjectWithTag("Player").transform.position - transform.position;
-            transform.Translate(dir.normalized * 3.5f * Time.deltaTime);
-        }
+    void Update()
+    {
+        //Vector3 dir;
+        //if (moving)
+        //{
+        //    dir = GameObject.FindGameObjectWithTag("Player").transform.position - transform.position;
+        //    transform.Translate(dir.normalized * 3.5f * Time.deltaTime);
+        //}
+
 
         DoSkill(skillOne);
         DoSkill(skillTwo);
+
+
+        Debug.DrawRay(transform.position, transform.TransformDirection(Vector3.forward) * 10, Color.yellow);
+        //Debug.DrawRay(transform.position, transform.forward, Color.green);
     }
 
-    private void OnCollisionEnter(Collision collision) {
-        if (collision.gameObject.CompareTag("Player")) {
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Player"))
+        {
             coliding = true;
         }
     }
@@ -109,13 +118,16 @@ public class Enemy : MonoBehaviour {
     /// Activate the skill passed in parameters
     /// </summary>
     /// <param name="skill"></param>
-    void DoSkill(Skill skill) {
+    void DoSkill(Skill skill)
+    {
 
-        switch (skill) {
+        switch (skill)
+        {
             case Skill.Impact:
 
                 //dégat a l'impact
-                if (coliding) {
+                if (coliding)
+                {
                     GameManager.gameManager.takeDamage(impactDamage);
                 }
                 break;
@@ -131,7 +143,8 @@ public class Enemy : MonoBehaviour {
 
                 // if inRange && isVisible
 
-                if (nearest != null && (distanceto <= distanceRange) && isVisible(transform.position, nearest.transform.position)) {
+                if (nearest != null && (distanceto <= distanceRange) && isVisible(transform.position, nearest.transform.position))
+                {
 
                     Vector3 dir = nearest.transform.position - transform.position;
                     Quaternion lookRotation = Quaternion.LookRotation(dir);
@@ -145,7 +158,8 @@ public class Enemy : MonoBehaviour {
                     // 2 check if projectile hits
                     //   2.1 do domage
 
-                    if (fireCountdown <= 0f) {//active le tir si le countdown avant de tirer est inférieur ou égal à 0
+                    if (fireCountdown <= 0f)
+                    {//active le tir si le countdown avant de tirer est inférieur ou égal à 0
 
                         Shoot(bulletPrefab, firePoint, nearest.transform, distanceDamage);
                         fireCountdown = 1 / fireRate;//réinitialise le countdown
@@ -186,22 +200,28 @@ public class Enemy : MonoBehaviour {
     /// </summary>
     /// <param name="center"></param>
     /// <param name="radius"></param>
-    void AoeDamage(Vector3 center, float radius, int damage) {
+    void AoeDamage(Vector3 center, float radius, int damage)
+    {
         Collider[] hits = Physics.OverlapSphere(center, radius);
-        foreach (Collider item in hits) {
+        foreach (Collider item in hits)
+        {
 
-            if (item.CompareTag("Player")) {
+            if (item.CompareTag("Player"))
+            {
                 GameManager.gameManager.takeDamage(damage);
             }
         }
     }
 
-    GameObject GetNearestGO(GameObject[] gos) {
+    GameObject GetNearestGO(GameObject[] gos)
+    {
         float min = Mathf.Infinity;
         GameObject nearest = null;
-        foreach (var item in gos) {
+        foreach (var item in gos)
+        {
             float dist = Vector3.Distance(transform.position, item.transform.position);
-            if (dist < min) {
+            if (dist < min)
+            {
                 min = dist;
                 nearest = item.gameObject;
             }
@@ -216,11 +236,13 @@ public class Enemy : MonoBehaviour {
     /// <param name="firePoint"></param>
     /// <param name="target"></param>
     /// <param name="damage"></param>
-    void Shoot(GameObject bulletPrefab, Transform firePoint, Transform target, int damage) {
+    void Shoot(GameObject bulletPrefab, Transform firePoint, Transform target, int damage)
+    {
         GameObject bulletGO = (GameObject)Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
         Bullet bullet = bulletGO.GetComponent<Bullet>();//instancie un objet bullet à partir du prefab défini
 
-        if (bullet != null) {
+        if (bullet != null)
+        {
             bullet.Seek(target, damage);//
         }
     }
@@ -231,10 +253,13 @@ public class Enemy : MonoBehaviour {
     /// <param name="start"></param>
     /// <param name="end"></param>
     /// <returns></returns>
-    bool isVisible(Vector3 start, Vector3 end) {
+    bool isVisible(Vector3 start, Vector3 end)
+    {
         RaycastHit hitInfo;
-        if (Physics.Linecast(start, end, out hitInfo)) {
-            if (hitInfo.transform.CompareTag("Player")) {
+        if (Physics.Linecast(start, end, out hitInfo))
+        {
+            if (hitInfo.transform.CompareTag("Player"))
+            {
                 return true;
             }
         }
@@ -242,9 +267,11 @@ public class Enemy : MonoBehaviour {
     }
 
 
-    private void OnDrawGizmos() {
+    private void OnDrawGizmos()
+    {
         Gizmos.color = Color.white;
-        switch (skillTwo) {
+        switch (skillTwo)
+        {
             case Skill.Impact:
                 break;
             case Skill.AOE:

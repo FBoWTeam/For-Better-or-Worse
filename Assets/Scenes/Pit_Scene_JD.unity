@@ -219,7 +219,7 @@ GameObject:
   - component: {fileID: 157861090}
   m_Layer: 0
   m_Name: Player2
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -327,6 +327,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   player1: 0
   speed: 15
+  dashTime: 0
+  dashSpeed: 0
 --- !u!1 &162246385
 GameObject:
   m_ObjectHideFlags: 0
@@ -1437,8 +1439,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 81d58563530c10f4b8b4498f50dd8756, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player1: {fileID: 1594032063}
-  player2: {fileID: 157861088}
 --- !u!1 &882738166
 GameObject:
   m_ObjectHideFlags: 0
@@ -1488,6 +1488,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   player1: {fileID: 1594032063}
   player2: {fileID: 157861088}
+  maxDeformHeight: 0
 --- !u!1 &1061922908
 GameObject:
   m_ObjectHideFlags: 0
@@ -1665,7 +1666,7 @@ GameObject:
   - component: {fileID: 1594032065}
   m_Layer: 0
   m_Name: Player1
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1773,6 +1774,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   player1: 1
   speed: 15
+  dashTime: 0
+  dashSpeed: 0
 --- !u!1 &1713871434
 GameObject:
   m_ObjectHideFlags: 0
@@ -2167,6 +2170,11 @@ PrefabInstance:
     - target: {fileID: 6759876714258691777, guid: 8e72342c511536043883f2199df73730,
         type: 3}
       propertyPath: skillTwo
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6759876714258691777, guid: 8e72342c511536043883f2199df73730,
+        type: 3}
+      propertyPath: movement
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
