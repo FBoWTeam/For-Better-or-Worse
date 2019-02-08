@@ -36,24 +36,29 @@ public class PlayerController : MonoBehaviour
             if (player1)
             {
                 direction = new Vector3(Input.GetAxis("HorizontalP1"), 0.0f, Input.GetAxis("VerticalP1"));
-                if (Input.GetKeyDown(KeyCode.LeftShift) && !isDashing)
+                if (!isDashing)
                 {
-                    StartCoroutine(DashCoroutine());
+                    if (Input.GetKeyDown(KeyCode.LeftShift) || Input.GetKeyDown(KeyCode.Joystick1Button5))
+                    {
+                        StartCoroutine(DashCoroutine());
+                    }
                 }
             }
             else
             {
                 direction = new Vector3(Input.GetAxis("HorizontalP2"), 0.0f, Input.GetAxis("VerticalP2"));
-                if (Input.GetKeyDown(KeyCode.RightShift) && !isDashing)
+                if (!isDashing)
                 {
-                    StartCoroutine(DashCoroutine());
+                    if (Input.GetKeyDown(KeyCode.RightShift) || Input.GetKeyDown(KeyCode.Joystick1Button5))
+                    {
+                        StartCoroutine(DashCoroutine());
+                    }
                 }
             }
         }
 
         Vector3 velocity = direction * speed * Time.deltaTime;
-
-
+        
         ApplyVelocity(velocity);
 
     }

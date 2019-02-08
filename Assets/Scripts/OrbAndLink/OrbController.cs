@@ -6,7 +6,7 @@ public class OrbController : MonoBehaviour
 {
 	public float speed;
 
-	bool toPlayer1;
+	public bool toPlayer1;
 	float progression;
 	float step;
 

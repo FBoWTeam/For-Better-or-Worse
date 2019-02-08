@@ -31,11 +31,11 @@ public class OrbHitter : MonoBehaviour
         {
             if (canHit)
             {
-                if (Input.GetKeyDown(KeyCode.E))
+                if (Input.GetKeyDown(KeyCode.E) || Input.GetAxisRaw("OrbHitter1") != 0)
                 {
-                    if (!orb.GetComponent<OrbController2>().ascending)
+                    if (!orb.GetComponent<OrbController>().toPlayer1)
                     {
-                        orb.GetComponent<OrbController2>().ascending = true;
+                        orb.GetComponent<OrbController>().toPlayer1 = true;
                     }
                 }
             }
@@ -44,11 +44,11 @@ public class OrbHitter : MonoBehaviour
         {
             if (canHit)
             {
-                if (Input.GetKeyDown(KeyCode.I))
+                if (Input.GetKeyDown(KeyCode.I) || Input.GetAxisRaw("OrbHitter1") != 0)
                 {
-                    if (orb.GetComponent<OrbController2>().ascending)
+                    if (orb.GetComponent<OrbController>().toPlayer1)
                     {
-                        orb.GetComponent<OrbController2>().ascending = false;
+                        orb.GetComponent<OrbController>().toPlayer1 = false;
                     }
                 }
             }
