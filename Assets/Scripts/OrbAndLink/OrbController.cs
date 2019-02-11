@@ -6,14 +6,11 @@ public class OrbController : MonoBehaviour
 {
 	public float speed;
 
-	Vector3 oldPos;
-
-	public AnimationCurve plot = new AnimationCurve();
-
 	public float veryLowFixedCoefficient;
 	public float lowFixedCoefficient;
 	public float highFixedCoefficient;
 	public float veryHighFixedCoefficient;
+
 	float fixedSpeedCoefficient;
 
 	bool toPlayer1;
@@ -23,7 +20,6 @@ public class OrbController : MonoBehaviour
 
 	void Start()
 	{
-		oldPos = transform.position;
 		toPlayer1 = true;
 		progression = 0.5f;
 		transform.position = BezierCurve.CalculateCubicBezierPoint(progression);
@@ -31,9 +27,6 @@ public class OrbController : MonoBehaviour
 
 	void FixedUpdate()
 	{
-		plot.AddKey(Time.realtimeSinceStartup, Vector3.Distance(oldPos, transform.position));
-		oldPos = transform.position;
-
 		setFixedSpeedCoefficient();
 		float fixedSpeed = speed * fixedSpeedCoefficient;;
 
@@ -51,7 +44,7 @@ public class OrbController : MonoBehaviour
 		int player1Movement = 0;
 		int player2Movement = 0;
 		
-		if(GameManager.gameManager.player1.GetComponent<PlayerController>().direction.magnitude >= 0.75f)
+		if(GameManager.gameManager.player1.GetComponent<PlayerController>().direction.magnitude >= 0.25f)
 		{
 			Vector3 player1Reference = (GameManager.gameManager.player2.transform.position - GameManager.gameManager.player1.transform.position).normalized;
 			Vector3 player1Direction = GameManager.gameManager.player1.GetComponent<PlayerController>().direction;
@@ -63,7 +56,7 @@ public class OrbController : MonoBehaviour
 				player1Movement = 1;
 		}
 
-		if (GameManager.gameManager.player2.GetComponent<PlayerController>().direction.magnitude >= 0.75f)
+		if (GameManager.gameManager.player2.GetComponent<PlayerController>().direction.magnitude >= 0.25f)
 		{
 			Vector3 player2Reference = (GameManager.gameManager.player1.transform.position - GameManager.gameManager.player2.transform.position).normalized;
 			Vector3 player2Direction = GameManager.gameManager.player2.GetComponent<PlayerController>().direction;
