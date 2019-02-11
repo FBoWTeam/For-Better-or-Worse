@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class LinkDeformation : MonoBehaviour
 {
-	public Transform player1, player2;
 	Transform deformPoint1, deformPointMid, deformPoint2;
 	Transform minDeform, maxDeform;
 
@@ -28,7 +27,7 @@ public class LinkDeformation : MonoBehaviour
 
 		(float player1DeformAmount, float player2DeformAmount) = GetDeformAmount();
 
-		float playersDistance = Vector3.Distance(player1.position, player2.position);
+		float playersDistance = Vector3.Distance(GameManager.gameManager.player1.transform.position, GameManager.gameManager.player2.transform.position);
 
 		deformPoint1.localPosition = new Vector3(player1DeformAmount * maxDeformHeight, 0.0f, (playersDistance / 4.0f));
 		deformPoint2.localPosition = new Vector3(player2DeformAmount * maxDeformHeight, 0.0f, -(playersDistance / 4.0f));
@@ -40,8 +39,8 @@ public class LinkDeformation : MonoBehaviour
 	/// </summary>
 	void FixPosition()
 	{
-		transform.position = player1.position + (player2.position - player1.position) / 2;
-		transform.LookAt(player1.position);
+		transform.position = GameManager.gameManager.player1.transform.position + (GameManager.gameManager.player2.transform.position - GameManager.gameManager.player1.transform.position) / 2;
+		transform.LookAt(GameManager.gameManager.player1.transform.position);
 
 		minDeform.localPosition = new Vector3(transform.localPosition.x - maxDeformHeight, transform.localPosition.y, transform.localPosition.z);
 		maxDeform.localPosition = new Vector3(transform.localPosition.x + maxDeformHeight, transform.localPosition.y, transform.localPosition.z);

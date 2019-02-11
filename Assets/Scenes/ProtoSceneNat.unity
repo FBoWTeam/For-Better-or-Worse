@@ -373,9 +373,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player1: 0
-  speed: 15
+  speed: 10
   dashTime: 0.05
   dashSpeed: 5
+  direction: {x: 0, y: 0, z: 0}
 --- !u!1 &162246385
 GameObject:
   m_ObjectHideFlags: 0
@@ -661,6 +662,52 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 3
+--- !u!1 &326932060
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 326932062}
+  - component: {fileID: 326932061}
+  m_Layer: 0
+  m_Name: GameManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &326932061
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 326932060}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 179cacf7a184fd8459cb000dd6818e6d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pv: 100
+  player1: {fileID: 0}
+  player2: {fileID: 0}
+--- !u!4 &326932062
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 326932060}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 9.911598, y: -9.6140175, z: 6.045561}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 7
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &362389863
 GameObject:
   m_ObjectHideFlags: 0
@@ -1607,8 +1654,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fdd7947766f3c954e860904af50fa7a5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player1: {fileID: 1594032063}
-  player2: {fileID: 157861088}
   maxDeformHeight: 5
 --- !u!1 &1061922908
 GameObject:
@@ -2030,9 +2075,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player1: 1
-  speed: 15
+  speed: 10
   dashTime: 0.05
   dashSpeed: 5
+  direction: {x: 0, y: 0, z: 0}
 --- !u!1 &1713871434
 GameObject:
   m_ObjectHideFlags: 0
@@ -2138,7 +2184,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a741ad3d802cbb47a8ae06e6c0ebb63, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 10
+  speed: 8
+  veryLowFixedCoefficient: 0.05
+  lowFixedCoefficient: 0.45
+  highFixedCoefficient: 1
+  veryHighFixedCoefficient: 1
 --- !u!1 &1744453972
 GameObject:
   m_ObjectHideFlags: 0
