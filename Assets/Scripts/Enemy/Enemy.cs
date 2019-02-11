@@ -22,9 +22,18 @@ public class Enemy : MonoBehaviour
     };
     [Header("[Movement]")]
     public Movement movement;
+
+    [DrawIf(new string[] { "movement" }, Movement.Classic)]
     public float speed = 2f;
+
+    [DrawIf(new string[] { "movement" }, Movement.Classic)]
     [Tooltip("represents the time of the attack animation")]
     public float stopTime = 2f;
+
+    [DrawIf(new string[] { "movement" }, Movement.Classic)]
+    [Tooltip("represents the remaining distance between the enemy and the player")]
+    public float distanceBetweenPlayer = 5f;
+
     private LineRenderer line;
     #endregion
 
@@ -125,7 +134,7 @@ public class Enemy : MonoBehaviour
 
         DoMovement(movement);
 
-        Debug.DrawRay(transform.position, transform.TransformDirection(Vector3.forward) * 10, Color.yellow);
+        Debug.DrawRay(transform.position, transform.TransformDirection(Vector3.forward) * 5, Color.yellow);
         //Debug.DrawRay(transform.position, transform.forward, Color.green);
     }
 
@@ -230,9 +239,7 @@ public class Enemy : MonoBehaviour
                 this.transform.LookAt(players[0].transform);
                 break;
             case Movement.Classic:
-                //agent.Raycast(players[0].transform.position, )
-                //agent.Move(players[0].transform.position);
-                agent.destination = players[0].transform.position;
+                StartCoroutine(ClassicMovement());
                 break;
             default:
                 break;
@@ -246,6 +253,19 @@ public class Enemy : MonoBehaviour
         else
         {
             line.enabled = false;
+        }
+    }
+
+    IEnumerator ClassicMovement()
+    {
+        Debug.Log("ClassicMovement");
+        agent.isStopped = false;
+        agent.destination = players[0].transform.position;
+
+        if (agent.remainingDistance <= distanceBetweenPlayer)
+        {
+            agent.isStopped = true;
+            yield return new WaitForSeconds(stopTime);
         }
     }
 
