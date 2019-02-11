@@ -39,6 +39,10 @@ public class OrbController : MonoBehaviour
 			toPlayer1 = !toPlayer1;
 	}
 
+	/// <summary>
+	/// for each player, return 1 if the player moves away from the other player, -1 if he gets closer, 0 otherwise
+	/// </summary>
+	/// <returns></returns>
 	(int, int) getMovementsInfo()
 	{
 		int player1Movement = 0;
@@ -71,6 +75,9 @@ public class OrbController : MonoBehaviour
 		return (player1Movement, player2Movement);
 	}
 
+	/// <summary>
+	/// set the speed coefficient to fix the speed when the link is shrinked/expanded
+	/// </summary>
 	void setFixedSpeedCoefficient()
 	{
 		(int, int) playersMovements = getMovementsInfo();
@@ -105,7 +112,5 @@ public class OrbController : MonoBehaviour
 				fixedSpeedCoefficient = veryHighFixedCoefficient;
 				break;
 		}
-
-		//Debug.Log(fixedSpeedCoefficient);
 	}
 }
