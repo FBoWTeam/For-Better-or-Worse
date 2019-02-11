@@ -7,21 +7,28 @@ using UnityEngine.AI;
 [RequireComponent(typeof(NavMeshAgent))]
 public class Enemy : MonoBehaviour
 {
+    #region All Variables
+    #region Debug Variables
     public bool debug;
-
-    [DrawIf(new string[] {"debug"}, true)]
+    [DrawIf(new string[] { "debug" }, true)]
     public bool drawPath = false;
+    #endregion
 
+    #region Movement Variables
     public enum Movement
     {
         Immobile,
         Classic,
     };
+    [Header("[Movement]")]
     public Movement movement;
+    public float speed = 2f;
+    [Tooltip("represents the time of the attack animation")]
+    public float stopTime = 2f;
     private LineRenderer line;
+    #endregion
 
-
-
+    #region Skills Variables
     public enum Skill
     {
         Impact,
@@ -39,9 +46,9 @@ public class Enemy : MonoBehaviour
         Magnet,
         None,
     };
+    [Header("[Skills]")]
     public Skill skillOne;
     public Skill skillTwo;
-
 
     // Est-ce que les skill font des damages différentes
     // si oui...
@@ -82,23 +89,30 @@ public class Enemy : MonoBehaviour
     [DrawIf(new string[] { "skillOne", "skillTwo" }, Skill.Distance)]
     public Transform firePoint;
     #endregion
+    #endregion
 
+    #region Bonus Variables
     public enum Bonus
     {
         Mirror,
+        None,
     };
+    [Header("[Bonus]")]
     public Bonus bonusOne;
     public Bonus bonusTwo;
+    #endregion
+
 
     private bool coliding = false;
-
     private NavMeshAgent agent;
     private GameObject[] players;
+    #endregion
 
     // Start is called before the first frame update
     void Start()
     {
         agent = this.GetComponent<NavMeshAgent>();
+        agent.speed = speed;
         players = GameObject.FindGameObjectsWithTag("Player");
         line = this.GetComponent<LineRenderer>();
     }
