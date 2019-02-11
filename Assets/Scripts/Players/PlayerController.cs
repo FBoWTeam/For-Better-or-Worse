@@ -13,14 +13,15 @@ public class PlayerController : MonoBehaviour
 
     bool isDashing = false;
     Rigidbody rb;
-    Vector3 direction;
+	[HideInInspector]
+    public Vector3 direction;
 
     void Awake()
     {
         rb = GetComponent<Rigidbody>();
     }
 
-    void Update()
+	void Update()
     {
         Move();
     }

@@ -8,8 +8,12 @@ public class GameManager : MonoBehaviour {
     public static GameManager gameManager;
     public int pv = 100;
 
-    // Start is called before the first frame update
-    void Awake()
+	public GameObject player1;
+	public GameObject player2;
+
+
+	// Start is called before the first frame update
+	void Awake()
     {
         if (gameManager == null)
         {
@@ -19,7 +23,10 @@ public class GameManager : MonoBehaviour {
             Destroy(this);
         }
         DontDestroyOnLoad(gameManager);
-    }
+
+		player1 = GameObject.Find("Player1");
+		player2 = GameObject.Find("Player2");
+	}
 
     // Update is called once per frame
     void Update()
