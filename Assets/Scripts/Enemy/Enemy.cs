@@ -1,12 +1,26 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 [RequireComponent(typeof(Rigidbody))]
+[RequireComponent(typeof(NavMeshAgent))]
 public class Enemy : MonoBehaviour
 {
-    public enum Movement { Immobile, Classic };
+    public bool debug;
+
+    [DrawIf(new string[] {"debug"}, true)]
+    public bool drawPath = false;
+
+    public enum Movement
+    {
+        Immobile,
+        Classic,
+    };
     public Movement movement;
+    private LineRenderer line;
+
+
 
     public enum Skill
     {
@@ -25,7 +39,6 @@ public class Enemy : MonoBehaviour
         Magnet,
         None,
     };
-
     public Skill skillOne;
     public Skill skillTwo;
 
@@ -70,36 +83,33 @@ public class Enemy : MonoBehaviour
     public Transform firePoint;
     #endregion
 
-    public enum Bonus { Mirror }
+    public enum Bonus
+    {
+        Mirror,
+    };
     public Bonus bonusOne;
     public Bonus bonusTwo;
 
-
     private bool coliding = false;
 
-    public bool moving = true;
-
+    private NavMeshAgent agent;
+    private GameObject[] players;
 
     // Start is called before the first frame update
     void Start()
     {
-
+        agent = this.GetComponent<NavMeshAgent>();
+        players = GameObject.FindGameObjectsWithTag("Player");
+        line = this.GetComponent<LineRenderer>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        //Vector3 dir;
-        //if (moving)
-        //{
-        //    dir = GameObject.FindGameObjectWithTag("Player").transform.position - transform.position;
-        //    transform.Translate(dir.normalized * 3.5f * Time.deltaTime);
-        //}
-
-
         DoSkill(skillOne);
         DoSkill(skillTwo);
 
+        DoMovement(movement);
 
         Debug.DrawRay(transform.position, transform.TransformDirection(Vector3.forward) * 10, Color.yellow);
         //Debug.DrawRay(transform.position, transform.forward, Color.green);
@@ -194,6 +204,48 @@ public class Enemy : MonoBehaviour
         }
     }
     #endregion
+
+
+    #region Movement
+
+    void DoMovement(Movement movement)
+    {
+        switch (movement)
+        {
+            case Movement.Immobile:
+                this.transform.LookAt(players[0].transform);
+                break;
+            case Movement.Classic:
+                //agent.Raycast(players[0].transform.position, )
+                //agent.Move(players[0].transform.position);
+                agent.destination = players[0].transform.position;
+                break;
+            default:
+                break;
+        }
+
+        if (drawPath)
+        {
+            line.enabled = true;
+            DrawPath(agent.path);
+        }
+        else
+        {
+            line.enabled = false;
+        }
+    }
+
+    void DrawPath(NavMeshPath path)
+    {
+        if (path.corners.Length < 2) //if the path has 1 or no corners, there is no need
+        {
+            return;
+        }
+        line.SetPositions(path.corners); //set the array of positions to the amount of corners
+    }
+
+    #endregion
+
 
     /// <summary>
     /// do damage to all gameObject inside a sphereCollider of center in radius
@@ -307,4 +359,5 @@ public class Enemy : MonoBehaviour
                 break;
         }
     }
+
 }
