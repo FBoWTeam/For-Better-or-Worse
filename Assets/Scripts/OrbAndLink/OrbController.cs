@@ -13,7 +13,7 @@ public class OrbController : MonoBehaviour
 
 	float fixedSpeedCoefficient;
 
-	bool toPlayer2;
+	public bool toPlayer2;
 
 	float progression;
 	float step;

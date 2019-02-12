@@ -33,9 +33,9 @@ public class OrbHitter : MonoBehaviour
             {
                 if (Input.GetKeyDown(KeyCode.E) || Input.GetAxisRaw("OrbHitter1") != 0)
                 {
-                    if (!orb.GetComponent<OrbController>().toPlayer1)
+                    if (!orb.GetComponent<OrbController>().toPlayer2)
                     {
-                        orb.GetComponent<OrbController>().toPlayer1 = true;
+                        orb.GetComponent<OrbController>().toPlayer2 = true;
                     }
                 }
             }
@@ -46,9 +46,9 @@ public class OrbHitter : MonoBehaviour
             {
                 if (Input.GetKeyDown(KeyCode.I) || Input.GetAxisRaw("OrbHitter1") != 0)
                 {
-                    if (orb.GetComponent<OrbController>().toPlayer1)
+                    if (orb.GetComponent<OrbController>().toPlayer2)
                     {
-                        orb.GetComponent<OrbController>().toPlayer1 = false;
+                        orb.GetComponent<OrbController>().toPlayer2 = false;
                     }
                 }
             }
