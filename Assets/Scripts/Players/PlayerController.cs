@@ -50,7 +50,7 @@ public class PlayerController : MonoBehaviour
                 direction = new Vector3(Input.GetAxis("HorizontalP2"), 0.0f, Input.GetAxis("VerticalP2"));
                 if (!isDashing)
                 {
-                    if (Input.GetKeyDown(KeyCode.RightShift) || Input.GetKeyDown(KeyCode.Joystick1Button5))
+                    if (Input.GetKeyDown(KeyCode.RightShift) || Input.GetKeyDown(KeyCode.Joystick2Button5))
                     {
                         StartCoroutine(DashCoroutine());
                     }

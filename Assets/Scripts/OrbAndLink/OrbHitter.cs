@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class OrbHitter : MonoBehaviour
 {
-    public GameObject orb;
+    GameObject orb;
 
     public float hitZone;
 
@@ -12,6 +12,7 @@ public class OrbHitter : MonoBehaviour
 
     void Start()
     {
+		orb = GameObject.Find("Orb");
         canHit = false;
     }
 
@@ -31,7 +32,7 @@ public class OrbHitter : MonoBehaviour
         {
             if (canHit)
             {
-                if (Input.GetKeyDown(KeyCode.E) || Input.GetAxisRaw("OrbHitter1") != 0)
+                if (Input.GetKeyDown(KeyCode.E) || Input.GetAxisRaw("OrbHitterP1") != 0)
                 {
                     if (!orb.GetComponent<OrbController>().toPlayer2)
                     {
@@ -44,7 +45,7 @@ public class OrbHitter : MonoBehaviour
         {
             if (canHit)
             {
-                if (Input.GetKeyDown(KeyCode.I) || Input.GetAxisRaw("OrbHitter1") != 0)
+                if (Input.GetKeyDown(KeyCode.Keypad0) || Input.GetAxisRaw("OrbHitterP2") != 0)
                 {
                     if (orb.GetComponent<OrbController>().toPlayer2)
                     {

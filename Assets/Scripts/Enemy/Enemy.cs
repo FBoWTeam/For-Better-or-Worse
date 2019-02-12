@@ -134,20 +134,24 @@ public class Enemy : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        DoSkill(skillOne);
+        DoSkill(skillTwo);
+		
+		if(!agent.isStopped)
+		{
+			DoMovement(movement);
+		}
+
+        Debug.DrawRay(transform.position, transform.TransformDirection(Vector3.forward) * 5, Color.yellow);
+		//Debug.DrawRay(transform.position, transform.forward, Color.green);
+
 		if (hp <= 0)
 		{
+			agent.isStopped = true;
 			StopAllCoroutines();
 			Destroy(this.gameObject);
 		}
-
-        DoSkill(skillOne);
-        DoSkill(skillTwo);
-
-        DoMovement(movement);
-
-        Debug.DrawRay(transform.position, transform.TransformDirection(Vector3.forward) * 5, Color.yellow);
-        //Debug.DrawRay(transform.position, transform.forward, Color.green);
-    }
+	}
 
     private void OnCollisionEnter(Collision collision)
     {
@@ -269,14 +273,14 @@ public class Enemy : MonoBehaviour
 
     IEnumerator ClassicMovement()
     {
-        agent.isStopped = false;
         agent.destination = players[0].transform.position;
 
         if (agent.remainingDistance <= distanceBetweenPlayer)
         {
             agent.isStopped = true;
             yield return new WaitForSeconds(stopTime);
-        }
+			agent.isStopped = false;
+		}
     }
 
     void DrawPath(NavMeshPath path)

@@ -120,7 +120,7 @@ public class OrbController : MonoBehaviour
 		if (other.CompareTag("Wall"))
 			toPlayer2 = !toPlayer2;
 		else if (other.CompareTag("Player"))
-			GameManager.gameManager.takeDamage(damage);
+			GameManager.gameManager.takeDamage(damage/2);
 		else if (other.CompareTag("Enemy"))
 			other.GetComponent<Enemy>().hp -= damage;
 	}
