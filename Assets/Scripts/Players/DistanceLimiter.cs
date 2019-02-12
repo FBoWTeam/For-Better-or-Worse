@@ -13,11 +13,10 @@ public class DistanceLimiter : MonoBehaviour
     private BoxCollider[] boxList;
 
     /// <summary>
-    /// Script qui gere les distances Min et Max entre les joueurs
-    /// Géré avec des colliders positionné en fonction de la position des joueurs
-    /// Taille des colliders parametrable
-    /// Distance Min gérée avec une sphere colliders situé entre les joueurs
-    /// Distance Max gérée avec deux box colliders situés deriere chaque joueurs
+    /// Script managing the minimum and maximum distance between the two players
+    /// using colliders positioned with the player's positions
+    /// using a sphere collider to handle the minimum distance
+    /// using two box colliders to handle the maximum distance
     /// </summary>
     private void Awake()
     {
