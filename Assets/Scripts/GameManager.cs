@@ -6,7 +6,8 @@ using UnityEngine;
 public class GameManager : MonoBehaviour {
 
     public static GameManager gameManager;
-    public int pv = 100;
+	public int baseHP;
+	public int hp;
 
 	public GameObject player1;
 	public GameObject player2;
@@ -26,6 +27,8 @@ public class GameManager : MonoBehaviour {
 
 		player1 = GameObject.Find("Player1");
 		player2 = GameObject.Find("Player2");
+
+		hp = baseHP;
 	}
 
     // Update is called once per frame
@@ -39,8 +42,8 @@ public class GameManager : MonoBehaviour {
     /// <param name="impactDamage"></param>
     public void takeDamage(int damage)
     {
-        pv -= damage;
-        if (pv <= 0)
+        hp -= damage;
+        if (hp <= 0)
         {
 			Debug.Log("DED");
         }
