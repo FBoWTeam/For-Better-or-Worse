@@ -8,10 +8,8 @@ public class GameManager : MonoBehaviour {
     public static GameManager gameManager;
 	public int baseHP;
 	public int hp;
-
-	[HideInInspector]
+	
 	public GameObject player1;
-	[HideInInspector]
 	public GameObject player2;
 
 
