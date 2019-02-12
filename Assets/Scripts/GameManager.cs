@@ -42,7 +42,7 @@ public class GameManager : MonoBehaviour {
         pv -= damage;
         if (pv <= 0)
         {
-            throw new NotImplementedException();
+			Debug.Log("DED");
         }
     }
 }

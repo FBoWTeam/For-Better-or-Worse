@@ -7,7 +7,10 @@ using UnityEngine.AI;
 [RequireComponent(typeof(NavMeshAgent))]
 public class Enemy : MonoBehaviour
 {
-    #region All Variables
+	#region All Variables
+
+	public int hp;
+
     #region Debug Variables
     public bool debug;
     [DrawIf(new string[] { "debug" }, true)]
@@ -129,6 +132,12 @@ public class Enemy : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+		if (hp <= 0)
+		{
+			StopAllCoroutines();
+			Destroy(this.gameObject);
+		}
+
         DoSkill(skillOne);
         DoSkill(skillTwo);
 
@@ -258,7 +267,6 @@ public class Enemy : MonoBehaviour
 
     IEnumerator ClassicMovement()
     {
-        Debug.Log("ClassicMovement");
         agent.isStopped = false;
         agent.destination = players[0].transform.position;
 
