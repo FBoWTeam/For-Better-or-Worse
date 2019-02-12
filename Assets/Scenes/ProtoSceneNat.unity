@@ -266,7 +266,7 @@ GameObject:
   - component: {fileID: 157861090}
   m_Layer: 10
   m_Name: Player2
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -342,7 +342,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!54 &157861089
 Rigidbody:
@@ -552,7 +552,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 60, y: -30.000002, z: 0}
 --- !u!1 &172271254
 GameObject:
@@ -706,7 +706,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &362389863
 GameObject:
@@ -1223,7 +1223,7 @@ Transform:
   - {fileID: 379931464}
   - {fileID: 1432279079}
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &530255849
 GameObject:
@@ -1414,7 +1414,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 45, y: 0, z: 0}
 --- !u!114 &534669906
 MonoBehaviour:
@@ -1497,7 +1497,7 @@ Transform:
   - {fileID: 882738167}
   - {fileID: 1263362230}
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!120 &723706937
 LineRenderer:
@@ -1968,7 +1968,7 @@ GameObject:
   - component: {fileID: 1594032065}
   m_Layer: 10
   m_Name: Player1
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2044,7 +2044,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!54 &1594032064
 Rigidbody:
@@ -2170,7 +2170,7 @@ Transform:
   m_Children:
   - {fileID: 451999186}
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1713871439
 MonoBehaviour:
@@ -2181,20 +2181,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 1713871434}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7a741ad3d802cbb47a8ae06e6c0ebb63, type: 3}
+  m_Script: {fileID: 11500000, guid: add04915dcedc254c8f1e93d5588c2ea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  damage: 10
   speed: 8
-  plot:
-    serializedVersion: 2
-    m_Curve: []
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
   veryLowFixedCoefficient: 0.3
   lowFixedCoefficient: 0.5
   highFixedCoefficient: 1.5
   veryHighFixedCoefficient: 1.7
+  toPlayer2: 0
 --- !u!1 &1744453972
 GameObject:
   m_ObjectHideFlags: 0

@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class OrbController : MonoBehaviour
 {
+	public int damage;
 	public float speed;
 
 	public float veryLowFixedCoefficient;
@@ -112,5 +113,13 @@ public class OrbController : MonoBehaviour
 				fixedSpeedCoefficient = veryHighFixedCoefficient;
 				break;
 		}
+	}
+
+	private void OnTriggerEnter(Collider other)
+	{
+		if (other.CompareTag("Wall"))
+			toPlayer2 = !toPlayer2;
+		else if (other.CompareTag("Player"))
+			GameManager.gameManager.takeDamage(damage);
 	}
 }
