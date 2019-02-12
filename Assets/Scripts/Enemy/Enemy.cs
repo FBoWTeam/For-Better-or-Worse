@@ -9,6 +9,7 @@ public class Enemy : MonoBehaviour
 {
 	#region All Variables
 
+	public int baseHP;
 	public int hp;
 
     #region Debug Variables
@@ -127,6 +128,7 @@ public class Enemy : MonoBehaviour
         agent.speed = speed;
         players = GameObject.FindGameObjectsWithTag("Player");
         line = this.GetComponent<LineRenderer>();
+		hp = baseHP;
     }
 
     // Update is called once per frame
