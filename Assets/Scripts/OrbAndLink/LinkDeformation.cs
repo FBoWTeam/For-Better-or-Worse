@@ -18,6 +18,10 @@ public class LinkDeformation : MonoBehaviour
 		minDeform = transform.GetChild(3);
 		maxDeform = transform.GetChild(4);
 
+	}
+
+	private void Start()
+	{
 		FixPosition();
 	}
 
