@@ -63,9 +63,7 @@ public class Enemy : MonoBehaviour
     public Skill skillOne;
     public Skill skillTwo;
 
-    // Est-ce que les skill font des damages différentes
-    // si oui...
-    //TODO Cacher/Afficher les variable de dam
+   
     #region ImpactFields
     [DrawIf(new string[] { "skillOne", "skillTwo" }, Skill.Impact)]
     public int impactDamage = 5;
@@ -343,7 +341,7 @@ public class Enemy : MonoBehaviour
 
         if (bullet != null)
         {
-            bullet.Seek(target, damage);//
+            bullet.Seek(target, damage);
         }
     }
 
