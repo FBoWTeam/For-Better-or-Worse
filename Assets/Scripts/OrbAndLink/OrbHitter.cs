@@ -6,13 +6,16 @@ public class OrbHitter : MonoBehaviour
 {
     GameObject orb;
 
+    [Header("[Parameters]")]
+    [Tooltip("represents the orb hitting range")]
     public float hitZone;
+    public float accelerationFactor;
 
     bool canHit;
 
     void Start()
     {
-		orb = GameObject.Find("Orb");
+        orb = GameObject.Find("Orb");
         canHit = false;
     }
 
@@ -32,11 +35,12 @@ public class OrbHitter : MonoBehaviour
         {
             if (canHit)
             {
-                if (Input.GetKeyDown(KeyCode.E) || Input.GetAxisRaw("OrbHitterP1") != 0)
+                if (!orb.GetComponent<OrbController>().toPlayer2)
                 {
-                    if (!orb.GetComponent<OrbController>().toPlayer2)
+                    if (Input.GetKeyDown(KeyCode.E) || Input.GetAxisRaw("OrbHitterP1") != 0)
                     {
                         orb.GetComponent<OrbController>().toPlayer2 = true;
+                        orb.GetComponent<OrbController>().speed += accelerationFactor;
                     }
                 }
             }
@@ -45,11 +49,12 @@ public class OrbHitter : MonoBehaviour
         {
             if (canHit)
             {
-                if (Input.GetKeyDown(KeyCode.Keypad0) || Input.GetAxisRaw("OrbHitterP2") != 0)
+                if (orb.GetComponent<OrbController>().toPlayer2)
                 {
-                    if (orb.GetComponent<OrbController>().toPlayer2)
+                    if (Input.GetKeyDown(KeyCode.Keypad0) || Input.GetAxisRaw("OrbHitterP2") != 0)
                     {
                         orb.GetComponent<OrbController>().toPlayer2 = false;
+                        orb.GetComponent<OrbController>().speed += accelerationFactor;
                     }
                 }
             }

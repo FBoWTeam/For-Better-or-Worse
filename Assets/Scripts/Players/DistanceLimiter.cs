@@ -4,8 +4,10 @@ using UnityEngine;
 
 public class DistanceLimiter : MonoBehaviour
 {
+    
     public GameObject player1;
     public GameObject player2;
+
 
     public float maxDistance = 20;
     public float minDistance = 5;
