@@ -7,7 +7,8 @@ public class LinkDeformation : MonoBehaviour
 	Transform deformPoint1, deformPointMid, deformPoint2;
 	Transform minDeform, maxDeform;
 
-	public float maxDeformHeight;
+    [Tooltip("represents the maximum amplitude of the deformation")]
+    public float maxDeformHeight;
 
 	private void Awake()
 	{
