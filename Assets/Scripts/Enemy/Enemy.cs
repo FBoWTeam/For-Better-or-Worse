@@ -59,14 +59,20 @@ public class Enemy : MonoBehaviour
         Magnet,
         None,
     };
+    public bool showSkill = true;
     [Header("[Skills]")]
     public Skill skillOne;
     public Skill skillTwo;
 
    
+   
     #region ImpactFields
     [DrawIf(new string[] { "skillOne", "skillTwo" }, Skill.Impact)]
     public int impactDamage = 5;
+    [DrawIf(new string[] { "skillOne", "skillTwo" }, Skill.Impact)]
+    public float impactCooldown = 3f;
+
+    bool canAttack = true;
     #endregion
 
     #region AoeFields
@@ -160,6 +166,9 @@ public class Enemy : MonoBehaviour
     }
 
     #region Skill
+
+    
+
     /// <summary>
     /// Activate the skill passed in parameters
     /// </summary>
@@ -170,15 +179,16 @@ public class Enemy : MonoBehaviour
         switch (skill)
         {
             case Skill.Impact:
-
-                //dégat a l'impact
-                if (coliding)
-                {
-                    GameManager.gameManager.takeDamage(impactDamage);
+               
+                if (coliding && canAttack) {
+                    StartCoroutine("Impact");
                 }
+
                 break;
             case Skill.AOE:
+               
                 AoeDamage(transform.position, aoeRange, aeoDamage);
+                
                 break;
             case Skill.Distance:
 
@@ -292,6 +302,14 @@ public class Enemy : MonoBehaviour
 
     #endregion
 
+    IEnumerator Impact() {
+       
+        GameManager.gameManager.takeDamage(impactDamage);
+        canAttack = false;
+        yield return new WaitForSeconds(impactCooldown);
+       
+        canAttack = true;
+    }
 
     /// <summary>
     /// do damage to all gameObject inside a sphereCollider of center in radius
@@ -306,9 +324,12 @@ public class Enemy : MonoBehaviour
 
             if (item.CompareTag("Player"))
             {
+                print("aeoDamage");
                 GameManager.gameManager.takeDamage(damage);
+               
             }
         }
+        
     }
 
     GameObject GetNearestGO(GameObject[] gos)
@@ -367,43 +388,83 @@ public class Enemy : MonoBehaviour
 
     private void OnDrawGizmos()
     {
-        Gizmos.color = Color.white;
-        switch (skillTwo)
-        {
-            case Skill.Impact:
-                break;
-            case Skill.AOE:
-                Gizmos.DrawWireSphere(transform.position, aoeRange);
-                break;
-            case Skill.Distance:
-                Gizmos.DrawLine(transform.position, new Vector3(-17.3f, 1.0f, 0));
-                Gizmos.DrawWireSphere(transform.position, distanceRange);
-                break;
-            case Skill.Bloc:
-                break;
-            case Skill.MudThrow:
-                break;
-            case Skill.Vortex:
-                break;
-            case Skill.Inverse:
-                break;
-            case Skill.Mentaliste:
-                break;
-            case Skill.Shield:
-                break;
-            case Skill.PreciousWater:
-                break;
-            case Skill.Rooting:
-                break;
-            case Skill.Silence:
-                break;
-            case Skill.Magnet:
-                break;
-            case Skill.None:
-                break;
-            default:
-                break;
+        if (showSkill) {
+            Gizmos.color = Color.white;
+            switch (skillOne) {
+                case Skill.Impact:
+                    break;
+                case Skill.AOE:
+                    Gizmos.DrawWireSphere(transform.position, aoeRange);
+                    break;
+                case Skill.Distance:
+                    Gizmos.DrawLine(transform.position, new Vector3(-17.3f, 1.0f, 0));
+                    Gizmos.DrawWireSphere(transform.position, distanceRange);
+                    break;
+                case Skill.Bloc:
+                    break;
+                case Skill.MudThrow:
+                    break;
+                case Skill.Vortex:
+                    break;
+                case Skill.Inverse:
+                    break;
+                case Skill.Mentaliste:
+                    break;
+                case Skill.Shield:
+                    break;
+                case Skill.PreciousWater:
+                    break;
+                case Skill.Rooting:
+                    break;
+                case Skill.Silence:
+                    break;
+                case Skill.Magnet:
+                    break;
+                case Skill.None:
+                    break;
+                default:
+                    break;
+            }
+
+            Gizmos.color = Color.black;
+            switch (skillTwo) {
+                case Skill.Impact:
+                    break;
+                case Skill.AOE:
+                    Gizmos.DrawWireSphere(transform.position, aoeRange);
+                    break;
+                case Skill.Distance:
+                    Gizmos.DrawLine(transform.position, new Vector3(-17.3f, 1.0f, 0));
+                    Gizmos.DrawWireSphere(transform.position, distanceRange);
+                    break;
+                case Skill.Bloc:
+                    break;
+                case Skill.MudThrow:
+                    break;
+                case Skill.Vortex:
+                    break;
+                case Skill.Inverse:
+                    break;
+                case Skill.Mentaliste:
+                    break;
+                case Skill.Shield:
+                    break;
+                case Skill.PreciousWater:
+                    break;
+                case Skill.Rooting:
+                    break;
+                case Skill.Silence:
+                    break;
+                case Skill.Magnet:
+                    break;
+                case Skill.None:
+                    break;
+                default:
+                    break;
+            }
         }
+        
+
     }
 
 }
