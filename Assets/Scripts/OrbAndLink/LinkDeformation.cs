@@ -9,6 +9,12 @@ public class LinkDeformation : MonoBehaviour
 
 	public float maxDeformHeight;
 
+	(float deformInputP1, float deformInputP2) deformInputs;
+	float deformAmountP1, deformAmountP2;
+	public float smoothTime;
+
+	public bool canBeDeformed;
+
 	private void Awake()
 	{
 		deformPoint1 = transform.GetChild(0);
@@ -18,6 +24,7 @@ public class LinkDeformation : MonoBehaviour
 		minDeform = transform.GetChild(3);
 		maxDeform = transform.GetChild(4);
 
+		canBeDeformed = true;
 	}
 
 	private void Start()
@@ -29,12 +36,15 @@ public class LinkDeformation : MonoBehaviour
 	{
 		FixPosition();
 
-		(float player1DeformAmount, float player2DeformAmount) = GetDeformAmount();
+		deformInputs = canBeDeformed ? GetDeformInputs() : deformInputs;
+
+		deformAmountP1 = Mathf.Lerp(deformAmountP1, deformInputs.deformInputP1, smoothTime);
+		deformAmountP2 = Mathf.Lerp(deformAmountP2, deformInputs.deformInputP2, smoothTime);
 
 		float playersDistance = Vector3.Distance(GameManager.gameManager.player1.transform.position, GameManager.gameManager.player2.transform.position);
 
-		deformPoint1.localPosition = new Vector3(player1DeformAmount * maxDeformHeight, 0.0f, (playersDistance / 4.0f));
-		deformPoint2.localPosition = new Vector3(player2DeformAmount * maxDeformHeight, 0.0f, -(playersDistance / 4.0f));
+		deformPoint1.localPosition = new Vector3(deformAmountP1 * maxDeformHeight, 0.0f, (playersDistance / 4.0f));
+		deformPoint2.localPosition = new Vector3(deformAmountP2 * maxDeformHeight, 0.0f, -(playersDistance / 4.0f));
 		deformPointMid.localPosition = new Vector3(((deformPoint1.localPosition.x + deformPoint2.localPosition.x) / 2.0f), 0.0f, 0.0f);
 	}
 
@@ -54,7 +64,7 @@ public class LinkDeformation : MonoBehaviour
 	///	return a tuple of the deformation amounts ([-1; 1]) of player 1 and 2 based on their inputs
 	/// </summary>
 	/// <returns></returns>
-	(float, float) GetDeformAmount()
+	(float, float) GetDeformInputs()
 	{
 		Vector3 player1DeformInput = new Vector3(Input.GetAxis("DeformP1X"), 0.0f, Input.GetAxis("DeformP1Z"));
 		Vector3 player2DeformInput = new Vector3(Input.GetAxis("DeformP2X"), 0.0f, Input.GetAxis("DeformP2Z"));

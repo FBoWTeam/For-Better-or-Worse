@@ -29,7 +29,7 @@ public class OrbController : MonoBehaviour
 	void FixedUpdate()
 	{
 		setFixedSpeedCoefficient();
-		float fixedSpeed = speed * fixedSpeedCoefficient;;
+		float fixedSpeed = speed * fixedSpeedCoefficient; ;
 
 		step = (fixedSpeed / BezierCurve.GetPlayersDistance()) * Time.fixedDeltaTime;
 		progression = toPlayer2 ? progression + step : progression - step;
@@ -48,8 +48,8 @@ public class OrbController : MonoBehaviour
 	{
 		int player1Movement = 0;
 		int player2Movement = 0;
-		
-		if(GameManager.gameManager.player1.GetComponent<PlayerController>().direction.magnitude >= 0.25f)
+
+		if (GameManager.gameManager.player1.GetComponent<PlayerController>().direction.magnitude >= 0.25f)
 		{
 			Vector3 player1Reference = (GameManager.gameManager.player2.transform.position - GameManager.gameManager.player1.transform.position).normalized;
 			Vector3 player1Direction = GameManager.gameManager.player1.GetComponent<PlayerController>().direction;
@@ -84,7 +84,7 @@ public class OrbController : MonoBehaviour
 		(int, int) playersMovements = getMovementsInfo();
 		(int, bool, int) movementsInfo = (playersMovements.Item1, toPlayer2, playersMovements.Item2);
 
-		switch(movementsInfo)
+		switch (movementsInfo)
 		{
 
 			case var c1 when c1.Item1 == 1 && c1.Item2 == false && c1.Item3 == -1:
@@ -118,10 +118,21 @@ public class OrbController : MonoBehaviour
 	private void OnTriggerEnter(Collider other)
 	{
 		if (other.CompareTag("Wall"))
+		{
 			toPlayer2 = !toPlayer2;
+			GameManager.gameManager.linkDeformation.GetComponent<LinkDeformation>().canBeDeformed = false;
+		}
 		else if (other.CompareTag("Player"))
-			GameManager.gameManager.takeDamage(damage/2);
+			GameManager.gameManager.takeDamage(damage / 2);
 		else if (other.CompareTag("Enemy"))
 			other.GetComponent<Enemy>().hp -= damage;
+	}
+
+	private void OnTriggerExit(Collider other)
+	{
+		if (other.CompareTag("Wall"))
+		{
+			GameManager.gameManager.linkDeformation.GetComponent<LinkDeformation>().canBeDeformed = true;
+		}
 	}
 }
