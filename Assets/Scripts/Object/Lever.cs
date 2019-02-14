@@ -29,7 +29,7 @@ public class Lever : MonoBehaviour, IActivable
     {
         isActive = !isActive;
         objectToActivate.GetComponent<IActivable>().Activate();
+        //plays the animation of the lever
+        GetComponent<Animator>().SetTrigger("ActivateLever");
     }
-
-
 }
