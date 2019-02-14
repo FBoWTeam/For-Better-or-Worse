@@ -14,6 +14,8 @@ public class GameManager : MonoBehaviour {
 	[HideInInspector]
 	public GameObject player2;
 
+	public GameObject linkDeformation;
+
 
 	// Start is called before the first frame update
 	void Awake()
@@ -29,6 +31,7 @@ public class GameManager : MonoBehaviour {
 
 		player1 = GameObject.Find("Player1");
 		player2 = GameObject.Find("Player2");
+		linkDeformation = GameObject.Find("Deformation");
 
 		hp = baseHP;
 	}
