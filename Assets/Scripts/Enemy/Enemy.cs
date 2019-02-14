@@ -42,39 +42,16 @@ public class Enemy : MonoBehaviour
     #endregion
 
     #region Skills Variables
-    public enum Skill
-    {
-        Impact,
-        AOE,
-        Distance,
-        Bloc,
-        MudThrow,
-        Vortex,
-        Inverse,
-        Mentaliste,
-        Shield,
-        PreciousWater,
-        Rooting,
-        Silence,
-        Magnet,
-        None,
-    };
+   
     public bool showSkill = true;
-    [Header("[Skills]")]
-    public Skill skillOne;
-    public Skill skillTwo;
+    
+   
 
    
    
-    #region ImpactFields
-    [DrawIf(new string[] { "skillOne", "skillTwo" }, Skill.Impact)]
-    public int impactDamage = 5;
-    [DrawIf(new string[] { "skillOne", "skillTwo" }, Skill.Impact)]
-    public float impactCooldown = 3f;
-
-    bool canAttack = true;
-    #endregion
-
+    
+    
+    /*
     #region AoeFields
     [DrawIf(new string[] { "skillOne", "skillTwo" }, Skill.AOE)]
     public float aoeRange = 5f;
@@ -106,6 +83,7 @@ public class Enemy : MonoBehaviour
     [DrawIf(new string[] { "skillOne", "skillTwo" }, Skill.Distance)]
     public Transform firePoint;
     #endregion
+    */
     #endregion
 
     #region Bonus Variables
@@ -138,8 +116,8 @@ public class Enemy : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        DoSkill(skillOne);
-        DoSkill(skillTwo);
+        //DoSkill(skillOne);
+        //DoSkill(skillTwo);
 		
 		if(!agent.isStopped)
 		{
@@ -173,7 +151,7 @@ public class Enemy : MonoBehaviour
     /// Activate the skill passed in parameters
     /// </summary>
     /// <param name="skill"></param>
-    void DoSkill(Skill skill)
+    /*void DoSkill(Skill skill)
     {
 
         switch (skill)
@@ -249,6 +227,7 @@ public class Enemy : MonoBehaviour
                 break;
         }
     }
+    */
     #endregion
 
 
@@ -301,7 +280,7 @@ public class Enemy : MonoBehaviour
     }
 
     #endregion
-
+    /*
     IEnumerator Impact() {
        
         GameManager.gameManager.takeDamage(impactDamage);
@@ -310,7 +289,7 @@ public class Enemy : MonoBehaviour
        
         canAttack = true;
     }
-
+    */
     /// <summary>
     /// do damage to all gameObject inside a sphereCollider of center in radius
     /// </summary>
@@ -386,85 +365,6 @@ public class Enemy : MonoBehaviour
     }
 
 
-    private void OnDrawGizmos()
-    {
-        if (showSkill) {
-            Gizmos.color = Color.white;
-            switch (skillOne) {
-                case Skill.Impact:
-                    break;
-                case Skill.AOE:
-                    Gizmos.DrawWireSphere(transform.position, aoeRange);
-                    break;
-                case Skill.Distance:
-                    Gizmos.DrawLine(transform.position, new Vector3(-17.3f, 1.0f, 0));
-                    Gizmos.DrawWireSphere(transform.position, distanceRange);
-                    break;
-                case Skill.Bloc:
-                    break;
-                case Skill.MudThrow:
-                    break;
-                case Skill.Vortex:
-                    break;
-                case Skill.Inverse:
-                    break;
-                case Skill.Mentaliste:
-                    break;
-                case Skill.Shield:
-                    break;
-                case Skill.PreciousWater:
-                    break;
-                case Skill.Rooting:
-                    break;
-                case Skill.Silence:
-                    break;
-                case Skill.Magnet:
-                    break;
-                case Skill.None:
-                    break;
-                default:
-                    break;
-            }
-
-            Gizmos.color = Color.black;
-            switch (skillTwo) {
-                case Skill.Impact:
-                    break;
-                case Skill.AOE:
-                    Gizmos.DrawWireSphere(transform.position, aoeRange);
-                    break;
-                case Skill.Distance:
-                    Gizmos.DrawLine(transform.position, new Vector3(-17.3f, 1.0f, 0));
-                    Gizmos.DrawWireSphere(transform.position, distanceRange);
-                    break;
-                case Skill.Bloc:
-                    break;
-                case Skill.MudThrow:
-                    break;
-                case Skill.Vortex:
-                    break;
-                case Skill.Inverse:
-                    break;
-                case Skill.Mentaliste:
-                    break;
-                case Skill.Shield:
-                    break;
-                case Skill.PreciousWater:
-                    break;
-                case Skill.Rooting:
-                    break;
-                case Skill.Silence:
-                    break;
-                case Skill.Magnet:
-                    break;
-                case Skill.None:
-                    break;
-                default:
-                    break;
-            }
-        }
-        
-
-    }
+   
 
 }

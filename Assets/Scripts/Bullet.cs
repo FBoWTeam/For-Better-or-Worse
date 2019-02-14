@@ -34,7 +34,7 @@ public class Bullet : MonoBehaviour {
             return;
         }
 
-        transform.Translate(shootDir.normalized * distanceThisFrame, Space.World);
+        transform.Translate(shootDir.normalized * speed * distanceThisFrame, Space.World);
 
     }
 
