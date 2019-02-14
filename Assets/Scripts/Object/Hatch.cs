@@ -10,5 +10,6 @@ public class Hatch : MonoBehaviour
     public void Activate()
     {
         isActive = !isActive;
+        //play the animation, change the environment
     }
 }
