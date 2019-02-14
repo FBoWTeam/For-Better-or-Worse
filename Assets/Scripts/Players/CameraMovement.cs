@@ -45,8 +45,9 @@ public class CameraMovement : MonoBehaviour
 	{
 		Vector3 centerPoint = GetCenterPoint();
 		transform.position = Vector3.SmoothDamp(transform.position, centerPoint + offset, ref velocity, smoothTime);
-		transform.LookAt(GetCenterPoint());
-		//transform.localEulerAngles = new Vector3(transform.localEulerAngles.x, 0.0f, transform.localEulerAngles.z);
+		
+		transform.LookAt(centerPoint);
+		transform.localEulerAngles = new Vector3(transform.localEulerAngles.x, 0.0f, transform.localEulerAngles.z);
 	}
 
 	/// <summary>
