@@ -13,7 +13,6 @@ public class OrbController : MonoBehaviour
     [Header("[Valid Targets]")]
     public bool canHitEnemy;
     public bool canHitPlayer;
-    public bool canHitWalls;
 
     [Header("[Fix Coefficient]")]
     public float veryLowFixedCoefficient;
@@ -141,13 +140,9 @@ public class OrbController : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Wall") && canHitWalls == true)
+        if (other.CompareTag("Player") && canHitPlayer == true)
         {
-            toPlayer2 = !toPlayer2;
-        }
-        else if (other.CompareTag("Player") && canHitPlayer == true)
-        {
-            GameManager.gameManager.takeDamage(damage / 2);
+            GameManager.gameManager.takeDamage(damage);
             speed = minSpeed;
         }
         else if (other.CompareTag("Enemy") && canHitEnemy == true)

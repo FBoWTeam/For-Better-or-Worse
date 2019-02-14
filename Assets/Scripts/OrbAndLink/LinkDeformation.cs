@@ -10,11 +10,8 @@ public class LinkDeformation : MonoBehaviour
     [Tooltip("represents the maximum amplitude of the deformation")]
     public float maxDeformHeight;
 
-	(float deformInputP1, float deformInputP2) deformInputs;
 	float deformAmountP1, deformAmountP2;
 	public float smoothTime;
-
-	public bool canBeDeformed;
 
 	private void Awake()
 	{
@@ -24,8 +21,6 @@ public class LinkDeformation : MonoBehaviour
 
 		minDeform = transform.GetChild(3);
 		maxDeform = transform.GetChild(4);
-
-		canBeDeformed = true;
 	}
 
 	private void Start()
@@ -37,10 +32,9 @@ public class LinkDeformation : MonoBehaviour
 	{
 		FixPosition();
 
-		deformInputs = canBeDeformed ? GetDeformInputs() : deformInputs;
-
-		deformAmountP1 = Mathf.Lerp(deformAmountP1, deformInputs.deformInputP1, smoothTime);
-		deformAmountP2 = Mathf.Lerp(deformAmountP2, deformInputs.deformInputP2, smoothTime);
+		(float deformInputP1, float deformInputP2) = GetDeformInputs();
+		deformAmountP1 = Mathf.Lerp(deformAmountP1, deformInputP1, smoothTime);
+		deformAmountP2 = Mathf.Lerp(deformAmountP2, deformInputP2, smoothTime);
 
 		float playersDistance = Vector3.Distance(GameManager.gameManager.player1.transform.position, GameManager.gameManager.player2.transform.position);
 
