@@ -10,7 +10,7 @@ public class Lever : MonoBehaviour, IActivable
     //the lever activates an other object
     [Tooltip("the object to activate id the current lever is active")]
     public GameObject objectToActivate;
-    
+
     /// <summary>
     /// activates the lever if the orb enter it's collider
     /// </summary>

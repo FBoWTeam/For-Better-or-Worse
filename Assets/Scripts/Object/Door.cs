@@ -31,7 +31,6 @@ public class Door : MonoBehaviour, IActivable
             }
             isActive = false;
         }
-
     }
 
     /// <summary>
@@ -49,6 +48,4 @@ public class Door : MonoBehaviour, IActivable
         }
         return true;
     }
-
-
 }
