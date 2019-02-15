@@ -36,9 +36,10 @@ public class PlayerController : MonoBehaviour
             direction = new Vector3(Input.GetAxis("HorizontalP2"), 0.0f, Input.GetAxis("VerticalP2"));
         }
 
-        Vector3 velocity = direction * speed * Time.deltaTime;
+		direction = (direction.x * Camera.main.transform.right + direction.z * Camera.main.transform.forward);
+
+		Vector3 velocity = direction * speed * Time.deltaTime;
 
 		rb.MovePosition(transform.position + velocity);
-
 	}
 }
