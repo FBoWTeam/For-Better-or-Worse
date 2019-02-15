@@ -9,7 +9,7 @@ public class EnemySkill : MonoBehaviour
     public enum Skill {
         Impact,
         AOE,
-        Distance,
+        Sniper,
         /*Bloc,
         MudThrow,
         Vortex,
@@ -37,15 +37,15 @@ public class EnemySkill : MonoBehaviour
 
 
 
-    #region DistanceFields
+    #region SniperFields
  
     //[DrawIf(new string[] { "skillOne" }, Skill.Distance)]
     //public int distanceDamage = 3;
 
-    [DrawIf(new string[] { "skillOne" }, Skill.Distance)]
+    [DrawIf(new string[] { "skillOne" }, Skill.Sniper)]
     public float fireRate = 1f;
 
-    [DrawIf(new string[] { "skillOne" }, Skill.Distance)]
+    [DrawIf(new string[] { "skillOne" }, Skill.Sniper)]
     //public float turnSpeed = 6.5f;// Servira a tourner le joueur en direction de la target plus tard 
 
 
@@ -54,17 +54,19 @@ public class EnemySkill : MonoBehaviour
     //public Transform partToRotate;
 
 
-    [DrawIf(new string[] { "skillOne" }, Skill.Distance)]
+    [DrawIf(new string[] { "skillOne" }, Skill.Sniper)]
     public float bulletSpeed = 70f;
-    [DrawIf(new string[] { "skillOne" }, Skill.Distance)]
+    [DrawIf(new string[] { "skillOne" }, Skill.Sniper)]
     public GameObject bulletPrefab;
 
-    [DrawIf(new string[] { "skillOne" }, Skill.Distance)]
+    [DrawIf(new string[] { "skillOne" }, Skill.Sniper)]
     public Transform firePoint;
     #endregion
 
+    #region AoeFields
     [DrawIf(new string[] { "skillOne" }, Skill.AOE)]
     public float aoeCooldown = 2f;
+    #endregion
 
     public int damage = 5;
 
@@ -135,7 +137,7 @@ public class EnemySkill : MonoBehaviour
                     nextAttack = Time.time + aoeCooldown;
                 }
                 break;
-            case Skill.Distance:              
+            case Skill.Sniper:              
                 myMat.color = Color.red;
                 // ne renvoie pas toujours vrai alors que 'visuelement' on sait que oui
                 // problem : parfois le tag du collider toucher est 'DistanceLimiter'
