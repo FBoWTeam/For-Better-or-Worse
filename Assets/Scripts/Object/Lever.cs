@@ -8,8 +8,9 @@ public class Lever : MonoBehaviour, IActivable
     public bool isActive { get; set; }
 
     //the lever activates an other object
+    [Tooltip("the object to activate id the current lever is active")]
     public GameObject objectToActivate;
-
+    
     /// <summary>
     /// activates the lever if the orb enter it's collider
     /// </summary>
@@ -28,8 +29,18 @@ public class Lever : MonoBehaviour, IActivable
     public void Activate()
     {
         isActive = !isActive;
+        //activates the other object
         objectToActivate.GetComponent<IActivable>().Activate();
         //plays the animation of the lever
-        GetComponent<Animator>().SetTrigger("ActivateLever");
+        if (isActive)
+        {
+            GetComponentInParent<Animation>().Play("LeverSetOn");
+        }
+        else
+        {
+            GetComponentInParent<Animation>().Play("LeverSetOff");
+        }
+
+
     }
 }
