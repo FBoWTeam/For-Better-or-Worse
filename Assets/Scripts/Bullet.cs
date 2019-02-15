@@ -22,7 +22,7 @@ public class Bullet : MonoBehaviour {
         
         if (target == null)
         {
-            Destroy(gameObject);//si la balle n'a plus de cible, elle est détruite
+            Destroy(gameObject);
             return;
         }
  

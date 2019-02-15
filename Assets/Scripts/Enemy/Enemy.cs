@@ -41,51 +41,6 @@ public class Enemy : MonoBehaviour
     private LineRenderer line;
     #endregion
 
-    #region Skills Variables
-   
-    public bool showSkill = true;
-    
-   
-
-   
-   
-    
-    
-    /*
-    #region AoeFields
-    [DrawIf(new string[] { "skillOne", "skillTwo" }, Skill.AOE)]
-    public float aoeRange = 5f;
-    [DrawIf(new string[] { "skillOne", "skillTwo" }, Skill.AOE)]
-    public int aeoDamage = 5;
-    #endregion
-
-    #region DistanceFields
-    [DrawIf(new string[] { "skillOne", "skillTwo" }, Skill.Distance)]
-    public float distanceRange = 5f;
-
-    [DrawIf(new string[] { "skillOne", "skillTwo" }, Skill.Distance)]
-    public int distanceDamage = 3;
-
-    [DrawIf(new string[] { "skillOne", "skillTwo" }, Skill.Distance)]
-    public float fireRate = 1f;
-
-    [DrawIf(new string[] { "skillOne", "skillTwo" }, Skill.Distance)]
-    public float turnSpeed = 6.5f;// Rotation Speed
-
-
-    private float fireCountdown = 0f;
-
-    //public Transform partToRotate;
-
-    [DrawIf(new string[] { "skillOne", "skillTwo" }, Skill.Distance)]
-    public GameObject bulletPrefab;
-
-    [DrawIf(new string[] { "skillOne", "skillTwo" }, Skill.Distance)]
-    public Transform firePoint;
-    #endregion
-    */
-    #endregion
-
     #region Bonus Variables
     public enum Bonus
     {
@@ -116,9 +71,7 @@ public class Enemy : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //DoSkill(skillOne);
-        //DoSkill(skillTwo);
-		
+       
 		if(!agent.isStopped)
 		{
 			DoMovement(movement);
@@ -134,102 +87,7 @@ public class Enemy : MonoBehaviour
 			Destroy(this.gameObject);
 		}
 	}
-
-    private void OnCollisionEnter(Collision collision)
-    {
-        if (collision.gameObject.CompareTag("Player"))
-        {
-            coliding = true;
-        }
-    }
-
-    #region Skill
-
-    
-
-    /// <summary>
-    /// Activate the skill passed in parameters
-    /// </summary>
-    /// <param name="skill"></param>
-    /*void DoSkill(Skill skill)
-    {
-
-        switch (skill)
-        {
-            case Skill.Impact:
-               
-                if (coliding && canAttack) {
-                    StartCoroutine("Impact");
-                }
-
-                break;
-            case Skill.AOE:
-               
-                AoeDamage(transform.position, aoeRange, aeoDamage);
-                
-                break;
-            case Skill.Distance:
-
-                GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
-                //recup le plus porhce
-                GameObject nearest = GetNearestGO(players);
-                float distanceto = Vector3.Distance(transform.position, nearest.transform.position);
-
-                // if inRange && isVisible
-
-                if (nearest != null && (distanceto <= distanceRange) && isVisible(transform.position, nearest.transform.position))
-                {
-
-                    Vector3 dir = nearest.transform.position - transform.position;
-                    Quaternion lookRotation = Quaternion.LookRotation(dir);
-                    Vector3 rotation = Quaternion.Lerp(transform.rotation, lookRotation, Time.deltaTime * turnSpeed).eulerAngles; //tourner l'ennemy vers le jouer
-
-                    //Vector3 rotation = Quaternion.Lerp(partToRotate.rotation, lookRotation, Time.deltaTime * turnSpeed).eulerAngles; // tourne le gun/arc/arme de l'ennemi 
-                    //partToRotate.rotation = Quaternion.Euler(0f, rotation.y, 0f); // idem
-
-
-                    //1 Throw projectile
-                    // 2 check if projectile hits
-                    //   2.1 do domage
-
-                    if (fireCountdown <= 0f)
-                    {//active le tir si le countdown avant de tirer est inférieur ou égal à 0
-
-                        Shoot(bulletPrefab, firePoint, nearest.transform, distanceDamage);
-                        fireCountdown = 1 / fireRate;//réinitialise le countdown
-                    }
-
-                    fireCountdown -= Time.deltaTime;
-
-                }
-                break;
-            case Skill.Bloc:
-                break;
-            case Skill.MudThrow:
-                break;
-            case Skill.Vortex:
-                break;
-            case Skill.Inverse:
-                break;
-            case Skill.Mentaliste:
-                break;
-            case Skill.Shield:
-                break;
-            case Skill.PreciousWater:
-                break;
-            case Skill.Rooting:
-                break;
-            case Skill.Silence:
-                break;
-            case Skill.Magnet:
-                break;
-            default:
-                break;
-        }
-    }
-    */
-    #endregion
-
+   
 
     #region Movement
 
@@ -280,36 +138,7 @@ public class Enemy : MonoBehaviour
     }
 
     #endregion
-    /*
-    IEnumerator Impact() {
-       
-        GameManager.gameManager.takeDamage(impactDamage);
-        canAttack = false;
-        yield return new WaitForSeconds(impactCooldown);
-       
-        canAttack = true;
-    }
-    */
-    /// <summary>
-    /// do damage to all gameObject inside a sphereCollider of center in radius
-    /// </summary>
-    /// <param name="center"></param>
-    /// <param name="radius"></param>
-    void AoeDamage(Vector3 center, float radius, int damage)
-    {
-        Collider[] hits = Physics.OverlapSphere(center, radius);
-        foreach (Collider item in hits)
-        {
-
-            if (item.CompareTag("Player"))
-            {
-                print("aeoDamage");
-                GameManager.gameManager.takeDamage(damage);
-               
-            }
-        }
-        
-    }
+    
 
     GameObject GetNearestGO(GameObject[] gos)
     {
