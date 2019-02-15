@@ -35,8 +35,6 @@ public class EnemySkill : MonoBehaviour
     public float impactSpeed = 1.5f;
     #endregion
 
-
-
     #region SniperFields
  
     //[DrawIf(new string[] { "skillOne" }, Skill.Distance)]
@@ -183,13 +181,7 @@ public class EnemySkill : MonoBehaviour
         
     }
 
-    IEnumerator DOT(float time) {
-        Debug.Log("Aplly damage");
-
-        yield return new WaitForSeconds(time);
-    }
-
-
+    
     /// <summary>
     /// return true if a Player is "visible"
     /// </summary>
