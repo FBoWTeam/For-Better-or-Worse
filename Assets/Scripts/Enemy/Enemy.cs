@@ -281,7 +281,7 @@ public class Enemy : MonoBehaviour
 
     IEnumerator ClassicMovement()
     {
-        agent.destination = players[0].transform.position;
+        agent.destination = GetNearestGO(players).transform.position;
 
         if (agent.remainingDistance <= distanceBetweenPlayer)
         {
