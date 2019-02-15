@@ -19,7 +19,7 @@ public class EnemyMovement : MonoBehaviour
         Tunnel,
     };
 
-    [Header("[Movement]")]
+
     public Movement movement;
 
     [DrawIf(new string[] { "movement" }, Movement.Basic)]
@@ -29,13 +29,14 @@ public class EnemyMovement : MonoBehaviour
     [Tooltip("represents the time of the attack animation")]
     public float stopTime = 2f;
 
-    [DrawIf(new string[] { "movement" }, Movement.Basic)]
-    [Tooltip("represents the remaining distance between the enemy and the player")]
-    public float distanceBetweenPlayer = 5f;
+    //[DrawIf(new string[] { "movement" }, Movement.Basic)]
+    //[Tooltip("represents the remaining distance between the enemy and the player")]
+    //public float distanceBetweenPlayer = 5f;
 
     private LineRenderer line;
     #endregion
 
+    [HideInInspector]
     public NavMeshAgent agent;
 
     // Start is called before the first frame update
@@ -43,6 +44,7 @@ public class EnemyMovement : MonoBehaviour
     {
         agent = this.GetComponent<NavMeshAgent>();
         agent.speed = speed;
+        agent.isStopped = false;
         line = this.GetComponent<LineRenderer>();
     }
 
@@ -82,14 +84,11 @@ public class EnemyMovement : MonoBehaviour
 
     IEnumerator ClassicMovement()
     {
+        agent.isStopped = false;
         agent.destination = Enemy.target.transform.position;
-
-        if (agent.remainingDistance <= distanceBetweenPlayer)
-        {
-            agent.isStopped = true;
-            yield return new WaitForSeconds(stopTime);
-            agent.isStopped = false;
-        }
+        if (agent.isStopped)
+        yield return new WaitForSeconds(stopTime);
+        agent.isStopped = true;
     }
 
     void DrawPath(NavMeshPath path)

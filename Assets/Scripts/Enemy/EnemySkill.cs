@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using UnityEngine.Events;
 
 [RequireComponent(typeof(SphereCollider))]
 public class EnemySkill : MonoBehaviour
@@ -9,17 +10,17 @@ public class EnemySkill : MonoBehaviour
     public enum Skill {
         Impact,
         AOE,
-        Sniper,
-        /*Bloc,
-        MudThrow,
+        Ranged,
+        Bloc,
+        MudThrowing,
         Vortex,
-        Inverse,
-        Mentaliste,
+        Inversion,
+        Mentalist,
         Shield,
-        PreciousWater,
-        Rooting,
+        HolyWater,
+        Root,
         Silence,
-        Magnet,*/
+        Magnet,
         None,
     };
 
@@ -40,10 +41,10 @@ public class EnemySkill : MonoBehaviour
     //[DrawIf(new string[] { "skillOne" }, Skill.Distance)]
     //public int distanceDamage = 3;
 
-    [DrawIf(new string[] { "skillOne" }, Skill.Sniper)]
+    [DrawIf(new string[] { "skillOne" }, Skill.Ranged)]
     public float fireRate = 1f;
 
-    [DrawIf(new string[] { "skillOne" }, Skill.Sniper)]
+    [DrawIf(new string[] { "skillOne" }, Skill.Ranged)]
     //public float turnSpeed = 6.5f;// Servira a tourner le joueur en direction de la target plus tard 
 
 
@@ -52,12 +53,12 @@ public class EnemySkill : MonoBehaviour
     //public Transform partToRotate;
 
 
-    [DrawIf(new string[] { "skillOne" }, Skill.Sniper)]
+    [DrawIf(new string[] { "skillOne" }, Skill.Ranged)]
     public float bulletSpeed = 70f;
-    [DrawIf(new string[] { "skillOne" }, Skill.Sniper)]
+    [DrawIf(new string[] { "skillOne" }, Skill.Ranged)]
     public GameObject bulletPrefab;
 
-    [DrawIf(new string[] { "skillOne" }, Skill.Sniper)]
+    [DrawIf(new string[] { "skillOne" }, Skill.Ranged)]
     public Transform firePoint;
     #endregion
 
@@ -70,7 +71,6 @@ public class EnemySkill : MonoBehaviour
 
     //evenement avec aucun type de retour mais 1 parametre 
     public event Action<GameObject,Skill> inRangeEvent;
-
 
     Material myMat;
     float nextAttack = 0f;
@@ -86,7 +86,7 @@ public class EnemySkill : MonoBehaviour
     }
     
 
-    //Dammge player on coll
+    //Dammage player on collision
     private void OnCollisionEnter(Collision collision) {
         if (collision.gameObject.CompareTag("Player")) {
             GameManager.gameManager.takeDamage(damage);
@@ -94,12 +94,13 @@ public class EnemySkill : MonoBehaviour
     }
 
 
-    //Triiger inRangeEvent
+    //Trigger inRangeEvent
     private void OnTriggerEnter(Collider other) {
         if (other.CompareTag("Player")) {
             inRangeEvent(other.gameObject,skillOne);
         }
     }
+
 
     private void OnTriggerStay(Collider other) {
         if (other.CompareTag("Player")) {
@@ -135,7 +136,7 @@ public class EnemySkill : MonoBehaviour
                     nextAttack = Time.time + aoeCooldown;
                 }
                 break;
-            case Skill.Sniper:              
+            case Skill.Ranged:              
                 myMat.color = Color.red;
                 // ne renvoie pas toujours vrai alors que 'visuelement' on sait que oui
                 // problem : parfois le tag du collider toucher est 'DistanceLimiter'
@@ -171,7 +172,7 @@ public class EnemySkill : MonoBehaviour
 
             percent += Time.deltaTime * impactSpeed;
             float interpolation = (-Mathf.Pow(percent, 2) + percent) * 4;
-            Debug.Log(interpolation);
+            //Debug.Log(interpolation);
             transform.position = Vector3.Lerp(originalPosition, attackPosition, interpolation);
 
             yield return null;
