@@ -327,42 +327,9 @@ public class Enemy : MonoBehaviour
         return nearest;
     }
 
-    /// <summary>
-    /// Shoot a bulletPrefab from firePoint to target in order to do damage onHit
-    /// </summary>
-    /// <param name="bulletPrefab"></param>
-    /// <param name="firePoint"></param>
-    /// <param name="target"></param>
-    /// <param name="damage"></param>
-    void Shoot(GameObject bulletPrefab, Transform firePoint, Transform target, int damage)
-    {
-        GameObject bulletGO = (GameObject)Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
-        Bullet bullet = bulletGO.GetComponent<Bullet>();//instancie un objet bullet à partir du prefab défini
+   
 
-        if (bullet != null)
-        {
-            bullet.Seek(target, damage);
-        }
-    }
-
-    /// <summary>
-    /// return true if a Player is "visible"
-    /// </summary>
-    /// <param name="start"></param>
-    /// <param name="end"></param>
-    /// <returns></returns>
-    bool isVisible(Vector3 start, Vector3 end)
-    {
-        RaycastHit hitInfo;
-        if (Physics.Linecast(start, end, out hitInfo))
-        {
-            if (hitInfo.transform.CompareTag("Player"))
-            {
-                return true;
-            }
-        }
-        return false;
-    }
+    
 
 
    
