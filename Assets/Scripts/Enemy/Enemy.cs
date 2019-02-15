@@ -18,6 +18,7 @@ public class Enemy : MonoBehaviour
     public static bool drawPath = false;
     #endregion
 
+
     private bool coliding = false;
 
     public EnemyMovement enemyMovement;
@@ -27,6 +28,7 @@ public class Enemy : MonoBehaviour
     GameObject[] players = { GameManager.gameManager.player1.gameObject, GameManager.gameManager.player2.gameObject };
 
     #endregion
+
 
 
     // Start is called before the first frame update
@@ -39,6 +41,7 @@ public class Enemy : MonoBehaviour
     }
     // Update is called once per frame
     void Update() {
+
 
         if (!enemyMovement.agent.isStopped)
         {
