@@ -65,13 +65,14 @@ public class EnemyMovement : MonoBehaviour
                 this.transform.LookAt(Enemy.target.transform);
                 break;
             case Movement.Basic:
-                StartCoroutine(ClassicMovement());
+                ClassicMovement();
                 break;
             default:
+                Debug.LogWarning("Movement not implemented");
                 break;
         }
 
-        if (Enemy.drawPath)
+        if (Enemy.sdrawPath)
         {
             line.enabled = true;
             DrawPath(agent.path);
@@ -82,13 +83,19 @@ public class EnemyMovement : MonoBehaviour
         }
     }
 
-    IEnumerator ClassicMovement()
+    void ClassicMovement()
+    {
+        agent.destination = Enemy.target.transform.position;
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        agent.isStopped = true;
+    }
+
+    private void OnCollisionExit(Collision collision)
     {
         agent.isStopped = false;
-        agent.destination = Enemy.target.transform.position;
-        if (agent.isStopped)
-        yield return new WaitForSeconds(stopTime);
-        agent.isStopped = true;
     }
 
     void DrawPath(NavMeshPath path)

@@ -10,9 +10,15 @@ public class Enemy : MonoBehaviour
     #region All Variables
 
     #region Debug Variables
-    public bool debug = false;
+    public bool debug;
     [DrawIf(new string[] { "debug" }, true)]
-    public static bool drawPath = false;
+    public bool drawPath = false;
+    public bool drawView = false;
+    [DrawIf(new string[] { "drawView" }, true)]
+    public float lengthView = 2f;
+
+
+    public static bool sdrawPath;
     #endregion
 
     public enum Focus
@@ -23,7 +29,7 @@ public class Enemy : MonoBehaviour
     }
     public Focus focus = Focus.Nearest;
 
-    public int baseHP;
+    public int baseHP = 100;
     public int hp;
 
     public EnemyMovement enemyMovement;
@@ -39,7 +45,7 @@ public class Enemy : MonoBehaviour
         hp = baseHP;
         players = new GameObject[] { GameManager.gameManager.player1, GameManager.gameManager.player2 };
         enemyMovement = GetComponent<EnemyMovement>();
-
+        sdrawPath = drawPath;
     }
 
     // Update is called once per frame
@@ -57,6 +63,11 @@ public class Enemy : MonoBehaviour
             enemyMovement.agent.isStopped = true;
             StopAllCoroutines();
             Destroy(this.gameObject);
+        }
+
+        if (drawView)
+        {
+            Debug.DrawRay(this.transform.position, this.transform.forward * lengthView, Color.magenta);
         }
     }
 
