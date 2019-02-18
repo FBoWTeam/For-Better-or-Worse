@@ -571,8 +571,8 @@ GameObject:
   - component: {fileID: 362389866}
   - component: {fileID: 362389865}
   m_Layer: 0
-  m_Name: CrossableWall
-  m_TagString: CrossableWall
+  m_Name: Wall
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 4294967295
@@ -621,7 +621,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 002c56f3ed6cabb49a23876ca6dd7b5d, type: 2}
+  - {fileID: 2100000, guid: 111e86b5fa2eafb479b16e68e43c0d1c, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1737,6 +1737,56 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8708506530313036442, guid: e0c803f7f12a09b4cb87b0f68746c41b,
+        type: 3}
+      propertyPath: smoothTime
+      value: 0.15
+      objectReference: {fileID: 0}
+    - target: {fileID: 8708506531089382189, guid: e0c803f7f12a09b4cb87b0f68746c41b,
+        type: 3}
+      propertyPath: minSpeed
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 8708506531089382189, guid: e0c803f7f12a09b4cb87b0f68746c41b,
+        type: 3}
+      propertyPath: maxSpeed
+      value: 12
+      objectReference: {fileID: 0}
+    - target: {fileID: 8708506531089382189, guid: e0c803f7f12a09b4cb87b0f68746c41b,
+        type: 3}
+      propertyPath: canHitEnemy
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8708506529559422337, guid: e0c803f7f12a09b4cb87b0f68746c41b,
+        type: 3}
+      propertyPath: accelerationFactor
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8708506529559422337, guid: e0c803f7f12a09b4cb87b0f68746c41b,
+        type: 3}
+      propertyPath: maxAmortizeTime
+      value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8708506529559422337, guid: e0c803f7f12a09b4cb87b0f68746c41b,
+        type: 3}
+      propertyPath: hitCooldown
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8708506530940788384, guid: e0c803f7f12a09b4cb87b0f68746c41b,
+        type: 3}
+      propertyPath: accelerationFactor
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8708506530940788384, guid: e0c803f7f12a09b4cb87b0f68746c41b,
+        type: 3}
+      propertyPath: maxAmortizeTime
+      value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8708506530940788384, guid: e0c803f7f12a09b4cb87b0f68746c41b,
+        type: 3}
+      propertyPath: hitCooldown
+      value: 5
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e0c803f7f12a09b4cb87b0f68746c41b, type: 3}
 --- !u!1001 &8896361619845698694
@@ -1816,5 +1866,20 @@ PrefabInstance:
       propertyPath: player2
       value: 
       objectReference: {fileID: 157861088}
+    - target: {fileID: 8896361620369587924, guid: 88ac0b2d964b153488a65f115a787617,
+        type: 3}
+      propertyPath: offset.x
+      value: 75
+      objectReference: {fileID: 0}
+    - target: {fileID: 8896361620369587924, guid: 88ac0b2d964b153488a65f115a787617,
+        type: 3}
+      propertyPath: offset.y
+      value: 75
+      objectReference: {fileID: 0}
+    - target: {fileID: 8896361620369587924, guid: 88ac0b2d964b153488a65f115a787617,
+        type: 3}
+      propertyPath: offset.z
+      value: -75
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 88ac0b2d964b153488a65f115a787617, type: 3}
