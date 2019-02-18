@@ -112,9 +112,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0232df69d290b394f8ca562834e4a8c0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  healthBar: {fileID: 0}
-  healthRemainingBar: {fileID: 0}
-  enemy: {fileID: 0}
 --- !u!1 &6759876714258691839
 GameObject:
   m_ObjectHideFlags: 0
@@ -240,17 +237,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fdc032083e4d8d649840d27397245384, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  baseHP: 0
-  hp: 0
+  baseHP: 10
+  hp: 10
   debug: 0
   drawPath: 0
   movement: 1
   speed: 10
   stopTime: 0.5
   distanceBetweenPlayer: 5
+  showSkill: 1
   skillOne: 0
   skillTwo: 0
   impactDamage: 5
+  impactCooldown: 3
   aoeRange: 5
   aeoDamage: 5
   distanceRange: 5
