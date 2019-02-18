@@ -12,14 +12,18 @@ public class OrbHitter : MonoBehaviour
     public float accelerationFactor;
 	public float maxAmortizeTime;
 
-    bool canHit;
+	bool inRange;
+	
+	public float hitCooldown;
+	float hitTimer;
+
 
     public GameManager.PowerType powerToApply;
 
     void Start()
     {
         orb = GameObject.Find("Orb").GetComponent<OrbController>();
-        canHit = false;
+        inRange = false;
     }
 
     // Update is called once per frame
@@ -29,19 +33,25 @@ public class OrbHitter : MonoBehaviour
     }
 
     /// <summary>
-    /// function that let the players hit the ball
+    /// function that let the players hit and amortize the ball
     /// </summary>
     void OrbHit()
     {
-        checkHit();
+		if (hitTimer > 0.0f)
+		{
+			hitTimer -= Time.deltaTime;
+		}
+        checkRange();
+
         if (GetComponent<PlayerController>().player1)
         {
-            if (canHit)
+            if (inRange)
             {
                 if (!orb.GetComponent<OrbController>().toPlayer2)
                 {
-                    if (Input.GetAxisRaw("OrbHitterP1") != 0)
+                    if (Input.GetAxisRaw("OrbHitterP1") != 0 && hitTimer <= 0.0f)
                     {
+						hitTimer = hitCooldown;
                         orb.toPlayer2 = !orb.toPlayer2;
                         orb.speed += accelerationFactor;
                         checkPowerActivation();
@@ -62,7 +72,7 @@ public class OrbHitter : MonoBehaviour
         }
         else
         {
-            if (canHit)
+            if (inRange)
             {
                 if (orb.GetComponent<OrbController>().toPlayer2)
                 {
@@ -91,15 +101,15 @@ public class OrbHitter : MonoBehaviour
     /// <summary>
     /// function that check if the orb is close enough to let the player to hit the ball
     /// </summary>
-    void checkHit()
+    void checkRange()
     {
         if (Vector3.Distance(transform.position, orb.transform.position) < hitZone)
         {
-            canHit = true;
+            inRange = true;
         }
         else
         {
-            canHit = false;
+            inRange = false;
         }
     }
 
@@ -131,6 +141,4 @@ public class OrbHitter : MonoBehaviour
 			orb.speed = orb.minSpeed;
 		}
 	}
-
-
 }

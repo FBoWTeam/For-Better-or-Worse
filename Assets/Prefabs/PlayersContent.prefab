@@ -163,9 +163,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player1: 0
-  speed: 10
-  dashTime: 0.05
-  dashSpeed: 5
+  speed: 15
   direction: {x: 0, y: 0, z: 0}
 --- !u!114 &8708506529559422337
 MonoBehaviour:
@@ -181,6 +179,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hitZone: 2
+  accelerationFactor: 1
+  maxAmortizeTime: 1.5
+  hitCooldown: 1
+  powerToApply: 0
 --- !u!1 &8708506529803211955
 GameObject:
   m_ObjectHideFlags: 0
@@ -482,6 +484,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxDeformHeight: 5
+  smoothTime: 0.15
 --- !u!1 &8708506530400192830
 GameObject:
   m_ObjectHideFlags: 0
@@ -599,7 +602,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   player1: {fileID: 8708506530940788441}
   player2: {fileID: 8708506529559422398}
-  maxDistance: 20
+  maxDistance: 30
   minDistance: 5
 --- !u!135 &8708506530601402843
 SphereCollider:
@@ -806,9 +809,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player1: 1
-  speed: 10
-  dashTime: 0.05
-  dashSpeed: 5
+  speed: 15
   direction: {x: 0, y: 0, z: 0}
 --- !u!114 &8708506530940788384
 MonoBehaviour:
@@ -824,6 +825,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hitZone: 2
+  accelerationFactor: 0
+  maxAmortizeTime: 0
+  hitCooldown: 0
+  powerToApply: 0
 --- !u!1 &8708506531061932086
 GameObject:
   m_ObjectHideFlags: 0
@@ -985,7 +990,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   damage: 10
-  speed: 8
+  speed: 10
+  minSpeed: 10
+  maxSpeed: 20
+  amortized: 0
+  canHitEnemy: 0
+  canHitPlayer: 0
   veryLowFixedCoefficient: 0.3
   lowFixedCoefficient: 0.5
   highFixedCoefficient: 1.5
@@ -1058,6 +1068,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player1
       objectReference: {fileID: 0}
+    - target: {fileID: 7598758412744586776, guid: be079e4189e95af42ae96fc1433d476e,
+        type: 3}
+      propertyPath: speed
+      value: 15
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: be079e4189e95af42ae96fc1433d476e, type: 3}
 --- !u!1001 &3231554813000413721
@@ -1126,6 +1141,26 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Player2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6053433248621057945, guid: af313dd075237354892ee3a84cda3e48,
+        type: 3}
+      propertyPath: speed
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 6053433248621057944, guid: af313dd075237354892ee3a84cda3e48,
+        type: 3}
+      propertyPath: accelerationFactor
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6053433248621057944, guid: af313dd075237354892ee3a84cda3e48,
+        type: 3}
+      propertyPath: maxAmortizeTime
+      value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6053433248621057944, guid: af313dd075237354892ee3a84cda3e48,
+        type: 3}
+      propertyPath: hitCooldown
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: af313dd075237354892ee3a84cda3e48, type: 3}
@@ -1196,6 +1231,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Link
       objectReference: {fileID: 0}
+    - target: {fileID: 2169873882748627070, guid: 8d535c8daf082b84d9ee101e6efb1159,
+        type: 3}
+      propertyPath: smoothTime
+      value: 0.15
+      objectReference: {fileID: 0}
     - target: {fileID: 2169873882594528060, guid: 8d535c8daf082b84d9ee101e6efb1159,
         type: 3}
       propertyPath: player1
@@ -1206,6 +1246,11 @@ PrefabInstance:
       propertyPath: player2
       value: 
       objectReference: {fileID: 8708506529559422398}
+    - target: {fileID: 2169873882594528060, guid: 8d535c8daf082b84d9ee101e6efb1159,
+        type: 3}
+      propertyPath: maxDistance
+      value: 30
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8d535c8daf082b84d9ee101e6efb1159, type: 3}
 --- !u!1001 &8326337482231601452
@@ -1274,6 +1319,21 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Orb
+      objectReference: {fileID: 0}
+    - target: {fileID: 817336672892953089, guid: a26de46656de9cd4daab9d3087dc3799,
+        type: 3}
+      propertyPath: speed
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 817336672892953089, guid: a26de46656de9cd4daab9d3087dc3799,
+        type: 3}
+      propertyPath: minSpeed
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 817336672892953089, guid: a26de46656de9cd4daab9d3087dc3799,
+        type: 3}
+      propertyPath: maxSpeed
+      value: 20
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a26de46656de9cd4daab9d3087dc3799, type: 3}
