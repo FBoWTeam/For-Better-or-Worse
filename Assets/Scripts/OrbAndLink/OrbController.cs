@@ -9,6 +9,7 @@ public class OrbController : MonoBehaviour
     public float speed;
     public float minSpeed;
     public float maxSpeed;
+	public bool amortized;
 
     [Header("[Valid Targets]")]
     public bool canHitEnemy;
@@ -37,13 +38,16 @@ public class OrbController : MonoBehaviour
 
     void FixedUpdate()
     {
-        setFixedSpeedCoefficient();
-        checkSpeed();
-        float fixedSpeed = speed * fixedSpeedCoefficient; ;
+		if (!amortized)
+		{
+			setFixedSpeedCoefficient();
+			speed = Mathf.Clamp(speed, minSpeed, maxSpeed);
+			float fixedSpeed = speed * fixedSpeedCoefficient; ;
 
-        step = (fixedSpeed / BezierCurve.GetPlayersDistance()) * Time.fixedDeltaTime;
-        progression = toPlayer2 ? progression + step : progression - step;
-        progression = Mathf.Clamp01(progression);
+			step = (fixedSpeed / BezierCurve.GetPlayersDistance()) * Time.fixedDeltaTime;
+			progression = toPlayer2 ? progression + step : progression - step;
+			progression = Mathf.Clamp01(progression);
+		}
         transform.position = BezierCurve.CalculateCubicBezierPoint(progression);
 
         if (progression == 1.0f || progression == 0.0f)
@@ -124,19 +128,6 @@ public class OrbController : MonoBehaviour
                 break;
         }
     }
-
-    void checkSpeed()
-    {
-        if (speed < minSpeed)
-        {
-            speed = minSpeed;
-        }
-        if (speed > maxSpeed)
-        {
-            speed = maxSpeed;
-        }
-    }
-
 
     private void OnTriggerEnter(Collider other)
     {
