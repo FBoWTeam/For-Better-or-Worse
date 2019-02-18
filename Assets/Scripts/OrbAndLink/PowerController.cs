@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class PowerController : MonoBehaviour
 {
-    GameManager.PowerType elementalPower;
-    GameManager.PowerType behavioralPower;
+    public GameManager.PowerType elementalPower;
+    public GameManager.PowerType behavioralPower;
 
 
     public void ActivatePower(GameManager.PowerType powerToActivate)
