@@ -2,34 +2,33 @@
 
 public class Bullet : MonoBehaviour {
 
-    private Transform target;
-    public float speed = 70f;
+    Transform target;
+    float speed = 70f;
     Vector3 shootDir; 
     int turretDamage;
 
-    public void Seek(Transform _target, int damage)
+    public void Seek(Transform _target, int damage, float _speed)
     {
-        
+        speed = _speed;
         turretDamage = damage;
         target = _target;
         shootDir = target.position - transform.position;
     }
 
+    
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         
         if (target == null)
         {
-            Destroy(gameObject);//si la balle n'a plus de cible, elle est détruite
+            Destroy(gameObject);
             return;
         }
-
-       
+ 
         float distanceThisFrame = speed * Time.deltaTime;
 
-        if (shootDir.magnitude <= distanceThisFrame)//lorsque la distance avec la cible est inférieure ou égale à 0 lance la fonction HitTarget
-        {
+        if (CheckCollisions(target.position - transform.position, distanceThisFrame)) {
             HitTarget();
             return;
         }
@@ -40,12 +39,36 @@ public class Bullet : MonoBehaviour {
 
     void HitTarget()
     {
+        print("hit");
+        Destroy(gameObject);
         GameManager.gameManager.takeDamage(turretDamage);
-        //Destroy(target.gameObject);//détruit la cible
-        Destroy(gameObject);//détruit la balle
+        
     }
     
     private void OnBecameInvisible() {
         Destroy(gameObject);
+    }
+
+    //Askip la meilleur solution pour check les collisiosn avec des projectils ce sont des raycast
+    // mais le temps calculer , la balle traverse le joueurs ..
+    //du coup old style
+    bool CheckCollisions(Vector3 dir,float dist) {
+        /*Ray ray = new Ray(transform.position, transform.forward);
+        RaycastHit hit;
+
+        if (Physics.Raycast(ray, out hit, moveDistance)) {
+            if (hit.collider.CompareTag("Player")) {
+                return true;
+            }
+            
+            
+        }
+        return false;
+        */
+
+        if (dir.magnitude <= dist) {
+            return true;
+        }
+        return false;
     }
 }
