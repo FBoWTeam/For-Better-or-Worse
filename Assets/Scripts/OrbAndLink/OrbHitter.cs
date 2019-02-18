@@ -38,17 +38,19 @@ public class OrbHitter : MonoBehaviour
             {
                 if (!orb.GetComponent<OrbController>().toPlayer2)
                 {
-                    if (Input.GetKeyDown(KeyCode.E) || Input.GetAxisRaw("OrbHitterP1") != 0)
+                    if (Input.GetAxisRaw("OrbHitterP1") != 0)
                     {
-                        orb.toPlayer2 = true;
+                        orb.toPlayer2 = !orb.toPlayer2;
                         orb.speed += accelerationFactor;
                     }
-					if((Input.GetKeyDown(KeyCode.A) || Input.GetAxisRaw("OrbAmortizerP1") != 0) && !orb.amortized)
+					if(Input.GetAxisRaw("OrbAmortizerP1") != 0 && !orb.amortized)
 					{
 						StartCoroutine(AmortizeCoroutine());
 					}
-					else if ((Input.GetKeyUp(KeyCode.A) || Input.GetAxisRaw("OrbAmortizerP1") == 0) && orb.amortized)
+					else if (Input.GetAxisRaw("OrbAmortizerP1") == 0 && orb.amortized)
 					{
+						StopCoroutine(AmortizeCoroutine());
+						orb.toPlayer2 = !orb.toPlayer2;
 						orb.amortized = false;
 						orb.speed = orb.minSpeed;
 					}
@@ -61,17 +63,19 @@ public class OrbHitter : MonoBehaviour
             {
                 if (orb.GetComponent<OrbController>().toPlayer2)
                 {
-                    if (Input.GetKeyDown(KeyCode.Keypad6) || Input.GetAxisRaw("OrbHitterP2") != 0)
-                    {
-                        orb.toPlayer2 = false;
-                        orb.speed += accelerationFactor;
+                    if (Input.GetAxisRaw("OrbHitterP2") != 0)
+					{
+						orb.toPlayer2 = !orb.toPlayer2;
+						orb.speed += accelerationFactor;
 					}
-					if (Input.GetKeyDown(KeyCode.Keypad4) || Input.GetAxisRaw("OrbAmortizerP2") != 0)
+					if (Input.GetAxisRaw("OrbAmortizerP2") != 0 && !orb.amortized)
 					{
 						StartCoroutine(AmortizeCoroutine());
 					}
-					else if ((Input.GetKeyUp(KeyCode.Keypad6) || Input.GetAxisRaw("OrbAmortizerP2") == 0) && orb.amortized)
+					else if (Input.GetAxisRaw("OrbAmortizerP2") == 0 && orb.amortized)
 					{
+						StopCoroutine(AmortizeCoroutine());
+						orb.toPlayer2 = !orb.toPlayer2;
 						orb.amortized = false;
 						orb.speed = orb.minSpeed;
 					}
@@ -105,8 +109,12 @@ public class OrbHitter : MonoBehaviour
 		orb.speed = 0.0f;
 		orb.amortized = true;
 		yield return new WaitForSeconds(maxAmortizeTime);
-		orb.amortized = false;
-		orb.speed = orb.minSpeed;
+		if(orb.amortized)
+		{
+			orb.toPlayer2 = !orb.toPlayer2;
+			orb.amortized = false;
+			orb.speed = orb.minSpeed;
+		}
 	}
 
 
