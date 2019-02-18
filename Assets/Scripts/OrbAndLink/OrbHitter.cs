@@ -13,6 +13,8 @@ public class OrbHitter : MonoBehaviour
 
     bool canHit;
 
+    public GameManager.PowerType powerToApply;
+
     void Start()
     {
         orb = GameObject.Find("Orb");
@@ -41,6 +43,7 @@ public class OrbHitter : MonoBehaviour
                     {
                         orb.GetComponent<OrbController>().toPlayer2 = true;
                         orb.GetComponent<OrbController>().speed += accelerationFactor;
+                        checkPowerActivation();
                     }
                 }
             }
@@ -55,6 +58,7 @@ public class OrbHitter : MonoBehaviour
                     {
                         orb.GetComponent<OrbController>().toPlayer2 = false;
                         orb.GetComponent<OrbController>().speed += accelerationFactor;
+                        checkPowerActivation();
                     }
                 }
             }
@@ -73,6 +77,17 @@ public class OrbHitter : MonoBehaviour
         else
         {
             canHit = false;
+        }
+    }
+
+
+
+    void checkPowerActivation()
+    {
+        if (powerToApply != GameManager.PowerType.None)
+        {
+            orb.GetComponent<PowerController>().ActivatePower(powerToApply);
+            powerToApply = GameManager.PowerType.None;
         }
     }
 

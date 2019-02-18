@@ -3,38 +3,60 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GameManager : MonoBehaviour {
+public class GameManager : MonoBehaviour
+{
 
     public static GameManager gameManager;
-	public int baseHP;
-	public int hp;
+    public int baseHP;
+    public int hp;
 
-	[HideInInspector]
-	public GameObject player1;
-	[HideInInspector]
-	public GameObject player2;
+    [HideInInspector]
+    public GameObject player1;
+    [HideInInspector]
+    public GameObject player2;
 
-	public GameObject linkDeformation;
+    public GameObject linkDeformation;
+
+    public enum PowerType
+    {
+        None,
+
+        LargeOrb,
+        Vortex,
+        LeechLife,
+        Slug,
+        Shield,
+
+        Ice,
+        Fire,
+        Water,
+        Electric,
+        Weakness,
+
+        Elemental = LargeOrb | Vortex | LeechLife | Slug | Shield,
+        Behavioral = Ice | Fire | Water | Electric | Weakness
+    }
 
 
-	// Start is called before the first frame update
-	void Awake()
+    // Start is called before the first frame update
+    void Awake()
     {
         if (gameManager == null)
         {
             gameManager = this;
-        } else if (gameManager != this)
+        }
+        else if (gameManager != this)
         {
             Destroy(this);
         }
         DontDestroyOnLoad(gameManager);
 
-		player1 = GameObject.Find("Player1");
-		player2 = GameObject.Find("Player2");
-		linkDeformation = GameObject.Find("Deformation");
+        player1 = GameObject.Find("Player1");
+        player2 = GameObject.Find("Player2");
+        linkDeformation = GameObject.Find("Deformation");
 
-		hp = baseHP;
-	}
+        hp = baseHP;
+    }
 
     // Update is called once per frame
     void Update()
@@ -50,7 +72,7 @@ public class GameManager : MonoBehaviour {
         hp -= damage;
         if (hp <= 0)
         {
-			Debug.Log("DED");
+            Debug.Log("DED");
         }
     }
 }
