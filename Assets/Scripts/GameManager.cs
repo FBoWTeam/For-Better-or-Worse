@@ -33,8 +33,8 @@ public class GameManager : MonoBehaviour
         Electric,
         Weakness,
 
-        Elemental = LargeOrb | Vortex | LeechLife | Slug | Shield,
-        Behavioral = Ice | Fire | Water | Electric | Weakness
+        Elemental = Ice | Fire | Water | Electric | Weakness,
+        Behavioral = LargeOrb | Vortex | LeechLife | Slug | Shield
     }
 
 

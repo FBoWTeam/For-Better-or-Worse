@@ -7,10 +7,15 @@ public class PowerController : MonoBehaviour
     public GameManager.PowerType elementalPower;
     public GameManager.PowerType behavioralPower;
 
-	/// <summary>
-	/// Activate the powerToActivate, deactivate the power of the same type if there's already an active one
-	/// </summary>
-	/// <param name="powerToActivate"></param>
+    private void Start()
+    {
+        elementalPower = GameManager.PowerType.Fire;
+    }
+
+    /// <summary>
+    /// Activate the powerToActivate, deactivate the power of the same type if there's already an active one
+    /// </summary>
+    /// <param name="powerToActivate"></param>
     public void ActivatePower(GameManager.PowerType powerToActivate)
     {
         if (powerToActivate == GameManager.PowerType.Elemental && elementalPower != GameManager.PowerType.None)
