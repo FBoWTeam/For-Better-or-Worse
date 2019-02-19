@@ -39,7 +39,7 @@ public class Bullet : MonoBehaviour {
 
     void HitTarget()
     {
-        print("hit");
+        
         Destroy(gameObject);
         GameManager.gameManager.takeDamage(turretDamage);
         
