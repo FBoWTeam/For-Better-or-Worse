@@ -5,8 +5,6 @@ using UnityEngine;
 [RequireComponent(typeof(LineRenderer))]
 public class CameraMovement : MonoBehaviour
 {
-	public Transform player1, player2;
-
 	public Vector3 offset;
 	public float smoothTime = 0.5f;
 	Vector3 velocity;
@@ -33,7 +31,7 @@ public class CameraMovement : MonoBehaviour
 	/// </summary>
 	void Zoom()
 	{
-		float distancePlayer = Vector3.Distance(player1.transform.position, player2.transform.position);
+		float distancePlayer = Vector3.Distance(GameManager.gameManager.player1.transform.position, GameManager.gameManager.player2.transform.position);
 		float newZoom = Mathf.Lerp(maxZoom, minZoom, distancePlayer / zoomLimiter);
 		cam.orthographicSize = Mathf.Lerp(cam.orthographicSize, newZoom, Time.deltaTime);
 	}
@@ -45,8 +43,9 @@ public class CameraMovement : MonoBehaviour
 	{
 		Vector3 centerPoint = GetCenterPoint();
 		transform.position = Vector3.SmoothDamp(transform.position, centerPoint + offset, ref velocity, smoothTime);
-		transform.LookAt(GetCenterPoint());
-		transform.localEulerAngles = new Vector3(transform.localEulerAngles.x, 0.0f, transform.localEulerAngles.z);
+		
+		transform.LookAt(centerPoint);
+		//transform.localEulerAngles = new Vector3(transform.localEulerAngles.x, 0.0f, transform.localEulerAngles.z);
 	}
 
 	/// <summary>
@@ -55,7 +54,7 @@ public class CameraMovement : MonoBehaviour
 	/// <returns></returns>
 	Vector3 GetCenterPoint()
 	{
-		return (player1.transform.position + player2.transform.position) / 2;
+		return (GameManager.gameManager.player1.transform.position + GameManager.gameManager.player2.transform.position) / 2;
 	}
 
 }

@@ -8,12 +8,15 @@ public class TriggerSystem : MonoBehaviour
     public TriggerMode triggerMode;
 
     [Header("Elements to trigger")]
-    public GameObject[] Enemies;
+    public GameObject[] enemies;
 
     // Start is called before the first frame update
     void Start()
     {
-
+        if(enemies.Length == 0)
+        {
+            Debug.LogError("Enemies list is empty", this);
+        }
     }
 
     // Update is called once per frame
@@ -28,7 +31,7 @@ public class TriggerSystem : MonoBehaviour
         {
             if (other.gameObject.tag == "Player")
             {
-                foreach (GameObject enemy in Enemies)
+                foreach (GameObject enemy in enemies)
                 {
                     enemy.GetComponent<Enemy>().enabled = true;
                 }
@@ -42,7 +45,7 @@ public class TriggerSystem : MonoBehaviour
         {
             if (other.gameObject.tag == "Player")
             {
-                foreach (GameObject enemy in Enemies)
+                foreach (GameObject enemy in enemies)
                 {
                     enemy.GetComponent<Enemy>().enabled = true;
                 }
@@ -56,7 +59,7 @@ public class TriggerSystem : MonoBehaviour
         {
             if (other.gameObject.tag == "Player")
             {
-                foreach (GameObject enemy in Enemies)
+                foreach (GameObject enemy in enemies)
                 {
                     enemy.GetComponent<Enemy>().enabled = true;
                 }

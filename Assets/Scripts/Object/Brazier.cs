@@ -14,8 +14,9 @@ public class Brazier : MonoBehaviour, IActivable
     {
         if (other.CompareTag("Orb"))
         {
+            PowerController powerController = other.GetComponent<PowerController>();
             //if the brazier is not active and the orb is on fire, set the brazier on and activates the object if not null
-            if (isActive == false && other)
+            if (!isActive && powerController.elementalPower == GameManager.PowerType.Fire)
             {
                 this.Activate();
                 if (objectToActivate != null)
@@ -24,9 +25,9 @@ public class Brazier : MonoBehaviour, IActivable
                 }
             }
             //if the brazier is active and the orb isn't, set the orb on fire
-            else if (isActive == true && other)
+            else if (isActive && powerController.elementalPower != GameManager.PowerType.Fire)
             {
-                //FOUT LE FEU A LA BALLE !
+                powerController.ActivatePower(GameManager.PowerType.Fire);
             }
         }
     }
