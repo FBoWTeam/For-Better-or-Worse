@@ -112,6 +112,50 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0232df69d290b394f8ca562834e4a8c0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &6119800825286927116
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3104341690813429601}
+  - component: {fileID: 3030536045141649466}
+  m_Layer: 0
+  m_Name: Range
+  m_TagString: EnemyRange
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3104341690813429601
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6119800825286927116}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 6759876714258691776}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!135 &3030536045141649466
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6119800825286927116}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.5
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &6759876714258691839
 GameObject:
   m_ObjectHideFlags: 0
@@ -125,8 +169,6 @@ GameObject:
   - component: {fileID: 6759876714258691778}
   - component: {fileID: 6759876714258691837}
   - component: {fileID: 6759876714258691836}
-  - component: {fileID: 8336589514360743458}
-  - component: {fileID: 8977592996007363457}
   - component: {fileID: 6759876713592593700}
   - component: {fileID: 4923415502517835651}
   - component: {fileID: 6759876714258691777}
@@ -151,6 +193,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 8566674626248025584}
+  - {fileID: 3104341690813429601}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -229,32 +272,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 116
   m_CollisionDetection: 3
---- !u!135 &8336589514360743458
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6759876714258691839}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 1
-  m_Center: {x: 0, y: 0, z: 0}
---- !u!135 &8977592996007363457
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6759876714258691839}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 2.14
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!195 &6759876713592593700
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -428,6 +445,7 @@ MonoBehaviour:
   bulletPrefab: {fileID: 0}
   firePoint: {fileID: 0}
   aoeCooldown: 2
+  range: 4
   damage: 5
 --- !u!1 &7200140934854383923
 GameObject:
