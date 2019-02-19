@@ -29,6 +29,13 @@ public class Enemy : MonoBehaviour
     }
     public Focus focus = Focus.Nearest;
 
+    public enum Taunt
+    {
+        Taunter,
+        Other,
+    }
+    public Taunt taunt = Taunt.Taunter;
+
     public int baseHP = 100;
     public int hp;
 
@@ -115,4 +122,22 @@ public class Enemy : MonoBehaviour
     }
 
     #endregion
+
+    private void TauntManager(GameObject taunter)
+    {
+        if (this.GetComponent<Renderer>().isVisible)
+        {
+            switch (taunt)
+            {
+                case Taunt.Taunter:
+                    target = taunter;
+                    break;
+                case Taunt.Other:
+                    target = (taunter.Equals(players[0])) ? players[1] : players[0];
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
 }
