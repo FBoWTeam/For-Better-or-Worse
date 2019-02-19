@@ -35,10 +35,13 @@ public class Enemy : MonoBehaviour
         Other,
     }
     public Taunt taunt = Taunt.Taunter;
+    private GameObject taunter;
+    public bool isTaunted = false;
 
     public int baseHP = 100;
     public int hp;
 
+    [HideInInspector]
     public EnemyMovement enemyMovement;
 
     GameObject[] players;
@@ -59,6 +62,7 @@ public class Enemy : MonoBehaviour
     void Update()
     {
         FocusManagement();
+        TauntManagement();
 
         if (!enemyMovement.agent.isStopped)
         {
@@ -123,20 +127,37 @@ public class Enemy : MonoBehaviour
 
     #endregion
 
-    private void TauntManager(GameObject taunter)
+    private void TauntManagement()
     {
-        if (this.GetComponent<Renderer>().isVisible)
+        if (!isTaunted)
         {
-            switch (taunt)
+            if (enemyMovement.agent.remainingDistance <= GameManager.gameManager.tauntRange)
             {
-                case Taunt.Taunter:
-                    target = taunter;
-                    break;
-                case Taunt.Other:
-                    target = (taunter.Equals(players[0])) ? players[1] : players[0];
-                    break;
-                default:
-                    break;
+                if (GameManager.gameManager.player1HasTaunt)
+                {
+                    taunter = players[0];
+                }
+                else if (GameManager.gameManager.player2HasTaunt)
+                {
+                    taunter = players[1];
+                }
+
+                if (taunter != null)
+                {
+                    switch (taunt)
+                    {
+                        case Taunt.Taunter:
+                            target = taunter;
+                            break;
+                        case Taunt.Other:
+                            target = (taunter.Equals(players[0])) ? players[1] : players[0];
+                            break;
+                        default:
+                            break;
+                    }
+
+                    isTaunted = true;
+                }
             }
         }
     }

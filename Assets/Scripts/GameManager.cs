@@ -18,6 +18,7 @@ public class GameManager : MonoBehaviour
     public GameObject linkDeformation;
 
 	public bool player1HasTaunt, player2HasTaunt;
+    public int tauntRange = 10;
 
 	public enum PowerType
     {

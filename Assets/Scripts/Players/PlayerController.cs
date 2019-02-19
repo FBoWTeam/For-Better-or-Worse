@@ -54,7 +54,6 @@ public class PlayerController : MonoBehaviour
 		if ( (player1 && (Input.GetKeyDown(KeyCode.Joystick1Button4) || Input.GetKeyDown(KeyCode.Space))) || (!player1 && (Input.GetKeyDown(KeyCode.Joystick2Button4) || Input.GetKeyDown(KeyCode.Keypad0))))
 		{
 			StartCoroutine(TauntCoroutine());
-			Debug.Log(player1);
 		}
 	}
 
