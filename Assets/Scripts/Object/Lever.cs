@@ -28,19 +28,13 @@ public class Lever : MonoBehaviour, IActivable
     /// </summary>
     public void Activate()
     {
-        isActive = !isActive;
-        //activates the other object
-        objectToActivate.GetComponent<IActivable>().Activate();
-        //plays the animation of the lever
-        if (isActive)
+        if (!isActive)
         {
+            isActive = !isActive;
+            //activates the other object
+            objectToActivate.GetComponent<IActivable>().Activate();
+            //plays the animation of the lever
             GetComponentInParent<Animation>().Play("LeverSetOn");
         }
-        else
-        {
-            GetComponentInParent<Animation>().Play("LeverSetOff");
-        }
-
-
     }
 }

@@ -98,7 +98,7 @@ public class EnemySkill : MonoBehaviour
     //Dammage player on collision
     private void OnCollisionEnter(Collision collision) {
         if (collision.gameObject.CompareTag("Player")) {          
-            GameManager.gameManager.takeDamage(damage);
+            GameManager.gameManager.TakeDamage(damage);
         }
     }
     
@@ -141,7 +141,7 @@ public class EnemySkill : MonoBehaviour
                 //DOT while in range
                 myMat.color = Color.red;
                 if (Time.time > nextAttack) {
-                    GameManager.gameManager.takeDamage(damage);   
+                    GameManager.gameManager.TakeDamage(damage);   
                     nextAttack = Time.time + aoeCooldown;
                 }
                 break;

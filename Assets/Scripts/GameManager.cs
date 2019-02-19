@@ -67,7 +67,7 @@ public class GameManager : MonoBehaviour
     /// Handle taking damage from an Ennemy or other things
     /// </summary>
     /// <param name="impactDamage"></param>
-    public void takeDamage(int damage)
+    public void TakeDamage(int damage)
     {
         hp -= damage;
         if (hp <= 0)

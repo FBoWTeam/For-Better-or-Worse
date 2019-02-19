@@ -28,7 +28,7 @@ public class PlayerController : MonoBehaviour
     void Update()
     {
         Move();
-        getCurrentPower();
+        GetCurrentPower();
     }
 
     /// <summary>
@@ -57,7 +57,7 @@ public class PlayerController : MonoBehaviour
     /// gets the current power that is going to be apllied on the orb by checking the input
     /// the power to apply on the orb when the player hits the orb
     /// </summary>
-    public void getCurrentPower()
+    public void GetCurrentPower()
     {
         bool power1 = player1 ? Input.GetKeyDown(KeyCode.Joystick1Button0) : Input.GetKeyDown(KeyCode.Joystick2Button0);
         bool power2 = player1 ? Input.GetKeyDown(KeyCode.Joystick1Button1) : Input.GetKeyDown(KeyCode.Joystick2Button1);

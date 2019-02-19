@@ -41,7 +41,7 @@ public class Bullet : MonoBehaviour {
     {
         
         Destroy(gameObject);
-        GameManager.gameManager.takeDamage(turretDamage);
+        GameManager.gameManager.TakeDamage(turretDamage);
         
     }
     

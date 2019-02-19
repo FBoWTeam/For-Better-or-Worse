@@ -40,7 +40,7 @@ public class OrbController : MonoBehaviour
     {
 		if (!amortized)
 		{
-			setFixedSpeedCoefficient();
+			SetFixedSpeedCoefficient();
 			speed = Mathf.Clamp(speed, minSpeed, maxSpeed);
 			float fixedSpeed = speed * fixedSpeedCoefficient; ;
 
@@ -58,7 +58,7 @@ public class OrbController : MonoBehaviour
     /// for each player, return 1 if the player moves away from the other player, -1 if he gets closer, 0 otherwise
     /// </summary>
     /// <returns></returns>
-    (int, int) getMovementsInfo()
+    (int, int) GetMovementsInfo()
     {
         int player1Movement = 0;
         int player2Movement = 0;
@@ -93,9 +93,9 @@ public class OrbController : MonoBehaviour
     /// <summary>
     /// set the speed coefficient to fix the speed when the link is shrinked/expanded
     /// </summary>
-    void setFixedSpeedCoefficient()
+    void SetFixedSpeedCoefficient()
     {
-        (int, int) playersMovements = getMovementsInfo();
+        (int, int) playersMovements = GetMovementsInfo();
         (int, bool, int) movementsInfo = (playersMovements.Item1, toPlayer2, playersMovements.Item2);
 
         switch (movementsInfo)
@@ -133,7 +133,7 @@ public class OrbController : MonoBehaviour
     {
         if (other.CompareTag("Player") && canHitPlayer == true)
         {
-            GameManager.gameManager.takeDamage(damage);
+            GameManager.gameManager.TakeDamage(damage);
             speed = minSpeed;
         }
         else if (other.CompareTag("Enemy") && canHitEnemy == true)
