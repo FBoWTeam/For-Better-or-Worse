@@ -29,11 +29,10 @@ public class GameManager : MonoBehaviour
 
         Ice,
         Fire,
-        Water,
         Electric,
         Weakness,
 
-        Elemental = Ice | Fire | Water | Electric | Weakness,
+        Elemental = Ice | Fire | Electric | Weakness,
         Behavioral = LargeOrb | Vortex | LeechLife | Slug | Shield
     }
 

@@ -7,9 +7,27 @@ public class PowerController : MonoBehaviour
     public GameManager.PowerType elementalPower;
     public GameManager.PowerType behavioralPower;
 
+    public int baseDamage;
+
+    //LargeOrb
+    [Header("[GreatOrb Param]")]
+    public float minScale;
+    public float maxScale;
+    public int LargeOrbDamage;
+
+    //LeechLife
+    [Header("[LeechLife Param]")]
+    [Range(0, 100f)]
+    public float lifeSteel;
+
+    //Slug
+    [Header("[Slug Param]")]
+    public GameObject slug;
+    public float durationSlugPower;
+
     private void Start()
     {
-        elementalPower = GameManager.PowerType.Fire;
+        behavioralPower = GameManager.PowerType.Slug;
     }
 
     /// <summary>
@@ -30,232 +48,244 @@ public class PowerController : MonoBehaviour
         switch (powerToActivate)
         {
             case GameManager.PowerType.LargeOrb:
-				ActivateLargeOrb();
+                ActivateLargeOrb();
                 break;
             case GameManager.PowerType.Vortex:
-				ActivateVortex();
+                ActivateVortex();
                 break;
             case GameManager.PowerType.LeechLife:
-				ActivateLeechLife();
+                ActivateLeechLife();
                 break;
             case GameManager.PowerType.Slug:
-				ActivateSlug();
+                ActivateSlug();
                 break;
             case GameManager.PowerType.Shield:
-				ActivateShield();
+                ActivateShield();
                 break;
             case GameManager.PowerType.Ice:
-				ActivateIce();
+                ActivateIce();
                 break;
             case GameManager.PowerType.Fire:
-				ActivateFire();
-                break;
-            case GameManager.PowerType.Water:
-				ActivateWater();
+                ActivateFire();
                 break;
             case GameManager.PowerType.Electric:
-				ActivateElectric();
+                ActivateElectric();
                 break;
             case GameManager.PowerType.Weakness:
-				ActivateWeakness();
+                ActivateWeakness();
                 break;
         }
     }
 
-	/// <summary>
-	/// Deactivate the powerToDeactivate
-	/// </summary>
-	/// <param name="powerToDeactivate"></param>
+    /// <summary>
+    /// Deactivate the powerToDeactivate
+    /// </summary>
+    /// <param name="powerToDeactivate"></param>
     public void DeactivatePower(GameManager.PowerType powerToDeactivate)
     {
         switch (powerToDeactivate)
         {
             case GameManager.PowerType.LargeOrb:
-				DeactivateLargeOrb();
+                DeactivateLargeOrb();
                 break;
             case GameManager.PowerType.Vortex:
-				DeactivateVortex();
+                DeactivateVortex();
                 break;
             case GameManager.PowerType.LeechLife:
-				DeactivateLeechLife();
+                DeactivateLeechLife();
                 break;
             case GameManager.PowerType.Slug:
-				DeactivateSlug();
+                DeactivateSlug();
                 break;
             case GameManager.PowerType.Shield:
-				DeactivateShield();
+                DeactivateShield();
                 break;
             case GameManager.PowerType.Ice:
-				DeactivateIce();
+                DeactivateIce();
                 break;
             case GameManager.PowerType.Fire:
-				DeactivateFire();
-                break;
-            case GameManager.PowerType.Water:
-				DeactivateWater();
+                DeactivateFire();
                 break;
             case GameManager.PowerType.Electric:
-				DeactivateElectric();
+                DeactivateElectric();
                 break;
             case GameManager.PowerType.Weakness:
-				DeactivateWeakness();
+                DeactivateWeakness();
                 break;
             default:
                 break;
         }
     }
 
-	//==========BEHAVIORAL POWERS FUNCTIONS==========
+    //==========BEHAVIORAL POWERS FUNCTIONS==========
 
-	#region LargeOrb
-	//==========LARGEORB==========
+    #region LargeOrb
+    //==========LARGEORB==========
+    /// <summary>
+    /// set the behavioral power to LargeOrb and resize the orb
+    /// </summary>
+    void ActivateLargeOrb()
+    {
+        behavioralPower = GameManager.PowerType.LargeOrb;
+        transform.localScale = new Vector3(maxScale, maxScale, maxScale);
+        baseDamage += LargeOrbDamage;
+    }
 
-	void ActivateLargeOrb()
-	{
-		behavioralPower = GameManager.PowerType.LargeOrb;
-	}
+    void DeactivateLargeOrb()
+    {
+        behavioralPower = GameManager.PowerType.None;
+        transform.localScale = new Vector3(minScale, minScale, minScale);
+        baseDamage -= LargeOrbDamage;
+    }
 
-	void DeactivateLargeOrb()
-	{
-		behavioralPower = GameManager.PowerType.None;
-	}
+    #endregion
 
-	#endregion
+    #region Vortex
+    //==========VORTEX==========
 
-	#region Vortex
-	//==========VORTEX==========
+    void ActivateVortex()
+    {
+        behavioralPower = GameManager.PowerType.Vortex;
+    }
 
-	void ActivateVortex()
-	{
-		behavioralPower = GameManager.PowerType.Vortex;
-	}
+    void DeactivateVortex()
+    {
+        behavioralPower = GameManager.PowerType.None;
+    }
 
-	void DeactivateVortex()
-	{
-		behavioralPower = GameManager.PowerType.None;
-	}
+    #endregion
 
-	#endregion
+    #region LeechLife
+    //==========LEACHLIFE==========
 
-	#region LeechLife
-	//==========LEACHLIFE==========
+    void ActivateLeechLife()
+    {
+        behavioralPower = GameManager.PowerType.LeechLife;
+    }
 
-	void ActivateLeechLife()
-	{
-		behavioralPower = GameManager.PowerType.LeechLife;
-	}
+    void DeactivateLeechLife()
+    {
+        behavioralPower = GameManager.PowerType.None;
+    }
 
-	void DeactivateLeechLife()
-	{
-		behavioralPower = GameManager.PowerType.None;
-	}
+    #endregion
 
-	#endregion
+    #region Slug
+    //==========SLUG==========
 
-	#region Slug
-	//==========SLUG==========
+    void ActivateSlug()
+    {
+        behavioralPower = GameManager.PowerType.Slug;
+        StartCoroutine("InstanciateSlug");
+    }
 
-	void ActivateSlug()
-	{
-		behavioralPower = GameManager.PowerType.Slug;
-	}
+    void DeactivateSlug()
+    {
+        behavioralPower = GameManager.PowerType.None;
+    }
 
-	void DeactivateSlug()
-	{
-		behavioralPower = GameManager.PowerType.None;
-	}
+    IEnumerator InstanciateSlug()
+    {
+        float timeStamp = Time.time;
+        while (Time.time - timeStamp >= durationSlugPower)
+        {
+            Instantiate(slug, new Vector3(transform.position.x, 0.5f, transform.position.y), Quaternion.identity);
+            yield return new WaitForSeconds(1.0f);
+        }
+    }
 
-	#endregion
+    #endregion
 
-	#region Shield
-	//==========SHIELD==========
+    #region Shield
+    //==========SHIELD==========
 
-	void ActivateShield()
-	{
-		behavioralPower = GameManager.PowerType.Shield;
-	}
+    void ActivateShield()
+    {
+        behavioralPower = GameManager.PowerType.Shield;
+    }
 
-	void DeactivateShield()
-	{
-		behavioralPower = GameManager.PowerType.None;
-	}
+    void DeactivateShield()
+    {
+        behavioralPower = GameManager.PowerType.None;
+    }
 
-	#endregion
+    #endregion
 
-	//==========ELEMENTAL POWERS FUNCTIONS==========
+    //==========ELEMENTAL POWERS FUNCTIONS==========
 
-	#region Ice
-	//==========ICE==========
+    #region Ice
+    //==========ICE==========
 
-	void ActivateIce()
-	{
-		elementalPower = GameManager.PowerType.Ice;
-	}
+    void ActivateIce()
+    {
+        elementalPower = GameManager.PowerType.Ice;
+    }
 
-	void DeactivateIce()
-	{
-		elementalPower = GameManager.PowerType.None;
-	}
+    void DeactivateIce()
+    {
+        elementalPower = GameManager.PowerType.None;
+    }
 
-	#endregion
+    #endregion
 
-	#region Fire
-	//==========FIRE==========
+    #region Fire
+    //==========FIRE==========
 
-	void ActivateFire()
-	{
-		elementalPower = GameManager.PowerType.Fire;
-	}
+    void ActivateFire()
+    {
+        elementalPower = GameManager.PowerType.Fire;
+    }
 
-	void DeactivateFire()
-	{
-		elementalPower = GameManager.PowerType.None;
-	}
+    void DeactivateFire()
+    {
+        elementalPower = GameManager.PowerType.None;
+    }
 
-	#endregion
+    #endregion
 
-	#region Water
-	//==========WATER==========
+    #region Electric
+    //==========ELECTRIC==========
 
-	void ActivateWater()
-	{
-		elementalPower = GameManager.PowerType.Water;
-	}
+    void ActivateElectric()
+    {
+        elementalPower = GameManager.PowerType.Electric;
+    }
 
-	void DeactivateWater()
-	{
-		elementalPower = GameManager.PowerType.None;
-	}
+    void DeactivateElectric()
+    {
+        elementalPower = GameManager.PowerType.None;
+    }
 
-	#endregion
+    #endregion
 
-	#region Electric
-	//==========ELECTRIC==========
+    #region Weakness
+    //==========WEAKNESS==========
 
-	void ActivateElectric()
-	{
-		elementalPower = GameManager.PowerType.Electric;
-	}
+    void ActivateWeakness()
+    {
+        elementalPower = GameManager.PowerType.Weakness;
+    }
 
-	void DeactivateElectric()
-	{
-		elementalPower = GameManager.PowerType.None;
-	}
+    void DeactivateWeakness()
+    {
+        elementalPower = GameManager.PowerType.None;
+    }
 
-	#endregion
+    #endregion
 
-	#region Weakness
-	//==========WEAKNESS==========
+    public void onEnemyHit(GameObject target)
+    {
+        target.GetComponent<Enemy>().hp -= baseDamage;
+        
+        //check if the orb has the power LeechLife and apply the effect
+        if (gameObject.GetComponent<PowerController>().behavioralPower == GameManager.PowerType.LeechLife)
+        {
+            GameManager.gameManager.hp += (int)(baseDamage / (100 / gameObject.GetComponent<PowerController>().lifeSteel));
+        }
+    }
 
-	void ActivateWeakness()
-	{
-		elementalPower = GameManager.PowerType.Weakness;
-	}
 
-	void DeactivateWeakness()
-	{
-		elementalPower = GameManager.PowerType.None;
-	}
-
-	#endregion
 }
+
+
+    

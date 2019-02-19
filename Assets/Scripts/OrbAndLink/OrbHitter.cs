@@ -100,10 +100,12 @@ public class OrbHitter : MonoBehaviour
 
     /// <summary>
     /// function that check if the orb is close enough to let the player to hit the ball
+    /// the range is defined by the default hitzone AND the radius of the orb (so that we can hit the orb on it's border no matter it's size)
+    /// orb.transform.localScale.x / 2 is the radius of the orb
     /// </summary>
     void CheckRange()
     {
-        if (Vector3.Distance(transform.position, orb.transform.position) < hitZone)
+        if (Vector3.Distance(transform.position, orb.transform.position) < hitZone + orb.transform.localScale.x / 2)
         {
             inRange = true;
         }
