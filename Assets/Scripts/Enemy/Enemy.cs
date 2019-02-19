@@ -156,7 +156,7 @@ public class Enemy : MonoBehaviour
                             break;
                     }
 
-                    isTaunted = true;
+                    //isTaunted = true;
                 }
             }
         }
