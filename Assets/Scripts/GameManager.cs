@@ -32,11 +32,10 @@ public class GameManager : MonoBehaviour
 
         Ice,
         Fire,
-        Water,
         Electric,
         Weakness,
 
-        Elemental = Ice | Fire | Water | Electric | Weakness,
+        Elemental = Ice | Fire | Electric | Weakness,
         Behavioral = LargeOrb | Vortex | LeechLife | Slug | Shield
     }
 
@@ -70,7 +69,7 @@ public class GameManager : MonoBehaviour
     /// Handle taking damage from an Ennemy or other things
     /// </summary>
     /// <param name="impactDamage"></param>
-    public void takeDamage(int damage)
+    public void TakeDamage(int damage)
     {
         hp -= damage;
         if (hp <= 0)

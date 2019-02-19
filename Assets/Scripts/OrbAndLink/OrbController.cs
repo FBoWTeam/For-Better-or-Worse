@@ -5,11 +5,10 @@ using UnityEngine;
 public class OrbController : MonoBehaviour
 {
     [Header("[Orb Statistics]")]
-    public int damage;
     public float speed;
     public float minSpeed;
     public float maxSpeed;
-	public bool amortized;
+    public bool amortized;
 
     [Header("[Valid Targets]")]
     public bool canHitEnemy;
@@ -38,16 +37,16 @@ public class OrbController : MonoBehaviour
 
     void FixedUpdate()
     {
-		if (!amortized)
-		{
-			setFixedSpeedCoefficient();
-			speed = Mathf.Clamp(speed, minSpeed, maxSpeed);
-			float fixedSpeed = speed * fixedSpeedCoefficient; ;
+        if (!amortized)
+        {
+            SetFixedSpeedCoefficient();
+            speed = Mathf.Clamp(speed, minSpeed, maxSpeed);
+            float fixedSpeed = speed * fixedSpeedCoefficient; ;
 
-			step = (fixedSpeed / BezierCurve.GetPlayersDistance()) * Time.fixedDeltaTime;
-			progression = toPlayer2 ? progression + step : progression - step;
-			progression = Mathf.Clamp01(progression);
-		}
+            step = (fixedSpeed / BezierCurve.GetPlayersDistance()) * Time.fixedDeltaTime;
+            progression = toPlayer2 ? progression + step : progression - step;
+            progression = Mathf.Clamp01(progression);
+        }
         transform.position = BezierCurve.CalculateCubicBezierPoint(progression);
 
         if (progression == 1.0f || progression == 0.0f)
@@ -58,7 +57,7 @@ public class OrbController : MonoBehaviour
     /// for each player, return 1 if the player moves away from the other player, -1 if he gets closer, 0 otherwise
     /// </summary>
     /// <returns></returns>
-    (int, int) getMovementsInfo()
+    (int, int) GetMovementsInfo()
     {
         int player1Movement = 0;
         int player2Movement = 0;
@@ -93,9 +92,9 @@ public class OrbController : MonoBehaviour
     /// <summary>
     /// set the speed coefficient to fix the speed when the link is shrinked/expanded
     /// </summary>
-    void setFixedSpeedCoefficient()
+    void SetFixedSpeedCoefficient()
     {
-        (int, int) playersMovements = getMovementsInfo();
+        (int, int) playersMovements = GetMovementsInfo();
         (int, bool, int) movementsInfo = (playersMovements.Item1, toPlayer2, playersMovements.Item2);
 
         switch (movementsInfo)
@@ -133,12 +132,12 @@ public class OrbController : MonoBehaviour
     {
         if (other.CompareTag("Player") && canHitPlayer == true)
         {
-            GameManager.gameManager.takeDamage(damage);
+            GameManager.gameManager.TakeDamage(gameObject.GetComponent<PowerController>().baseDamage);
             speed = minSpeed;
         }
         else if (other.CompareTag("Enemy") && canHitEnemy == true)
         {
-            other.GetComponent<Enemy>().hp -= damage;
+            gameObject.GetComponent<PowerController>().onEnemyHit(other.gameObject);
         }
     }
 }
