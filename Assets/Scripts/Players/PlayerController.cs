@@ -28,7 +28,8 @@ public class PlayerController : MonoBehaviour
     void Update()
     {
         Move();
-        getCurrentPower();
+		CheckTaunt();
+        GetCurrentPower();
     }
 
     /// <summary>
@@ -37,27 +38,48 @@ public class PlayerController : MonoBehaviour
     /// </summary>
 	public void Move()
     {
-        if (player1)
-        {
-            direction = new Vector3(Input.GetAxis("HorizontalP1"), 0.0f, Input.GetAxis("VerticalP1"));
-        }
-        else
-        {
-            direction = new Vector3(Input.GetAxis("HorizontalP2"), 0.0f, Input.GetAxis("VerticalP2"));
-        }
+		direction = player1 ? new Vector3(Input.GetAxis("HorizontalP1"), 0.0f, Input.GetAxis("VerticalP1")) : new Vector3(Input.GetAxis("HorizontalP2"), 0.0f, Input.GetAxis("VerticalP2"));
 
-        direction = (direction.x * Camera.main.transform.right + direction.z * Camera.main.transform.forward);
+		direction = (direction.x * Camera.main.transform.right + direction.z * Camera.main.transform.forward);
 
         Vector3 velocity = direction * speed * Time.deltaTime;
 
         rb.MovePosition(transform.position + velocity);
     }
 
+
+
+	void CheckTaunt()
+	{
+		if ( (player1 && (Input.GetKeyDown(KeyCode.Joystick1Button4) || Input.GetKeyDown(KeyCode.Space))) || (!player1 && (Input.GetKeyDown(KeyCode.Joystick2Button4) || Input.GetKeyDown(KeyCode.Keypad0))))
+		{
+			StartCoroutine(TauntCoroutine());
+			Debug.Log(player1);
+		}
+	}
+
+	IEnumerator TauntCoroutine()
+	{
+		yield return new WaitForEndOfFrame();
+
+		if (player1)
+			GameManager.gameManager.player1HasTaunt = true;
+		else
+			GameManager.gameManager.player2HasTaunt = true;
+
+		yield return new WaitForEndOfFrame();
+
+		if (player1)
+			GameManager.gameManager.player1HasTaunt = false;
+		else
+			GameManager.gameManager.player2HasTaunt = false;
+	}
+
     /// <summary>
     /// gets the current power that is going to be apllied on the orb by checking the input
     /// the power to apply on the orb when the player hits the orb
     /// </summary>
-    public void getCurrentPower()
+    public void GetCurrentPower()
     {
         bool power1 = player1 ? Input.GetKeyDown(KeyCode.Joystick1Button0) : Input.GetKeyDown(KeyCode.Joystick2Button0);
         bool power2 = player1 ? Input.GetKeyDown(KeyCode.Joystick1Button1) : Input.GetKeyDown(KeyCode.Joystick2Button1);
