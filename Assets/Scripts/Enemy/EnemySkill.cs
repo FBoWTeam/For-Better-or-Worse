@@ -58,7 +58,7 @@ public class EnemySkill : MonoBehaviour
     [DrawIf(new string[] { "skillOne" }, Skill.Ranged)]
     public GameObject bulletPrefab;
 
-    [DrawIf(new string[] { "skillOne" }, Skill.Ranged)]
+    //[DrawIf(new string[] { "skillOne" }, Skill.Ranged)]
     //public Transform firePoint; set to the transform postion for now , changed later
     #endregion
 

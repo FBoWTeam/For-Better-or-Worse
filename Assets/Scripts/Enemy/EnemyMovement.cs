@@ -90,7 +90,11 @@ public class EnemyMovement : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        agent.isStopped = true;
+        if (collision.gameObject.CompareTag("Player"))
+        {
+            agent.isStopped = true;
+
+        }
     }
 
     private void OnCollisionExit(Collision collision)
