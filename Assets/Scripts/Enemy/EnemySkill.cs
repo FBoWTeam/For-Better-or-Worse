@@ -4,7 +4,7 @@ using UnityEngine;
 using System;
 using UnityEngine.Events;
 
-[RequireComponent(typeof(SphereCollider))]
+
 public class EnemySkill : MonoBehaviour
 {
     public enum Skill {
@@ -59,7 +59,7 @@ public class EnemySkill : MonoBehaviour
     public GameObject bulletPrefab;
 
     [DrawIf(new string[] { "skillOne" }, Skill.Ranged)]
-    public Transform firePoint;
+    //public Transform firePoint; set to the transform postion for now , changed later
     #endregion
 
     #region AoeFields
@@ -67,6 +67,7 @@ public class EnemySkill : MonoBehaviour
     public float aoeCooldown = 2f;
     #endregion
 
+    public float range = 4f;
     public int damage = 5;
 
     //evenement avec aucun type de retour mais 1 parametre 
@@ -78,21 +79,29 @@ public class EnemySkill : MonoBehaviour
 
     private void Awake() {
         //set the sphereCollider to trigger just to be sure
-        rangeCollider = GetComponent<SphereCollider>();
-        rangeCollider.isTrigger = true;
-
+        rangeCollider = transform.GetChild(1).GetComponent<SphereCollider>();
+        if (!rangeCollider.isTrigger) {
+            rangeCollider.isTrigger = true;
+        }
+        rangeCollider.radius = range;
+        
         inRangeEvent += onPlayerinRange;
         myMat = GetComponent<Renderer>().material;
     }
-    
+
+    private void Update() {
+        rangeCollider.radius = range;
+    }
+
+
 
     //Dammage player on collision
     private void OnCollisionEnter(Collision collision) {
-        if (collision.gameObject.CompareTag("Player")) {
+        if (collision.gameObject.CompareTag("Player")) {          
             GameManager.gameManager.takeDamage(damage);
         }
     }
-
+    
 
     //Trigger inRangeEvent
     private void OnTriggerEnter(Collider other) {
@@ -113,7 +122,7 @@ public class EnemySkill : MonoBehaviour
             myMat.color = Color.white;
         }
     }
-
+    
 
     void onPlayerinRange(GameObject target,Skill skill) {
         //SET target = target
@@ -139,11 +148,12 @@ public class EnemySkill : MonoBehaviour
             case Skill.Ranged:              
                 myMat.color = Color.red;
                 // ne renvoie pas toujours vrai alors que 'visuelement' on sait que oui
-                // problem : parfois le tag du collider toucher est 'DistanceLimiter'
-                Debug.Log("wsh "+ isVisible(transform.position, target.transform.position));               
+                // BUG TO FIX : parfois le tag du collider toucher est 'DistanceLimiter'
+                //Debug.Log("wsh "+ isVisible(transform.position, target.transform.position));               
                 
-                if (Time.time>nextAttack && isVisible(transform.position, target.transform.position)) {                                    
-                    Shoot(bulletPrefab, firePoint, target.transform, damage);                                     
+                if (Time.time>nextAttack && isVisible(transform.position, target.transform.position)) {
+                    
+                    Shoot(bulletPrefab, transform, target.transform, damage);                                     
                     nextAttack = Time.time + fireRate;
                    
                 }
@@ -182,6 +192,8 @@ public class EnemySkill : MonoBehaviour
         
     }
 
+
+   
     
     /// <summary>
     /// return true if a Player is "visible"
@@ -216,4 +228,6 @@ public class EnemySkill : MonoBehaviour
         }
     }
 
+
+   
 }
