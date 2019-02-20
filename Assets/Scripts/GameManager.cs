@@ -9,7 +9,9 @@ public class GameManager : MonoBehaviour
     public static GameManager gameManager;
     public int baseHP;
     public int hp;
-    public int shield;
+
+    public int shieldP1;
+    public int shieldP2;
 
     [HideInInspector]
     public GameObject player1;

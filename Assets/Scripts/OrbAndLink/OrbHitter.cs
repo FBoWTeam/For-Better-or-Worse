@@ -123,8 +123,25 @@ public class OrbHitter : MonoBehaviour
         if (powerToApply != GameManager.PowerType.None)
         {
             orb.GetComponent<PowerController>().ActivatePower(powerToApply);
+            
             powerToApply = GameManager.PowerType.None;
         }
+
+        //TEST ZONE si l'orb a le pouvoir shield
+        if (orb.GetComponent<PowerController>().behavioralPower == GameManager.PowerType.Shield && orb.GetComponent<PowerController>().currentShieldStack > 0)
+        {
+            if (gameObject.GetComponent<PlayerController>().player1)
+            {
+                GameManager.gameManager.shieldP1 = orb.GetComponent<PowerController>().shieldAmount;
+                orb.GetComponent<PowerController>().currentShieldStack--;
+            }
+            else if (!gameObject.GetComponent<PlayerController>().player1)
+            {
+                GameManager.gameManager.shieldP2 = orb.GetComponent<PowerController>().shieldAmount;
+                orb.GetComponent<PowerController>().currentShieldStack--;
+            }
+        }
+        //FIN TEST ZONE
     }
 
     /// <summary>

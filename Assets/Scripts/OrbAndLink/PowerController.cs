@@ -27,8 +27,13 @@ public class PowerController : MonoBehaviour
     
     //Shield
     [Header("[Shield Param]")]
+    [Tooltip("Reduce the damage of the orb")]
     public int mitigatedDamage;
     public int shieldAmount;
+    [Tooltip("number of stacks that gives shield when the orb is hit")]
+    public int currentShieldStack;
+
+
     
     //Fire
     [Header("[Fire Param]")]
@@ -218,14 +223,15 @@ public class PowerController : MonoBehaviour
     {
         behavioralPower = GameManager.PowerType.Shield;
         baseDamage -= mitigatedDamage;
-        GameManager.gameManager.shield = shieldAmount;
+        currentShieldStack = 2;
     }
 
     void DeactivateShield()
     {
         behavioralPower = GameManager.PowerType.None;
         baseDamage += mitigatedDamage;
-        GameManager.gameManager.shield = 0;
+        GameManager.gameManager.shieldP1 = 0;
+        GameManager.gameManager.shieldP2 = 0;
     }
 
     #endregion
@@ -337,7 +343,6 @@ public class PowerController : MonoBehaviour
             case GameManager.PowerType.Electric:
                 break;
         }
-
     }
 
 
