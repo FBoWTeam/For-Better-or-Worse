@@ -77,4 +77,29 @@ public class GameManager : MonoBehaviour
             Debug.Log("DED");
         }
     }
+    
+    public void SlowSpeed(GameObject target)
+    {
+        if (target.GetComponent<EnemyMovement>() != null)
+        {
+            target.GetComponent<EnemyMovement>().agent.speed /= 2;
+        }
+        else if (target.GetComponent<PlayerController>() != null)
+        {
+            target.GetComponent<PlayerController>().speed /= 2;
+        }
+    }
+
+    public void RestoreSpeed(GameObject target)
+    {
+        if (target.GetComponent<EnemyMovement>() != null)
+        {
+            target.GetComponent<EnemyMovement>().agent.speed = target.GetComponent<EnemyMovement>().initialSpeed;
+        }
+        else if (target.GetComponent<PlayerController>() != null)
+        {
+            target.GetComponent<PlayerController>().speed = target.GetComponent<PlayerController>().initialSpeed;
+        }
+    }
+
 }

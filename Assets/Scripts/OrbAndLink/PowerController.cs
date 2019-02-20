@@ -187,7 +187,7 @@ public class PowerController : MonoBehaviour
     IEnumerator InstanciateSlug()
     {
         float timeStamp = Time.time;
-        while (Time.time - timeStamp >= durationSlugPower)
+        while (Time.time - timeStamp <= durationSlugPower)
         {
             Instantiate(slug, new Vector3(transform.position.x, 0.5f, transform.position.y), Quaternion.identity);
             yield return new WaitForSeconds(1.0f);
