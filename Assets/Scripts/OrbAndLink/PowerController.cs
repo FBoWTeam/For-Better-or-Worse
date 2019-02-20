@@ -25,11 +25,19 @@ public class PowerController : MonoBehaviour
     public GameObject slug;
     public float durationSlugPower;
 
-    //
+    //Fire
+    [Header("[Fire Param]")]
+    public GameObject fireParticleSystem;
+    [Tooltip("Damage is over time , should be >= to fireDuration")]
+    public int fireDamage = 5;
+    public float fireDuration = 5;
+    public float fireCoolDown = 8;
+
+    private float nextAttack = 0f;
 
     private void Start()
     {
-        elementalPower = GameManager.PowerType.Ice;
+        elementalPower = GameManager.PowerType.Fire;
     }
 
     /// <summary>
@@ -232,6 +240,25 @@ public class PowerController : MonoBehaviour
 
     #region Fire
     //==========FIRE==========
+    // QUESTIONS : what do we do if we hit a ennemy that is already inFIRE ?
+    IEnumerator FireDamage(Enemy enemy,int totalDamage,float duration,float cooldown) {
+
+        int tickDamage = Mathf.RoundToInt(totalDamage / duration);
+        int curentDamage = 0;
+        Instantiate(fireParticleSystem, enemy.transform.position, Quaternion.identity);
+        fireParticleSystem.GetComponent<ParticleSystem>().Play();
+
+        while (curentDamage < totalDamage) {
+            enemy.TakeDamage(tickDamage);           
+            yield return new WaitForSeconds(1f);         
+            curentDamage += tickDamage;
+        }
+
+        print("stop");      
+        fireParticleSystem.GetComponent<ParticleSystem>().Stop();
+        //DestroyImmediate(fireParticleSystem,true);
+        yield return null;
+    }
 
     void ActivateFire()
     {
@@ -277,7 +304,8 @@ public class PowerController : MonoBehaviour
 
     public void onEnemyHit(GameObject target)
     {
-        target.GetComponent<Enemy>().TakeDamage(baseDamage);
+        Enemy enemy = target.GetComponent<Enemy>();
+        enemy.TakeDamage(baseDamage);
 
         
         //check if the orb has the power LeechLife and apply the effect
@@ -290,8 +318,12 @@ public class PowerController : MonoBehaviour
             case GameManager.PowerType.Ice:
                 Debug.Log("Slow down bitch"); 
                 break;
-            case GameManager.PowerType.Fire:
-
+            case GameManager.PowerType.Fire:              
+                if (Time.time > nextAttack) {
+                    StartCoroutine(FireDamage(enemy, fireDamage, fireDuration, fireCoolDown));
+                    nextAttack = Time.time + fireCoolDown;
+                }
+               
                 break;
             case GameManager.PowerType.Electric:
                 break;
