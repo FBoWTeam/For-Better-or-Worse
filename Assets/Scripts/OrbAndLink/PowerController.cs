@@ -25,9 +25,11 @@ public class PowerController : MonoBehaviour
     public GameObject slug;
     public float durationSlugPower;
 
+    //
+
     private void Start()
     {
-        behavioralPower = GameManager.PowerType.Slug;
+        elementalPower = GameManager.PowerType.Ice;
     }
 
     /// <summary>
@@ -275,13 +277,26 @@ public class PowerController : MonoBehaviour
 
     public void onEnemyHit(GameObject target)
     {
-        target.GetComponent<Enemy>().hp -= baseDamage;
+        target.GetComponent<Enemy>().TakeDamage(baseDamage);
+
         
         //check if the orb has the power LeechLife and apply the effect
         if (gameObject.GetComponent<PowerController>().behavioralPower == GameManager.PowerType.LeechLife)
         {
             GameManager.gameManager.hp += (int)(baseDamage / (100 / gameObject.GetComponent<PowerController>().lifeSteel));
         }
+
+        switch (elementalPower) {          
+            case GameManager.PowerType.Ice:
+                Debug.Log("Slow down bitch"); 
+                break;
+            case GameManager.PowerType.Fire:
+
+                break;
+            case GameManager.PowerType.Electric:
+                break;
+        }
+
     }
 
 
