@@ -69,13 +69,6 @@ public class Enemy : MonoBehaviour
             enemyMovement.DoMovement();
         }
 
-        if (hp <= 0)
-        {
-            enemyMovement.agent.isStopped = true;
-            StopAllCoroutines();
-            Destroy(this.gameObject);
-        }
-
         if (drawView)
         {
             Debug.DrawRay(this.transform.position, this.transform.forward * lengthView, Color.magenta);
@@ -161,4 +154,14 @@ public class Enemy : MonoBehaviour
             }
         }
     }
+
+    public void TakeDamage(int damage) {
+        hp -= damage;
+        if (hp <= 0) {
+            enemyMovement.agent.isStopped = true;
+            StopAllCoroutines();
+            Destroy(this.gameObject);
+        }
+    }
+
 }
