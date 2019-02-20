@@ -25,6 +25,12 @@ public class PowerController : MonoBehaviour
     public GameObject slug;
     public float durationSlugPower;
 
+    //Shield
+    [Header("[Shield Param]")]
+    public int mitigatedDamage;
+    public int shieldAmount;
+
+
     private void Start()
     {
         //behavioralPower = GameManager.PowerType.LargeOrb;
@@ -202,11 +208,15 @@ public class PowerController : MonoBehaviour
     void ActivateShield()
     {
         behavioralPower = GameManager.PowerType.Shield;
+        baseDamage -= mitigatedDamage;
+        GameManager.gameManager.shield = shieldAmount;
     }
 
     void DeactivateShield()
     {
         behavioralPower = GameManager.PowerType.None;
+        baseDamage += mitigatedDamage;
+        GameManager.gameManager.shield = 0;
     }
 
     #endregion
