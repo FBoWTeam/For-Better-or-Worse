@@ -27,7 +27,7 @@ public class PowerController : MonoBehaviour
 
     private void Start()
     {
-        behavioralPower = GameManager.PowerType.Slug;
+        //behavioralPower = GameManager.PowerType.LargeOrb;
     }
 
     /// <summary>
@@ -189,7 +189,7 @@ public class PowerController : MonoBehaviour
         float timeStamp = Time.time;
         while (Time.time - timeStamp <= durationSlugPower)
         {
-            Instantiate(slug, new Vector3(transform.position.x, 0.5f, transform.position.y), Quaternion.identity);
+            Instantiate(slug, new Vector3(transform.position.x, 0.2f, transform.position.z), Quaternion.identity);
             yield return new WaitForSeconds(1.0f);
         }
     }
