@@ -1781,10 +1781,25 @@ PrefabInstance:
       propertyPath: skillOne
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6759876714258691777, guid: 8e72342c511536043883f2199df73730,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8566674626248025584, guid: 8e72342c511536043883f2199df73730,
         type: 3}
       propertyPath: m_LocalPosition.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9164865582948619922, guid: 8e72342c511536043883f2199df73730,
+        type: 3}
+      propertyPath: movement
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 9164865582948619922, guid: 8e72342c511536043883f2199df73730,
+        type: 3}
+      propertyPath: initialSpeed
+      value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8e72342c511536043883f2199df73730, type: 3}
@@ -2312,7 +2327,17 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3207297833789192834, guid: 0a0bbcab4b29c1a49aa1d53f1751a965,
         type: 3}
+      propertyPath: enemies.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3207297833789192834, guid: 0a0bbcab4b29c1a49aa1d53f1751a965,
+        type: 3}
       propertyPath: Enemies.Array.data[0]
+      value: 
+      objectReference: {fileID: 1058958501}
+    - target: {fileID: 3207297833789192834, guid: 0a0bbcab4b29c1a49aa1d53f1751a965,
+        type: 3}
+      propertyPath: enemies.Array.data[0]
       value: 
       objectReference: {fileID: 1058958501}
     m_RemovedComponents: []
@@ -2749,6 +2774,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   elementalPower: 0
   behavioralPower: 0
+  baseDamage: 0
   minScale: 0.75
   maxScale: 1.5
   LargeOrbDamage: 0

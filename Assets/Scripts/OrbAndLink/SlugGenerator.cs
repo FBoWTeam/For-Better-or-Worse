@@ -14,11 +14,17 @@ public class SlugGenerator : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        GameManager.gameManager.SlowSpeed(other.gameObject);
+        if (other.CompareTag("Enemy"))
+        {
+            GameManager.gameManager.SlowSpeed(other.gameObject);
+        }
     }
 
     private void OnTriggerExit(Collider other)
     {
-        GameManager.gameManager.RestoreSpeed(other.gameObject);
+        if (other.CompareTag("Enemy"))
+        {
+            GameManager.gameManager.RestoreSpeed(other.gameObject);
+        }
     }
 }

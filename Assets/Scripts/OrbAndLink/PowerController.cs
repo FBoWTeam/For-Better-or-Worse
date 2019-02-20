@@ -190,7 +190,7 @@ public class PowerController : MonoBehaviour
         while (Time.time - timeStamp <= durationSlugPower)
         {
             Instantiate(slug, new Vector3(transform.position.x, 0.2f, transform.position.z), Quaternion.identity);
-            yield return new WaitForSeconds(1.0f);
+            yield return new WaitForSeconds(0.2f);
         }
     }
 
