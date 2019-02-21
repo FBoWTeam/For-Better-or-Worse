@@ -23,7 +23,7 @@ public class EnemyMovement : MonoBehaviour
     public Movement movement;
 
     [DrawIf(new string[] { "movement" }, Movement.Basic)]
-    public float speed = 2f;
+    public float initialSpeed = 2f;
 
     [DrawIf(new string[] { "movement" }, Movement.Basic)]
     [Tooltip("represents the time of the attack animation")]
@@ -43,7 +43,7 @@ public class EnemyMovement : MonoBehaviour
     void Start()
     {
         agent = this.GetComponent<NavMeshAgent>();
-        agent.speed = speed;
+        agent.speed = initialSpeed;
         agent.isStopped = false;
         line = this.GetComponent<LineRenderer>();
     }

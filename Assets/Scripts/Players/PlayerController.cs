@@ -8,6 +8,9 @@ public class PlayerController : MonoBehaviour
     public bool player1;
     public float speed;
 
+    [HideInInspector]
+    public float initialSpeed;
+
     Rigidbody rb;
     public Vector3 direction;
 
@@ -23,6 +26,7 @@ public class PlayerController : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();
         orbHitter = gameObject.GetComponent<OrbHitter>();
+        initialSpeed = speed;
     }
 
     void Update()

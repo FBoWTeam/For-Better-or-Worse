@@ -10,6 +10,9 @@ public class GameManager : MonoBehaviour
     public int baseHP;
     public int hp;
 
+    public int shieldP1;
+    public int shieldP2;
+
     [HideInInspector]
     public GameObject player1;
     [HideInInspector]
@@ -32,11 +35,10 @@ public class GameManager : MonoBehaviour
 
         Ice,
         Fire,
-        Water,
         Electric,
         Weakness,
 
-        Elemental = Ice | Fire | Water | Electric | Weakness,
+        Elemental = Ice | Fire | Electric | Weakness,
         Behavioral = LargeOrb | Vortex | LeechLife | Slug | Shield
     }
 
@@ -70,12 +72,67 @@ public class GameManager : MonoBehaviour
     /// Handle taking damage from an Ennemy or other things
     /// </summary>
     /// <param name="impactDamage"></param>
-    public void takeDamage(int damage)
+    public void TakeDamage(GameObject targetPlayer, int damage)
     {
-        hp -= damage;
+        if (targetPlayer == player1)
+        {
+            if (damage >= shieldP1)
+            {
+                damage -= shieldP1;
+                shieldP1 = 0;
+            }
+            else if(damage < shieldP1)
+            {
+                shieldP1 -= damage;
+            }
+            hp -= damage;
+        }
+        if (targetPlayer == player2)
+        {
+            if (damage >= shieldP2)
+            {
+                damage -= shieldP2;
+                shieldP2 = 0;
+            }
+            else if (damage < shieldP2)
+            {
+                shieldP2 -= damage;
+            }
+            hp -= damage;
+        }
+
+        Debug.Log("player1 : " + shieldP1);
+        Debug.Log("player2 : " + shieldP2);
+        Debug.Log("HP : " + hp);
+
         if (hp <= 0)
         {
             Debug.Log("DED");
         }
     }
+    
+    public void SlowSpeed(GameObject target)
+    {
+        if (target.GetComponent<EnemyMovement>() != null)
+        {
+            target.GetComponent<EnemyMovement>().agent.speed /= 2;
+        }
+        else if (target.GetComponent<PlayerController>() != null)
+        {
+            target.GetComponent<PlayerController>().speed /= 2;
+        }
+    }
+
+    public void RestoreSpeed(GameObject target)
+    {
+        if (target.GetComponent<EnemyMovement>() != null)
+        {
+            target.GetComponent<EnemyMovement>().agent.speed = target.GetComponent<EnemyMovement>().initialSpeed;
+        }
+        else if (target.GetComponent<PlayerController>() != null)
+        {
+            target.GetComponent<PlayerController>().speed = target.GetComponent<PlayerController>().initialSpeed;
+        }
+    }
+
 }
