@@ -1781,9 +1781,29 @@ PrefabInstance:
       propertyPath: skillOne
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6759876714258691777, guid: 8e72342c511536043883f2199df73730,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8566674626248025584, guid: 8e72342c511536043883f2199df73730,
         type: 3}
       propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9164865582948619922, guid: 8e72342c511536043883f2199df73730,
+        type: 3}
+      propertyPath: movement
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 9164865582948619922, guid: 8e72342c511536043883f2199df73730,
+        type: 3}
+      propertyPath: initialSpeed
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 947384502557923801, guid: 8e72342c511536043883f2199df73730,
+        type: 3}
+      propertyPath: skillOne
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
@@ -2312,7 +2332,17 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3207297833789192834, guid: 0a0bbcab4b29c1a49aa1d53f1751a965,
         type: 3}
+      propertyPath: enemies.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3207297833789192834, guid: 0a0bbcab4b29c1a49aa1d53f1751a965,
+        type: 3}
       propertyPath: Enemies.Array.data[0]
+      value: 
+      objectReference: {fileID: 1058958501}
+    - target: {fileID: 3207297833789192834, guid: 0a0bbcab4b29c1a49aa1d53f1751a965,
+        type: 3}
+      propertyPath: enemies.Array.data[0]
       value: 
       objectReference: {fileID: 1058958501}
     m_RemovedComponents: []
@@ -2672,6 +2702,11 @@ PrefabInstance:
       propertyPath: accelerationFactor
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 8708506529559422337, guid: e0c803f7f12a09b4cb87b0f68746c41b,
+        type: 3}
+      propertyPath: hitZone
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8708506530940788387, guid: e0c803f7f12a09b4cb87b0f68746c41b,
         type: 3}
       propertyPath: dashSpeed
@@ -2681,6 +2716,16 @@ PrefabInstance:
         type: 3}
       propertyPath: accelerationFactor
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8708506530940788384, guid: e0c803f7f12a09b4cb87b0f68746c41b,
+        type: 3}
+      propertyPath: hitZone
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8708506530940788384, guid: e0c803f7f12a09b4cb87b0f68746c41b,
+        type: 3}
+      propertyPath: powerToApply
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 8708506531089382189, guid: e0c803f7f12a09b4cb87b0f68746c41b,
         type: 3}
@@ -2739,6 +2784,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   elementalPower: 0
   behavioralPower: 0
+  baseDamage: 10
+  minScale: 0.75
+  maxScale: 1.5
+  LargeOrbDamage: 0
+  lifeSteel: 0
+  slug: {fileID: 1635892733598159781, guid: f1fb8f1469f8aab42bc8a4f47c49f15c, type: 3}
+  durationSlugPower: 5
+  mitigatedDamage: 2
+  shieldAmount: 10
+  currentShieldStack: 0
+  fireParticleSystem: {fileID: 0}
+  fireDamage: 5
+  fireDuration: 5
+  fireCoolDown: 8
 --- !u!1001 &8896361619845698694
 PrefabInstance:
   m_ObjectHideFlags: 0

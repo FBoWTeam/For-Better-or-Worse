@@ -23,7 +23,7 @@ public class EnemyMovement : MonoBehaviour
     public Movement movement;
 
     [DrawIf(new string[] { "movement" }, Movement.Basic)]
-    public float speed = 2f;
+    public float initialSpeed = 2f;
 
     [DrawIf(new string[] { "movement" }, Movement.Basic)]
     [Tooltip("represents the time of the attack animation")]
@@ -43,7 +43,7 @@ public class EnemyMovement : MonoBehaviour
     void Start()
     {
         agent = this.GetComponent<NavMeshAgent>();
-        agent.speed = speed;
+        agent.speed = initialSpeed;
         agent.isStopped = false;
         line = this.GetComponent<LineRenderer>();
     }
@@ -62,7 +62,7 @@ public class EnemyMovement : MonoBehaviour
         switch (movement)
         {
             case Movement.Static:
-                this.transform.LookAt(Enemy.target.transform);
+                StaticMovement();
                 break;
             case Movement.Basic:
                 ClassicMovement();
@@ -83,9 +83,17 @@ public class EnemyMovement : MonoBehaviour
         }
     }
 
+    void StaticMovement()
+    {
+        this.transform.LookAt(Enemy.aimPlayer.transform);
+        this.transform.eulerAngles = new Vector3(0, this.transform.eulerAngles.y, 0);
+        this.GetComponent<Rigidbody>().isKinematic = true;
+
+    }
+
     void ClassicMovement()
     {
-        agent.destination = Enemy.target.transform.position;
+        agent.destination = Enemy.aimPlayer.transform.position;
     }
 
     private void OnCollisionEnter(Collision collision)

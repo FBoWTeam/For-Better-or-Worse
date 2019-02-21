@@ -15,7 +15,7 @@ public class Hatch : MonoBehaviour, IActivable
     /// </summary>
     public void Activate()
     {
-        if (checkValidObjects())
+        if (CheckValidObjects())
         {
             if (isActive == false)
             {
@@ -37,7 +37,7 @@ public class Hatch : MonoBehaviour, IActivable
     /// check if all the necesary object are activated to open the door
     /// </summary>
     /// <returns></returns>
-    bool checkValidObjects()
+    bool CheckValidObjects()
     {
         for (int i = 0; i < objectsConditions.Count; i++)
         {
