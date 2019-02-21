@@ -84,6 +84,7 @@ public class GameManager : MonoBehaviour
             else if(damage < shieldP1)
             {
                 shieldP1 -= damage;
+                damage = 0;
             }
             hp -= damage;
         }
@@ -97,14 +98,10 @@ public class GameManager : MonoBehaviour
             else if (damage < shieldP2)
             {
                 shieldP2 -= damage;
+                damage = 0;
             }
             hp -= damage;
         }
-
-        Debug.Log("player1 : " + shieldP1);
-        Debug.Log("player2 : " + shieldP2);
-        Debug.Log("HP : " + hp);
-
         if (hp <= 0)
         {
             Debug.Log("DED");
