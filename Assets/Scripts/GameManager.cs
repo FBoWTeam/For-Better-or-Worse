@@ -101,10 +101,6 @@ public class GameManager : MonoBehaviour
             hp -= damage;
         }
 
-        Debug.Log("player1 : " + shieldP1);
-        Debug.Log("player2 : " + shieldP2);
-        Debug.Log("HP : " + hp);
-
         if (hp <= 0)
         {
             Debug.Log("DED");

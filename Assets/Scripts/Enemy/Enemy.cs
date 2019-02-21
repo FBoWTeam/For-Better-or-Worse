@@ -13,6 +13,7 @@ public class Enemy : MonoBehaviour
     public bool debug;
     [DrawIf(new string[] { "debug" }, true)]
     public bool drawPath = false;
+    [DrawIf(new string[] { "debug" }, true)]
     public bool drawView = false;
     [DrawIf(new string[] { "drawView" }, true)]
     public float lengthView = 2f;

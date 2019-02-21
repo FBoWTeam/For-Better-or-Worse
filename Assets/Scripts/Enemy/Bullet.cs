@@ -1,10 +1,11 @@
 ﻿using UnityEngine;
 
-public class Bullet : MonoBehaviour {
+public class Bullet : MonoBehaviour
+{
 
     Transform target;
     float speed = 70f;
-    Vector3 shootDir; 
+    Vector3 shootDir;
     int turretDamage;
 
     public void Seek(Transform _target, int damage, float _speed)
@@ -15,20 +16,21 @@ public class Bullet : MonoBehaviour {
         shootDir = target.position - transform.position;
     }
 
-    
+
     // Update is called once per frame
     void FixedUpdate()
     {
-        
+
         if (target == null)
         {
             Destroy(gameObject);
             return;
         }
- 
+
         float distanceThisFrame = speed * Time.deltaTime;
 
-        if (CheckCollisions(target.position - transform.position, distanceThisFrame)) {
+        if (CheckCollisions(target.position - transform.position, distanceThisFrame))
+        {
             HitTarget();
             return;
         }
@@ -39,20 +41,22 @@ public class Bullet : MonoBehaviour {
 
     void HitTarget()
     {
-        
+
         Destroy(gameObject);
         //GameManager.gameManager.TakeDamage(turretDamage);
-        
+
     }
-    
-    private void OnBecameInvisible() {
+
+    private void OnBecameInvisible()
+    {
         Destroy(gameObject);
     }
 
     //Askip la meilleur solution pour check les collisiosn avec des projectils ce sont des raycast
     // mais le temps calculer , la balle traverse le joueurs ..
     //du coup old style
-    bool CheckCollisions(Vector3 dir,float dist) {
+    bool CheckCollisions(Vector3 dir, float dist)
+    {
         /*Ray ray = new Ray(transform.position, transform.forward);
         RaycastHit hit;
 
@@ -66,7 +70,8 @@ public class Bullet : MonoBehaviour {
         return false;
         */
 
-        if (dir.magnitude <= dist) {
+        if (dir.magnitude <= dist)
+        {
             return true;
         }
         return false;
