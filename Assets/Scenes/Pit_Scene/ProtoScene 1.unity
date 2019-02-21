@@ -1231,6 +1231,11 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6759876714258691777, guid: 8e72342c511536043883f2199df73730,
+        type: 3}
+      propertyPath: focus
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 9164865582948619922, guid: 8e72342c511536043883f2199df73730,
         type: 3}
       propertyPath: movement
@@ -1244,17 +1249,32 @@ PrefabInstance:
     - target: {fileID: 947384502557923801, guid: 8e72342c511536043883f2199df73730,
         type: 3}
       propertyPath: range
-      value: 12.05
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 947384502557923801, guid: 8e72342c511536043883f2199df73730,
         type: 3}
       propertyPath: fireRate
-      value: 3
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 947384502557923801, guid: 8e72342c511536043883f2199df73730,
         type: 3}
       propertyPath: bulletSpeed
       value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 947384502557923801, guid: 8e72342c511536043883f2199df73730,
+        type: 3}
+      propertyPath: damage
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6759876714258691836, guid: 8e72342c511536043883f2199df73730,
+        type: 3}
+      propertyPath: m_Constraints
+      value: 116
+      objectReference: {fileID: 0}
+    - target: {fileID: 175060479829023852, guid: 8e72342c511536043883f2199df73730,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8e72342c511536043883f2199df73730, type: 3}
@@ -1716,56 +1736,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8708506529559422337, guid: e0c803f7f12a09b4cb87b0f68746c41b,
-        type: 3}
-      propertyPath: accelerationFactor
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 8708506529559422337, guid: e0c803f7f12a09b4cb87b0f68746c41b,
-        type: 3}
-      propertyPath: maxAmortizeTime
-      value: 1.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 8708506529559422337, guid: e0c803f7f12a09b4cb87b0f68746c41b,
-        type: 3}
-      propertyPath: hitCooldown
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 8708506530940788384, guid: e0c803f7f12a09b4cb87b0f68746c41b,
-        type: 3}
-      propertyPath: accelerationFactor
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 8708506530940788384, guid: e0c803f7f12a09b4cb87b0f68746c41b,
-        type: 3}
-      propertyPath: maxAmortizeTime
-      value: 1.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 8708506530940788384, guid: e0c803f7f12a09b4cb87b0f68746c41b,
-        type: 3}
-      propertyPath: hitCooldown
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 8708506531089382189, guid: e0c803f7f12a09b4cb87b0f68746c41b,
-        type: 3}
-      propertyPath: minSpeed
-      value: 8
-      objectReference: {fileID: 0}
-    - target: {fileID: 8708506531089382189, guid: e0c803f7f12a09b4cb87b0f68746c41b,
-        type: 3}
-      propertyPath: maxSpeed
-      value: 12
-      objectReference: {fileID: 0}
-    - target: {fileID: 8708506531089382189, guid: e0c803f7f12a09b4cb87b0f68746c41b,
-        type: 3}
-      propertyPath: canHitEnemy
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8708506530313036442, guid: e0c803f7f12a09b4cb87b0f68746c41b,
-        type: 3}
-      propertyPath: smoothTime
-      value: 0.15
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e0c803f7f12a09b4cb87b0f68746c41b, type: 3}

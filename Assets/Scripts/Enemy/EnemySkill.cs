@@ -96,22 +96,22 @@ public class EnemySkill : MonoBehaviour
         rangeCollider.radius = range;
     }
 
-
-
     //Dammage player on collision
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.CompareTag("Player"))
+        if (skillOne == Skill.Impact)
         {
-            GameManager.gameManager.TakeDamage(collision.gameObject, damage);
+            if (collision.gameObject.CompareTag("Player") && collision.gameObject == Enemy.aimPlayer)
+            {
+                GameManager.gameManager.TakeDamage(collision.gameObject, damage);
+            }
         }
     }
-
 
     //Trigger inRangeEvent
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player"))
+        if (other.CompareTag("Player") && other.gameObject == Enemy.aimPlayer)
         {
             inRangeEvent(other.gameObject, skillOne);
         }
@@ -120,7 +120,7 @@ public class EnemySkill : MonoBehaviour
 
     private void OnTriggerStay(Collider other)
     {
-        if (other.CompareTag("Player"))
+        if (other.CompareTag("Player") && other.gameObject == Enemy.aimPlayer)
         {
             inRangeEvent(other.gameObject, skillOne);
         }
@@ -250,7 +250,7 @@ public class EnemySkill : MonoBehaviour
         //    bullet.Seek(target, damage, bulletSpeed);
         //}
 
-        if(enemyShot != null)
+        if (enemyShot != null)
         {
             enemyShot.Initialise(target, damage, bulletSpeed);
         }
