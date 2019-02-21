@@ -45,7 +45,7 @@ public class Enemy : MonoBehaviour
     public EnemyMovement enemyMovement;
 
     GameObject[] players;
-    public static GameObject target;
+    public static GameObject aimPlayer;
 
     #endregion
 
@@ -84,13 +84,13 @@ public class Enemy : MonoBehaviour
         switch (focus)
         {
             case Focus.Player1:
-                target = GameManager.gameManager.player1;
+                aimPlayer = GameManager.gameManager.player1;
                 break;
             case Focus.Player2:
-                target = GameManager.gameManager.player2;
+                aimPlayer = GameManager.gameManager.player2;
                 break;
             case Focus.Nearest:
-                target = GetNearestGO(players);
+                aimPlayer = GetNearestGO(players);
                 break;
             default:
                 break;
@@ -140,10 +140,10 @@ public class Enemy : MonoBehaviour
                     switch (taunt)
                     {
                         case Taunt.Taunter:
-                            target = taunter;
+                            aimPlayer = taunter;
                             break;
                         case Taunt.Other:
-                            target = (taunter.Equals(players[0])) ? players[1] : players[0];
+                            aimPlayer = (taunter.Equals(players[0])) ? players[1] : players[0];
                             break;
                         default:
                             break;

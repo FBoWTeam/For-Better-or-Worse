@@ -62,7 +62,7 @@ public class EnemyMovement : MonoBehaviour
         switch (movement)
         {
             case Movement.Static:
-                this.transform.LookAt(Enemy.target.transform);
+                this.transform.LookAt(Enemy.aimPlayer.transform);
                 break;
             case Movement.Basic:
                 ClassicMovement();
@@ -85,7 +85,7 @@ public class EnemyMovement : MonoBehaviour
 
     void ClassicMovement()
     {
-        agent.destination = Enemy.target.transform.position;
+        agent.destination = Enemy.aimPlayer.transform.position;
     }
 
     private void OnCollisionEnter(Collision collision)
