@@ -22,6 +22,7 @@ public class Enemy : MonoBehaviour
     public static bool sdrawPath;
     #endregion
 
+    #region Focus Variables
     public enum Focus
     {
         Player1,
@@ -29,7 +30,9 @@ public class Enemy : MonoBehaviour
         Nearest,
     }
     public Focus focus = Focus.Nearest;
+    #endregion
 
+    #region Taunt Variables
     public enum Taunt
     {
         Taunter,
@@ -38,6 +41,7 @@ public class Enemy : MonoBehaviour
     public Taunt taunt = Taunt.Taunter;
     private GameObject taunter;
     public bool isTaunted = false;
+    #endregion
 
     public int baseHP = 100;
     public int hp;
@@ -121,6 +125,8 @@ public class Enemy : MonoBehaviour
 
     #endregion
 
+    #region Taunt Methods
+
     private void TauntManagement()
     {
         if (!isTaunted)
@@ -154,11 +160,31 @@ public class Enemy : MonoBehaviour
                 }
             }
         }
+
+        TauntFeedback();
     }
 
-    public void TakeDamage(int damage) {
+
+    #endregion
+
+    private void TauntFeedback()
+    {
+        GameObject tauntCanvas = transform.GetChild(2).gameObject;
+
+        if (isTaunted)
+        {
+            tauntCanvas.SetActive(true);
+        }
+
+        tauntCanvas.SetActive(false);
+
+    }
+
+    public void TakeDamage(int damage)
+    {
         hp -= damage;
-        if (hp <= 0) {
+        if (hp <= 0)
+        {
             enemyMovement.agent.isStopped = true;
             StopAllCoroutines();
             Destroy(this.gameObject);
