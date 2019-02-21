@@ -132,7 +132,7 @@ public class OrbController : MonoBehaviour
     {
         if (other.CompareTag("Player") && canHitPlayer == true)
         {
-            GameManager.gameManager.TakeDamage(gameObject.GetComponent<PowerController>().baseDamage);
+            GameManager.gameManager.TakeDamage(other.gameObject, gameObject.GetComponent<PowerController>().baseDamage);
             speed = minSpeed;
         }
         else if (other.CompareTag("Enemy") && canHitEnemy == true)
