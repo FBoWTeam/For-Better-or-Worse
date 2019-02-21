@@ -72,9 +72,39 @@ public class GameManager : MonoBehaviour
     /// Handle taking damage from an Ennemy or other things
     /// </summary>
     /// <param name="impactDamage"></param>
-    public void TakeDamage(int damage)
+    public void TakeDamage(GameObject targetPlayer, int damage)
     {
-        hp -= damage;
+        if (targetPlayer == player1)
+        {
+            if (damage >= shieldP1)
+            {
+                damage -= shieldP1;
+                shieldP1 = 0;
+            }
+            else if(damage < shieldP1)
+            {
+                shieldP1 -= damage;
+            }
+            hp -= damage;
+        }
+        if (targetPlayer == player2)
+        {
+            if (damage >= shieldP2)
+            {
+                damage -= shieldP2;
+                shieldP2 = 0;
+            }
+            else if (damage < shieldP2)
+            {
+                shieldP2 -= damage;
+            }
+            hp -= damage;
+        }
+
+        Debug.Log("player1 : " + shieldP1);
+        Debug.Log("player2 : " + shieldP2);
+        Debug.Log("HP : " + hp);
+
         if (hp <= 0)
         {
             Debug.Log("DED");
