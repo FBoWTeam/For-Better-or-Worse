@@ -17,6 +17,8 @@ public class GameManager : MonoBehaviour
     public GameObject player1;
     [HideInInspector]
     public GameObject player2;
+    [HideInInspector]
+    public GameObject orb;
 
     public GameObject linkDeformation;
 
@@ -58,6 +60,7 @@ public class GameManager : MonoBehaviour
 
         player1 = GameObject.Find("Player1");
         player2 = GameObject.Find("Player2");
+        orb = GameObject.Find("Orb");
         linkDeformation = GameObject.Find("Deformation");
 
         hp = baseHP;
