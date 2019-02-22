@@ -172,7 +172,7 @@ MonoBehaviour:
   hitZone: 2
   accelerationFactor: 0.5
   maxAmortizeTime: 1.5
-  hitCooldown: 5
+  hitCooldown: 1
   powerToApply: 0
 --- !u!1 &8708506529803211955
 GameObject:
@@ -789,7 +789,7 @@ MonoBehaviour:
   hitZone: 2
   accelerationFactor: 0.5
   maxAmortizeTime: 1.5
-  hitCooldown: 5
+  hitCooldown: 1
   powerToApply: 0
 --- !u!1 &8708506531061932086
 GameObject:
@@ -835,6 +835,7 @@ GameObject:
   - component: {fileID: 5554655534727368811}
   - component: {fileID: 8708506531089382185}
   - component: {fileID: 8708506531089382189}
+  - component: {fileID: 2970527385879693205}
   m_Layer: 0
   m_Name: Orb
   m_TagString: Untagged
@@ -944,8 +945,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 10
-  minSpeed: 8
-  maxSpeed: 12
+  minSpeed: 10
+  maxSpeed: 20
   amortized: 0
   canHitEnemy: 1
   canHitPlayer: 0
@@ -954,3 +955,32 @@ MonoBehaviour:
   highFixedCoefficient: 1.5
   veryHighFixedCoefficient: 1.7
   toPlayer2: 0
+--- !u!114 &2970527385879693205
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8708506531089382184}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c59eb286cd1e8a14aaaaf44326e6a8c6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  elementalPower: 0
+  behavioralPower: 0
+  baseDamage: 5
+  minScale: 1
+  maxScale: 1.5
+  LargeOrbDamage: 5
+  lifeSteel: 50
+  slug: {fileID: 1635892733598159781, guid: f1fb8f1469f8aab42bc8a4f47c49f15c, type: 3}
+  durationSlugPower: 4
+  mitigatedDamage: 2
+  shieldAmount: 10
+  currentShieldStack: 2
+  fireParticleSystem: {fileID: 5522416902220534363, guid: a5e31017771f8db45ac7c51b24cb21a8,
+    type: 3}
+  fireDamage: 5
+  fireDuration: 5
+  fireCoolDown: 8
