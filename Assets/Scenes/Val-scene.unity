@@ -1801,6 +1801,11 @@ PrefabInstance:
       propertyPath: initialSpeed
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 947384502557923801, guid: 8e72342c511536043883f2199df73730,
+        type: 3}
+      propertyPath: skillOne
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8e72342c511536043883f2199df73730, type: 3}
 --- !u!1 &1432279078
@@ -2717,6 +2722,11 @@ PrefabInstance:
       propertyPath: hitZone
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 8708506530940788384, guid: e0c803f7f12a09b4cb87b0f68746c41b,
+        type: 3}
+      propertyPath: powerToApply
+      value: 5
+      objectReference: {fileID: 0}
     - target: {fileID: 8708506531089382189, guid: e0c803f7f12a09b4cb87b0f68746c41b,
         type: 3}
       propertyPath: canHitPlayer
@@ -2774,13 +2784,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   elementalPower: 0
   behavioralPower: 0
-  baseDamage: 0
+  baseDamage: 10
   minScale: 0.75
   maxScale: 1.5
   LargeOrbDamage: 0
   lifeSteel: 0
   slug: {fileID: 1635892733598159781, guid: f1fb8f1469f8aab42bc8a4f47c49f15c, type: 3}
   durationSlugPower: 5
+  mitigatedDamage: 2
+  shieldAmount: 10
+  currentShieldStack: 0
+  fireParticleSystem: {fileID: 0}
+  fireDamage: 5
+  fireDuration: 5
+  fireCoolDown: 8
 --- !u!1001 &8896361619845698694
 PrefabInstance:
   m_ObjectHideFlags: 0

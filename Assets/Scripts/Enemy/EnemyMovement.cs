@@ -62,7 +62,7 @@ public class EnemyMovement : MonoBehaviour
         switch (movement)
         {
             case Movement.Static:
-                this.transform.LookAt(Enemy.target.transform);
+                StaticMovement();
                 break;
             case Movement.Basic:
                 ClassicMovement();
@@ -83,9 +83,17 @@ public class EnemyMovement : MonoBehaviour
         }
     }
 
+    void StaticMovement()
+    {
+        this.transform.LookAt(Enemy.aimPlayer.transform);
+        this.transform.eulerAngles = new Vector3(0, this.transform.eulerAngles.y, 0);
+        this.GetComponent<Rigidbody>().isKinematic = true;
+
+    }
+
     void ClassicMovement()
     {
-        agent.destination = Enemy.target.transform.position;
+        agent.destination = Enemy.aimPlayer.transform.position;
     }
 
     private void OnCollisionEnter(Collision collision)
