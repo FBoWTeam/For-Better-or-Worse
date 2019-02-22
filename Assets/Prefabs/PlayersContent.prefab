@@ -164,6 +164,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   player1: 0
   speed: 15
+  initialSpeed: 0
   direction: {x: 0, y: 0, z: 0}
 --- !u!114 &8708506529559422337
 MonoBehaviour:
@@ -810,6 +811,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   player1: 1
   speed: 15
+  initialSpeed: 0
   direction: {x: 0, y: 0, z: 0}
 --- !u!114 &8708506530940788384
 MonoBehaviour:
@@ -876,6 +878,7 @@ GameObject:
   - component: {fileID: 5554655534727368811}
   - component: {fileID: 8708506531089382185}
   - component: {fileID: 8708506531089382189}
+  - component: {fileID: 7233650217127547058}
   m_Layer: 0
   m_Name: Orb
   m_TagString: Orb
@@ -989,7 +992,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: add04915dcedc254c8f1e93d5588c2ea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damage: 10
   speed: 10
   minSpeed: 10
   maxSpeed: 20
@@ -1001,6 +1003,34 @@ MonoBehaviour:
   highFixedCoefficient: 1.5
   veryHighFixedCoefficient: 1.7
   toPlayer2: 0
+--- !u!114 &7233650217127547058
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8708506531089382184}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c59eb286cd1e8a14aaaaf44326e6a8c6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  elementalPower: 0
+  behavioralPower: 0
+  baseDamage: 10
+  minScale: 0
+  maxScale: 0
+  LargeOrbDamage: 0
+  lifeSteel: 0
+  slug: {fileID: 0}
+  durationSlugPower: 0
+  mitigatedDamage: 0
+  shieldAmount: 0
+  currentShieldStack: 0
+  fireParticleSystem: {fileID: 0}
+  fireDamage: 5
+  fireDuration: 5
+  fireCoolDown: 8
 --- !u!1001 &1274204272493586619
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1231,6 +1261,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Link
       objectReference: {fileID: 0}
+    - target: {fileID: 2169873882748627070, guid: 8d535c8daf082b84d9ee101e6efb1159,
+        type: 3}
+      propertyPath: smoothTime
+      value: 0.15
+      objectReference: {fileID: 0}
     - target: {fileID: 2169873882594528060, guid: 8d535c8daf082b84d9ee101e6efb1159,
         type: 3}
       propertyPath: player1
@@ -1245,11 +1280,6 @@ PrefabInstance:
         type: 3}
       propertyPath: maxDistance
       value: 30
-      objectReference: {fileID: 0}
-    - target: {fileID: 2169873882748627070, guid: 8d535c8daf082b84d9ee101e6efb1159,
-        type: 3}
-      propertyPath: smoothTime
-      value: 0.15
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8d535c8daf082b84d9ee101e6efb1159, type: 3}
