@@ -136,37 +136,34 @@ public class Enemy : MonoBehaviour
 
     private void TauntManagement()
     {
-
-        if (enemyMovement.agent.remainingDistance <= GameManager.gameManager.tauntRange)
+		if (GameManager.gameManager.player1HasTaunt && Vector3.Distance(transform.position, GameManager.gameManager.player1.transform.position) <= GameManager.gameManager.tauntRange)
         {
-            if (GameManager.gameManager.player1HasTaunt)
-            {
-                taunter = players[0];
-                isTaunted = true;
-                tauntCanvas.GetComponentInChildren<Text>().color = player1ColorTaunt;
-            }
-            else if (GameManager.gameManager.player2HasTaunt)
-            {
-                taunter = players[1];
-                isTaunted = true;
-                tauntCanvas.GetComponentInChildren<Text>().color = player2ColorTaunt;
-            }
+            taunter = players[0];
+            isTaunted = true;
+            tauntCanvas.GetComponentInChildren<Text>().color = player1ColorTaunt;
+        }
+        else if (GameManager.gameManager.player2HasTaunt && Vector3.Distance(transform.position, GameManager.gameManager.player2.transform.position) <= GameManager.gameManager.tauntRange)
+        {
+            taunter = players[1];
+            isTaunted = true;
+            tauntCanvas.GetComponentInChildren<Text>().color = player2ColorTaunt;
+        }
 
-            if (taunter != null)
+        if (taunter != null)
+        {
+            switch (taunt)
             {
-                switch (taunt)
-                {
-                    case Taunt.Taunter:
-                        aimPlayer = taunter;
-                        break;
-                    case Taunt.Other:
-                        aimPlayer = (taunter.Equals(players[0])) ? players[1] : players[0];
-                        break;
-                    default:
-                        break;
-                }
+                case Taunt.Taunter:
+                    aimPlayer = taunter;
+                    break;
+                case Taunt.Other:
+                    aimPlayer = (taunter.Equals(players[0])) ? players[1] : players[0];
+                    break;
+                default:
+                    break;
             }
         }
+
         TauntFeedback();
     }
 
