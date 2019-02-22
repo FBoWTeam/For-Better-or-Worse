@@ -260,17 +260,13 @@ public class PowerController : MonoBehaviour
 
         int tickDamage = Mathf.RoundToInt(totalDamage / duration);
         int curentDamage = 0;
-        Instantiate(fireParticleSystem, enemy.transform.position, Quaternion.identity);
-        fireParticleSystem.GetComponent<ParticleSystem>().Play();
 
         while (curentDamage < totalDamage) {
             enemy.TakeDamage(tickDamage);           
             yield return new WaitForSeconds(1f);         
             curentDamage += tickDamage;
         }
-
-        print("stop");      
-        fireParticleSystem.GetComponent<ParticleSystem>().Stop();
+        
         //DestroyImmediate(fireParticleSystem,true);
         yield return null;
     }
