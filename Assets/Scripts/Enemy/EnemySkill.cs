@@ -108,21 +108,14 @@ public class EnemySkill : MonoBehaviour
         }
     }
 
-    //Trigger inRangeEvent
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.CompareTag("Player") && other.gameObject == Enemy.aimPlayer)
-        {
-            inRangeEvent(other.gameObject, skillOne);
-        }
-    }
-
-
     private void OnTriggerStay(Collider other)
     {
-        if (other.CompareTag("Player") && other.gameObject == Enemy.aimPlayer)
+        if (other.CompareTag("Player"))
         {
-            inRangeEvent(other.gameObject, skillOne);
+            if (other.gameObject == Enemy.aimPlayer || skillOne == Skill.AOE)
+            {
+                inRangeEvent(other.gameObject, skillOne);
+            }
         }
     }
 

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.UI;
 
 [RequireComponent(typeof(Rigidbody))]
 [RequireComponent(typeof(NavMeshAgent))]
@@ -22,6 +23,7 @@ public class Enemy : MonoBehaviour
     public static bool sdrawPath;
     #endregion
 
+    #region Focus Variables
     public enum Focus
     {
         Player1,
@@ -29,7 +31,9 @@ public class Enemy : MonoBehaviour
         Nearest,
     }
     public Focus focus = Focus.Nearest;
+    #endregion
 
+    #region Taunt Variables
     public enum Taunt
     {
         Taunter,
@@ -38,6 +42,12 @@ public class Enemy : MonoBehaviour
     public Taunt taunt = Taunt.Taunter;
     private GameObject taunter;
     public bool isTaunted = false;
+
+    GameObject tauntCanvas;
+    Color player1ColorTaunt = new Color(255, 96, 0);
+    Color player2ColorTaunt = new Color(82, 82, 82);
+
+    #endregion
 
     public int baseHP = 100;
     public int hp;
@@ -57,6 +67,7 @@ public class Enemy : MonoBehaviour
         players = new GameObject[] { GameManager.gameManager.player1, GameManager.gameManager.player2 };
         enemyMovement = GetComponent<EnemyMovement>();
         sdrawPath = drawPath;
+        tauntCanvas = transform.GetChild(2).gameObject;
     }
 
     // Update is called once per frame
@@ -121,44 +132,64 @@ public class Enemy : MonoBehaviour
 
     #endregion
 
+    #region Taunt Methods
+
     private void TauntManagement()
     {
-        if (!isTaunted)
+
+        if (enemyMovement.agent.remainingDistance <= GameManager.gameManager.tauntRange)
         {
-            if (enemyMovement.agent.remainingDistance <= GameManager.gameManager.tauntRange)
+            if (GameManager.gameManager.player1HasTaunt)
             {
-                if (GameManager.gameManager.player1HasTaunt)
-                {
-                    taunter = players[0];
-                }
-                else if (GameManager.gameManager.player2HasTaunt)
-                {
-                    taunter = players[1];
-                }
+                taunter = players[0];
+                isTaunted = true;
+                tauntCanvas.GetComponentInChildren<Text>().color = player1ColorTaunt;
+            }
+            else if (GameManager.gameManager.player2HasTaunt)
+            {
+                taunter = players[1];
+                isTaunted = true;
+                tauntCanvas.GetComponentInChildren<Text>().color = player2ColorTaunt;
+            }
 
-                if (taunter != null)
+            if (taunter != null)
+            {
+                switch (taunt)
                 {
-                    switch (taunt)
-                    {
-                        case Taunt.Taunter:
-                            aimPlayer = taunter;
-                            break;
-                        case Taunt.Other:
-                            aimPlayer = (taunter.Equals(players[0])) ? players[1] : players[0];
-                            break;
-                        default:
-                            break;
-                    }
-
-                    //isTaunted = true;
+                    case Taunt.Taunter:
+                        aimPlayer = taunter;
+                        break;
+                    case Taunt.Other:
+                        aimPlayer = (taunter.Equals(players[0])) ? players[1] : players[0];
+                        break;
+                    default:
+                        break;
                 }
             }
         }
+        TauntFeedback();
     }
 
-    public void TakeDamage(int damage) {
+    private void TauntFeedback()
+    {
+        if (isTaunted)
+        {
+            tauntCanvas.SetActive(true);
+            tauntCanvas.transform.LookAt(Camera.main.transform.position);
+        }
+        else
+        {
+            tauntCanvas.SetActive(false);
+        }
+    }
+
+    #endregion
+
+    public void TakeDamage(int damage)
+    {
         hp -= damage;
-        if (hp <= 0) {
+        if (hp <= 0)
+        {
             enemyMovement.agent.isStopped = true;
             StopAllCoroutines();
             Destroy(this.gameObject);
