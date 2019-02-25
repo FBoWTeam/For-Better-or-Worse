@@ -9,13 +9,17 @@ public class Capstan : MonoBehaviour
     Transform pivot;
     private bool orbOnTheRight;
 
-    int rotationSpeed = 1;
-
     [Tooltip("how many times the capstan must be turned clockwise to lower the bridge")]
     public int notchNumber;
+
+    [HideInInspector]
     public int actualAngle;
+    [HideInInspector]
     public int targetAngle;
+    [HideInInspector]
     public int maxAngle;
+
+    public int rotationSpeed = 1;
 
     private void Start()
     {
