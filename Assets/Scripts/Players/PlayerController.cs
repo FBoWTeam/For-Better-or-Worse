@@ -18,15 +18,17 @@ public class PlayerController : MonoBehaviour
     public GameManager.PowerType powerSlot2;
     public GameManager.PowerType powerSlot3;
     public GameManager.PowerType powerSlot4;
+	public bool oldestSlotIs3;
 
 
-    OrbHitter orbHitter;
+	OrbHitter orbHitter;
 
     void Awake()
     {
         rb = GetComponent<Rigidbody>();
         orbHitter = gameObject.GetComponent<OrbHitter>();
         initialSpeed = speed;
+		oldestSlotIs3 = true;
     }
 
     void Update()

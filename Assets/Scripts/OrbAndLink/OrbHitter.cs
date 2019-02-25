@@ -17,10 +17,11 @@ public class OrbHitter : MonoBehaviour
     public float hitCooldown;
     float hitTimer;
 
+	public GameManager.PowerType powerToApply;
 
-    public GameManager.PowerType powerToApply;
+	public GameManager.PowerType droppedPower;
 
-    void Start()
+	void Start()
     {
         orb = GameObject.Find("Orb").GetComponent<OrbController>();
         inRange = false;
