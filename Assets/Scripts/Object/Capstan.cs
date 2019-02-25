@@ -2,8 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Capstan : MonoBehaviour
+public class Capstan : MonoBehaviour, IActivable
 {
+    //boolean indicating if the hatch is activated or not
+    public bool isActive { get; set; }
+
+    [Tooltip("list of activated objects needed to activate the capstan")]
+    public List<GameObject> objectsConditions;
+
     GameObject orb;
     Transform border;
     Transform pivot;
@@ -67,6 +73,42 @@ public class Capstan : MonoBehaviour
                 targetAngle -= 180;
             }
         }
+    }
+
+    public void Activate()
+    {
+        if (CheckValidObjects())
+        {
+            if (isActive == false)
+            {
+                GetComponent<Animation>().Play("CapstanUp");
+            }
+            isActive = true;
+        }
+        else
+        {
+            if (isActive == true)
+            {
+                GetComponent<Animation>().Play("CapstanDown");
+            }
+            isActive = false;
+        }
+    }
+
+    /// <summary>
+    /// check if all the necesary object are activated to open the door
+    /// </summary>
+    /// <returns></returns>
+    bool CheckValidObjects()
+    {
+        for (int i = 0; i < objectsConditions.Count; i++)
+        {
+            if (objectsConditions[i].GetComponent<IActivable>().isActive != true)
+            {
+                return false;
+            }
+        }
+        return true;
     }
 
     /// <summary>
