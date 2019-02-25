@@ -7,26 +7,36 @@ public class PowerController : MonoBehaviour
     public GameManager.PowerType elementalPower;
     public GameManager.PowerType behavioralPower;
 
-    public int baseDamage;
+	public int baseDamage;
 
-    //LargeOrb
-    [Header("[GreatOrb Param]")]
+	public List<bool> canBeActivated;
+
+	//LargeOrb
+	[Header("[LargeOrb Param]")]
+	public float largeOrbCooldown;
     public float minScale;
     public float maxScale;
-    public int LargeOrbDamage;
+    public int largeOrbDamage;
 
-    //LeechLife
-    [Header("[LeechLife Param]")]
+	//Vortex
+	[Header("[Vortex Param]")]
+	public float vortexCooldown;
+
+	//LeechLife
+	[Header("[LeechLife Param]")]
+	public float leechLifeCooldown;
     [Range(0, 100f)]
     public float lifeSteel;
 
-    //Slug
-    [Header("[Slug Param]")]
+	//Slug
+	[Header("[Slug Param]")]
+	public float slugCooldown;
     public GameObject slug;
     public float durationSlugPower;
-    
-    //Shield
-    [Header("[Shield Param]")]
+
+	//Shield
+	[Header("[Shield Param]")]
+	public float shieldCooldown;
     [Tooltip("Reduce the damage of the orb")]
     public int mitigatedDamage;
     public int shieldAmount;
@@ -34,21 +44,33 @@ public class PowerController : MonoBehaviour
     public int currentShieldStack;
 
 
-    
-    //Fire
-    [Header("[Fire Param]")]
+	//Ice
+	[Header("[Ice Param]")]
+	public float iceCooldown;
+
+	//Fire
+	[Header("[Fire Param]")]
+	public float fireCooldown;
     public GameObject fireParticleSystem;
     [Tooltip("Damage is over time , should be >= to fireDuration")]
     public int fireDamage = 5;
     public float fireDuration = 5;
     public float fireCoolDown = 8;
-
     private float nextAttack = 0f;
 
-    private void Start()
+	//Electric
+	[Header("[Electric Param]")]
+	public float electricCooldown;
+
+	//Weakness
+	[Header("[Weakness Param]")]
+	public float weaknessCooldown;
+
+
+	private void Start()
     {
-        elementalPower = GameManager.PowerType.Fire;
-    }
+		canBeActivated = new List<bool> {true, true, true, true, true, true, true, true, true};
+	}
 
     /// <summary>
     /// Activate the powerToActivate, deactivate the power of the same type if there's already an active one
@@ -56,45 +78,57 @@ public class PowerController : MonoBehaviour
     /// <param name="powerToActivate"></param>
     public void ActivatePower(GameManager.PowerType powerToActivate)
     {
-        if (powerToActivate == GameManager.PowerType.Elemental && elementalPower != GameManager.PowerType.None)
-        {
-            DeactivatePower(elementalPower);
-        }
-        else if (powerToActivate == GameManager.PowerType.Behavioral && behavioralPower != GameManager.PowerType.None)
-        {
-            DeactivatePower(behavioralPower);
-        }
+		if(canBeActivated[(int)powerToActivate - 1])
+		{
+			if (powerToActivate == GameManager.PowerType.Elemental && elementalPower != GameManager.PowerType.None)
+			{
+				DeactivatePower(elementalPower);
+			}
+			else if (powerToActivate == GameManager.PowerType.Behavioral && behavioralPower != GameManager.PowerType.None)
+			{
+				DeactivatePower(behavioralPower);
+			}
 
-        switch (powerToActivate)
-        {
-            case GameManager.PowerType.LargeOrb:
-                ActivateLargeOrb();
-                break;
-            case GameManager.PowerType.Vortex:
-                ActivateVortex();
-                break;
-            case GameManager.PowerType.LeechLife:
-                ActivateLeechLife();
-                break;
-            case GameManager.PowerType.Slug:
-                ActivateSlug();
-                break;
-            case GameManager.PowerType.Shield:
-                ActivateShield();
-                break;
-            case GameManager.PowerType.Ice:
-                ActivateIce();
-                break;
-            case GameManager.PowerType.Fire:
-                ActivateFire();
-                break;
-            case GameManager.PowerType.Electric:
-                ActivateElectric();
-                break;
-            case GameManager.PowerType.Weakness:
-                ActivateWeakness();
-                break;
-        }
+			switch (powerToActivate)
+			{
+				case GameManager.PowerType.LargeOrb:
+					StartCoroutine(cooldownCoroutine(GameManager.PowerType.LargeOrb, largeOrbCooldown));
+					ActivateLargeOrb();
+					break;
+				case GameManager.PowerType.Vortex:
+					StartCoroutine(cooldownCoroutine(GameManager.PowerType.Vortex, vortexCooldown));
+					ActivateVortex();
+					break;
+				case GameManager.PowerType.LeechLife:
+					StartCoroutine(cooldownCoroutine(GameManager.PowerType.LeechLife, leechLifeCooldown));
+					ActivateLeechLife();
+					break;
+				case GameManager.PowerType.Slug:
+					StartCoroutine(cooldownCoroutine(GameManager.PowerType.Slug, slugCooldown));
+					ActivateSlug();
+					break;
+				case GameManager.PowerType.Shield:
+					StartCoroutine(cooldownCoroutine(GameManager.PowerType.Shield, shieldCooldown));
+					ActivateShield();
+					break;
+				case GameManager.PowerType.Ice:
+					StartCoroutine(cooldownCoroutine(GameManager.PowerType.Ice, iceCooldown));
+					ActivateIce();
+					break;
+				case GameManager.PowerType.Fire:
+					StartCoroutine(cooldownCoroutine(GameManager.PowerType.Fire, fireCooldown));
+					ActivateFire();
+					break;
+				case GameManager.PowerType.Electric:
+					StartCoroutine(cooldownCoroutine(GameManager.PowerType.Electric, electricCooldown));
+					ActivateElectric();
+					break;
+				case GameManager.PowerType.Weakness:
+					StartCoroutine(cooldownCoroutine(GameManager.PowerType.Weakness, weaknessCooldown));
+					ActivateWeakness();
+					break;
+			}
+		}
     }
 
     /// <summary>
@@ -148,14 +182,14 @@ public class PowerController : MonoBehaviour
     {
         behavioralPower = GameManager.PowerType.LargeOrb;
         transform.localScale = new Vector3(maxScale, maxScale, maxScale);
-        baseDamage += LargeOrbDamage;
+        baseDamage += largeOrbDamage;
     }
 
     void DeactivateLargeOrb()
     {
         behavioralPower = GameManager.PowerType.None;
         transform.localScale = new Vector3(minScale, minScale, minScale);
-        baseDamage -= LargeOrbDamage;
+        baseDamage -= largeOrbDamage;
     }
 
     #endregion
@@ -341,7 +375,12 @@ public class PowerController : MonoBehaviour
         }
     }
 
-
+	public IEnumerator cooldownCoroutine(GameManager.PowerType power, float cooldown)
+	{
+		canBeActivated[(int)power-1] = false;
+		yield return new WaitForSeconds(cooldown);
+		canBeActivated[(int)power-1] = true;
+	}
 }
 
 

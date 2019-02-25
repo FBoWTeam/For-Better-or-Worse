@@ -27,21 +27,21 @@ public class GameManager : MonoBehaviour
 
 	public enum PowerType
     {
-        None,
+        None = 0,
 
-        LargeOrb,
-        Vortex,
-        LeechLife,
-        Slug,
-        Shield,
+        LargeOrb = 1,
+        Vortex = 2,
+        LeechLife = 3,
+        Slug = 4,
+        Shield = 5,
 
-        Ice,
-        Fire,
-        Electric,
-        Weakness,
+        Ice = 6,
+        Fire = 7,
+        Electric = 8,
+        Weakness = 9,
 
-        Elemental = Ice | Fire | Electric | Weakness,
-        Behavioral = LargeOrb | Vortex | LeechLife | Slug | Shield
+		Behavioral = LargeOrb | Vortex | LeechLife | Slug | Shield,
+		Elemental = Ice | Fire | Electric | Weakness
     }
 
 

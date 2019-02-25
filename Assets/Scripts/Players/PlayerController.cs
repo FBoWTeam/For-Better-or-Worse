@@ -14,10 +14,10 @@ public class PlayerController : MonoBehaviour
     Rigidbody rb;
     public Vector3 direction;
 
-    GameManager.PowerType powerSlot1;
-    GameManager.PowerType powerSlot2;
-    GameManager.PowerType powerSlot3;
-    GameManager.PowerType powerSlot4;
+    public GameManager.PowerType powerSlot1;
+    public GameManager.PowerType powerSlot2;
+    public GameManager.PowerType powerSlot3;
+    public GameManager.PowerType powerSlot4;
 
 
     OrbHitter orbHitter;
