@@ -28,7 +28,7 @@ public class OrbController : MonoBehaviour
     float progression;
     float step;
 
-    void Start()
+	void Start()
     {
         toPlayer2 = true;
         progression = 0.5f;
@@ -128,16 +128,21 @@ public class OrbController : MonoBehaviour
         }
     }
 
-    private void OnTriggerEnter(Collider other)
+	private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player") && canHitPlayer == true)
         {
             GameManager.gameManager.TakeDamage(other.gameObject, gameObject.GetComponent<PowerController>().baseDamage);
             speed = minSpeed;
+			GetComponent<PowerController>().CheckPowerAttribution("miss", other.GetComponent<PlayerController>().player1);
         }
-        else if (other.CompareTag("Enemy") && canHitEnemy == true)
+		else if (other.CompareTag("Player") && canHitPlayer == false)
+		{
+			GetComponent<PowerController>().CheckPowerAttribution("miss", other.GetComponent<PlayerController>().player1);
+		}
+		else if (other.CompareTag("Enemy") && canHitEnemy == true)
         {
-            gameObject.GetComponent<PowerController>().onEnemyHit(other.gameObject);
+            GetComponent<PowerController>().onEnemyHit(other.gameObject);
         }
     }
 }
