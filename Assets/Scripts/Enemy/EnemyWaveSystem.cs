@@ -14,7 +14,12 @@ public class EnemyWaveSystem : MonoBehaviour
     private int currentWave;
 
 
-    // Start is called before the first frame update
+    /// <summary>
+    /// coroutine that handles the wave system
+    /// instanciate the prefabs in the array enemyWaves
+    /// the prefabs are gameObjects that contain the enemies to spawn
+    /// </summary>
+    /// <returns></returns>
     IEnumerator Start()
     {
         //if no waves to instanciate, exit the coroutine

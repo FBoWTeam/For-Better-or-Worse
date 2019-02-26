@@ -13,7 +13,6 @@ public class FlammableObjects : MonoBehaviour, IActivable
 
     public bool isActive { get; set; }
     
-
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Orb"))
