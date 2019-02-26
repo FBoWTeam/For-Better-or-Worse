@@ -109,6 +109,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+
 	/// <summary>
 	/// Gives a power dropped by an enemy, and place it on the good slot
 	/// </summary>
@@ -143,4 +144,10 @@ public class PlayerController : MonoBehaviour
 			oldestSlotIs3 = !oldestSlotIs3;
 		}
 	}
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.magenta;
+        Gizmos.DrawWireSphere(transform.position, gameObject.GetComponent<OrbHitter>().hitZone * 2);
+    }
 }
