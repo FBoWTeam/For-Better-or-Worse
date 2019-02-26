@@ -101,13 +101,15 @@ public class EnemyMovement : MonoBehaviour
         if (collision.gameObject.CompareTag("Player"))
         {
             agent.isStopped = true;
-
         }
     }
 
     private void OnCollisionExit(Collision collision)
     {
-        agent.isStopped = false;
+        if (collision.gameObject.CompareTag("Player"))
+        {
+            agent.isStopped = false;
+        }
     }
 
     void DrawPath(NavMeshPath path)

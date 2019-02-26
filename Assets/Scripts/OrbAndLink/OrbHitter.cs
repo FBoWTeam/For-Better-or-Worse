@@ -120,7 +120,7 @@ public class OrbHitter : MonoBehaviour
     /// </summary>
     void CheckPowerActivation()
     {
-        if (powerToApply != GameManager.PowerType.None)
+		if (powerToApply != GameManager.PowerType.None)
         {
             orb.GetComponent<PowerController>().ActivatePower(powerToApply);
             
