@@ -9,17 +9,25 @@ public class PrologueLastRoom : MonoBehaviour
     public GameObject waveSystem;
 
     private float timer;
+    private bool alreadyActive;
 
     // Update is called once per frame
     void Update()
     {
-        if (flammableObject.GetComponent<IActivable>().isActive)
+        if (flammableObject.GetComponent<IActivable>().isActive && flammableObject != null)
         {
-            timer = flammableObject.GetComponent<FlammableObjects>().burnTime;
-            waveSystem.SetActive(true);
+            if (!alreadyActive)
+            {
+                waveSystem.SetActive(true);
+            }
 
-            //AFFICHER L'UI
-
+            timer += Time.deltaTime;
+            if (timer >= flammableObject.GetComponent<FlammableObjects>().burnTime)
+            {
+                Destroy(flammableObject);
+                Destroy(gameObject);
+            }
         }
+
     }
 }

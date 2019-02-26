@@ -6,6 +6,10 @@ public class FlammableObjects : MonoBehaviour, IActivable
 {
     [Tooltip("time needed for the object to be destroyed when burning")]
     public float burnTime;
+    [Tooltip("the burn time is reduce by this amount if touched with the fire orb")]
+    public float burnAcceleration;
+
+    private bool isBurning;
 
     public bool isActive { get; set; }
     
@@ -17,10 +21,14 @@ public class FlammableObjects : MonoBehaviour, IActivable
             PowerController orbPower = other.gameObject.GetComponent<PowerController>();
             if (orbPower.elementalPower == GameManager.PowerType.Fire)
             {
-                if (isActive == false)
+                if (!isActive)
                 {
                     this.Activate();
                 }
+            }
+            else if (orbPower.elementalPower == GameManager.PowerType.None)
+            {
+                orbPower.elementalPower = GameManager.PowerType.Fire;
             }
         }
     }
@@ -28,6 +36,8 @@ public class FlammableObjects : MonoBehaviour, IActivable
     public void Activate()
     {
         isActive = true;
+        isBurning = true;
+        gameObject.GetComponent<Renderer>().material.color = Color.red;
         Destroy(gameObject, burnTime);
     }
 }
