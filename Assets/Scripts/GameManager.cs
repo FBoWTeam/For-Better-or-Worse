@@ -107,7 +107,7 @@ public class GameManager : MonoBehaviour
         }
         if (hp <= 0)
         {
-            Debug.Log("DED");
+
         }
     }
     
