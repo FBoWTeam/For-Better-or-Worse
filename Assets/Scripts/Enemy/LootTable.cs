@@ -13,8 +13,10 @@ public class LootTable : MonoBehaviour
 
 	public void LootEnemy()
 	{
-		//if (Random.Range(0.0f, 1.0f) <= chanceOfHealing)
-			//do the heal thing
+		if (Random.Range(0.0f, 1.0f) <= chanceOfHealing)
+		{
+			GameManager.gameManager.spawnHealingOrbs();
+		}
 
 		if (Random.Range(0.0f, 1.0f) <= chanceOfPowerDrop && GameManager.gameManager.orb.GetComponent<PowerController>().droppedPower == GameManager.PowerType.None)
 		{
