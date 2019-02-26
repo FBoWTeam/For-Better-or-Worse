@@ -106,4 +106,11 @@ public class PlayerController : MonoBehaviour
             orbHitter.powerToApply = powerSlot3;
         }
     }
+
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.magenta;
+        Gizmos.DrawWireSphere(transform.position, gameObject.GetComponent<OrbHitter>().hitZone * 2);
+    }
 }
