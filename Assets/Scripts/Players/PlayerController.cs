@@ -18,23 +18,23 @@ public class PlayerController : MonoBehaviour
     public GameManager.PowerType powerSlot2;
     public GameManager.PowerType powerSlot3;
     public GameManager.PowerType powerSlot4;
-	public bool oldestSlotIs3;
+    public bool oldestSlotIs3;
 
 
-	OrbHitter orbHitter;
+    OrbHitter orbHitter;
 
     void Awake()
     {
         rb = GetComponent<Rigidbody>();
         orbHitter = gameObject.GetComponent<OrbHitter>();
         initialSpeed = speed;
-		oldestSlotIs3 = true;
+        oldestSlotIs3 = true;
     }
 
     void Update()
     {
         Move();
-		CheckTaunt();
+        CheckTaunt();
         GetCurrentPower();
     }
 
@@ -44,9 +44,9 @@ public class PlayerController : MonoBehaviour
     /// </summary>
 	public void Move()
     {
-		direction = player1 ? new Vector3(Input.GetAxis("HorizontalP1"), 0.0f, Input.GetAxis("VerticalP1")) : new Vector3(Input.GetAxis("HorizontalP2"), 0.0f, Input.GetAxis("VerticalP2"));
+        direction = player1 ? new Vector3(Input.GetAxis("HorizontalP1"), 0.0f, Input.GetAxis("VerticalP1")) : new Vector3(Input.GetAxis("HorizontalP2"), 0.0f, Input.GetAxis("VerticalP2"));
 
-		direction = (direction.x * Camera.main.transform.right + direction.z * Camera.main.transform.forward);
+        direction = (direction.x * Camera.main.transform.right + direction.z * Camera.main.transform.forward);
 
         Vector3 velocity = direction * speed * Time.deltaTime;
 
@@ -55,30 +55,30 @@ public class PlayerController : MonoBehaviour
 
 
 
-	void CheckTaunt()
-	{
-		if ( (player1 && (Input.GetKeyDown(KeyCode.Joystick1Button4) || Input.GetKeyDown(KeyCode.Space))) || (!player1 && (Input.GetKeyDown(KeyCode.Joystick2Button4) || Input.GetKeyDown(KeyCode.Keypad0))))
-		{
-			StartCoroutine(TauntCoroutine());
-		}
-	}
+    void CheckTaunt()
+    {
+        if ((player1 && (Input.GetKeyDown(KeyCode.Joystick1Button4) || Input.GetKeyDown(KeyCode.Space))) || (!player1 && (Input.GetKeyDown(KeyCode.Joystick2Button4) || Input.GetKeyDown(KeyCode.Keypad0))))
+        {
+            StartCoroutine(TauntCoroutine());
+        }
+    }
 
-	IEnumerator TauntCoroutine()
-	{
-		yield return new WaitForEndOfFrame();
+    IEnumerator TauntCoroutine()
+    {
+        yield return new WaitForEndOfFrame();
 
-		if (player1)
-			GameManager.gameManager.player1HasTaunt = true;
-		else
-			GameManager.gameManager.player2HasTaunt = true;
+        if (player1)
+            GameManager.gameManager.player1HasTaunt = true;
+        else
+            GameManager.gameManager.player2HasTaunt = true;
 
-		yield return new WaitForEndOfFrame();
+        yield return new WaitForEndOfFrame();
 
-		if (player1)
-			GameManager.gameManager.player1HasTaunt = false;
-		else
-			GameManager.gameManager.player2HasTaunt = false;
-	}
+        if (player1)
+            GameManager.gameManager.player1HasTaunt = false;
+        else
+            GameManager.gameManager.player2HasTaunt = false;
+    }
 
     /// <summary>
     /// gets the current power that is going to be apllied on the orb by checking the input
@@ -110,40 +110,40 @@ public class PlayerController : MonoBehaviour
     }
 
 
-	/// <summary>
-	/// Gives a power dropped by an enemy, and place it on the good slot
-	/// </summary>
-	public void AttributePower(GameManager.PowerType newPower)
-	{
-		if (powerSlot1 == GameManager.PowerType.None)
-		{
-			powerSlot1 = newPower;
-		}
-		else if (powerSlot2 == GameManager.PowerType.None)
-		{
-			powerSlot2 = newPower;
-		}
-		else if (powerSlot3 == GameManager.PowerType.None)
-		{
-			powerSlot3 = newPower;
-		}
-		else if (powerSlot4 == GameManager.PowerType.None)
-		{
-			powerSlot4 = newPower;
-		}
-		else
-		{
-			if(oldestSlotIs3)
-			{
-				powerSlot3 = newPower;
-			}
-			else
-			{
-				powerSlot4 = newPower;
-			}
-			oldestSlotIs3 = !oldestSlotIs3;
-		}
-	}
+    /// <summary>
+    /// Gives a power dropped by an enemy, and place it on the good slot
+    /// </summary>
+    public void AttributePower(GameManager.PowerType newPower)
+    {
+        if (powerSlot1 == GameManager.PowerType.None)
+        {
+            powerSlot1 = newPower;
+        }
+        else if (powerSlot2 == GameManager.PowerType.None)
+        {
+            powerSlot2 = newPower;
+        }
+        else if (powerSlot3 == GameManager.PowerType.None)
+        {
+            powerSlot3 = newPower;
+        }
+        else if (powerSlot4 == GameManager.PowerType.None)
+        {
+            powerSlot4 = newPower;
+        }
+        else
+        {
+            if (oldestSlotIs3)
+            {
+                powerSlot3 = newPower;
+            }
+            else
+            {
+                powerSlot4 = newPower;
+            }
+            oldestSlotIs3 = !oldestSlotIs3;
+        }
+    }
 
     private void OnDrawGizmos()
     {

@@ -22,10 +22,10 @@ public class GameManager : MonoBehaviour
 
     public GameObject linkDeformation;
 
-	public bool player1HasTaunt, player2HasTaunt;
+    public bool player1HasTaunt, player2HasTaunt;
     public int tauntRange = 10;
 
-	public enum PowerType
+    public enum PowerType
     {
         None = 0,
 
@@ -40,8 +40,8 @@ public class GameManager : MonoBehaviour
         Electric = 8,
         Weakness = 9,
 
-		Behavioral = LargeOrb | Vortex | LeechLife | Slug | Shield,
-		Elemental = Ice | Fire | Electric | Weakness
+        Behavioral = LargeOrb | Vortex | LeechLife | Slug | Shield,
+        Elemental = Ice | Fire | Electric | Weakness
     }
 
 
@@ -84,7 +84,7 @@ public class GameManager : MonoBehaviour
                 damage -= shieldP1;
                 shieldP1 = 0;
             }
-            else if(damage < shieldP1)
+            else if (damage < shieldP1)
             {
                 shieldP1 -= damage;
                 damage = 0;
@@ -110,7 +110,7 @@ public class GameManager : MonoBehaviour
 
         }
     }
-    
+
     public void SlowSpeed(GameObject target)
     {
         if (target.GetComponent<EnemyMovement>() != null)

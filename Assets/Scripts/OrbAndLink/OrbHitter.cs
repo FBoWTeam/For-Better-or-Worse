@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class OrbHitter : MonoBehaviour
 {
-	OrbController orbController;
+    OrbController orbController;
 
     [Header("[Parameters]")]
     [Tooltip("represents the orb hitting range")]
@@ -17,12 +17,12 @@ public class OrbHitter : MonoBehaviour
     public float hitCooldown;
     float hitTimer;
 
-	public GameManager.PowerType powerToApply;
+    public GameManager.PowerType powerToApply;
 
-	void Start()
+    void Start()
     {
-		orbController = GameManager.gameManager.orb.GetComponent<OrbController>();
-		inRange = false;
+        orbController = GameManager.gameManager.orb.GetComponent<OrbController>();
+        inRange = false;
     }
 
     // Update is called once per frame
@@ -42,7 +42,7 @@ public class OrbHitter : MonoBehaviour
         }
         CheckRange();
 
-		if (GetComponent<PlayerController>().player1)
+        if (GetComponent<PlayerController>().player1)
         {
             if (inRange)
             {
@@ -52,15 +52,16 @@ public class OrbHitter : MonoBehaviour
                     {
                         hitTimer = hitCooldown;
                         orbController.toPlayer2 = !orbController.toPlayer2;
-                        orbController.speed += accelerationFactor;
+                        orbController.speed = accelerationFactor * orbController.combo + orbController.minSpeed;
+                        orbController.combo++;
                         CheckPowerActivation();
-						GameManager.gameManager.orb.GetComponent<PowerController>().CheckPowerAttribution("hit", true);
+                        GameManager.gameManager.orb.GetComponent<PowerController>().CheckPowerAttribution("hit", true);
                     }
                     if (Input.GetAxisRaw("OrbAmortizerP1") != 0 && !orbController.amortized)
                     {
                         StartCoroutine(AmortizeCoroutine());
-						GameManager.gameManager.orb.GetComponent<PowerController>().CheckPowerAttribution("amortize", true);
-					}
+                        GameManager.gameManager.orb.GetComponent<PowerController>().CheckPowerAttribution("amortize", true);
+                    }
                     else if (Input.GetAxisRaw("OrbAmortizerP1") == 0 && orbController.amortized)
                     {
                         StopCoroutine(AmortizeCoroutine());
@@ -80,15 +81,16 @@ public class OrbHitter : MonoBehaviour
                     if (Input.GetAxisRaw("OrbHitterP2") != 0)
                     {
                         orbController.toPlayer2 = !orbController.toPlayer2;
-                        orbController.speed += accelerationFactor;
+                        orbController.speed = accelerationFactor * orbController.combo + orbController.minSpeed;
+                        orbController.combo++;
                         CheckPowerActivation();
-						GameManager.gameManager.orb.GetComponent<PowerController>().CheckPowerAttribution("hit", false);
-					}
+                        GameManager.gameManager.orb.GetComponent<PowerController>().CheckPowerAttribution("hit", false);
+                    }
                     if (Input.GetAxisRaw("OrbAmortizerP2") != 0 && !orbController.amortized)
                     {
                         StartCoroutine(AmortizeCoroutine());
-						GameManager.gameManager.orb.GetComponent<PowerController>().CheckPowerAttribution("amortize", false);
-					}
+                        GameManager.gameManager.orb.GetComponent<PowerController>().CheckPowerAttribution("amortize", false);
+                    }
                     else if (Input.GetAxisRaw("OrbAmortizerP2") == 0 && orbController.amortized)
                     {
                         StopCoroutine(AmortizeCoroutine());
@@ -123,10 +125,10 @@ public class OrbHitter : MonoBehaviour
     /// </summary>
     void CheckPowerActivation()
     {
-		if (powerToApply != GameManager.PowerType.None)
+        if (powerToApply != GameManager.PowerType.None)
         {
             orbController.GetComponent<PowerController>().ActivatePower(powerToApply);
-            
+
             powerToApply = GameManager.PowerType.None;
         }
 
@@ -144,14 +146,14 @@ public class OrbHitter : MonoBehaviour
                 orbController.GetComponent<PowerController>().currentShieldStack--;
             }
         }
-		//FIN TEST ZONE
-	}
+        //FIN TEST ZONE
+    }
 
-	/// <summary>
-	/// coroutine that manage the amortize of the orb
-	/// </summary>
-	/// <returns></returns>
-	IEnumerator AmortizeCoroutine()
+    /// <summary>
+    /// coroutine that manage the amortize of the orb
+    /// </summary>
+    /// <returns></returns>
+    IEnumerator AmortizeCoroutine()
     {
         orbController.speed = 0.0f;
         orbController.amortized = true;

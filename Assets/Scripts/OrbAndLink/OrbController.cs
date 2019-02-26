@@ -9,6 +9,7 @@ public class OrbController : MonoBehaviour
     public float minSpeed;
     public float maxSpeed;
     public bool amortized;
+    public float combo;
 
     [Header("[Valid Targets]")]
     public bool canHitEnemy;
@@ -28,7 +29,7 @@ public class OrbController : MonoBehaviour
     float progression;
     float step;
 
-	void Start()
+    void Start()
     {
         toPlayer2 = true;
         progression = 0.5f;
@@ -41,7 +42,7 @@ public class OrbController : MonoBehaviour
         {
             SetFixedSpeedCoefficient();
             speed = Mathf.Clamp(speed, minSpeed, maxSpeed);
-            float fixedSpeed = speed * fixedSpeedCoefficient; ;
+            float fixedSpeed = speed * fixedSpeedCoefficient;
 
             step = (fixedSpeed / BezierCurve.GetPlayersDistance()) * Time.fixedDeltaTime;
             progression = toPlayer2 ? progression + step : progression - step;
@@ -128,19 +129,20 @@ public class OrbController : MonoBehaviour
         }
     }
 
-	private void OnTriggerEnter(Collider other)
+    private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player") && canHitPlayer == true)
+        if (other.CompareTag("Player") && canHitPlayer == true && amortized == false)
         {
             GameManager.gameManager.TakeDamage(other.gameObject, gameObject.GetComponent<PowerController>().baseDamage);
+            combo = 0;
             speed = minSpeed;
-			GetComponent<PowerController>().CheckPowerAttribution("miss", other.GetComponent<PlayerController>().player1);
+            GetComponent<PowerController>().CheckPowerAttribution("miss", other.GetComponent<PlayerController>().player1);
         }
-		else if (other.CompareTag("Player") && canHitPlayer == false)
-		{
-			GetComponent<PowerController>().CheckPowerAttribution("miss", other.GetComponent<PlayerController>().player1);
-		}
-		else if (other.CompareTag("Enemy") && canHitEnemy == true)
+        else if (other.CompareTag("Player") && canHitPlayer == false)
+        {
+            GetComponent<PowerController>().CheckPowerAttribution("miss", other.GetComponent<PlayerController>().player1);
+        }
+        else if (other.CompareTag("Enemy") && canHitEnemy == true)
         {
             GetComponent<PowerController>().onEnemyHit(other.gameObject);
         }
