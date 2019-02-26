@@ -11,6 +11,10 @@ public class PowerController : MonoBehaviour
 
 	public List<bool> canBeActivated;
 
+	[Header("[Drop Container]")]
+	public GameManager.PowerType droppedPower;
+	public bool reflectedDrop;
+
 	//LargeOrb
 	[Header("[LargeOrb Param]")]
 	public float largeOrbCooldown;
@@ -374,6 +378,41 @@ public class PowerController : MonoBehaviour
                 break;
         }
     }
+
+	/// <summary>
+	/// Check if a dropped power is in the orb to give it to a player
+	/// </summary>
+	public void CheckPowerAttribution(string mode, bool player1)
+	{
+		if (droppedPower != GameManager.PowerType.None)
+		{
+			switch (mode)
+			{
+				case "hit":
+					if(player1)
+						GameManager.gameManager.player1.GetComponent<PlayerController>().AttributePower(droppedPower);
+					else
+						GameManager.gameManager.player2.GetComponent<PlayerController>().AttributePower(droppedPower);
+					droppedPower = GameManager.PowerType.None;
+					break;
+				case "amortize":
+				case "miss":
+					if (reflectedDrop)
+					{
+						if (player1)
+							GameManager.gameManager.player1.GetComponent<PlayerController>().AttributePower(droppedPower);
+						else
+							GameManager.gameManager.player2.GetComponent<PlayerController>().AttributePower(droppedPower);
+						droppedPower = GameManager.PowerType.None;
+					}
+					else
+					{
+						reflectedDrop = true;
+					}
+					break;
+			}
+		}
+	}
 
 	public IEnumerator cooldownCoroutine(GameManager.PowerType power, float cooldown)
 	{

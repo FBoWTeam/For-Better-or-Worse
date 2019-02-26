@@ -16,11 +16,11 @@ public class LootTable : MonoBehaviour
 		//if (Random.Range(0.0f, 1.0f) <= chanceOfHealing)
 			//do the heal thing
 
-		if (Random.Range(0.0f, 1.0f) <= chanceOfPowerDrop && GameManager.gameManager.orb.GetComponent<OrbHitter>().powerToApply == GameManager.PowerType.None)
+		if (Random.Range(0.0f, 1.0f) <= chanceOfPowerDrop && GameManager.gameManager.orb.GetComponent<PowerController>().droppedPower == GameManager.PowerType.None)
 		{
-			OrbHitter hitter = GameManager.gameManager.orb.GetComponent<OrbHitter>();
-			hitter.droppedPower = droppedPower;
-			hitter.reflectedDrop = false;
+			PowerController controller = GameManager.gameManager.orb.GetComponent<PowerController>();
+			controller.droppedPower = droppedPower;
+			controller.reflectedDrop = false;
 		}
 	}
 }
