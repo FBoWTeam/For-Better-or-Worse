@@ -34,7 +34,7 @@ public class Door : MonoBehaviour, IActivable
     }
 
     /// <summary>
-    /// check if all the necesary object are activated to open the door
+    /// check if all the necesary objects are activated to open the door
     /// </summary>
     /// <returns></returns>
     bool CheckValidObjects()
