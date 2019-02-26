@@ -157,6 +157,11 @@ MonoBehaviour:
   speed: 15
   initialSpeed: 0
   direction: {x: 0, y: 0, z: 0}
+  powerSlot1: 0
+  powerSlot2: 0
+  powerSlot3: 0
+  powerSlot4: 0
+  oldestSlotIs3: 0
 --- !u!114 &8708506529559422337
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -215,7 +220,7 @@ Light:
   m_Enabled: 1
   serializedVersion: 8
   m_Type: 2
-  m_Color: {r: 1, g: 1, b: 0.5, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_Intensity: 1
   m_Range: 5
   m_SpotAngle: 30
@@ -340,7 +345,7 @@ LineRenderer:
   m_MinimumChartSize: 4
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
-  m_LightmapParameters: {fileID: 0}
+  m_LightmapParameters: {fileID: 15200, guid: 0000000000000000f000000000000000, type: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
@@ -774,6 +779,11 @@ MonoBehaviour:
   speed: 15
   initialSpeed: 0
   direction: {x: 0, y: 0, z: 0}
+  powerSlot1: 0
+  powerSlot2: 0
+  powerSlot3: 0
+  powerSlot4: 0
+  oldestSlotIs3: 0
 --- !u!114 &8708506530940788384
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -955,6 +965,9 @@ MonoBehaviour:
   highFixedCoefficient: 1.5
   veryHighFixedCoefficient: 1.7
   toPlayer2: 0
+  progression: 0
+  isHealingOrb: 0
+  healAmount: 0
 --- !u!114 &2970527385879693205
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -969,27 +982,46 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   elementalPower: 0
   behavioralPower: 0
+  normalMaterial: {fileID: 2100000, guid: 76cf3b8074637204fb930c562b8cb61a, type: 2}
   baseDamage: 5
+  canBeActivated: 
+  droppedPower: 0
+  reflectedDrop: 0
+  largeOrbDuration: 5
   largeOrbCooldown: 7
   minScale: 1
   maxScale: 1.5
   largeOrbDamage: 0
+  vortexMaterial: {fileID: 2100000, guid: 7595e36051d4c9b42bd858bf1f438410, type: 2}
+  vortexDuration: 4
   vortexCooldown: 6
+  leechLifeMaterial: {fileID: 2100000, guid: 92b138bf65fea4941b08f59441c6770f, type: 2}
+  leechLifeDuration: 3
   leechLifeCooldown: 9
   lifeSteel: 50
+  slugMaterial: {fileID: 2100000, guid: 7468f8944ac1ed94490c837a13e8b672, type: 2}
+  slugDuration: 4
   slugCooldown: 8
   slug: {fileID: 1635892733598159781, guid: f1fb8f1469f8aab42bc8a4f47c49f15c, type: 3}
-  durationSlugPower: 4
+  shieldMaterial: {fileID: 2100000, guid: 075f406c77a9ee34db02bb28f18db12c, type: 2}
   shieldCooldown: 8
   mitigatedDamage: 2
   shieldAmount: 10
   currentShieldStack: 2
+  iceMaterial: {fileID: 2100000, guid: e1c894261949685488e6031af020a36f, type: 2}
+  iceDuration: 8
   iceCooldown: 5
+  fireMaterial: {fileID: 2100000, guid: dbaea46d10d0aee4898f0b579c7a84fd, type: 2}
+  fireDuration: 8
   fireCooldown: 5
   fireParticleSystem: {fileID: 5522416902220534363, guid: a5e31017771f8db45ac7c51b24cb21a8,
     type: 3}
   fireDamage: 5
-  fireDuration: 5
+  fireTickDuration: 5
   fireCoolDown: 8
+  electricMaterial: {fileID: 2100000, guid: c5714c959eba6964cb5543af1128b646, type: 2}
+  electricDuration: 3
   electricCooldown: 10
+  weaknessMaterial: {fileID: 2100000, guid: 306a366e89de9e84dbc9e733941e50df, type: 2}
+  weaknessDuration: 5
   weaknessCooldown: 7

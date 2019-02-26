@@ -24,8 +24,10 @@ public class GameManager : MonoBehaviour
 
     public bool player1HasTaunt, player2HasTaunt;
     public int tauntRange = 10;
+    
+	public GameObject healingOrbPrefab;
 
-    public enum PowerType
+	public enum PowerType
     {
         None = 0,
 
@@ -135,4 +137,16 @@ public class GameManager : MonoBehaviour
         }
     }
 
+	public void spawnHealingOrbs()
+	{
+		OrbController healingOrb1 = Instantiate(healingOrbPrefab, orb.transform.position, Quaternion.identity, orb.GetComponentInParent<Transform>()).GetComponent<OrbController>();
+
+		healingOrb1.progression = orb.GetComponent<OrbController>().progression;
+		healingOrb1.toPlayer2 = false;
+
+		OrbController healingOrb2 = Instantiate(healingOrbPrefab, orb.transform.position, Quaternion.identity, orb.GetComponentInParent<Transform>()).GetComponent<OrbController>();
+
+		healingOrb2.progression = orb.GetComponent<OrbController>().progression;
+		healingOrb2.toPlayer2 = true;
+	}
 }
