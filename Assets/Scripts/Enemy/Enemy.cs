@@ -187,6 +187,7 @@ public class Enemy : MonoBehaviour
         hp -= damage;
 		if (hp <= 0)
 		{
+			GetComponent<LootTable>().LootEnemy();
 			enemyMovement.agent.isStopped = true;
 			StopAllCoroutines();
 			Destroy(this.gameObject);

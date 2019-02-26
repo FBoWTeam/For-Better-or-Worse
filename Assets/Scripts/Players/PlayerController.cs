@@ -91,21 +91,56 @@ public class PlayerController : MonoBehaviour
         bool power3 = player1 ? Input.GetKeyDown(KeyCode.Joystick1Button2) : Input.GetKeyDown(KeyCode.Joystick2Button2);
         bool power4 = player1 ? Input.GetKeyDown(KeyCode.Joystick1Button3) : Input.GetKeyDown(KeyCode.Joystick2Button3);
 
-        if (power1)
+        if (power1 && powerSlot1 != GameManager.PowerType.None)
         {
             orbHitter.powerToApply = powerSlot1;
         }
-        if (power2)
+        if (power2 && powerSlot1 != GameManager.PowerType.None)
         {
             orbHitter.powerToApply = powerSlot2;
         }
-        if (power3)
+        if (power3 && powerSlot1 != GameManager.PowerType.None)
         {
             orbHitter.powerToApply = powerSlot3;
         }
-        if (power4)
+        if (power4 && powerSlot1 != GameManager.PowerType.None)
         {
             orbHitter.powerToApply = powerSlot3;
         }
     }
+
+	/// <summary>
+	/// Gives a power dropped by an enemy, and place it on the good slot
+	/// </summary>
+	public void AttributePower(GameManager.PowerType newPower)
+	{
+		if (powerSlot1 == GameManager.PowerType.None)
+		{
+			powerSlot1 = newPower;
+		}
+		else if (powerSlot2 == GameManager.PowerType.None)
+		{
+			powerSlot2 = newPower;
+		}
+		else if (powerSlot3 == GameManager.PowerType.None)
+		{
+			powerSlot3 = newPower;
+		}
+		else if (powerSlot4 == GameManager.PowerType.None)
+		{
+			powerSlot4 = newPower;
+		}
+		else
+		{
+			if(oldestSlotIs3)
+			{
+				powerSlot3 = newPower;
+			}
+			else
+			{
+				powerSlot4 = newPower;
+			}
+			oldestSlotIs3 = !oldestSlotIs3;
+		}
+	}
 }
