@@ -16,81 +16,121 @@ public class PowerController : MonoBehaviour
 	public GameManager.PowerType droppedPower;
 	public bool reflectedDrop;
 
+	[Header("[Power Editing]")]
+	public GameManager.PowerType editingPower;
+
 	//LargeOrb
-	[Header("[LargeOrb Param]")]
+	[DrawIf(new string[] { "editingPower" }, GameManager.PowerType.LargeOrb)]
 	public float largeOrbDuration;
+	[DrawIf(new string[] { "editingPower" }, GameManager.PowerType.LargeOrb)]
 	public float largeOrbCooldown;
-    public float minScale;
-    public float maxScale;
-    public int largeOrbDamage;
+	[DrawIf(new string[] { "editingPower" }, GameManager.PowerType.LargeOrb)]
+	public float minScale;
+	[DrawIf(new string[] { "editingPower" }, GameManager.PowerType.LargeOrb)]
+	public float maxScale;
+	[DrawIf(new string[] { "editingPower" }, GameManager.PowerType.LargeOrb)]
+	public int largeOrbDamage;
 
 	//Vortex
-	[Header("[Vortex Param]")]
+	[DrawIf(new string[] { "editingPower" }, GameManager.PowerType.Vortex)]
 	public Material vortexMaterial;
+	[DrawIf(new string[] { "editingPower" }, GameManager.PowerType.Vortex)]
 	public float vortexDuration;
+	[DrawIf(new string[] { "editingPower" }, GameManager.PowerType.Vortex)]
 	public float vortexCooldown;
 
 	//LeechLife
-	[Header("[LeechLife Param]")]
+	[DrawIf(new string[] { "editingPower" }, GameManager.PowerType.LeechLife)]
 	public Material leechLifeMaterial;
+	[DrawIf(new string[] { "editingPower" }, GameManager.PowerType.LeechLife)]
 	public float leechLifeDuration;
+	[DrawIf(new string[] { "editingPower" }, GameManager.PowerType.LeechLife)]
 	public float leechLifeCooldown;
-    [Range(0, 100f)]
+	[DrawIf(new string[] { "editingPower" }, GameManager.PowerType.LeechLife)]
+	[Range(0, 100f)]
     public float lifeSteel;
 
 
 	//Slug
-	[Header("[Slug Param]")]
+	[DrawIf(new string[] { "editingPower" }, GameManager.PowerType.Slug)]
 	public Material slugMaterial;
+	[DrawIf(new string[] { "editingPower" }, GameManager.PowerType.Slug)]
 	public float slugDuration;
+	[DrawIf(new string[] { "editingPower" }, GameManager.PowerType.Slug)]
 	public float slugCooldown;
-    public GameObject slug;
+	[DrawIf(new string[] { "editingPower" }, GameManager.PowerType.Slug)]
+	public GameObject slug;
 
 	//Shield
-	[Header("[Shield Param]")]
+	[DrawIf(new string[] { "editingPower" }, GameManager.PowerType.Shield)]
 	public Material shieldMaterial;
+	[DrawIf(new string[] { "editingPower" }, GameManager.PowerType.Shield)]
 	public float shieldCooldown;
-    [Tooltip("Reduce the damage of the orb")]
+	[DrawIf(new string[] { "editingPower" }, GameManager.PowerType.Shield)]
+	[Tooltip("Reduce the damage of the orb")]
     public int mitigatedDamage;
-    public int shieldAmount;
-    [Tooltip("number of stacks that gives shield when the orb is hit")]
+	[DrawIf(new string[] { "editingPower" }, GameManager.PowerType.Shield)]
+	public int shieldAmount;
+	[DrawIf(new string[] { "editingPower" }, GameManager.PowerType.Shield)]
+	[Tooltip("number of stacks that gives shield when the orb is hit")]
     public int currentShieldStack;
 
 
 	//Ice
-	[Header("[Ice Param]")]
+	[DrawIf(new string[] { "editingPower" }, GameManager.PowerType.Ice)]
 	public Material iceMaterial;
+	[DrawIf(new string[] { "editingPower" }, GameManager.PowerType.Ice)]
 	public float iceDuration;
+	[DrawIf(new string[] { "editingPower" }, GameManager.PowerType.Ice)]
 	public float iceCooldown;
 
 	//Fire
-	[Header("[Fire Param]")]
+	[DrawIf(new string[] { "editingPower" }, GameManager.PowerType.Fire)]
 	public Material fireMaterial;
+	[DrawIf(new string[] { "editingPower" }, GameManager.PowerType.Fire)]
 	public float fireDuration;
+	[DrawIf(new string[] { "editingPower" }, GameManager.PowerType.Fire)]
 	public float fireCooldown;
-    public GameObject fireParticleSystem;
-    [Tooltip("Damage is over time , should be >= to fireDuration")]
+	[DrawIf(new string[] { "editingPower" }, GameManager.PowerType.Fire)]
+	public GameObject fireParticleSystem;
+	[DrawIf(new string[] { "editingPower" }, GameManager.PowerType.Fire)]
+	[Tooltip("Damage is over time , should be >= to fireDuration")]
     public int fireDamage = 5;
-    public float fireTickDuration = 5;
-    public float fireCoolDown = 8;
-    private float nextAttack = 0f;
+	[DrawIf(new string[] { "editingPower" }, GameManager.PowerType.Fire)]
+	public float fireTickDuration = 5;
+	[DrawIf(new string[] { "editingPower" }, GameManager.PowerType.Fire)]
+	public float fireCoolDown = 8;
+	[DrawIf(new string[] { "editingPower" }, GameManager.PowerType.Fire)]
+	private float nextAttack = 0f;
 
 	//Electric
-	[Header("[Electric Param]")]
+	[DrawIf(new string[] { "editingPower" }, GameManager.PowerType.Electric)]
 	public Material electricMaterial;
+	[DrawIf(new string[] { "editingPower" }, GameManager.PowerType.Electric)]
 	public float electricDuration;
+	[DrawIf(new string[] { "editingPower" }, GameManager.PowerType.Electric)]
 	public float electricCooldown;
 
 	//Weakness
-	[Header("[Weakness Param]")]
+	[DrawIf(new string[] { "editingPower" }, GameManager.PowerType.Weakness)]
 	public Material weaknessMaterial;
+	[DrawIf(new string[] { "editingPower" }, GameManager.PowerType.Weakness)]
 	public float weaknessDuration;
+	[DrawIf(new string[] { "editingPower" }, GameManager.PowerType.Weakness)]
 	public float weaknessCooldown;
 
 
 	private void Start()
     {
 		canBeActivated = new List<bool> {true, true, true, true, true, true, true, true, true};
+	}
+
+	public bool isBehavioral(GameManager.PowerType power)
+	{
+		if (power == GameManager.PowerType.LargeOrb || power == GameManager.PowerType.LeechLife || power == GameManager.PowerType.Shield || power == GameManager.PowerType.Slug || power == GameManager.PowerType.Vortex)
+			return true;
+		else
+			return false;
 	}
 
     /// <summary>
@@ -101,11 +141,11 @@ public class PowerController : MonoBehaviour
     {
 		if(canBeActivated[(int)powerToActivate - 1])
 		{
-			if (powerToActivate == GameManager.PowerType.Elemental && elementalPower != GameManager.PowerType.None)
+			if (!isBehavioral(powerToActivate) && elementalPower != GameManager.PowerType.None)
 			{
 				DeactivatePower(elementalPower);
 			}
-			else if (powerToActivate == GameManager.PowerType.Behavioral && behavioralPower != GameManager.PowerType.None)
+			else if (isBehavioral(powerToActivate) && behavioralPower != GameManager.PowerType.None)
 			{
 				DeactivatePower(behavioralPower);
 			}

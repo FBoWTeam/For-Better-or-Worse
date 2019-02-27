@@ -40,10 +40,7 @@ public class GameManager : MonoBehaviour
         Ice = 6,
         Fire = 7,
         Electric = 8,
-        Weakness = 9,
-
-        Behavioral = LargeOrb | Vortex | LeechLife | Slug | Shield,
-        Elemental = Ice | Fire | Electric | Weakness
+        Weakness = 9
     }
 
 
