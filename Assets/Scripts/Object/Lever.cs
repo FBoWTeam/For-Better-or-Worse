@@ -30,7 +30,7 @@ public class Lever : MonoBehaviour, IActivable
     {
         if (!isActive)
         {
-            isActive = !isActive;
+            isActive = true;
             //activates the other object
             objectToActivate.GetComponent<IActivable>().Activate();
             //plays the animation of the lever

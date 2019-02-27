@@ -33,6 +33,16 @@ public class Door : MonoBehaviour, IActivable
         }
     }
 
+
+    public void Deactivate()
+    {
+        if (isActive == true)
+        {
+            GetComponentInParent<Animation>().Play("DoorClose");
+        }
+        isActive = false;
+    }
+
     /// <summary>
     /// check if all the necesary objects are activated to open the door
     /// </summary>
