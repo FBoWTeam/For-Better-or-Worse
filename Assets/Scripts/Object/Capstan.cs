@@ -57,8 +57,6 @@ public class Capstan : MonoBehaviour, IActivable
             int sign = targetAngle > actualAngle ? 1 : -1;
             transform.parent.localEulerAngles = new Vector3(0.0f, actualAngle += (rotationSpeed * sign), 0.0f);
         }
-
-        
     }
 
     private void OnTriggerEnter(Collider other)
@@ -73,6 +71,7 @@ public class Capstan : MonoBehaviour, IActivable
             {
                 targetAngle -= 180;
             }
+            Debug.Log(targetAngle);
         }
     }
 

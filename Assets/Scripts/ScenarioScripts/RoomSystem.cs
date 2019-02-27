@@ -13,29 +13,27 @@ public class RoomSystem : MonoBehaviour
     private bool roomCleared;
     [SerializeField]
     private bool playerLeft;
-    [SerializeField]
-    private bool playerEntered;
 
     public GameObject[] doorsToClose;
     public GameObject[] doorsToOpen;
 
     [Tooltip("game object coontaining the enemies of the room")]
-    public GameObject enemies;
+    public GameObject[] enemies;
     
     void Update()
     {
         if (!roomCleared)
         {
-            RoomCleared();
+            if (enemies.Length == 0)
+            {
+                roomCleared = true;
+                OpenDoors();
+            }
         }
         else if (numberPlayerPresent == 0 && !playerLeft)
         {
             playerLeft = true;
             CloseDoors();
-        }
-        else if (numberPlayerPresent == 0 && !playerEntered)
-        {
-            playerEntered = true;
         }
     }
 
@@ -62,15 +60,6 @@ public class RoomSystem : MonoBehaviour
         for (int i = 0; i < doorsToOpen.Length; i++)
         {
             doorsToOpen[i].GetComponent<Door>().Activate();
-        }
-    }
-
-    void RoomCleared()
-    {
-        if (enemies.transform.childCount == 0)
-        {
-            roomCleared = true;
-            OpenDoors();
         }
     }
 
