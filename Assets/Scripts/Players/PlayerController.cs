@@ -51,6 +51,8 @@ public class PlayerController : MonoBehaviour
         Vector3 velocity = direction * speed * Time.deltaTime;
 
         rb.MovePosition(transform.position + velocity);
+		transform.LookAt(transform.position + velocity);
+		transform.localEulerAngles = new Vector3(0.0f, transform.localEulerAngles.y, 0.0f);
     }
 
 
