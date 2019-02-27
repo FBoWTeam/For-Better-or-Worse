@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class OrbHitter : MonoBehaviour
 {
-    OrbController orb;
+    OrbController orbController;
 
     [Header("[Parameters]")]
     [Tooltip("represents the orb hitting range")]
@@ -17,12 +17,11 @@ public class OrbHitter : MonoBehaviour
     public float hitCooldown;
     float hitTimer;
 
-
     public GameManager.PowerType powerToApply;
 
     void Start()
     {
-        orb = GameObject.Find("Orb").GetComponent<OrbController>();
+        orbController = GameManager.gameManager.orb.GetComponent<OrbController>();
         inRange = false;
     }
 
@@ -47,25 +46,28 @@ public class OrbHitter : MonoBehaviour
         {
             if (inRange)
             {
-                if (!orb.GetComponent<OrbController>().toPlayer2)
+                if (!orbController.toPlayer2)
                 {
                     if (Input.GetAxisRaw("OrbHitterP1") != 0 && hitTimer <= 0.0f)
                     {
                         hitTimer = hitCooldown;
-                        orb.toPlayer2 = !orb.toPlayer2;
-                        orb.speed += accelerationFactor;
+                        orbController.toPlayer2 = !orbController.toPlayer2;
+                        orbController.speed = accelerationFactor * orbController.combo + orbController.minSpeed;
+                        orbController.combo++;
                         CheckPowerActivation();
+                        GameManager.gameManager.orb.GetComponent<PowerController>().CheckPowerAttribution("hit", true);
                     }
-                    if (Input.GetAxisRaw("OrbAmortizerP1") != 0 && !orb.amortized)
+                    if (Input.GetAxisRaw("OrbAmortizerP1") != 0 && !orbController.amortized)
                     {
                         StartCoroutine(AmortizeCoroutine());
+                        GameManager.gameManager.orb.GetComponent<PowerController>().CheckPowerAttribution("amortize", true);
                     }
-                    else if (Input.GetAxisRaw("OrbAmortizerP1") == 0 && orb.amortized)
+                    else if (Input.GetAxisRaw("OrbAmortizerP1") == 0 && orbController.amortized)
                     {
                         StopCoroutine(AmortizeCoroutine());
-                        orb.toPlayer2 = !orb.toPlayer2;
-                        orb.amortized = false;
-                        orb.speed = orb.minSpeed;
+                        orbController.toPlayer2 = !orbController.toPlayer2;
+                        orbController.amortized = false;
+                        orbController.speed = orbController.minSpeed;
                     }
                 }
             }
@@ -74,24 +76,27 @@ public class OrbHitter : MonoBehaviour
         {
             if (inRange)
             {
-                if (orb.GetComponent<OrbController>().toPlayer2)
+                if (orbController.toPlayer2)
                 {
                     if (Input.GetAxisRaw("OrbHitterP2") != 0)
                     {
-                        orb.toPlayer2 = !orb.toPlayer2;
-                        orb.speed += accelerationFactor;
+                        orbController.toPlayer2 = !orbController.toPlayer2;
+                        orbController.speed = accelerationFactor * orbController.combo + orbController.minSpeed;
+                        orbController.combo++;
                         CheckPowerActivation();
+                        GameManager.gameManager.orb.GetComponent<PowerController>().CheckPowerAttribution("hit", false);
                     }
-                    if (Input.GetAxisRaw("OrbAmortizerP2") != 0 && !orb.amortized)
+                    if (Input.GetAxisRaw("OrbAmortizerP2") != 0 && !orbController.amortized)
                     {
                         StartCoroutine(AmortizeCoroutine());
+                        GameManager.gameManager.orb.GetComponent<PowerController>().CheckPowerAttribution("amortize", false);
                     }
-                    else if (Input.GetAxisRaw("OrbAmortizerP2") == 0 && orb.amortized)
+                    else if (Input.GetAxisRaw("OrbAmortizerP2") == 0 && orbController.amortized)
                     {
                         StopCoroutine(AmortizeCoroutine());
-                        orb.toPlayer2 = !orb.toPlayer2;
-                        orb.amortized = false;
-                        orb.speed = orb.minSpeed;
+                        orbController.toPlayer2 = !orbController.toPlayer2;
+                        orbController.amortized = false;
+                        orbController.speed = orbController.minSpeed;
                     }
                 }
             }
@@ -105,7 +110,7 @@ public class OrbHitter : MonoBehaviour
     /// </summary>
     void CheckRange()
     {
-        if (Vector3.Distance(transform.position, orb.transform.position) < hitZone + orb.transform.localScale.x / 2)
+        if (Vector3.Distance(transform.position, orbController.transform.position) < hitZone + orbController.transform.localScale.x / 2)
         {
             inRange = true;
         }
@@ -120,25 +125,25 @@ public class OrbHitter : MonoBehaviour
     /// </summary>
     void CheckPowerActivation()
     {
-		if (powerToApply != GameManager.PowerType.None)
+        if (powerToApply != GameManager.PowerType.None)
         {
-            orb.GetComponent<PowerController>().ActivatePower(powerToApply);
-            
+            orbController.GetComponent<PowerController>().ActivatePower(powerToApply);
+
             powerToApply = GameManager.PowerType.None;
         }
 
         //TEST ZONE si l'orb a le pouvoir shield
-        if (orb.GetComponent<PowerController>().behavioralPower == GameManager.PowerType.Shield && orb.GetComponent<PowerController>().currentShieldStack > 0)
+        if (orbController.GetComponent<PowerController>().behavioralPower == GameManager.PowerType.Shield && orbController.GetComponent<PowerController>().currentShieldStack > 0)
         {
             if (gameObject.GetComponent<PlayerController>().player1)
             {
-                GameManager.gameManager.shieldP1 = orb.GetComponent<PowerController>().shieldAmount;
-                orb.GetComponent<PowerController>().currentShieldStack--;
+                GameManager.gameManager.shieldP1 = orbController.GetComponent<PowerController>().shieldAmount;
+                orbController.GetComponent<PowerController>().currentShieldStack--;
             }
             else if (!gameObject.GetComponent<PlayerController>().player1)
             {
-                GameManager.gameManager.shieldP2 = orb.GetComponent<PowerController>().shieldAmount;
-                orb.GetComponent<PowerController>().currentShieldStack--;
+                GameManager.gameManager.shieldP2 = orbController.GetComponent<PowerController>().shieldAmount;
+                orbController.GetComponent<PowerController>().currentShieldStack--;
             }
         }
         //FIN TEST ZONE
@@ -150,14 +155,14 @@ public class OrbHitter : MonoBehaviour
     /// <returns></returns>
     IEnumerator AmortizeCoroutine()
     {
-        orb.speed = 0.0f;
-        orb.amortized = true;
+        orbController.speed = 0.0f;
+        orbController.amortized = true;
         yield return new WaitForSeconds(maxAmortizeTime);
-        if (orb.amortized)
+        if (orbController.amortized)
         {
-            orb.toPlayer2 = !orb.toPlayer2;
-            orb.amortized = false;
-            orb.speed = orb.minSpeed;
+            orbController.toPlayer2 = !orbController.toPlayer2;
+            orbController.amortized = false;
+            orbController.speed = orbController.minSpeed;
         }
     }
 }
