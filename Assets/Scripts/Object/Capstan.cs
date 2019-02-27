@@ -30,8 +30,8 @@ public class Capstan : MonoBehaviour, IActivable
     private void Start()
     {
         orb = GameManager.gameManager.orb;
-        border = transform.GetChild(1);
-        pivot = transform.GetChild(2);
+        border = transform.GetChild(0);
+        pivot = transform.GetChild(1);
 
         actualAngle = 0;
         targetAngle = 0;
@@ -43,20 +43,21 @@ public class Capstan : MonoBehaviour, IActivable
     {
         if (OnTheRight(pivot, border, orb.transform))
         {
-            transform.GetChild(0).GetComponent<Renderer>().material.color = Color.red;
+            GetComponent<Renderer>().material.color = Color.red;
             orbOnTheRight = true;
         }
         else
         {
-            transform.GetChild(0).GetComponent<Renderer>().material.color = Color.blue;
+            GetComponent<Renderer>().material.color = Color.blue;
             orbOnTheRight = false;
         }
 
         if(actualAngle != targetAngle)
         {
             int sign = targetAngle > actualAngle ? 1 : -1;
-            transform.localEulerAngles = new Vector3(0.0f, actualAngle += (rotationSpeed * sign), 0.0f);
+            transform.parent.localEulerAngles = new Vector3(0.0f, actualAngle += (rotationSpeed * sign), 0.0f);
         }
+
         
     }
 
@@ -81,7 +82,7 @@ public class Capstan : MonoBehaviour, IActivable
         {
             if (isActive == false)
             {
-                GetComponent<Animation>().Play("CapstanUp");
+                GetComponentInParent<Animation>().Play("CapstanUp");
             }
             isActive = true;
         }
@@ -89,7 +90,7 @@ public class Capstan : MonoBehaviour, IActivable
         {
             if (isActive == true)
             {
-                GetComponent<Animation>().Play("CapstanDown");
+                GetComponentInParent<Animation>().Play("CapstanDown");
             }
             isActive = false;
         }
