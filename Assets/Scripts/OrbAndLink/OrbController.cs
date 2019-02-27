@@ -9,6 +9,7 @@ public class OrbController : MonoBehaviour
     public float minSpeed;
     public float maxSpeed;
     public bool amortized;
+    public float combo;
 
     [Header("[Valid Targets]")]
     public bool canHitEnemy;
@@ -25,14 +26,21 @@ public class OrbController : MonoBehaviour
     [Header("[Direction]")]
     public bool toPlayer2;
 
-    float progression;
+    public float progression;
     float step;
 
-    void Start()
+	[Header("[For Healing Orbs]")]
+	public bool isHealingOrb;
+	public int healAmount;
+
+	void Start()
     {
-        toPlayer2 = true;
-        progression = 0.5f;
-        transform.position = BezierCurve.CalculateCubicBezierPoint(progression);
+		if (!isHealingOrb)
+		{
+			toPlayer2 = true;
+			progression = 0.5f;
+			transform.position = BezierCurve.CalculateCubicBezierPoint(progression);
+		}
     }
 
     void FixedUpdate()
@@ -41,7 +49,7 @@ public class OrbController : MonoBehaviour
         {
             SetFixedSpeedCoefficient();
             speed = Mathf.Clamp(speed, minSpeed, maxSpeed);
-            float fixedSpeed = speed * fixedSpeedCoefficient; ;
+            float fixedSpeed = speed * fixedSpeedCoefficient;
 
             step = (fixedSpeed / BezierCurve.GetPlayersDistance()) * Time.fixedDeltaTime;
             progression = toPlayer2 ? progression + step : progression - step;
@@ -50,7 +58,17 @@ public class OrbController : MonoBehaviour
         transform.position = BezierCurve.CalculateCubicBezierPoint(progression);
 
         if (progression == 1.0f || progression == 0.0f)
-            toPlayer2 = !toPlayer2;
+		{
+			if (isHealingOrb)
+			{
+				GameManager.gameManager.hp += healAmount;
+				Destroy(this.gameObject);
+			}
+			else
+			{
+				toPlayer2 = !toPlayer2;
+			}
+		}
     }
 
     /// <summary>
@@ -130,14 +148,20 @@ public class OrbController : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player") && canHitPlayer == true)
+        if (other.CompareTag("Player") && canHitPlayer == true && amortized == false)
         {
             GameManager.gameManager.TakeDamage(other.gameObject, gameObject.GetComponent<PowerController>().baseDamage);
+            combo = 0;
             speed = minSpeed;
+            GetComponent<PowerController>().CheckPowerAttribution("miss", other.GetComponent<PlayerController>().player1);
+        }
+        else if (other.CompareTag("Player") && canHitPlayer == false)
+        {
+            GetComponent<PowerController>().CheckPowerAttribution("miss", other.GetComponent<PlayerController>().player1);
         }
         else if (other.CompareTag("Enemy") && canHitEnemy == true)
         {
-            gameObject.GetComponent<PowerController>().onEnemyHit(other.gameObject);
+            GetComponent<PowerController>().onEnemyHit(other.gameObject);
         }
     }
 }
