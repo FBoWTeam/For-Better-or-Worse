@@ -34,7 +34,6 @@ public class EnemyShot : MonoBehaviour
 
         if (other.CompareTag("Player"))
         {
-            Debug.Log("DESTROY");   
             GameManager.gameManager.TakeDamage(other.gameObject, damage);
             Destroy(this.gameObject);
         }
