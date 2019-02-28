@@ -134,15 +134,17 @@ public class GameManager : MonoBehaviour
         }
     }
 
-	public void spawnHealingOrbs()
+	public void spawnHealingOrbs(int healAmount)
 	{
 		OrbController healingOrb1 = Instantiate(healingOrbPrefab, orb.transform.position, Quaternion.identity, orb.GetComponentInParent<Transform>()).GetComponent<OrbController>();
 
+		healingOrb1.healAmount = healAmount;
 		healingOrb1.progression = orb.GetComponent<OrbController>().progression;
 		healingOrb1.toPlayer2 = false;
 
 		OrbController healingOrb2 = Instantiate(healingOrbPrefab, orb.transform.position, Quaternion.identity, orb.GetComponentInParent<Transform>()).GetComponent<OrbController>();
 
+		healingOrb2.healAmount = healAmount;
 		healingOrb2.progression = orb.GetComponent<OrbController>().progression;
 		healingOrb2.toPlayer2 = true;
 	}
