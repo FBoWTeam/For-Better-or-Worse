@@ -11,7 +11,8 @@ GameObject:
   - component: {fileID: 8120592202167718876}
   - component: {fileID: 8120592202167718432}
   - component: {fileID: 8120592202167718435}
-  - component: {fileID: 8120592202167718434}
+  - component: {fileID: 473032918966595185}
+  - component: {fileID: 6516386506724670990}
   - component: {fileID: 8120592202167718877}
   m_Layer: 0
   m_Name: LiftBridge
@@ -27,13 +28,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8120592202167718879}
-  m_LocalRotation: {x: 0, y: 0, z: -0.42261827, w: 0.9063079}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: -50}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &8120592202167718432
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -41,7 +42,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8120592202167718879}
-  m_Mesh: {fileID: 4300002, guid: 950c35a06377d37409999b954d51b78f, type: 3}
+  m_Mesh: {fileID: 4300002, guid: 10d72f3b20865d342ba7ebe8f53d7c62, type: 3}
 --- !u!23 &8120592202167718435
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -59,7 +60,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: f31de6886a530f44485b627c755c28fc, type: 2}
+  - {fileID: 2100004, guid: 7496bfd028ee2da47b0d3f5a3722ab26, type: 3}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -79,7 +80,7 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!65 &8120592202167718434
+--- !u!65 &473032918966595185
 BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -90,8 +91,21 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Size: {x: 21.000002, y: 4, z: 1}
+  m_Center: {x: -10.5, y: 1, z: -7.5}
+--- !u!65 &6516386506724670990
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8120592202167718879}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 21.000002, y: 4, z: 1}
+  m_Center: {x: -10.5, y: 1, z: 7.5}
 --- !u!114 &8120592202167718877
 MonoBehaviour:
   m_ObjectHideFlags: 0
