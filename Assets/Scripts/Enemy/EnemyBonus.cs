@@ -20,12 +20,17 @@ public class EnemyBonus : MonoBehaviour
 	[DrawIf(new string[] { "bonus" }, Bonus.Mirror)]
 	[Tooltip("represent the mirror's deactivation duration when the enemy is hit")]
 	public float deactivationDuration;
+	[DrawIf(new string[] { "bonus" }, Bonus.Mirror)]
+	public float knockbackForce;
 
 	// Start is called before the first frame update
 	void Start()
     {
 		if (bonus == Bonus.Mirror)
+		{
 			mirrorChild = Instantiate(mirrorPrefab, transform);
+			mirrorChild.GetComponent<Mirror>().knockbackForce = knockbackForce;
+		}
     }
 
 	IEnumerator DeactivateShieldCoroutine()
