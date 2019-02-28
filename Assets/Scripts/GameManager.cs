@@ -19,6 +19,8 @@ public class GameManager : MonoBehaviour
     public GameObject player2;
     [HideInInspector]
     public GameObject orb;
+    [HideInInspector]
+    public UIManager UIManager;
 
     public GameObject linkDeformation;
 
@@ -61,6 +63,7 @@ public class GameManager : MonoBehaviour
         player2 = GameObject.Find("Player2");
         orb = GameObject.Find("Orb");
         linkDeformation = GameObject.Find("Deformation");
+        UIManager = GameObject.FindGameObjectWithTag("UI").GetComponent<UIManager>();
 
         hp = baseHP;
     }
