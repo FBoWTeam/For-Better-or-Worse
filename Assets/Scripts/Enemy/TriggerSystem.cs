@@ -35,6 +35,7 @@ public class TriggerSystem : MonoBehaviour
                 {
                     enemy.GetComponent<Enemy>().enabled = true;
                 }
+                Destroy(this.gameObject);
             }
         }
     }
@@ -49,6 +50,7 @@ public class TriggerSystem : MonoBehaviour
                 {
                     enemy.GetComponent<Enemy>().enabled = true;
                 }
+                Destroy(this);
             }
         }
     }
@@ -63,6 +65,7 @@ public class TriggerSystem : MonoBehaviour
                 {
                     enemy.GetComponent<Enemy>().enabled = true;
                 }
+                Destroy(this);
             }
         }
     }
