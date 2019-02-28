@@ -48,8 +48,9 @@ public class LinkDeformation : MonoBehaviour
 	/// </summary>
 	void FixPosition()
 	{
-		transform.position = GameManager.gameManager.player1.transform.position + (GameManager.gameManager.player2.transform.position - GameManager.gameManager.player1.transform.position) / 2;
-		transform.LookAt(GameManager.gameManager.player1.transform.position);
+		(Vector3 player1LinkPoint, Vector3 player2LinkPoint) = BezierCurve.UpdateLinkPoints();
+		transform.position = player1LinkPoint + (player2LinkPoint - player1LinkPoint) / 2;
+		transform.LookAt(player1LinkPoint);
 
 		minDeform.localPosition = new Vector3(transform.localPosition.x - maxDeformHeight, transform.localPosition.y, transform.localPosition.z);
 		maxDeform.localPosition = new Vector3(transform.localPosition.x + maxDeformHeight, transform.localPosition.y, transform.localPosition.z);

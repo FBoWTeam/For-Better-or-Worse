@@ -22,8 +22,10 @@ public class GameManager : MonoBehaviour
 
     public GameObject linkDeformation;
 
-	public bool player1HasTaunt, player2HasTaunt;
+    public bool player1HasTaunt, player2HasTaunt;
     public int tauntRange = 10;
+    
+	public GameObject healingOrbPrefab;
 
 	public enum PowerType
     {
@@ -38,10 +40,7 @@ public class GameManager : MonoBehaviour
         Ice = 6,
         Fire = 7,
         Electric = 8,
-        Weakness = 9,
-
-		Behavioral = LargeOrb | Vortex | LeechLife | Slug | Shield,
-		Elemental = Ice | Fire | Electric | Weakness
+        Weakness = 9
     }
 
 
@@ -84,7 +83,7 @@ public class GameManager : MonoBehaviour
                 damage -= shieldP1;
                 shieldP1 = 0;
             }
-            else if(damage < shieldP1)
+            else if (damage < shieldP1)
             {
                 shieldP1 -= damage;
                 damage = 0;
@@ -107,10 +106,10 @@ public class GameManager : MonoBehaviour
         }
         if (hp <= 0)
         {
-            Debug.Log("DED");
+
         }
     }
-    
+
     public void SlowSpeed(GameObject target)
     {
         if (target.GetComponent<EnemyMovement>() != null)
@@ -135,4 +134,18 @@ public class GameManager : MonoBehaviour
         }
     }
 
+	public void spawnHealingOrbs(int healAmount)
+	{
+		OrbController healingOrb1 = Instantiate(healingOrbPrefab, orb.transform.position, Quaternion.identity, orb.GetComponentInParent<Transform>()).GetComponent<OrbController>();
+
+		healingOrb1.healAmount = healAmount;
+		healingOrb1.progression = orb.GetComponent<OrbController>().progression;
+		healingOrb1.toPlayer2 = false;
+
+		OrbController healingOrb2 = Instantiate(healingOrbPrefab, orb.transform.position, Quaternion.identity, orb.GetComponentInParent<Transform>()).GetComponent<OrbController>();
+
+		healingOrb2.healAmount = healAmount;
+		healingOrb2.progression = orb.GetComponent<OrbController>().progression;
+		healingOrb2.toPlayer2 = true;
+	}
 }
