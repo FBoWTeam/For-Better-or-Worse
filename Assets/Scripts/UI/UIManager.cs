@@ -13,29 +13,39 @@ public class UIManager : MonoBehaviour
     public GameObject dialogBoxRaccoon;
 
     [Header("Orb Power")]
-    public RawImage orbPower;
+    public Image orbPower;
 
     [Header("Combo")]
     public GameObject combo;
 
     [Header("Main Powers of Fox")]
-    public RawImage mainPower1Fox;
-    public RawImage mainPower2Fox;
+    public Image mainPower1Fox;
+    public Image mainPower2Fox;
     [Header("Main Powers of Raccoon")]
-    public RawImage mainPower1Raccoon;
-    public RawImage mainPower2Raccoon;
+    public Image mainPower1Raccoon;
+    public Image mainPower2Raccoon;
 
     [Header("Secondary Powers of Fox")]
-    public RawImage secondaryPower1Fox;
-    public RawImage secondaryPower2Fox;
+    public Image secondaryPower1Fox;
+    public Image secondaryPower2Fox;
     [Header("Secondary Powers of Raccoon")]
-    public RawImage secondaryPower1Raccoon;
-    public RawImage secondaryPower2Raccoon;
+    public Image secondaryPower1Raccoon;
+    public Image secondaryPower2Raccoon;
 
     [Header("Taunt")]
     public GameObject tauntCooldownFox;
     public GameObject tauntCooldownRaccoon;
 
+    [Header("Powers Image")]
+    public Sprite largeOrb;
+    public Sprite vortex;
+    public Sprite leechLife;
+    public Sprite slug;
+    public Sprite shield;
+    public Sprite ice;
+    public Sprite fire;
+    public Sprite electric;
+    public Sprite weakness;
 
     #endregion
 
