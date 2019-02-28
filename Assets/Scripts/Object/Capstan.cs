@@ -71,7 +71,6 @@ public class Capstan : MonoBehaviour, IActivable
             {
                 targetAngle -= 180;
             }
-            Debug.Log(targetAngle);
         }
     }
 
