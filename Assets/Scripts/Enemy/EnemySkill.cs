@@ -179,8 +179,9 @@ public class EnemySkill : MonoBehaviour
     {
 
         Vector3 originalPosition = transform.position;
-        Vector3 dirToTarget = (target.position - transform.position).normalized;
-        Vector3 attackPosition = target.position + dirToTarget;
+		Vector3 targetPos = new Vector3(target.position.x, target.position.y + 1, target.position.z);
+        Vector3 dirToTarget = (targetPos - transform.position).normalized;
+        Vector3 attackPosition = targetPos + dirToTarget;
         //Debug.Log(attackPosition);
         float percent = 0;
 

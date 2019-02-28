@@ -8,6 +8,7 @@ public class BezierCurve : MonoBehaviour
 	LineRenderer lineRenderer;
 
 	static Transform player1, player2;
+	static Vector3 player1LinkPoint, player2LinkPoint;
 	static Transform deformPoint1, deformPointMid, deformPoint2;
 
 	static private int numberPoints = 20;
@@ -26,14 +27,17 @@ public class BezierCurve : MonoBehaviour
 	{
 		lineRenderer = GetComponent<LineRenderer>();
 		lineRenderer.positionCount = numberPoints;
+
+		UpdateLinkPoints();
+		transform.position = player1LinkPoint + (player2LinkPoint - player1LinkPoint) / 2;
 		DrawCubicCurve();
-		transform.position = player1.position + (player2.position - player1.position) / 2;
 	}
 
 	void FixedUpdate()
 	{
+		UpdateLinkPoints();
+		transform.position = player1LinkPoint + (player2LinkPoint - player1LinkPoint) / 2;
 		DrawCubicCurve();
-		transform.position = player1.position + (player2.position - player1.position) / 2;
 	}
 
 	/// <summary>
@@ -57,7 +61,7 @@ public class BezierCurve : MonoBehaviour
 	public static Vector3 CalculateCubicBezierPoint(float t)
 	{
 		//return Mathf.Pow((1 - t), 3) * player1.position + 3 * Mathf.Pow((1 - t), 2) * t * deformPoint1.position + 3 * (1 - t) * t * t * deformPoint2.position + Mathf.Pow(t, 3) * player2.position;
-		return Mathf.Pow((1 - t), 4) * player1.position + 4 * t * Mathf.Pow((1 - t), 3) * deformPoint1.position + 6 * Mathf.Pow(t, 2) * Mathf.Pow((1 - t), 2) * deformPointMid.position + 4 * Mathf.Pow(t, 3) * (1 - t) * deformPoint2.position + Mathf.Pow(t, 4) * player2.position;
+		return Mathf.Pow((1 - t), 4) * player1LinkPoint + 4 * t * Mathf.Pow((1 - t), 3) * deformPoint1.position + 6 * Mathf.Pow(t, 2) * Mathf.Pow((1 - t), 2) * deformPointMid.position + 4 * Mathf.Pow(t, 3) * (1 - t) * deformPoint2.position + Mathf.Pow(t, 4) * player2LinkPoint;
 	}
 
 	/// <summary>
@@ -67,6 +71,21 @@ public class BezierCurve : MonoBehaviour
 	public static float GetPlayersDistance()
 	{
 		return Vector3.Distance(player1.position, player2.position);
+	}
+
+	public static (Vector3, Vector3) UpdateLinkPoints()
+	{
+		Vector3 toPlayer2 = player2.position - player1.position;
+		toPlayer2 = toPlayer2.normalized;
+		player1LinkPoint = player1.position + player1.GetComponent<CapsuleCollider>().radius * toPlayer2;
+		player1LinkPoint = new Vector3(player1LinkPoint.x, player1LinkPoint.y + 1.0f, player1LinkPoint.z);
+
+		Vector3 toPlayer1 = player1.position - player2.position;
+		toPlayer1 = toPlayer1.normalized;
+		player2LinkPoint = player2.position + player2.GetComponent<CapsuleCollider>().radius * toPlayer1;
+		player2LinkPoint = new Vector3(player2LinkPoint.x, player2LinkPoint.y + 1.0f, player2LinkPoint.z);
+
+		return (player1LinkPoint, player2LinkPoint);
 	}
 
 }
