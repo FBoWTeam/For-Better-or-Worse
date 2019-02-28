@@ -14,6 +14,7 @@ public class PowerController : MonoBehaviour
 
 	[Header("[Drop Container]")]
 	public GameManager.PowerType droppedPower;
+	public bool isFixedPower;
 	public bool reflectedDrop;
 
 	[Header("[Power Editing]")]
@@ -484,9 +485,9 @@ public class PowerController : MonoBehaviour
 			{
 				case "hit":
 					if(player1)
-						GameManager.gameManager.player1.GetComponent<PlayerController>().AttributePower(droppedPower);
+						GameManager.gameManager.player1.GetComponent<PlayerController>().AttributePower(droppedPower, isFixedPower);
 					else
-						GameManager.gameManager.player2.GetComponent<PlayerController>().AttributePower(droppedPower);
+						GameManager.gameManager.player2.GetComponent<PlayerController>().AttributePower(droppedPower, isFixedPower);
 					droppedPower = GameManager.PowerType.None;
 					break;
 				case "amortize":
@@ -494,9 +495,9 @@ public class PowerController : MonoBehaviour
 					if (reflectedDrop)
 					{
 						if (player1)
-							GameManager.gameManager.player1.GetComponent<PlayerController>().AttributePower(droppedPower);
+							GameManager.gameManager.player1.GetComponent<PlayerController>().AttributePower(droppedPower, isFixedPower);
 						else
-							GameManager.gameManager.player2.GetComponent<PlayerController>().AttributePower(droppedPower);
+							GameManager.gameManager.player2.GetComponent<PlayerController>().AttributePower(droppedPower, isFixedPower);
 						droppedPower = GameManager.PowerType.None;
 					}
 					else

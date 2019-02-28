@@ -115,36 +115,42 @@ public class PlayerController : MonoBehaviour
     /// <summary>
     /// Gives a power dropped by an enemy, and place it on the good slot
     /// </summary>
-    public void AttributePower(GameManager.PowerType newPower)
+    public void AttributePower(GameManager.PowerType newPower, bool isFixedPower)
     {
-        if (powerSlot1 == GameManager.PowerType.None)
-        {
-            powerSlot1 = newPower;
-        }
-        else if (powerSlot2 == GameManager.PowerType.None)
-        {
-            powerSlot2 = newPower;
-        }
-        else if (powerSlot3 == GameManager.PowerType.None)
-        {
-            powerSlot3 = newPower;
-        }
-        else if (powerSlot4 == GameManager.PowerType.None)
-        {
-            powerSlot4 = newPower;
-        }
-        else
-        {
-            if (oldestSlotIs3)
-            {
-                powerSlot3 = newPower;
-            }
-            else
-            {
-                powerSlot4 = newPower;
-            }
-            oldestSlotIs3 = !oldestSlotIs3;
-        }
+		if (isFixedPower)
+		{
+			if (powerSlot1 == GameManager.PowerType.None)
+			{
+				powerSlot1 = newPower;
+			}
+			else if (powerSlot2 == GameManager.PowerType.None)
+			{
+				powerSlot2 = newPower;
+			}
+		}
+		else
+		{
+			if (powerSlot3 == GameManager.PowerType.None)
+			{
+				powerSlot3 = newPower;
+			}
+			else if (powerSlot4 == GameManager.PowerType.None)
+			{
+				powerSlot4 = newPower;
+			}
+			else
+			{
+				if (oldestSlotIs3)
+				{
+					powerSlot3 = newPower;
+				}
+				else
+				{
+					powerSlot4 = newPower;
+				}
+				oldestSlotIs3 = !oldestSlotIs3;
+			}
+		}
     }
 
     private void OnDrawGizmos()

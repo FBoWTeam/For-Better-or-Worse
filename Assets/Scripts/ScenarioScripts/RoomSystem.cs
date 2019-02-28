@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class RoomSystem : MonoBehaviour
+public class RoomSystem : MonoBehaviour, IActivable
 {
+    [Header("Private variables  => Can't touch this")]
     [SerializeField]
     [Tooltip("number of player present in the current room")]
     private int numberPlayerPresent;
@@ -12,41 +13,66 @@ public class RoomSystem : MonoBehaviour
     [SerializeField]
     private bool roomCleared;
     [SerializeField]
+    [Tooltip("indicates if the players left the room or not")]
     private bool playerLeft;
 
+    [Header("Public variables  => Can touch this")]
     public GameObject[] doorsToClose;
-    public GameObject[] doorsToOpen;
 
     [Tooltip("game object coontaining the enemies of the room")]
-    public GameObject[] enemies;
-    
+    public List<GameObject> enemies;
+    [Tooltip("objects to activate when the room is cleared")]
+    public GameObject[] objectsToActivate;
+
+    public bool isActive { get; set; }
+
     void Update()
     {
-        if (!roomCleared)
+        CleanNullInEnemyList();
+        if (!roomCleared && enemies.Count == 0)
         {
-            if (enemies.Length == 0)
-            {
-                roomCleared = true;
-                OpenDoors();
-            }
+            this.Activate();
         }
         else if (numberPlayerPresent == 0 && !playerLeft)
         {
-            playerLeft = true;
-            CloseDoors();
+            this.Deactivate();
         }
+    }
+
+
+    public void Activate()
+    {
+        isActive = true;
+        roomCleared = true;
+        for (int i = 0; i < objectsToActivate.Length; i++)
+        {
+            objectsToActivate[i].GetComponent<IActivable>().Activate();
+        }
+    }
+
+    public void Deactivate()
+    {
+        playerLeft = true;
+        CloseDoors();
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        numberPlayerPresent++;
+        if (other.CompareTag("Player"))
+        {
+            playerLeft = false;
+            numberPlayerPresent++;
+        }
     }
 
     private void OnTriggerExit(Collider other)
     {
-        numberPlayerPresent--;
+        if (other.CompareTag("Player"))
+        {
+            numberPlayerPresent--;
+        }
     }
-
+    
     void CloseDoors()
     {
         for (int i = 0; i < doorsToClose.Length; i++)
@@ -55,12 +81,12 @@ public class RoomSystem : MonoBehaviour
         }
     }
 
-    void OpenDoors()
+    public void CleanNullInEnemyList()
     {
-        for (int i = 0; i < doorsToOpen.Length; i++)
+        if (enemies.Exists(x => x.Equals(null)))
         {
-            doorsToOpen[i].GetComponent<Door>().Activate();
+            enemies.RemoveAll(x => x.Equals(null));
         }
     }
-
+    
 }
