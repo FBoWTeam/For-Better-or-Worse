@@ -134,18 +134,24 @@ public class GameManager : MonoBehaviour
         }
     }
 
-	public void spawnHealingOrbs(int healAmount)
+	public void spawnHealingOrbs(int mode, int healAmount)
 	{
-		OrbController healingOrb1 = Instantiate(healingOrbPrefab, orb.transform.position, Quaternion.identity, orb.GetComponentInParent<Transform>()).GetComponent<OrbController>();
+		if(mode == 0 || mode == 1)
+		{
+			OrbController healingOrb1 = Instantiate(healingOrbPrefab, orb.transform.position, Quaternion.identity, orb.GetComponentInParent<Transform>()).GetComponent<OrbController>();
 
-		healingOrb1.healAmount = healAmount;
-		healingOrb1.progression = orb.GetComponent<OrbController>().progression;
-		healingOrb1.toPlayer2 = false;
+			healingOrb1.healAmount = healAmount;
+			healingOrb1.progression = orb.GetComponent<OrbController>().progression;
+			healingOrb1.toPlayer2 = false;
+		}
 
-		OrbController healingOrb2 = Instantiate(healingOrbPrefab, orb.transform.position, Quaternion.identity, orb.GetComponentInParent<Transform>()).GetComponent<OrbController>();
+		if (mode == 0 || mode == 2)
+		{
+			OrbController healingOrb2 = Instantiate(healingOrbPrefab, orb.transform.position, Quaternion.identity, orb.GetComponentInParent<Transform>()).GetComponent<OrbController>();
 
-		healingOrb2.healAmount = healAmount;
-		healingOrb2.progression = orb.GetComponent<OrbController>().progression;
-		healingOrb2.toPlayer2 = true;
+			healingOrb2.healAmount = healAmount;
+			healingOrb2.progression = orb.GetComponent<OrbController>().progression;
+			healingOrb2.toPlayer2 = true;
+		}
 	}
 }
