@@ -11,6 +11,7 @@ public class LootTable : MonoBehaviour
 	[Range(0.0f, 1.0f)]
 	public float chanceOfPowerDrop;
 	public GameManager.PowerType droppedPower;
+	public bool isFixedPower;
 
 	public void LootEnemy()
 	{
