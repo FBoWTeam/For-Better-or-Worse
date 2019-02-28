@@ -51,8 +51,8 @@ public class PlayerController : MonoBehaviour
         Vector3 velocity = direction * speed * Time.deltaTime;
 
         rb.MovePosition(transform.position + velocity);
-		transform.LookAt(transform.position + velocity);
-		transform.localEulerAngles = new Vector3(0.0f, transform.localEulerAngles.y, 0.0f);
+        transform.LookAt(transform.position + velocity);
+        transform.localEulerAngles = new Vector3(0.0f, transform.localEulerAngles.y, 0.0f);
     }
 
 
@@ -117,40 +117,46 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     public void AttributePower(GameManager.PowerType newPower, bool isFixedPower)
     {
-		if (isFixedPower)
-		{
-			if (powerSlot1 == GameManager.PowerType.None)
-			{
-				powerSlot1 = newPower;
-			}
-			else if (powerSlot2 == GameManager.PowerType.None)
-			{
-				powerSlot2 = newPower;
-			}
-		}
-		else
-		{
-			if (powerSlot3 == GameManager.PowerType.None)
-			{
-				powerSlot3 = newPower;
-			}
-			else if (powerSlot4 == GameManager.PowerType.None)
-			{
-				powerSlot4 = newPower;
-			}
-			else
-			{
-				if (oldestSlotIs3)
-				{
-					powerSlot3 = newPower;
-				}
-				else
-				{
-					powerSlot4 = newPower;
-				}
-				oldestSlotIs3 = !oldestSlotIs3;
-			}
-		}
+        if (isFixedPower)
+        {
+            if (powerSlot1 == GameManager.PowerType.None)
+            {
+                powerSlot1 = newPower;
+                GameManager.gameManager.UIManager.UpdatePowerSlot(1, player1, powerSlot1);
+            }
+            else if (powerSlot2 == GameManager.PowerType.None)
+            {
+                powerSlot2 = newPower;
+                GameManager.gameManager.UIManager.UpdatePowerSlot(2, player1, powerSlot2);
+            }
+        }
+        else
+        {
+            if (powerSlot3 == GameManager.PowerType.None)
+            {
+                powerSlot3 = newPower;
+                GameManager.gameManager.UIManager.UpdatePowerSlot(3, player1, powerSlot3);
+            }
+            else if (powerSlot4 == GameManager.PowerType.None)
+            {
+                powerSlot4 = newPower;
+                GameManager.gameManager.UIManager.UpdatePowerSlot(4, player1, powerSlot4);
+            }
+            else
+            {
+                if (oldestSlotIs3)
+                {
+                    powerSlot3 = newPower;
+                    GameManager.gameManager.UIManager.UpdatePowerSlot(3, player1, powerSlot3);
+                }
+                else
+                {
+                    powerSlot4 = newPower;
+                    GameManager.gameManager.UIManager.UpdatePowerSlot(4, player1, powerSlot4);
+                }
+                oldestSlotIs3 = !oldestSlotIs3;
+            }
+        }
     }
 
     private void OnDrawGizmos()

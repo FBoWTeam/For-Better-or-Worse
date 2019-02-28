@@ -19,28 +19,30 @@ public class GameManager : MonoBehaviour
     public GameObject player2;
     [HideInInspector]
     public GameObject orb;
+    [HideInInspector]
+    public UIManager UIManager;
 
     public GameObject linkDeformation;
 
     public bool player1HasTaunt, player2HasTaunt;
     public int tauntRange = 10;
-    
-	public GameObject healingOrbPrefab;
+
+	public GameObject normalHealingOrbPrefab, leechLifeHealingOrbPrefab;
 
 	public enum PowerType
     {
-        None = 0,
+        None,
 
-        LargeOrb = 1,
-        Vortex = 2,
-        LeechLife = 3,
-        Slug = 4,
-        Shield = 5,
+        LargeOrb,
+        Vortex,
+        LeechLife,
+        Slug,
+        Shield,
 
-        Ice = 6,
-        Fire = 7,
-        Electric = 8,
-        Weakness = 9
+        Ice,
+        Fire,
+        Electric,
+        Darkness
     }
 
 
@@ -61,6 +63,7 @@ public class GameManager : MonoBehaviour
         player2 = GameObject.Find("Player2");
         orb = GameObject.Find("Orb");
         linkDeformation = GameObject.Find("Deformation");
+        UIManager = GameObject.FindGameObjectWithTag("UI").GetComponent<UIManager>();
 
         hp = baseHP;
     }
@@ -134,9 +137,15 @@ public class GameManager : MonoBehaviour
         }
     }
 
-	public void spawnHealingOrbs(int mode, int healAmount)
+	public void spawnHealingOrbs(int playerHealed, int healAmount, string mode)
 	{
-		if(mode == 0 || mode == 1)
+		GameObject healingOrbPrefab = normalHealingOrbPrefab;
+		if(mode == "leechLife")
+		{
+			healingOrbPrefab = leechLifeHealingOrbPrefab;
+		}
+
+		if(playerHealed == 0 || playerHealed == 1)
 		{
 			OrbController healingOrb1 = Instantiate(healingOrbPrefab, orb.transform.position, Quaternion.identity, orb.GetComponentInParent<Transform>()).GetComponent<OrbController>();
 
@@ -145,7 +154,7 @@ public class GameManager : MonoBehaviour
 			healingOrb1.toPlayer2 = false;
 		}
 
-		if (mode == 0 || mode == 2)
+		if (playerHealed == 0 || playerHealed == 2)
 		{
 			OrbController healingOrb2 = Instantiate(healingOrbPrefab, orb.transform.position, Quaternion.identity, orb.GetComponentInParent<Transform>()).GetComponent<OrbController>();
 

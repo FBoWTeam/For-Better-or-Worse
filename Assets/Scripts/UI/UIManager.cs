@@ -45,19 +45,85 @@ public class UIManager : MonoBehaviour
     public Sprite ice;
     public Sprite fire;
     public Sprite electric;
-    public Sprite weakness;
+    public Sprite darkness;
+    public Sprite none;
 
     #endregion
 
-    // Start is called before the first frame update
-    void Start()
+
+    #region All Functions
+
+    private void Start()
     {
+    }
+
+
+    #region PowerSlot Functions
+
+
+    public void UpdatePowerSlot(int slot, bool player1, GameManager.PowerType powerSlot)
+    {
+        switch (slot)
+        {
+            case 1:
+                if (player1)
+                    mainPower1Fox.sprite = ImageAssignment(powerSlot);
+                else
+                    mainPower1Raccoon.sprite = ImageAssignment(powerSlot);
+                break;
+            case 2:
+                if (player1)
+                    mainPower2Fox.sprite = ImageAssignment(powerSlot);
+                else
+                    mainPower2Raccoon.sprite = ImageAssignment(powerSlot);
+                break;
+            case 3:
+                if (player1)
+                    secondaryPower1Fox.sprite = ImageAssignment(powerSlot);
+                else
+                    secondaryPower1Raccoon.sprite = ImageAssignment(powerSlot);
+                break;
+            case 4:
+                if (player1)
+                    secondaryPower2Fox.sprite = ImageAssignment(powerSlot);
+                else
+                    secondaryPower2Raccoon.sprite = ImageAssignment(powerSlot);
+                break;
+        }
+    }
+    #endregion
+
+    public Sprite ImageAssignment(GameManager.PowerType powerType)
+    {
+        switch (powerType)
+        {
+            case GameManager.PowerType.None:
+                return none;
+            case GameManager.PowerType.LargeOrb:
+                return largeOrb;
+            case GameManager.PowerType.Vortex:
+                return vortex;
+            case GameManager.PowerType.LeechLife:
+                return leechLife;
+            case GameManager.PowerType.Slug:
+                return slug;
+            case GameManager.PowerType.Shield:
+                return shield;
+            case GameManager.PowerType.Ice:
+                return ice;
+            case GameManager.PowerType.Fire:
+                return fire;
+            case GameManager.PowerType.Electric:
+                return electric;
+            case GameManager.PowerType.Darkness:
+                return darkness;
+            default:
+                return none;
+        }
+
 
     }
 
-    // Update is called once per frame
-    void Update()
-    {
+    #endregion
 
-    }
 }

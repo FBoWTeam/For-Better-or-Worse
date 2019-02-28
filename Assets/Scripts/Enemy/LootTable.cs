@@ -17,12 +17,13 @@ public class LootTable : MonoBehaviour
 	{
 		if (Random.Range(0.0f, 1.0f) <= chanceOfHealing)
 		{
-			GameManager.gameManager.spawnHealingOrbs(healAmount, 0);
+			GameManager.gameManager.spawnHealingOrbs(0, healAmount, "normal");
 		}
 
 		if (Random.Range(0.0f, 1.0f) <= chanceOfPowerDrop && GameManager.gameManager.orb.GetComponent<PowerController>().droppedPower == GameManager.PowerType.None)
 		{
 			PowerController controller = GameManager.gameManager.orb.GetComponent<PowerController>();
+			controller.isFixedPower = isFixedPower;
 			controller.droppedPower = droppedPower;
 			controller.reflectedDrop = false;
 		}
