@@ -26,23 +26,23 @@ public class GameManager : MonoBehaviour
 
     public bool player1HasTaunt, player2HasTaunt;
     public int tauntRange = 10;
-    
-	public GameObject healingOrbPrefab;
+
+	public GameObject normalHealingOrbPrefab, leechLifeHealingOrbPrefab;
 
 	public enum PowerType
     {
-        None = 0,
+        None,
 
-        LargeOrb = 1,
-        Vortex = 2,
-        LeechLife = 3,
-        Slug = 4,
-        Shield = 5,
+        LargeOrb,
+        Vortex,
+        LeechLife,
+        Slug,
+        Shield,
 
-        Ice = 6,
-        Fire = 7,
-        Electric = 8,
-        Weakness = 9
+        Ice,
+        Fire,
+        Electric,
+        Darkness
     }
 
 
@@ -137,18 +137,30 @@ public class GameManager : MonoBehaviour
         }
     }
 
-	public void spawnHealingOrbs(int healAmount)
+	public void spawnHealingOrbs(int playerHealed, int healAmount, string mode)
 	{
-		OrbController healingOrb1 = Instantiate(healingOrbPrefab, orb.transform.position, Quaternion.identity, orb.GetComponentInParent<Transform>()).GetComponent<OrbController>();
+		GameObject healingOrbPrefab = normalHealingOrbPrefab;
+		if(mode == "leechLife")
+		{
+			healingOrbPrefab = leechLifeHealingOrbPrefab;
+		}
 
-		healingOrb1.healAmount = healAmount;
-		healingOrb1.progression = orb.GetComponent<OrbController>().progression;
-		healingOrb1.toPlayer2 = false;
+		if(playerHealed == 0 || playerHealed == 1)
+		{
+			OrbController healingOrb1 = Instantiate(healingOrbPrefab, orb.transform.position, Quaternion.identity, orb.GetComponentInParent<Transform>()).GetComponent<OrbController>();
 
-		OrbController healingOrb2 = Instantiate(healingOrbPrefab, orb.transform.position, Quaternion.identity, orb.GetComponentInParent<Transform>()).GetComponent<OrbController>();
+			healingOrb1.healAmount = healAmount;
+			healingOrb1.progression = orb.GetComponent<OrbController>().progression;
+			healingOrb1.toPlayer2 = false;
+		}
 
-		healingOrb2.healAmount = healAmount;
-		healingOrb2.progression = orb.GetComponent<OrbController>().progression;
-		healingOrb2.toPlayer2 = true;
+		if (playerHealed == 0 || playerHealed == 2)
+		{
+			OrbController healingOrb2 = Instantiate(healingOrbPrefab, orb.transform.position, Quaternion.identity, orb.GetComponentInParent<Transform>()).GetComponent<OrbController>();
+
+			healingOrb2.healAmount = healAmount;
+			healingOrb2.progression = orb.GetComponent<OrbController>().progression;
+			healingOrb2.toPlayer2 = true;
+		}
 	}
 }

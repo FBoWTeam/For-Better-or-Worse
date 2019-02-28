@@ -20,6 +20,7 @@ public class PowerController : MonoBehaviour
 	[Header("[Power Editing]")]
 	public GameManager.PowerType editingPower;
 
+	#region Large Orb Param
 	//LargeOrb
 	[DrawIf(new string[] { "editingPower" }, GameManager.PowerType.LargeOrb)]
 	public float largeOrbDuration;
@@ -31,7 +32,9 @@ public class PowerController : MonoBehaviour
 	public float maxScale;
 	[DrawIf(new string[] { "editingPower" }, GameManager.PowerType.LargeOrb)]
 	public int largeOrbDamage;
+	#endregion
 
+	#region Vortex Param
 	//Vortex
 	[DrawIf(new string[] { "editingPower" }, GameManager.PowerType.Vortex)]
 	public Material vortexMaterial;
@@ -39,7 +42,9 @@ public class PowerController : MonoBehaviour
 	public float vortexDuration;
 	[DrawIf(new string[] { "editingPower" }, GameManager.PowerType.Vortex)]
 	public float vortexCooldown;
+	#endregion
 
+	#region Leech Life Param
 	//LeechLife
 	[DrawIf(new string[] { "editingPower" }, GameManager.PowerType.LeechLife)]
 	public Material leechLifeMaterial;
@@ -50,8 +55,9 @@ public class PowerController : MonoBehaviour
 	[DrawIf(new string[] { "editingPower" }, GameManager.PowerType.LeechLife)]
 	[Range(0, 100f)]
     public float lifeSteel;
+	#endregion
 
-
+	#region Slug Param
 	//Slug
 	[DrawIf(new string[] { "editingPower" }, GameManager.PowerType.Slug)]
 	public Material slugMaterial;
@@ -61,7 +67,9 @@ public class PowerController : MonoBehaviour
 	public float slugCooldown;
 	[DrawIf(new string[] { "editingPower" }, GameManager.PowerType.Slug)]
 	public GameObject slug;
+	#endregion
 
+	#region Shield Param
 	//Shield
 	[DrawIf(new string[] { "editingPower" }, GameManager.PowerType.Shield)]
 	public Material shieldMaterial;
@@ -75,8 +83,9 @@ public class PowerController : MonoBehaviour
 	[DrawIf(new string[] { "editingPower" }, GameManager.PowerType.Shield)]
 	[Tooltip("number of stacks that gives shield when the orb is hit")]
     public int currentShieldStack;
+	#endregion
 
-
+	#region Ice Param
 	//Ice
 	[DrawIf(new string[] { "editingPower" }, GameManager.PowerType.Ice)]
 	public Material iceMaterial;
@@ -84,7 +93,11 @@ public class PowerController : MonoBehaviour
 	public float iceDuration;
 	[DrawIf(new string[] { "editingPower" }, GameManager.PowerType.Ice)]
 	public float iceCooldown;
+	[DrawIf(new string[] { "editingPower" }, GameManager.PowerType.Ice)]
+	public int iceDamage;
+	#endregion
 
+	#region Fire Param
 	//Fire
 	[DrawIf(new string[] { "editingPower" }, GameManager.PowerType.Fire)]
 	public Material fireMaterial;
@@ -93,17 +106,17 @@ public class PowerController : MonoBehaviour
 	[DrawIf(new string[] { "editingPower" }, GameManager.PowerType.Fire)]
 	public float fireCooldown;
 	[DrawIf(new string[] { "editingPower" }, GameManager.PowerType.Fire)]
-	public GameObject fireParticleSystem;
+	public int fireDamage;
 	[DrawIf(new string[] { "editingPower" }, GameManager.PowerType.Fire)]
 	[Tooltip("Damage is over time , should be >= to fireDuration")]
-    public int fireDamage = 5;
+    public int fireTicksDamage = 5;
 	[DrawIf(new string[] { "editingPower" }, GameManager.PowerType.Fire)]
 	public float fireTickDuration = 5;
 	[DrawIf(new string[] { "editingPower" }, GameManager.PowerType.Fire)]
-	public float fireCoolDown = 8;
-	[DrawIf(new string[] { "editingPower" }, GameManager.PowerType.Fire)]
 	private float nextAttack = 0f;
+	#endregion
 
+	#region Electric Param
 	//Electric
 	[DrawIf(new string[] { "editingPower" }, GameManager.PowerType.Electric)]
 	public Material electricMaterial;
@@ -111,14 +124,19 @@ public class PowerController : MonoBehaviour
 	public float electricDuration;
 	[DrawIf(new string[] { "editingPower" }, GameManager.PowerType.Electric)]
 	public float electricCooldown;
+	[DrawIf(new string[] { "editingPower" }, GameManager.PowerType.Electric)]
+	public int electricDamage;
+	#endregion
 
-	//Weakness
-	[DrawIf(new string[] { "editingPower" }, GameManager.PowerType.Weakness)]
-	public Material weaknessMaterial;
-	[DrawIf(new string[] { "editingPower" }, GameManager.PowerType.Weakness)]
-	public float weaknessDuration;
-	[DrawIf(new string[] { "editingPower" }, GameManager.PowerType.Weakness)]
-	public float weaknessCooldown;
+	#region Darkness Param
+	//Darkness
+	[DrawIf(new string[] { "editingPower" }, GameManager.PowerType.Darkness)]
+	public Material darknessMaterial;
+	[DrawIf(new string[] { "editingPower" }, GameManager.PowerType.Darkness)]
+	public float darknessDuration;
+	[DrawIf(new string[] { "editingPower" }, GameManager.PowerType.Darkness)]
+	public float darknessCooldown;
+	#endregion
 
 
 	private void Start()
@@ -126,19 +144,13 @@ public class PowerController : MonoBehaviour
 		canBeActivated = new List<bool> {true, true, true, true, true, true, true, true, true};
 	}
 
-	public bool isBehavioral(GameManager.PowerType power)
-	{
-		if (power == GameManager.PowerType.LargeOrb || power == GameManager.PowerType.LeechLife || power == GameManager.PowerType.Shield || power == GameManager.PowerType.Slug || power == GameManager.PowerType.Vortex)
-			return true;
-		else
-			return false;
-	}
+	#region Activation and Deactivation Functions
 
-    /// <summary>
-    /// Activate the powerToActivate, deactivate the power of the same type if there's already an active one
-    /// </summary>
-    /// <param name="powerToActivate"></param>
-    public void ActivatePower(GameManager.PowerType powerToActivate)
+	/// <summary>
+	/// Activate the powerToActivate, deactivate the power of the same type if there's already an active one
+	/// </summary>
+	/// <param name="powerToActivate"></param>
+	public void ActivatePower(GameManager.PowerType powerToActivate)
     {
 		if(canBeActivated[(int)powerToActivate - 1])
 		{
@@ -185,9 +197,9 @@ public class PowerController : MonoBehaviour
 					StartCoroutine(cooldownCoroutine(GameManager.PowerType.Electric, electricCooldown));
 					ActivateElectric();
 					break;
-				case GameManager.PowerType.Weakness:
-					StartCoroutine(cooldownCoroutine(GameManager.PowerType.Weakness, weaknessCooldown));
-					ActivateWeakness();
+				case GameManager.PowerType.Darkness:
+					StartCoroutine(cooldownCoroutine(GameManager.PowerType.Darkness, darknessCooldown));
+					ActivateDarkness();
 					break;
 			}
 		}
@@ -225,26 +237,25 @@ public class PowerController : MonoBehaviour
             case GameManager.PowerType.Electric:
                 DeactivateElectric();
                 break;
-            case GameManager.PowerType.Weakness:
-                DeactivateWeakness();
+            case GameManager.PowerType.Darkness:
+                DeactivateDarkness();
                 break;
             default:
                 break;
         }
     }
 
-    //==========BEHAVIORAL POWERS FUNCTIONS==========
+	#endregion
 
-    #region LargeOrb
-    //==========LARGEORB==========
-    /// <summary>
-    /// set the behavioral power to LargeOrb and resize the orb
-    /// </summary>
-    void ActivateLargeOrb()
+	//==========BEHAVIORAL POWERS FUNCTIONS==========
+
+	#region LargeOrb
+	//==========LARGEORB==========
+
+	void ActivateLargeOrb()
     {
         behavioralPower = GameManager.PowerType.LargeOrb;
         transform.localScale = new Vector3(maxScale, maxScale, maxScale);
-        baseDamage += largeOrbDamage;
 		StartCoroutine(DurationCoroutine(GameManager.PowerType.LargeOrb, largeOrbDuration));
     }
 
@@ -252,7 +263,6 @@ public class PowerController : MonoBehaviour
     {
         behavioralPower = GameManager.PowerType.None;
         transform.localScale = new Vector3(minScale, minScale, minScale);
-        baseDamage -= largeOrbDamage;
     }
 
     #endregion
@@ -328,7 +338,6 @@ public class PowerController : MonoBehaviour
     void ActivateShield()
     {
         behavioralPower = GameManager.PowerType.Shield;
-        baseDamage -= mitigatedDamage;
         currentShieldStack = 2;
 		GetComponent<MeshRenderer>().material = shieldMaterial;
 	}
@@ -336,7 +345,6 @@ public class PowerController : MonoBehaviour
     void DeactivateShield()
     {
         behavioralPower = GameManager.PowerType.None;
-        baseDamage += mitigatedDamage;
         GameManager.gameManager.shieldP1 = 0;
         GameManager.gameManager.shieldP2 = 0;
 		GetComponent<MeshRenderer>().material = normalMaterial;
@@ -380,10 +388,8 @@ public class PowerController : MonoBehaviour
 		GetComponent<MeshRenderer>().material = normalMaterial;
 	}
 
-	// QUESTIONS : what do we do if we hit a ennemy that is already inFIRE ?
-	IEnumerator FireDamage(Enemy enemy, int totalDamage, float duration, float cooldown)
+	IEnumerator FireDamage(Enemy enemy, int totalDamage, float duration)
 	{
-
 		int tickDamage = Mathf.RoundToInt(totalDamage / duration);
 		int curentDamage = 0;
 
@@ -393,9 +399,6 @@ public class PowerController : MonoBehaviour
 			yield return new WaitForSeconds(1f);
 			curentDamage += tickDamage;
 		}
-
-		//DestroyImmediate(fireParticleSystem,true);
-		yield return null;
 	}
 
 	#endregion
@@ -418,17 +421,17 @@ public class PowerController : MonoBehaviour
 
     #endregion
 
-    #region Weakness
-    //==========WEAKNESS==========
+    #region Darkness
+    //==========DARKNESS==========
 
-    void ActivateWeakness()
+    void ActivateDarkness()
     {
-        elementalPower = GameManager.PowerType.Weakness;
-		GetComponent<MeshRenderer>().material = weaknessMaterial;
-		StartCoroutine(DurationCoroutine(GameManager.PowerType.Weakness, weaknessDuration));
+        elementalPower = GameManager.PowerType.Darkness;
+		GetComponent<MeshRenderer>().material = darknessMaterial;
+		StartCoroutine(DurationCoroutine(GameManager.PowerType.Darkness, darknessDuration));
 	}
 
-    void DeactivateWeakness()
+    void DeactivateDarkness()
     {
         elementalPower = GameManager.PowerType.None;
 		GetComponent<MeshRenderer>().material = normalMaterial;
@@ -436,7 +439,7 @@ public class PowerController : MonoBehaviour
 
 	#endregion
 
-	//==========DURATION COROUTINE==========
+	//==========DURATION AND COOLDOWN==========
 
 	IEnumerator DurationCoroutine(GameManager.PowerType power, float duration)
 	{
@@ -444,35 +447,64 @@ public class PowerController : MonoBehaviour
 		DeactivatePower(power);
 	}
 
+	public IEnumerator cooldownCoroutine(GameManager.PowerType power, float cooldown)
+	{
+		canBeActivated[(int)power - 1] = false;
+		yield return new WaitForSeconds(cooldown);
+		canBeActivated[(int)power - 1] = true;
+	}
+
 	//==========OTHERS==========
+
+	public bool isBehavioral(GameManager.PowerType power)
+	{
+		if (power == GameManager.PowerType.LargeOrb || power == GameManager.PowerType.LeechLife || power == GameManager.PowerType.Shield || power == GameManager.PowerType.Slug || power == GameManager.PowerType.Vortex)
+			return true;
+		else
+			return false;
+	}
 
 	public void onEnemyHit(GameObject target)
     {
         Enemy enemy = target.GetComponent<Enemy>();
-        enemy.TakeDamage(baseDamage);
+		int damageTaken = baseDamage;
 
-        
-        //check if the orb has the power LeechLife and apply the effect
-        if (gameObject.GetComponent<PowerController>().behavioralPower == GameManager.PowerType.LeechLife)
-        {
-            GameManager.gameManager.hp += (int)(baseDamage / (100 / gameObject.GetComponent<PowerController>().lifeSteel));
-        }
+		switch (behavioralPower)
+		{
+			case GameManager.PowerType.LargeOrb:
+				damageTaken += largeOrbDamage;
+				break;
+			case GameManager.PowerType.Shield:
+				damageTaken -= mitigatedDamage;
+				break;
+		}
 
         switch (elementalPower) {          
             case GameManager.PowerType.Ice:
-                Debug.Log("Slow down bitch"); 
+                Debug.Log("Slow down bitch");
+				damageTaken += iceDamage;
                 break;
-            case GameManager.PowerType.Fire:              
-                if (Time.time > nextAttack) {
-                    StartCoroutine(FireDamage(enemy, fireDamage, fireTickDuration, fireCoolDown));
-                    nextAttack = Time.time + fireCoolDown;
-                }
-               
+            case GameManager.PowerType.Fire:
+				StopCoroutine("FireDamage");
+				StartCoroutine(FireDamage(enemy, fireTicksDamage, fireTickDuration));
+				damageTaken += fireDamage;
                 break;
             case GameManager.PowerType.Electric:
+				damageTaken += electricDamage;
                 break;
         }
-    }
+
+		enemy.TakeDamage(damageTaken);
+
+		if (behavioralPower == GameManager.PowerType.LeechLife)
+		{
+			OrbController controller = GameManager.gameManager.orb.GetComponent<OrbController>();
+			if (controller.toPlayer2)
+				GameManager.gameManager.spawnHealingOrbs(1, (int)(damageTaken / (100 / lifeSteel)), "leechLife");
+			else
+				GameManager.gameManager.spawnHealingOrbs(2, (int)(damageTaken / (100 / lifeSteel)), "leechLife");
+		}
+	}
 
 	/// <summary>
 	/// Check if a dropped power is in the orb to give it to a player
@@ -508,14 +540,4 @@ public class PowerController : MonoBehaviour
 			}
 		}
 	}
-
-	public IEnumerator cooldownCoroutine(GameManager.PowerType power, float cooldown)
-	{
-		canBeActivated[(int)power-1] = false;
-		yield return new WaitForSeconds(cooldown);
-		canBeActivated[(int)power-1] = true;
-	}
 }
-
-
-    
