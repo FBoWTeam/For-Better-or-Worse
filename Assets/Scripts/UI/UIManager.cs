@@ -45,7 +45,7 @@ public class UIManager : MonoBehaviour
     public Sprite ice;
     public Sprite fire;
     public Sprite electric;
-    public Sprite weakness;
+    public Sprite darkness;
     public Sprite none;
 
     #endregion
@@ -99,37 +99,26 @@ public class UIManager : MonoBehaviour
         {
             case GameManager.PowerType.None:
                 return none;
-                break;
             case GameManager.PowerType.LargeOrb:
                 return largeOrb;
-                break;
             case GameManager.PowerType.Vortex:
                 return vortex;
-                break;
             case GameManager.PowerType.LeechLife:
                 return leechLife;
-                break;
             case GameManager.PowerType.Slug:
                 return slug;
-                break;
             case GameManager.PowerType.Shield:
                 return shield;
-                break;
             case GameManager.PowerType.Ice:
                 return ice;
-                break;
             case GameManager.PowerType.Fire:
                 return fire;
-                break;
             case GameManager.PowerType.Electric:
                 return electric;
-                break;
-            case GameManager.PowerType.Weakness:
-                return weakness;
-                break;
+            case GameManager.PowerType.Darkness:
+                return darkness;
             default:
                 return none;
-                break;
         }
 
 
