@@ -256,6 +256,7 @@ public class PowerController : MonoBehaviour
     {
         behavioralPower = GameManager.PowerType.LargeOrb;
         transform.localScale = new Vector3(maxScale, maxScale, maxScale);
+		transform.GetChild(0).GetComponent<MeshRenderer>().material = normalMaterial;
 		StartCoroutine(DurationCoroutine(GameManager.PowerType.LargeOrb, largeOrbDuration));
     }
 
@@ -263,7 +264,8 @@ public class PowerController : MonoBehaviour
     {
         behavioralPower = GameManager.PowerType.None;
         transform.localScale = new Vector3(minScale, minScale, minScale);
-    }
+		transform.GetChild(0).GetComponent<MeshRenderer>().material = normalMaterial;
+	}
 
     #endregion
 
@@ -273,14 +275,14 @@ public class PowerController : MonoBehaviour
     void ActivateVortex()
     {
         behavioralPower = GameManager.PowerType.Vortex;
-		GetComponent<MeshRenderer>().material = vortexMaterial;
+		transform.GetChild(0).GetComponent<MeshRenderer>().material = vortexMaterial;
 		StartCoroutine(DurationCoroutine(GameManager.PowerType.Vortex, vortexDuration));
 	}
 
     void DeactivateVortex()
     {
         behavioralPower = GameManager.PowerType.None;
-		GetComponent<MeshRenderer>().material = normalMaterial;
+		transform.GetChild(0).GetComponent<MeshRenderer>().material = normalMaterial;
 	}
 
     #endregion
@@ -291,14 +293,14 @@ public class PowerController : MonoBehaviour
     void ActivateLeechLife()
     {
         behavioralPower = GameManager.PowerType.LeechLife;
-		GetComponent<MeshRenderer>().material = leechLifeMaterial;
+		transform.GetChild(0).GetComponent<MeshRenderer>().material = leechLifeMaterial;
 		StartCoroutine(DurationCoroutine(GameManager.PowerType.LeechLife, leechLifeDuration));
 	}
 
     void DeactivateLeechLife()
     {
         behavioralPower = GameManager.PowerType.None;
-		GetComponent<MeshRenderer>().material = normalMaterial;
+		transform.GetChild(0).GetComponent<MeshRenderer>().material = normalMaterial;
 	}
 
     #endregion
@@ -310,13 +312,13 @@ public class PowerController : MonoBehaviour
     {
         behavioralPower = GameManager.PowerType.Slug;
         StartCoroutine("InstanciateSlug");
-		GetComponent<MeshRenderer>().material = slugMaterial;
+		transform.GetChild(0).GetComponent<MeshRenderer>().material = slugMaterial;
 	}
 
     void DeactivateSlug()
     {
         behavioralPower = GameManager.PowerType.None;
-		GetComponent<MeshRenderer>().material = normalMaterial;
+		transform.GetChild(0).GetComponent<MeshRenderer>().material = normalMaterial;
 	}
 
     IEnumerator InstanciateSlug()
@@ -339,7 +341,7 @@ public class PowerController : MonoBehaviour
     {
         behavioralPower = GameManager.PowerType.Shield;
         currentShieldStack = 2;
-		GetComponent<MeshRenderer>().material = shieldMaterial;
+		transform.GetChild(0).GetComponent<MeshRenderer>().material = shieldMaterial;
 	}
 
     void DeactivateShield()
@@ -347,7 +349,7 @@ public class PowerController : MonoBehaviour
         behavioralPower = GameManager.PowerType.None;
         GameManager.gameManager.shieldP1 = 0;
         GameManager.gameManager.shieldP2 = 0;
-		GetComponent<MeshRenderer>().material = normalMaterial;
+		transform.GetChild(0).GetComponent<MeshRenderer>().material = normalMaterial;
 	}
 
     #endregion
