@@ -130,7 +130,7 @@ public class EnemyMovement : MonoBehaviour
     {
         if (!isSlowed)
         {
-            agent.speed = agent.speed * (slowAmount/100);
+            agent.speed = agent.speed * ((100 - slowAmount)/100);
             isSlowed = true;
         }
     }
