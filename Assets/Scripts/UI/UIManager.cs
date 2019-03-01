@@ -53,14 +53,30 @@ public class UIManager : MonoBehaviour
 
     #region All Functions
 
-    private void Start()
+    public void UpdateDialogBox(string)
     {
-    }
+        if (dialogBoxFox.activeSelf)
+        {
+            dialogBoxFox.SetActive(false);
+        }
 
+        if (dialogBoxRaccoon.activeSelf)
+        {
+            dialogBoxRaccoon.SetActive(false);
+        }
+
+
+
+    }
 
     #region PowerSlot Functions
 
-
+    /// <summary>
+    /// Update the UI power slot according to the new power obtained
+    /// </summary>
+    /// <param name="slot">use to know the slot to update</param>
+    /// <param name="player1">use to know the player affected</param>
+    /// <param name="powerSlot">refers to the new powerType obtained</param>
     public void UpdatePowerSlot(int slot, bool player1, GameManager.PowerType powerSlot)
     {
         switch (slot)
@@ -91,8 +107,14 @@ public class UIManager : MonoBehaviour
                 break;
         }
     }
+
     #endregion
 
+    /// <summary>
+    /// Assign the image corresponding to the power
+    /// </summary>
+    /// <param name="powerType">refers to the new powerType obtained</param>
+    /// <returns></returns>
     public Sprite ImageAssignment(GameManager.PowerType powerType)
     {
         switch (powerType)
@@ -120,8 +142,6 @@ public class UIManager : MonoBehaviour
             default:
                 return none;
         }
-
-
     }
 
     #endregion
