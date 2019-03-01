@@ -112,30 +112,9 @@ public class GameManager : MonoBehaviour
 
         }
     }
+    
 
-    public void SlowSpeed(GameObject target)
-    {
-        if (target.GetComponent<EnemyMovement>() != null)
-        {
-            target.GetComponent<EnemyMovement>().agent.speed /= 2;
-        }
-        else if (target.GetComponent<PlayerController>() != null)
-        {
-            target.GetComponent<PlayerController>().speed /= 2;
-        }
-    }
 
-    public void RestoreSpeed(GameObject target)
-    {
-        if (target.GetComponent<EnemyMovement>() != null)
-        {
-            target.GetComponent<EnemyMovement>().agent.speed = target.GetComponent<EnemyMovement>().initialSpeed;
-        }
-        else if (target.GetComponent<PlayerController>() != null)
-        {
-            target.GetComponent<PlayerController>().speed = target.GetComponent<PlayerController>().initialSpeed;
-        }
-    }
 
 	public void spawnHealingOrbs(int playerHealed, int healAmount, string mode)
 	{
