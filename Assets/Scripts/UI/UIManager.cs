@@ -50,13 +50,7 @@ public class UIManager : MonoBehaviour
 
     #endregion
 
-
     #region All Functions
-
-    private void Start()
-    {
-    }
-
 
     #region PowerSlot Functions
 
