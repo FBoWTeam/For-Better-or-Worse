@@ -19,12 +19,6 @@ public class TriggerSystem : MonoBehaviour
         }
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
-
     private void OnTriggerEnter(Collider other)
     {
         if (triggerMode == TriggerMode.Enter)
