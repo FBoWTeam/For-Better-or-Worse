@@ -14,7 +14,7 @@ public class Brazier : MonoBehaviour, IActivable
 
     //the brazier activates an other object
     [Tooltip("list of objects to activate to activate the brazier")]
-    public GameObject objectToActivate;
+    public List<GameObject> objectToActivate;
 
     [Tooltip("list of activated objects needed to activate the brazier")]
     public List<GameObject> objectsConditions;
@@ -36,9 +36,12 @@ public class Brazier : MonoBehaviour, IActivable
             if (!isActive && powerController.elementalPower == GameManager.PowerType.Fire)
             {
                 this.Activate();
-                if (objectToActivate != null)
+                if (objectToActivate.Count != 0)
                 {
-                    objectToActivate.GetComponent<IActivable>().Activate();
+                    for (int i = 0; i < objectToActivate.Count; i++)
+                    {
+                        objectToActivate[i].GetComponent<IActivable>().Activate();
+                    }
                 }
             }
             //if the brazier is active and the orb isn't, set the orb on fire
