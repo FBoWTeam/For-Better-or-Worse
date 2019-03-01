@@ -29,18 +29,21 @@ public class Brazier : MonoBehaviour, IActivable
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Orb") && activatedByOrb)
+        if (other.CompareTag("Orb"))
         {
             PowerController powerController = other.GetComponent<PowerController>();
             //if the brazier is not active and the orb is on fire, set the brazier on and activates the object if not null
             if (!isActive && powerController.elementalPower == GameManager.PowerType.Fire)
             {
-                this.Activate();
-                if (objectToActivate.Count != 0)
+                if (activatedByOrb)
                 {
-                    for (int i = 0; i < objectToActivate.Count; i++)
+                    this.Activate();
+                    if (objectToActivate.Count != 0)
                     {
-                        objectToActivate[i].GetComponent<IActivable>().Activate();
+                        for (int i = 0; i < objectToActivate.Count; i++)
+                        {
+                            objectToActivate[i].GetComponent<IActivable>().Activate();
+                        }
                     }
                 }
             }
