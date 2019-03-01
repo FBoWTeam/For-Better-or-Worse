@@ -63,7 +63,9 @@ public class PowerController : MonoBehaviour
 	public Material slugMaterial;
 	[DrawIf(new string[] { "editingPower" }, GameManager.PowerType.Slug)]
 	public float slugDuration;
-	[DrawIf(new string[] { "editingPower" }, GameManager.PowerType.Slug)]
+    [DrawIf(new string[] { "editingPower" }, GameManager.PowerType.Slug)]
+    public int mitigatedDamageSlug;
+    [DrawIf(new string[] { "editingPower" }, GameManager.PowerType.Slug)]
 	public float slugCooldown;
 	[DrawIf(new string[] { "editingPower" }, GameManager.PowerType.Slug)]
 	public GameObject slug;
@@ -479,7 +481,10 @@ public class PowerController : MonoBehaviour
 			case GameManager.PowerType.Shield:
 				damageTaken -= mitigatedDamage;
 				break;
-		}
+            case GameManager.PowerType.Slug:
+                damageTaken -= mitigatedDamageSlug;
+                break;
+        }
 
         switch (elementalPower) {          
             case GameManager.PowerType.Ice:
