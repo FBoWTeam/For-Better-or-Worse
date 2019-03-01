@@ -8898,6 +8898,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 268983113}
+  - component: {fileID: 268983115}
+  - component: {fileID: 268983114}
   m_Layer: 0
   m_Name: Salle 7
   m_TagString: Untagged
@@ -8922,9 +8924,43 @@ Transform:
   - {fileID: 2053470386}
   - {fileID: 512961796}
   - {fileID: 777139158}
+  - {fileID: 548763403}
   m_Father: {fileID: 1530280647}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &268983114
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 268983112}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cca91b5a86e65aa4b8bc3a663a6f0c80, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  numberPlayerPresent: 0
+  roomCleared: 0
+  playerLeft: 0
+  doorsToClose: []
+  enemies:
+  - {fileID: 512961797}
+  objectsToActivate:
+  - {fileID: 0}
+--- !u!65 &268983115
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 268983112}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 65.78824, y: 1, z: 27.286104}
+  m_Center: {x: -14.622442, y: 0, z: -13.143052}
 --- !u!1 &271845301
 GameObject:
   m_ObjectHideFlags: 0
@@ -19260,6 +19296,12 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 512961795}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &512961797 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5093917487891404240, guid: dd7e859a6e8470c409cda09bae54057a,
+    type: 3}
+  m_PrefabInstance: {fileID: 512961795}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &513157693
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -20484,6 +20526,36 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 545602346}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &548763402
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 548763403}
+  m_Layer: 0
+  m_Name: Portes
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &548763403
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 548763402}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 268983113}
+  m_RootOrder: 6
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &548835208
 PrefabInstance:
   m_ObjectHideFlags: 0
