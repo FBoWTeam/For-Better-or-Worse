@@ -7,8 +7,18 @@ public class Brazier : MonoBehaviour, IActivable
     //boolean indicating if the brazier is activated or not
     public bool isActive { get; set; }
 
+    public bool onFire;
+
     //the brazier activates an other object
     public GameObject objectToActivate;
+
+    private void Start()
+    {
+        if (onFire)
+        {
+            this.Activate();
+        }
+    }
 
     private void OnTriggerEnter(Collider other)
     {
@@ -34,6 +44,15 @@ public class Brazier : MonoBehaviour, IActivable
 
     public void Activate()
     {
-        isActive = !isActive;
+        gameObject.GetComponent<Renderer>().material.color = Color.red;
+        isActive = true;
+        onFire = true;
+    }
+
+    public void Deactivate()
+    {
+        gameObject.GetComponent<Renderer>().material.color = Color.grey;
+        isActive = false;
+        onFire = false;
     }
 }

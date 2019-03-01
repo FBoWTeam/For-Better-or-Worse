@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.UI;
 
 [RequireComponent(typeof(Rigidbody))]
 [RequireComponent(typeof(NavMeshAgent))]
@@ -13,6 +14,7 @@ public class Enemy : MonoBehaviour
     public bool debug;
     [DrawIf(new string[] { "debug" }, true)]
     public bool drawPath = false;
+    [DrawIf(new string[] { "debug" }, true)]
     public bool drawView = false;
     [DrawIf(new string[] { "drawView" }, true)]
     public float lengthView = 2f;
@@ -21,6 +23,7 @@ public class Enemy : MonoBehaviour
     public static bool sdrawPath;
     #endregion
 
+    #region Focus Variables
     public enum Focus
     {
         Player1,
@@ -28,14 +31,32 @@ public class Enemy : MonoBehaviour
         Nearest,
     }
     public Focus focus = Focus.Nearest;
+    #endregion
+
+    #region Taunt Variables
+    public enum Taunt
+    {
+        Taunter,
+        Other,
+    }
+    public Taunt taunt = Taunt.Taunter;
+    private GameObject taunter;
+    public bool isTaunted = false;
+
+    GameObject tauntCanvas;
+    Color player1ColorTaunt = new Color(255, 96, 0);
+    Color player2ColorTaunt = new Color(82, 82, 82);
+
+    #endregion
 
     public int baseHP = 100;
     public int hp;
 
+    [HideInInspector]
     public EnemyMovement enemyMovement;
 
     GameObject[] players;
-    public static GameObject target;
+    public static GameObject aimPlayer;
 
     #endregion
 
@@ -46,23 +67,18 @@ public class Enemy : MonoBehaviour
         players = new GameObject[] { GameManager.gameManager.player1, GameManager.gameManager.player2 };
         enemyMovement = GetComponent<EnemyMovement>();
         sdrawPath = drawPath;
+        tauntCanvas = transform.GetChild(2).gameObject;
     }
 
     // Update is called once per frame
     void Update()
     {
         FocusManagement();
+        TauntManagement();
 
         if (!enemyMovement.agent.isStopped)
         {
             enemyMovement.DoMovement();
-        }
-
-        if (hp <= 0)
-        {
-            enemyMovement.agent.isStopped = true;
-            StopAllCoroutines();
-            Destroy(this.gameObject);
         }
 
         if (drawView)
@@ -80,13 +96,13 @@ public class Enemy : MonoBehaviour
         switch (focus)
         {
             case Focus.Player1:
-                target = GameManager.gameManager.player1;
+                aimPlayer = GameManager.gameManager.player1;
                 break;
             case Focus.Player2:
-                target = GameManager.gameManager.player2;
+                aimPlayer = GameManager.gameManager.player2;
                 break;
             case Focus.Nearest:
-                target = GetNearestGO(players);
+                aimPlayer = GetNearestGO(players);
                 break;
             default:
                 break;
@@ -115,4 +131,67 @@ public class Enemy : MonoBehaviour
     }
 
     #endregion
+
+    #region Taunt Methods
+
+    private void TauntManagement()
+    {
+		if (GameManager.gameManager.player1HasTaunt && Vector3.Distance(transform.position, GameManager.gameManager.player1.transform.position) <= GameManager.gameManager.tauntRange)
+        {
+            taunter = players[0];
+            isTaunted = true;
+            tauntCanvas.GetComponentInChildren<Text>().color = player1ColorTaunt;
+        }
+        else if (GameManager.gameManager.player2HasTaunt && Vector3.Distance(transform.position, GameManager.gameManager.player2.transform.position) <= GameManager.gameManager.tauntRange)
+        {
+            taunter = players[1];
+            isTaunted = true;
+            tauntCanvas.GetComponentInChildren<Text>().color = player2ColorTaunt;
+        }
+
+        if (taunter != null)
+        {
+            switch (taunt)
+            {
+                case Taunt.Taunter:
+                    aimPlayer = taunter;
+                    break;
+                case Taunt.Other:
+                    aimPlayer = (taunter.Equals(players[0])) ? players[1] : players[0];
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        TauntFeedback();
+    }
+
+    private void TauntFeedback()
+    {
+        if (isTaunted)
+        {
+            tauntCanvas.SetActive(true);
+            tauntCanvas.transform.LookAt(Camera.main.transform.position);
+        }
+        else
+        {
+            tauntCanvas.SetActive(false);
+        }
+    }
+
+    #endregion
+
+    public void TakeDamage(int damage)
+    {
+        hp -= damage;
+		if (hp <= 0)
+		{
+			GetComponent<LootTable>().LootEnemy();
+			enemyMovement.agent.isStopped = true;
+			StopAllCoroutines();
+			Destroy(this.gameObject);
+		}
+    }
+
 }

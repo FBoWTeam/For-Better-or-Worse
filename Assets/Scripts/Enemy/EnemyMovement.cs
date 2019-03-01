@@ -23,7 +23,7 @@ public class EnemyMovement : MonoBehaviour
     public Movement movement;
 
     [DrawIf(new string[] { "movement" }, Movement.Basic)]
-    public float speed = 2f;
+    public float initialSpeed = 2f;
 
     [DrawIf(new string[] { "movement" }, Movement.Basic)]
     [Tooltip("represents the time of the attack animation")]
@@ -39,11 +39,15 @@ public class EnemyMovement : MonoBehaviour
     [HideInInspector]
     public NavMeshAgent agent;
 
+    [SerializeField]
+    private bool isSlowed;
+
+
     // Start is called before the first frame update
     void Start()
     {
         agent = this.GetComponent<NavMeshAgent>();
-        agent.speed = speed;
+        agent.speed = initialSpeed;
         agent.isStopped = false;
         line = this.GetComponent<LineRenderer>();
     }
@@ -62,7 +66,7 @@ public class EnemyMovement : MonoBehaviour
         switch (movement)
         {
             case Movement.Static:
-                this.transform.LookAt(Enemy.target.transform);
+                StaticMovement();
                 break;
             case Movement.Basic:
                 ClassicMovement();
@@ -83,19 +87,33 @@ public class EnemyMovement : MonoBehaviour
         }
     }
 
+    void StaticMovement()
+    {
+        this.transform.LookAt(Enemy.aimPlayer.transform);
+        this.transform.eulerAngles = new Vector3(0, this.transform.eulerAngles.y, 0);
+        this.GetComponent<Rigidbody>().isKinematic = true;
+
+    }
+
     void ClassicMovement()
     {
-        agent.destination = Enemy.target.transform.position;
+        agent.destination = Enemy.aimPlayer.transform.position;
     }
 
     private void OnCollisionEnter(Collision collision)
     {
-        agent.isStopped = true;
+        if (collision.gameObject.CompareTag("Player"))
+        {
+            agent.isStopped = true;
+        }
     }
 
     private void OnCollisionExit(Collision collision)
     {
-        agent.isStopped = false;
+        if (collision.gameObject.CompareTag("Player"))
+        {
+            agent.isStopped = false;
+        }
     }
 
     void DrawPath(NavMeshPath path)
@@ -105,6 +123,25 @@ public class EnemyMovement : MonoBehaviour
             return;
         }
         line.SetPositions(path.corners); //set the array of positions to the amount of corners
+    }
+
+
+    public void SlowSpeed(float slowAmount)
+    {
+        if (!isSlowed)
+        {
+            agent.speed = agent.speed * ((100 - slowAmount)/100);
+            isSlowed = true;
+        }
+    }
+
+    public void RestoreSpeed()
+    {
+        if (isSlowed)
+        {
+            agent.speed = initialSpeed;
+            isSlowed = false;
+        }
     }
 
     #endregion

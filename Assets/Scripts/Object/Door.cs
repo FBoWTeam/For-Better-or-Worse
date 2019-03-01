@@ -15,7 +15,7 @@ public class Door : MonoBehaviour, IActivable
     /// </summary>
     public void Activate()
     {
-        if (checkValidObjects())
+        if (CheckValidObjects())
         {
             if (isActive == false)
             {
@@ -33,11 +33,21 @@ public class Door : MonoBehaviour, IActivable
         }
     }
 
+
+    public void Deactivate()
+    {
+        if (isActive == true)
+        {
+            GetComponentInParent<Animation>().Play("DoorClose");
+        }
+        isActive = false;
+    }
+
     /// <summary>
-    /// check if all the necesary object are activated to open the door
+    /// check if all the necesary objects are activated to open the door
     /// </summary>
     /// <returns></returns>
-    bool checkValidObjects()
+    bool CheckValidObjects()
     {
         for (int i = 0; i < objectsConditions.Count; i++)
         {

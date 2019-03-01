@@ -5,11 +5,11 @@ using UnityEngine;
 public class OrbController : MonoBehaviour
 {
     [Header("[Orb Statistics]")]
-    public int damage;
     public float speed;
     public float minSpeed;
     public float maxSpeed;
-	public bool amortized;
+    public bool amortized;
+    public float combo;
 
     [Header("[Valid Targets]")]
     public bool canHitEnemy;
@@ -26,39 +26,56 @@ public class OrbController : MonoBehaviour
     [Header("[Direction]")]
     public bool toPlayer2;
 
-    float progression;
+    public float progression;
     float step;
 
-    void Start()
+	[Header("[For Healing Orbs]")]
+	public bool isHealingOrb;
+	public int healAmount;
+
+	void Start()
     {
-        toPlayer2 = true;
-        progression = 0.5f;
-        transform.position = BezierCurve.CalculateCubicBezierPoint(progression);
+		if (!isHealingOrb)
+		{
+			toPlayer2 = true;
+			progression = 0.5f;
+			transform.position = BezierCurve.CalculateCubicBezierPoint(progression);
+		}
     }
 
     void FixedUpdate()
     {
-		if (!amortized)
-		{
-			setFixedSpeedCoefficient();
-			speed = Mathf.Clamp(speed, minSpeed, maxSpeed);
-			float fixedSpeed = speed * fixedSpeedCoefficient; ;
+        if (!amortized)
+        {
+            SetFixedSpeedCoefficient();
+            speed = Mathf.Clamp(speed, minSpeed, maxSpeed);
+            float fixedSpeed = speed * fixedSpeedCoefficient;
 
-			step = (fixedSpeed / BezierCurve.GetPlayersDistance()) * Time.fixedDeltaTime;
-			progression = toPlayer2 ? progression + step : progression - step;
-			progression = Mathf.Clamp01(progression);
-		}
+            step = (fixedSpeed / BezierCurve.GetPlayersDistance()) * Time.fixedDeltaTime;
+            progression = toPlayer2 ? progression + step : progression - step;
+            progression = Mathf.Clamp01(progression);
+        }
         transform.position = BezierCurve.CalculateCubicBezierPoint(progression);
 
         if (progression == 1.0f || progression == 0.0f)
-            toPlayer2 = !toPlayer2;
+		{
+			if (isHealingOrb)
+			{
+				GameManager.gameManager.hp += healAmount;
+				Destroy(this.gameObject);
+			}
+			else
+			{
+				toPlayer2 = !toPlayer2;
+			}
+		}
     }
 
     /// <summary>
     /// for each player, return 1 if the player moves away from the other player, -1 if he gets closer, 0 otherwise
     /// </summary>
     /// <returns></returns>
-    (int, int) getMovementsInfo()
+    (int, int) GetMovementsInfo()
     {
         int player1Movement = 0;
         int player2Movement = 0;
@@ -93,9 +110,9 @@ public class OrbController : MonoBehaviour
     /// <summary>
     /// set the speed coefficient to fix the speed when the link is shrinked/expanded
     /// </summary>
-    void setFixedSpeedCoefficient()
+    void SetFixedSpeedCoefficient()
     {
-        (int, int) playersMovements = getMovementsInfo();
+        (int, int) playersMovements = GetMovementsInfo();
         (int, bool, int) movementsInfo = (playersMovements.Item1, toPlayer2, playersMovements.Item2);
 
         switch (movementsInfo)
@@ -131,14 +148,20 @@ public class OrbController : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player") && canHitPlayer == true)
+        if (other.CompareTag("Player") && canHitPlayer == true && amortized == false)
         {
-            GameManager.gameManager.takeDamage(damage);
+            GameManager.gameManager.TakeDamage(other.gameObject, gameObject.GetComponent<PowerController>().baseDamage);
+            combo = 0;
             speed = minSpeed;
+            GetComponent<PowerController>().CheckPowerAttribution("miss", other.GetComponent<PlayerController>().player1);
+        }
+        else if (other.CompareTag("Player") && canHitPlayer == false)
+        {
+            GetComponent<PowerController>().CheckPowerAttribution("miss", other.GetComponent<PlayerController>().player1);
         }
         else if (other.CompareTag("Enemy") && canHitEnemy == true)
         {
-            other.GetComponent<Enemy>().hp -= damage;
+            GetComponent<PowerController>().onEnemyHit(other.gameObject);
         }
     }
 }

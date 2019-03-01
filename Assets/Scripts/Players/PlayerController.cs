@@ -8,13 +8,17 @@ public class PlayerController : MonoBehaviour
     public bool player1;
     public float speed;
 
+    [HideInInspector]
+    public float initialSpeed;
+
     Rigidbody rb;
     public Vector3 direction;
 
-    GameManager.PowerType powerSlot1;
-    GameManager.PowerType powerSlot2;
-    GameManager.PowerType powerSlot3;
-    GameManager.PowerType powerSlot4;
+    public GameManager.PowerType powerSlot1;
+    public GameManager.PowerType powerSlot2;
+    public GameManager.PowerType powerSlot3;
+    public GameManager.PowerType powerSlot4;
+    public bool oldestSlotIs3;
 
 
     OrbHitter orbHitter;
@@ -23,12 +27,15 @@ public class PlayerController : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();
         orbHitter = gameObject.GetComponent<OrbHitter>();
+        initialSpeed = speed;
+        oldestSlotIs3 = true;
     }
 
     void Update()
     {
         Move();
-        getCurrentPower();
+        CheckTaunt();
+        GetCurrentPower();
     }
 
     /// <summary>
@@ -37,48 +44,124 @@ public class PlayerController : MonoBehaviour
     /// </summary>
 	public void Move()
     {
-        if (player1)
-        {
-            direction = new Vector3(Input.GetAxis("HorizontalP1"), 0.0f, Input.GetAxis("VerticalP1"));
-        }
-        else
-        {
-            direction = new Vector3(Input.GetAxis("HorizontalP2"), 0.0f, Input.GetAxis("VerticalP2"));
-        }
+        direction = player1 ? new Vector3(Input.GetAxis("HorizontalP1"), 0.0f, Input.GetAxis("VerticalP1")) : new Vector3(Input.GetAxis("HorizontalP2"), 0.0f, Input.GetAxis("VerticalP2"));
 
         direction = (direction.x * Camera.main.transform.right + direction.z * Camera.main.transform.forward);
 
         Vector3 velocity = direction * speed * Time.deltaTime;
 
         rb.MovePosition(transform.position + velocity);
+        transform.LookAt(transform.position + velocity);
+        transform.localEulerAngles = new Vector3(0.0f, transform.localEulerAngles.y, 0.0f);
+    }
+
+
+
+    void CheckTaunt()
+    {
+        if ((player1 && (Input.GetKeyDown(KeyCode.Joystick1Button4) || Input.GetKeyDown(KeyCode.Space))) || (!player1 && (Input.GetKeyDown(KeyCode.Joystick2Button4) || Input.GetKeyDown(KeyCode.Keypad0))))
+        {
+            StartCoroutine(TauntCoroutine());
+        }
+    }
+
+    IEnumerator TauntCoroutine()
+    {
+        yield return new WaitForEndOfFrame();
+
+        if (player1)
+            GameManager.gameManager.player1HasTaunt = true;
+        else
+            GameManager.gameManager.player2HasTaunt = true;
+
+        yield return new WaitForEndOfFrame();
+
+        if (player1)
+            GameManager.gameManager.player1HasTaunt = false;
+        else
+            GameManager.gameManager.player2HasTaunt = false;
     }
 
     /// <summary>
     /// gets the current power that is going to be apllied on the orb by checking the input
     /// the power to apply on the orb when the player hits the orb
     /// </summary>
-    public void getCurrentPower()
+    public void GetCurrentPower()
     {
-        bool power1 = player1 ? Input.GetKeyDown(KeyCode.Joystick1Button0) : Input.GetKeyDown(KeyCode.Joystick2Button0);
-        bool power2 = player1 ? Input.GetKeyDown(KeyCode.Joystick1Button1) : Input.GetKeyDown(KeyCode.Joystick2Button1);
-        bool power3 = player1 ? Input.GetKeyDown(KeyCode.Joystick1Button2) : Input.GetKeyDown(KeyCode.Joystick2Button2);
-        bool power4 = player1 ? Input.GetKeyDown(KeyCode.Joystick1Button3) : Input.GetKeyDown(KeyCode.Joystick2Button3);
+        bool power1 = player1 ? Input.GetKeyDown(KeyCode.Joystick1Button3) : Input.GetKeyDown(KeyCode.Joystick2Button3);
+        bool power2 = player1 ? Input.GetKeyDown(KeyCode.Joystick1Button2) : Input.GetKeyDown(KeyCode.Joystick2Button2);
+        bool power3 = player1 ? Input.GetKeyDown(KeyCode.Joystick1Button1) : Input.GetKeyDown(KeyCode.Joystick2Button1);
+        bool power4 = player1 ? Input.GetKeyDown(KeyCode.Joystick1Button0) : Input.GetKeyDown(KeyCode.Joystick2Button0);
 
-        if (power1)
+        if (power1 && powerSlot1 != GameManager.PowerType.None)
         {
             orbHitter.powerToApply = powerSlot1;
         }
-        if (power2)
+        if (power2 && powerSlot2 != GameManager.PowerType.None)
         {
             orbHitter.powerToApply = powerSlot2;
         }
-        if (power3)
+        if (power3 && powerSlot3 != GameManager.PowerType.None)
         {
             orbHitter.powerToApply = powerSlot3;
         }
-        if (power4)
+        if (power4 && powerSlot4 != GameManager.PowerType.None)
         {
-            orbHitter.powerToApply = powerSlot3;
+            orbHitter.powerToApply = powerSlot4;
         }
+    }
+
+
+    /// <summary>
+    /// Gives a power dropped by an enemy, and place it on the good slot
+    /// </summary>
+    public void AttributePower(GameManager.PowerType newPower, bool isFixedPower)
+    {
+        if (isFixedPower)
+        {
+            if (powerSlot1 == GameManager.PowerType.None)
+            {
+                powerSlot1 = newPower;
+                GameManager.gameManager.UIManager.UpdatePowerSlot(1, player1, powerSlot1);
+            }
+            else if (powerSlot2 == GameManager.PowerType.None)
+            {
+                powerSlot2 = newPower;
+                GameManager.gameManager.UIManager.UpdatePowerSlot(2, player1, powerSlot2);
+            }
+        }
+        else
+        {
+            if (powerSlot3 == GameManager.PowerType.None)
+            {
+                powerSlot3 = newPower;
+                GameManager.gameManager.UIManager.UpdatePowerSlot(3, player1, powerSlot3);
+            }
+            else if (powerSlot4 == GameManager.PowerType.None)
+            {
+                powerSlot4 = newPower;
+                GameManager.gameManager.UIManager.UpdatePowerSlot(4, player1, powerSlot4);
+            }
+            else
+            {
+                if (oldestSlotIs3)
+                {
+                    powerSlot3 = newPower;
+                    GameManager.gameManager.UIManager.UpdatePowerSlot(3, player1, powerSlot3);
+                }
+                else
+                {
+                    powerSlot4 = newPower;
+                    GameManager.gameManager.UIManager.UpdatePowerSlot(4, player1, powerSlot4);
+                }
+                oldestSlotIs3 = !oldestSlotIs3;
+            }
+        }
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.magenta;
+        Gizmos.DrawWireSphere(transform.position, gameObject.GetComponent<OrbHitter>().hitZone * 2);
     }
 }
