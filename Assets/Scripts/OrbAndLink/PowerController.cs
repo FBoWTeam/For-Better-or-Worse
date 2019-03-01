@@ -295,14 +295,14 @@ public class PowerController : MonoBehaviour
     void ActivateLeechLife()
     {
         behavioralPower = GameManager.PowerType.LeechLife;
-		transform.GetChild(0).GetComponent<MeshRenderer>().material = leechLifeMaterial;
+		GetComponent<MeshRenderer>().material = leechLifeMaterial;
 		StartCoroutine(DurationCoroutine(GameManager.PowerType.LeechLife, leechLifeDuration));
 	}
 
     void DeactivateLeechLife()
     {
         behavioralPower = GameManager.PowerType.None;
-		transform.GetChild(0).GetComponent<MeshRenderer>().material = normalMaterial;
+		GetComponent<MeshRenderer>().material = normalMaterial;
 	}
 
     #endregion
