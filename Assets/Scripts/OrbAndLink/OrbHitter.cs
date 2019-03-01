@@ -14,6 +14,7 @@ public class OrbHitter : MonoBehaviour
 
     bool inRange;
 
+	public float hitDuration;
     public float hitCooldown;
     float hitTimer;
 
@@ -165,6 +166,7 @@ public class OrbHitter : MonoBehaviour
             orbController.toPlayer2 = !orbController.toPlayer2;
             orbController.amortized = false;
             orbController.speed = orbController.minSpeed;
+			orbController.combo = 0;
         }
     }
 }
