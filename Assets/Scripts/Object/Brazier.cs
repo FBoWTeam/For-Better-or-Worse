@@ -38,13 +38,6 @@ public class Brazier : MonoBehaviour, IActivable
                 if (activatedByOrb)
                 {
                     this.Activate();
-                    if (objectToActivate.Count != 0)
-                    {
-                        for (int i = 0; i < objectToActivate.Count; i++)
-                        {
-                            objectToActivate[i].GetComponent<IActivable>().Activate();
-                        }
-                    }
                 }
             }
             //if the brazier is active and the orb isn't, set the orb on fire
@@ -62,6 +55,13 @@ public class Brazier : MonoBehaviour, IActivable
             gameObject.GetComponent<Renderer>().material.color = Color.red;
             isActive = true;
             onFire = true;
+            if (objectToActivate.Count != 0)
+            {
+                for (int i = 0; i < objectToActivate.Count; i++)
+                {
+                    objectToActivate[i].GetComponent<IActivable>().Activate();
+                }
+            }
         }
     }
 
