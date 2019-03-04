@@ -20,7 +20,7 @@ public class PlayerController : MonoBehaviour
     public GameManager.PowerType powerSlot4;
     public bool oldestSlotIs3;
 
-
+    float nextTaunt = 0f;
     OrbHitter orbHitter;
 
     void Awake()
@@ -59,9 +59,11 @@ public class PlayerController : MonoBehaviour
 
     void CheckTaunt()
     {
-        if ((player1 && (Input.GetKeyDown(KeyCode.Joystick1Button4) || Input.GetKeyDown(KeyCode.Space))) || (!player1 && (Input.GetKeyDown(KeyCode.Joystick2Button4) || Input.GetKeyDown(KeyCode.Keypad0))))
-        {
+        if (  ((player1 && (Input.GetKeyDown(KeyCode.Joystick1Button4) || Input.GetKeyDown(KeyCode.Space))) || (!player1 && (Input.GetKeyDown(KeyCode.Joystick2Button4) || Input.GetKeyDown(KeyCode.Keypad0)))) && Time.time > nextTaunt     )
+        {           
             StartCoroutine(TauntCoroutine());
+            nextTaunt = Time.time + GameManager.gameManager.tauntCooldown;
+           
         }
     }
 
