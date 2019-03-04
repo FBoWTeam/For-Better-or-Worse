@@ -76,6 +76,7 @@ public class EnemySkill : MonoBehaviour
     SphereCollider rangeCollider;
 
     #endregion
+   
 
     private void Awake()
     {
@@ -154,10 +155,8 @@ public class EnemySkill : MonoBehaviour
                 }
                 break;
             case Skill.Ranged:
-                myMat.color = Color.red;
-                // ne renvoie pas toujours vrai alors que 'visuelement' on sait que oui
-                // BUG TO FIX : parfois le tag du collider toucher est 'DistanceLimiter'
-                //Debug.Log("wsh "+ isVisible(transform.position, target.transform.position));               
+                myMat.color = Color.red;              
+                         
 
                 if (Time.time > nextAttack && isVisible(transform.position, target.transform.position))
                 {
@@ -215,11 +214,15 @@ public class EnemySkill : MonoBehaviour
     bool isVisible(Vector3 start, Vector3 end)
     {
         RaycastHit hitInfo;
-        //Debug.DrawLine(start,end);
-        if (Physics.Linecast(start, end, out hitInfo))
+        //raycast should only hit player
+        int playerLayer = 1 << LayerMask.NameToLayer("Players");
+
+        if (Physics.Linecast(start, end, out hitInfo, playerLayer))
         {
+           
             if (hitInfo.transform.CompareTag("Player"))
             {
+               
                 return true;
             }
         }
