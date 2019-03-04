@@ -132,6 +132,11 @@ public class UIManager : MonoBehaviour
         }
     }
 
+    public void UpdateDroppedPower(GameManager.PowerType droppedPower)
+    {
+        orbPower.sprite = ImageAssignment(droppedPower);
+    }
+
     #endregion
 
     /// <summary>
