@@ -5,29 +5,31 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody))]
 public class PlayerController : MonoBehaviour
 {
+	[Header("[Main Params]")]
     public bool player1;
     public float speed;
-
-    [HideInInspector]
-    public float initialSpeed;
-
     Rigidbody rb;
+	[HideInInspector]
     public Vector3 direction;
+	public bool invincible;
+	public float invicibilityDuration;
+	public int blinkNb;
 
+	[Header("[Power Slots]")]
     public GameManager.PowerType powerSlot1;
     public GameManager.PowerType powerSlot2;
     public GameManager.PowerType powerSlot3;
     public GameManager.PowerType powerSlot4;
     public bool oldestSlotIs3;
-
+    
     float nextTaunt = 0f;
+
     OrbHitter orbHitter;
 
     void Awake()
     {
         rb = GetComponent<Rigidbody>();
         orbHitter = gameObject.GetComponent<OrbHitter>();
-        initialSpeed = speed;
         oldestSlotIs3 = true;
     }
 
@@ -180,4 +182,22 @@ public class PlayerController : MonoBehaviour
         Gizmos.color = Color.magenta;
         Gizmos.DrawWireSphere(transform.position, gameObject.GetComponent<OrbHitter>().hitZone * 2);
     }
+
+	public IEnumerator InvincibilityCoroutine()
+	{
+		MeshRenderer renderer = GetComponent<MeshRenderer>();
+		float blinkTime = invicibilityDuration / blinkNb;
+
+		invincible = true;
+
+		for (int i = 0; i < blinkNb; i++)
+		{
+			renderer.enabled = false;
+			yield return new WaitForSeconds(blinkTime/2.0f);
+			renderer.enabled = true;
+			yield return new WaitForSeconds(blinkTime/2.0f);
+		}
+
+		invincible = false;
+	}
 }

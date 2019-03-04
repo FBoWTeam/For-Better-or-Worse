@@ -166,7 +166,7 @@ public class OrbController : MonoBehaviour
         {
             if (canHitPlayer == true)
             {
-                GameManager.gameManager.TakeDamage(other.gameObject, gameObject.GetComponent<PowerController>().baseDamage);
+                GameManager.gameManager.TakeDamage(other.gameObject, gameObject.GetComponent<PowerController>().baseDamage, other.transform.position);
             }
             combo = 0;
             speed = minSpeed;

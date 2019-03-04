@@ -416,13 +416,13 @@ public class PowerController : MonoBehaviour
         int tickDamage = Mathf.RoundToInt(totalDamage / duration);
         int curentDamage = 0;
 
-        while (curentDamage < totalDamage)
-        {
-            enemy.TakeDamage(tickDamage);
-            yield return new WaitForSeconds(1f);
-            curentDamage += tickDamage;
-        }
-    }
+		while (curentDamage < totalDamage)
+		{
+			enemy.TakeDamage(tickDamage, enemy.transform.position);
+			yield return new WaitForSeconds(1f);
+			curentDamage += tickDamage;
+		}
+	}
 
     #endregion
 
@@ -525,8 +525,8 @@ public class PowerController : MonoBehaviour
                 damageTaken += electricDamage;
                 break;
         }
-
-        enemy.TakeDamage(damageTaken);
+        
+		enemy.TakeDamage(damageTaken, transform.position);
 
         if (behavioralPower == GameManager.PowerType.LeechLife)
         {
