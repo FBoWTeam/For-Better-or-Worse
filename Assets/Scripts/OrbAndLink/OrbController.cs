@@ -4,12 +4,18 @@ using UnityEngine;
 
 public class OrbController : MonoBehaviour
 {
-    [Header("[Orb Statistics]")]
+    [Header("[Orb speed Statistics]")]
     public float speed;
     public float minSpeed;
     public float maxSpeed;
+
+    [Header("[Orb combo Statistics]")]
+    public int combo;
+    public int damageComboIncrease;
+    public int damageIncreaseStep;
+    public int maxComboDamage;
+
     public bool amortized;
-    public float combo;
 
     [Header("[Valid Targets]")]
     public bool canHitEnemy;
@@ -148,9 +154,12 @@ public class OrbController : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player") && canHitPlayer == true && amortized == false)
+        if (other.CompareTag("Player") && amortized == false)
         {
-            GameManager.gameManager.TakeDamage(other.gameObject, gameObject.GetComponent<PowerController>().baseDamage);
+            if (canHitPlayer == true)
+            {
+                GameManager.gameManager.TakeDamage(other.gameObject, gameObject.GetComponent<PowerController>().baseDamage);
+            }
             combo = 0;
             speed = minSpeed;
             GetComponent<PowerController>().CheckPowerAttribution("miss", other.GetComponent<PlayerController>().player1);
