@@ -28,7 +28,7 @@ public class TriggerSystem : MonoBehaviour
         }
     }
 
-    private void OnTriggerExit(Collider other)
+    private void OnTriggerEnter(Collider other)
     {
         if (triggerActivation == TriggerActivation.Exit)
         {

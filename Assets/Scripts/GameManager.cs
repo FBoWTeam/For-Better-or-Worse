@@ -2,32 +2,36 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
-
     public static GameManager gameManager;
-    public int baseHP;
+	[HideInInspector]
+	public GameObject player1;
+	[HideInInspector]
+	public GameObject player2;
+	[HideInInspector]
+	public GameObject orb;
+	[HideInInspector]
+	public UIManager UIManager;
+
+	[Header("[Hps]")]
+	public int baseHP;
     public int hp;
+	public bool restartWhenDead;
 
     public int shieldP1;
     public int shieldP2;
 
-    [HideInInspector]
-    public GameObject player1;
-    [HideInInspector]
-    public GameObject player2;
-    [HideInInspector]
-    public GameObject orb;
-    [HideInInspector]
-    public UIManager UIManager;
-
-    public GameObject linkDeformation;
-
-    public bool player1HasTaunt, player2HasTaunt;
+	[Header("[Taunt]")]
+	public bool player1HasTaunt;
+	public bool player2HasTaunt;
     public int tauntRange = 10;
 
-	public GameObject normalHealingOrbPrefab, leechLifeHealingOrbPrefab;
+	[Header("[HealingOrbs]")]
+	public GameObject normalHealingOrbPrefab;
+	public GameObject leechLifeHealingOrbPrefab;
 
 	public enum PowerType
     {
@@ -44,8 +48,7 @@ public class GameManager : MonoBehaviour
         Electric,
         Darkness
     }
-
-
+	
     // Start is called before the first frame update
     void Awake()
     {
@@ -57,12 +60,11 @@ public class GameManager : MonoBehaviour
         {
             Destroy(this);
         }
-        DontDestroyOnLoad(gameManager);
+        //DontDestroyOnLoad(gameManager);
 
         player1 = GameObject.Find("Player1");
         player2 = GameObject.Find("Player2");
         orb = GameObject.Find("Orb");
-        linkDeformation = GameObject.Find("Deformation");
         UIManager = GameObject.FindGameObjectWithTag("UI").GetComponent<UIManager>();
 
         hp = baseHP;
@@ -107,35 +109,14 @@ public class GameManager : MonoBehaviour
             }
             hp -= damage;
         }
-        if (hp <= 0)
+        if (hp <= 0 && restartWhenDead)
         {
-
+			SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         }
     }
+    
 
-    public void SlowSpeed(GameObject target)
-    {
-        if (target.GetComponent<EnemyMovement>() != null)
-        {
-            target.GetComponent<EnemyMovement>().agent.speed /= 2;
-        }
-        else if (target.GetComponent<PlayerController>() != null)
-        {
-            target.GetComponent<PlayerController>().speed /= 2;
-        }
-    }
 
-    public void RestoreSpeed(GameObject target)
-    {
-        if (target.GetComponent<EnemyMovement>() != null)
-        {
-            target.GetComponent<EnemyMovement>().agent.speed = target.GetComponent<EnemyMovement>().initialSpeed;
-        }
-        else if (target.GetComponent<PlayerController>() != null)
-        {
-            target.GetComponent<PlayerController>().speed = target.GetComponent<PlayerController>().initialSpeed;
-        }
-    }
 
 	public void spawnHealingOrbs(int playerHealed, int healAmount, string mode)
 	{

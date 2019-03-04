@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class OrbController : MonoBehaviour
 {
+	public bool isActive;
+	public float timeToActivate;
+
     [Header("[Orb Statistics]")]
     public float speed;
     public float minSpeed;
@@ -40,24 +43,29 @@ public class OrbController : MonoBehaviour
 			toPlayer2 = true;
 			progression = 0.5f;
 			transform.position = BezierCurve.CalculateCubicBezierPoint(progression);
+			StartCoroutine(ActivateCoroutine());
+		}
+		else
+		{
+			isActive = true;
 		}
     }
 
     void FixedUpdate()
     {
-        if (!amortized)
-        {
-            SetFixedSpeedCoefficient();
-            speed = Mathf.Clamp(speed, minSpeed, maxSpeed);
-            float fixedSpeed = speed * fixedSpeedCoefficient;
+		if (!amortized && isActive)
+		{
+			SetFixedSpeedCoefficient();
+			speed = Mathf.Clamp(speed, minSpeed, maxSpeed);
+			float fixedSpeed = speed * fixedSpeedCoefficient;
 
-            step = (fixedSpeed / BezierCurve.GetPlayersDistance()) * Time.fixedDeltaTime;
-            progression = toPlayer2 ? progression + step : progression - step;
-            progression = Mathf.Clamp01(progression);
-        }
-        transform.position = BezierCurve.CalculateCubicBezierPoint(progression);
+			step = (fixedSpeed / BezierCurve.GetPlayersDistance()) * Time.fixedDeltaTime;
+			progression = toPlayer2 ? progression + step : progression - step;
+			progression = Mathf.Clamp01(progression);
+		}
+		transform.position = BezierCurve.CalculateCubicBezierPoint(progression);
 
-        if (progression == 1.0f || progression == 0.0f)
+		if (progression == 1.0f || progression == 0.0f)
 		{
 			if (isHealingOrb)
 			{
@@ -164,4 +172,11 @@ public class OrbController : MonoBehaviour
             GetComponent<PowerController>().onEnemyHit(other.gameObject);
         }
     }
+
+	IEnumerator ActivateCoroutine()
+	{
+		isActive = false;
+		yield return new WaitForSeconds(timeToActivate);
+		isActive = true;
+	}
 }

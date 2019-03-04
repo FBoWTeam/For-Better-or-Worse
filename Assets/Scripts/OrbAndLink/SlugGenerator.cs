@@ -7,6 +7,10 @@ public class SlugGenerator : MonoBehaviour
     //slug life time
     public float slugDurationEffect;
 
+    [Tooltip("Amount in percentage of the slow")]
+    [Range(1,100)]
+    public float slowAmount;
+
     void Start()
     {
         Destroy(gameObject, slugDurationEffect);
@@ -16,7 +20,7 @@ public class SlugGenerator : MonoBehaviour
     {
         if (other.CompareTag("Enemy"))
         {
-            GameManager.gameManager.SlowSpeed(other.gameObject);
+            other.GetComponent<EnemyMovement>().SlowSpeed(slowAmount);
         }
     }
 
@@ -24,7 +28,7 @@ public class SlugGenerator : MonoBehaviour
     {
         if (other.CompareTag("Enemy"))
         {
-            GameManager.gameManager.RestoreSpeed(other.gameObject);
+            other.GetComponent<EnemyMovement>().RestoreSpeed();
         }
     }
 }

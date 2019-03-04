@@ -39,6 +39,10 @@ public class EnemyMovement : MonoBehaviour
     [HideInInspector]
     public NavMeshAgent agent;
 
+    [SerializeField]
+    private bool isSlowed;
+
+
     // Start is called before the first frame update
     void Start()
     {
@@ -47,13 +51,6 @@ public class EnemyMovement : MonoBehaviour
         agent.isStopped = false;
         line = this.GetComponent<LineRenderer>();
     }
-
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
-
 
     #region Movement Methods
 
@@ -119,6 +116,25 @@ public class EnemyMovement : MonoBehaviour
             return;
         }
         line.SetPositions(path.corners); //set the array of positions to the amount of corners
+    }
+
+
+    public void SlowSpeed(float slowAmount)
+    {
+        if (!isSlowed)
+        {
+            agent.speed = agent.speed * ((100 - slowAmount)/100);
+            isSlowed = true;
+        }
+    }
+
+    public void RestoreSpeed()
+    {
+        if (isSlowed)
+        {
+            agent.speed = initialSpeed;
+            isSlowed = false;
+        }
     }
 
     #endregion

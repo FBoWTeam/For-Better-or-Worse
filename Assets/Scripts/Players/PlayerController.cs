@@ -55,8 +55,6 @@ public class PlayerController : MonoBehaviour
         transform.localEulerAngles = new Vector3(0.0f, transform.localEulerAngles.y, 0.0f);
     }
 
-
-
     void CheckTaunt()
     {
         if ((player1 && (Input.GetKeyDown(KeyCode.Joystick1Button4) || Input.GetKeyDown(KeyCode.Space))) || (!player1 && (Input.GetKeyDown(KeyCode.Joystick2Button4) || Input.GetKeyDown(KeyCode.Keypad0))))
@@ -88,26 +86,26 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     public void GetCurrentPower()
     {
-        bool power1 = player1 ? Input.GetKeyDown(KeyCode.Joystick1Button0) : Input.GetKeyDown(KeyCode.Joystick2Button0);
-        bool power2 = player1 ? Input.GetKeyDown(KeyCode.Joystick1Button1) : Input.GetKeyDown(KeyCode.Joystick2Button1);
-        bool power3 = player1 ? Input.GetKeyDown(KeyCode.Joystick1Button2) : Input.GetKeyDown(KeyCode.Joystick2Button2);
-        bool power4 = player1 ? Input.GetKeyDown(KeyCode.Joystick1Button3) : Input.GetKeyDown(KeyCode.Joystick2Button3);
+        bool power1 = player1 ? Input.GetKeyDown(KeyCode.Joystick1Button3) : Input.GetKeyDown(KeyCode.Joystick2Button3);
+        bool power2 = player1 ? Input.GetKeyDown(KeyCode.Joystick1Button2) : Input.GetKeyDown(KeyCode.Joystick2Button2);
+        bool power3 = player1 ? Input.GetKeyDown(KeyCode.Joystick1Button1) : Input.GetKeyDown(KeyCode.Joystick2Button1);
+        bool power4 = player1 ? Input.GetKeyDown(KeyCode.Joystick1Button0) : Input.GetKeyDown(KeyCode.Joystick2Button0);
 
         if (power1 && powerSlot1 != GameManager.PowerType.None)
         {
             orbHitter.powerToApply = powerSlot1;
         }
-        if (power2 && powerSlot1 != GameManager.PowerType.None)
+        if (power2 && powerSlot2 != GameManager.PowerType.None)
         {
             orbHitter.powerToApply = powerSlot2;
         }
-        if (power3 && powerSlot1 != GameManager.PowerType.None)
+        if (power3 && powerSlot3 != GameManager.PowerType.None)
         {
             orbHitter.powerToApply = powerSlot3;
         }
-        if (power4 && powerSlot1 != GameManager.PowerType.None)
+        if (power4 && powerSlot4 != GameManager.PowerType.None)
         {
-            orbHitter.powerToApply = powerSlot3;
+            orbHitter.powerToApply = powerSlot4;
         }
     }
 
@@ -120,15 +118,19 @@ public class PlayerController : MonoBehaviour
         if (isFixedPower)
         {
             if (powerSlot1 == GameManager.PowerType.None)
-            {
-                powerSlot1 = newPower;
-                GameManager.gameManager.UIManager.UpdatePowerSlot(1, player1, powerSlot1);
-            }
+			{
+				GameManager.gameManager.player1.GetComponent<PlayerController>().powerSlot1 = newPower;
+				GameManager.gameManager.player2.GetComponent<PlayerController>().powerSlot1 = newPower;
+				GameManager.gameManager.UIManager.UpdatePowerSlot(1, true, newPower);
+				GameManager.gameManager.UIManager.UpdatePowerSlot(1, false, newPower);
+			}
             else if (powerSlot2 == GameManager.PowerType.None)
-            {
-                powerSlot2 = newPower;
-                GameManager.gameManager.UIManager.UpdatePowerSlot(2, player1, powerSlot2);
-            }
+			{
+				GameManager.gameManager.player1.GetComponent<PlayerController>().powerSlot2 = newPower;
+				GameManager.gameManager.player2.GetComponent<PlayerController>().powerSlot2 = newPower;
+				GameManager.gameManager.UIManager.UpdatePowerSlot(2, true, newPower);
+				GameManager.gameManager.UIManager.UpdatePowerSlot(2, false, newPower);
+			}
         }
         else
         {
@@ -144,17 +146,20 @@ public class PlayerController : MonoBehaviour
             }
             else
             {
-                if (oldestSlotIs3)
-                {
-                    powerSlot3 = newPower;
-                    GameManager.gameManager.UIManager.UpdatePowerSlot(3, player1, powerSlot3);
-                }
-                else
-                {
-                    powerSlot4 = newPower;
-                    GameManager.gameManager.UIManager.UpdatePowerSlot(4, player1, powerSlot4);
-                }
-                oldestSlotIs3 = !oldestSlotIs3;
+				if(powerSlot3 != newPower && powerSlot4 != newPower)
+				{
+					if (oldestSlotIs3)
+					{
+						powerSlot3 = newPower;
+						GameManager.gameManager.UIManager.UpdatePowerSlot(3, player1, powerSlot3);
+					}
+					else
+					{
+						powerSlot4 = newPower;
+						GameManager.gameManager.UIManager.UpdatePowerSlot(4, player1, powerSlot4);
+					}
+					oldestSlotIs3 = !oldestSlotIs3;
+				}
             }
         }
     }
