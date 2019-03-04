@@ -44,6 +44,7 @@ public class Brazier : MonoBehaviour, IActivable
             else if (isActive && powerController.elementalPower != GameManager.PowerType.Fire)
             {
                 powerController.ActivatePower(GameManager.PowerType.Fire);
+                powerController.isActivatedByBrazier = true;
             }
         }
     }

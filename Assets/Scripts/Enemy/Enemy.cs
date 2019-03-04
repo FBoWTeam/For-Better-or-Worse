@@ -136,7 +136,7 @@ public class Enemy : MonoBehaviour
 
     private void TauntManagement()
     {
-		if (GameManager.gameManager.player1HasTaunt && Vector3.Distance(transform.position, GameManager.gameManager.player1.transform.position) <= GameManager.gameManager.tauntRange)
+        if (GameManager.gameManager.player1HasTaunt && Vector3.Distance(transform.position, GameManager.gameManager.player1.transform.position) <= GameManager.gameManager.tauntRange)
         {
             taunter = players[0];
             isTaunted = true;
@@ -184,14 +184,17 @@ public class Enemy : MonoBehaviour
 
     public void TakeDamage(int damage)
     {
-        hp -= damage;
-		if (hp <= 0)
-		{
-			GetComponent<LootTable>().LootEnemy();
-			enemyMovement.agent.isStopped = true;
-			StopAllCoroutines();
-			Destroy(this.gameObject);
-		}
+        if (this.gameObject != null)
+        {
+            hp -= damage;
+            if (hp <= 0)
+            {
+                GetComponent<LootTable>().LootEnemy();
+                enemyMovement.agent.isStopped = true;
+                StopAllCoroutines();
+                Destroy(this.gameObject);
+            }
+        }
     }
 
 }
