@@ -51,11 +51,49 @@ public class UIManager : MonoBehaviour
 
     #endregion
 
-    #region All Functions
 
-    #region PowerSlot Functions
+    #region All Methods
 
-    #region PowerSlot 
+    #region Dialog Methods
+
+    /// <summary>
+    /// In this case, the method check if dialog are display and removed them
+    /// </summary>
+    public void UpdateDialogBox()
+    {
+        if (dialogBoxFox.activeSelf || dialogBoxRaccoon.activeSelf)
+        {
+            dialogBoxFox.GetComponentInChildren<TextMeshProUGUI>().SetText("");
+            dialogBoxRaccoon.GetComponentInChildren<TextMeshProUGUI>().SetText("");
+            dialogBoxFox.SetActive(false);
+            dialogBoxRaccoon.SetActive(false);
+        }
+    }
+
+    /// <summary>
+    /// In this case, the method check which dialog box display and update the text
+    /// </summary>
+    /// <param name="player1Text">text display in the player 1 dialog box</param>
+    /// <param name="player2Text">text display in the player 2 dialog box</param>
+    /// <param name="displayTime">use for the invoke, to determine how much time display the text</param>
+    public void UpdateDialogBox(string player1Text, string player2Text, int displayTime)
+    {
+        if (player1Text != "")
+        {
+            dialogBoxFox.GetComponentInChildren<TextMeshProUGUI>().SetText(player1Text);
+            dialogBoxFox.SetActive(true);
+        }
+        if (player2Text != "")
+        {
+            dialogBoxRaccoon.GetComponentInChildren<TextMeshProUGUI>().SetText(player2Text);
+            dialogBoxRaccoon.SetActive(true);
+        }
+        Invoke("UpdateDialogBox", displayTime);
+    }
+
+    #endregion
+
+    #region PowerSlot Methods
 
     /// <summary>
     /// Update the UI power slot according to the new power obtained
