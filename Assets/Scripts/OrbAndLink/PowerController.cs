@@ -87,63 +87,68 @@ public class PowerController : MonoBehaviour
     [DrawIf(new string[] { "editingPower" }, GameManager.PowerType.Shield)]
     [Tooltip("number of stacks that gives shield when the orb is hit")]
     public int currentShieldStack;
-    #endregion
+	#endregion
 
-    #region Ice Param
-    //Ice
-    [DrawIf(new string[] { "editingPower" }, GameManager.PowerType.Ice)]
-    public Material iceMaterial;
-    [DrawIf(new string[] { "editingPower" }, GameManager.PowerType.Ice)]
-    public float iceDuration;
-    [DrawIf(new string[] { "editingPower" }, GameManager.PowerType.Ice)]
-    public float iceCooldown;
-    [DrawIf(new string[] { "editingPower" }, GameManager.PowerType.Ice)]
-    public int iceDamage;
-    #endregion
+	#region Ice Param
+	//Ice
+	[DrawIf(new string[] { "editingPower" }, GameManager.PowerType.Ice)]
+	public Material iceMaterial;
+	[DrawIf(new string[] { "editingPower" }, GameManager.PowerType.Ice)]
+	public float iceDuration;
+	[DrawIf(new string[] { "editingPower" }, GameManager.PowerType.Ice)]
+	public float iceCooldown;
+	[DrawIf(new string[] { "editingPower" }, GameManager.PowerType.Ice)]
+	public int iceDamage;
+	#endregion
 
-    #region Fire Param
-    //Fire
+	#region Fire Param
+	//Fire
+	[DrawIf(new string[] { "editingPower" }, GameManager.PowerType.Fire)]
+	public Material fireMaterial;
+	[DrawIf(new string[] { "editingPower" }, GameManager.PowerType.Fire)]
+	public float fireDuration;
     [DrawIf(new string[] { "editingPower" }, GameManager.PowerType.Fire)]
-    public Material fireMaterial;
+    public float fireDurationBrazier;
     [DrawIf(new string[] { "editingPower" }, GameManager.PowerType.Fire)]
-    public float fireDuration;
-    [DrawIf(new string[] { "editingPower" }, GameManager.PowerType.Fire)]
-    public float fireCooldown;
-    [DrawIf(new string[] { "editingPower" }, GameManager.PowerType.Fire)]
-    public int fireDamage;
-    [DrawIf(new string[] { "editingPower" }, GameManager.PowerType.Fire)]
-    [Tooltip("Damage is over time , should be >= to fireDuration")]
+	public float fireCooldown;
+	[DrawIf(new string[] { "editingPower" }, GameManager.PowerType.Fire)]
+	public int fireDamage;
+
+	[DrawIf(new string[] { "editingPower" }, GameManager.PowerType.Fire)]
+	[Tooltip("Damage is over time , should be >= to fireDuration")]
     public int fireTicksDamage = 5;
-    [DrawIf(new string[] { "editingPower" }, GameManager.PowerType.Fire)]
-    public float fireTickDuration = 5;
-    [DrawIf(new string[] { "editingPower" }, GameManager.PowerType.Fire)]
-    private float nextAttack = 0f;
-    #endregion
+	[DrawIf(new string[] { "editingPower" }, GameManager.PowerType.Fire)]
+	public float fireTickDuration = 5;
+	[DrawIf(new string[] { "editingPower" }, GameManager.PowerType.Fire)]
+	private float nextAttack = 0f;
 
-    #region Electric Param
-    //Electric
-    [DrawIf(new string[] { "editingPower" }, GameManager.PowerType.Electric)]
-    public Material electricMaterial;
-    [DrawIf(new string[] { "editingPower" }, GameManager.PowerType.Electric)]
-    public float electricDuration;
-    [DrawIf(new string[] { "editingPower" }, GameManager.PowerType.Electric)]
-    public float electricCooldown;
-    [DrawIf(new string[] { "editingPower" }, GameManager.PowerType.Electric)]
-    public int electricDamage;
-    #endregion
+    public bool isActivatedByBrazier;
+	#endregion
 
-    #region Darkness Param
-    //Darkness
-    [DrawIf(new string[] { "editingPower" }, GameManager.PowerType.Darkness)]
-    public Material darknessMaterial;
-    [DrawIf(new string[] { "editingPower" }, GameManager.PowerType.Darkness)]
-    public float darknessDuration;
-    [DrawIf(new string[] { "editingPower" }, GameManager.PowerType.Darkness)]
-    public float darknessCooldown;
-    #endregion
+	#region Electric Param
+	//Electric
+	[DrawIf(new string[] { "editingPower" }, GameManager.PowerType.Electric)]
+	public Material electricMaterial;
+	[DrawIf(new string[] { "editingPower" }, GameManager.PowerType.Electric)]
+	public float electricDuration;
+	[DrawIf(new string[] { "editingPower" }, GameManager.PowerType.Electric)]
+	public float electricCooldown;
+	[DrawIf(new string[] { "editingPower" }, GameManager.PowerType.Electric)]
+	public int electricDamage;
+	#endregion
+
+	#region Darkness Param
+	//Darkness
+	[DrawIf(new string[] { "editingPower" }, GameManager.PowerType.Darkness)]
+	public Material darknessMaterial;
+	[DrawIf(new string[] { "editingPower" }, GameManager.PowerType.Darkness)]
+	public float darknessDuration;
+	[DrawIf(new string[] { "editingPower" }, GameManager.PowerType.Darkness)]
+	public float darknessCooldown;
+	#endregion
 
 
-    private void Start()
+	private void Start()
     {
         canBeActivated = new List<bool> { true, true, true, true, true, true, true, true, true };
         orbController = gameObject.GetComponent<OrbController>();
@@ -157,57 +162,60 @@ public class PowerController : MonoBehaviour
     /// <param name="powerToActivate"></param>
     public void ActivatePower(GameManager.PowerType powerToActivate)
     {
-        if (canBeActivated[(int)powerToActivate - 1])
-        {
-            if (!isBehavioral(powerToActivate) && elementalPower != GameManager.PowerType.None)
-            {
-                DeactivatePower(elementalPower);
-            }
-            else if (isBehavioral(powerToActivate) && behavioralPower != GameManager.PowerType.None)
-            {
-                DeactivatePower(behavioralPower);
-            }
+		if(canBeActivated[(int)powerToActivate - 1])
+		{
+			if (!isBehavioral(powerToActivate) && elementalPower != GameManager.PowerType.None)
+			{
+				DeactivatePower(elementalPower);
+			}
+			else if (isBehavioral(powerToActivate) && behavioralPower != GameManager.PowerType.None)
+			{
+				DeactivatePower(behavioralPower);
+			}
 
-            switch (powerToActivate)
-            {
-                case GameManager.PowerType.LargeOrb:
-                    StartCoroutine(cooldownCoroutine(GameManager.PowerType.LargeOrb, largeOrbCooldown));
-                    ActivateLargeOrb();
-                    break;
-                case GameManager.PowerType.Vortex:
-                    StartCoroutine(cooldownCoroutine(GameManager.PowerType.Vortex, vortexCooldown));
-                    ActivateVortex();
-                    break;
-                case GameManager.PowerType.LeechLife:
-                    StartCoroutine(cooldownCoroutine(GameManager.PowerType.LeechLife, leechLifeCooldown));
-                    ActivateLeechLife();
-                    break;
-                case GameManager.PowerType.Slug:
-                    StartCoroutine(cooldownCoroutine(GameManager.PowerType.Slug, slugCooldown));
-                    ActivateSlug();
-                    break;
-                case GameManager.PowerType.Shield:
-                    StartCoroutine(cooldownCoroutine(GameManager.PowerType.Shield, shieldCooldown));
-                    ActivateShield();
-                    break;
-                case GameManager.PowerType.Ice:
-                    StartCoroutine(cooldownCoroutine(GameManager.PowerType.Ice, iceCooldown));
-                    ActivateIce();
-                    break;
-                case GameManager.PowerType.Fire:
-                    StartCoroutine(cooldownCoroutine(GameManager.PowerType.Fire, fireCooldown));
-                    ActivateFire();
-                    break;
-                case GameManager.PowerType.Electric:
-                    StartCoroutine(cooldownCoroutine(GameManager.PowerType.Electric, electricCooldown));
-                    ActivateElectric();
-                    break;
-                case GameManager.PowerType.Darkness:
-                    StartCoroutine(cooldownCoroutine(GameManager.PowerType.Darkness, darknessCooldown));
-                    ActivateDarkness();
-                    break;
-            }
-        }
+			switch (powerToActivate)
+			{
+				case GameManager.PowerType.LargeOrb:
+					StartCoroutine(cooldownCoroutine(GameManager.PowerType.LargeOrb, largeOrbCooldown));
+					ActivateLargeOrb();
+					break;
+				case GameManager.PowerType.Vortex:
+					StartCoroutine(cooldownCoroutine(GameManager.PowerType.Vortex, vortexCooldown));
+					ActivateVortex();
+					break;
+				case GameManager.PowerType.LeechLife:
+					StartCoroutine(cooldownCoroutine(GameManager.PowerType.LeechLife, leechLifeCooldown));
+					ActivateLeechLife();
+					break;
+				case GameManager.PowerType.Slug:
+					StartCoroutine(cooldownCoroutine(GameManager.PowerType.Slug, slugCooldown));
+					ActivateSlug();
+					break;
+				case GameManager.PowerType.Shield:
+					StartCoroutine(cooldownCoroutine(GameManager.PowerType.Shield, shieldCooldown));
+					ActivateShield();
+					break;
+				case GameManager.PowerType.Ice:
+					StartCoroutine(cooldownCoroutine(GameManager.PowerType.Ice, iceCooldown));
+					ActivateIce();
+					break;
+				case GameManager.PowerType.Fire:
+                    if (!isActivatedByBrazier)
+                    {
+                        StartCoroutine(cooldownCoroutine(GameManager.PowerType.Fire, fireCooldown));
+                    }
+					ActivateFire();
+					break;
+				case GameManager.PowerType.Electric:
+					StartCoroutine(cooldownCoroutine(GameManager.PowerType.Electric, electricCooldown));
+					ActivateElectric();
+					break;
+				case GameManager.PowerType.Darkness:
+					StartCoroutine(cooldownCoroutine(GameManager.PowerType.Darkness, darknessCooldown));
+					ActivateDarkness();
+					break;
+			}
+		}
     }
 
     /// <summary>
@@ -385,9 +393,17 @@ public class PowerController : MonoBehaviour
     void ActivateFire()
     {
         elementalPower = GameManager.PowerType.Fire;
-        GetComponent<MeshRenderer>().material = fireMaterial;
-        StartCoroutine(DurationCoroutine(GameManager.PowerType.Fire, fireDuration));
-    }
+		GetComponent<MeshRenderer>().material = fireMaterial;
+        if (isActivatedByBrazier)
+        {
+            StartCoroutine(DurationCoroutine(GameManager.PowerType.Fire, fireDurationBrazier));
+            isActivatedByBrazier = false;
+        }
+        else
+        {
+            StartCoroutine(DurationCoroutine(GameManager.PowerType.Fire, fireDuration));
+        }
+	}
 
     void DeactivateFire()
     {
