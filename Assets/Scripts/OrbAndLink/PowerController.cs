@@ -7,6 +7,8 @@ public class PowerController : MonoBehaviour
     public GameManager.PowerType elementalPower;
     public GameManager.PowerType behavioralPower;
 
+    OrbController orbController;
+
 	public Material normalMaterial;
 	public int baseDamage;
 
@@ -144,7 +146,8 @@ public class PowerController : MonoBehaviour
 	private void Start()
     {
 		canBeActivated = new List<bool> {true, true, true, true, true, true, true, true, true};
-	}
+        orbController = gameObject.GetComponent<OrbController>();
+    }
 
 	#region Activation and Deactivation Functions
 
@@ -471,7 +474,12 @@ public class PowerController : MonoBehaviour
 	public void onEnemyHit(GameObject target)
     {
         Enemy enemy = target.GetComponent<Enemy>();
-		int damageTaken = baseDamage;
+        int bonusDamage = (orbController.combo / orbController.damageIncreaseStep) * orbController.damageComboIncrease;
+        if (bonusDamage > orbController.maxComboDamage)
+        {
+            bonusDamage = orbController.maxComboDamage;
+        }
+		int damageTaken = baseDamage + bonusDamage;
 
 		switch (behavioralPower)
 		{

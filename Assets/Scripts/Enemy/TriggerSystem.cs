@@ -1,64 +1,82 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class TriggerSystem : MonoBehaviour
 {
-    public enum TriggerMode { Enter, Exit, Stay };
+    public enum TriggerActivation { Enter, Exit, Stay };
+    public TriggerActivation triggerActivation;
+
+    public enum TriggerMode { Enemy, Dialog };
     public TriggerMode triggerMode;
 
-    [Header("Elements to trigger")]
     public GameObject[] enemies;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        if(enemies.Length == 0)
-        {
-            Debug.LogError("Enemies list is empty", this);
-        }
-    }
+    [DrawIf(new string[] { "triggerMode" }, TriggerMode.Dialog)]
+    public int displayTime;
+    [TextArea]
+    public string player1Text;
+    [TextArea]
+    public string player2Text;
 
     private void OnTriggerEnter(Collider other)
     {
-        if (triggerMode == TriggerMode.Enter)
+        if (triggerActivation == TriggerActivation.Enter)
         {
-            if (other.gameObject.tag == "Player")
-            {
-                foreach (GameObject enemy in enemies)
-                {
-                    enemy.GetComponent<Enemy>().enabled = true;
-                }
-            }
+            TriggerManager(other);
         }
     }
 
     private void OnTriggerExit(Collider other)
     {
-        if (triggerMode == TriggerMode.Exit)
+        if (triggerActivation == TriggerActivation.Exit)
         {
-            if (other.gameObject.tag == "Player")
-            {
-                foreach (GameObject enemy in enemies)
-                {
-                    enemy.GetComponent<Enemy>().enabled = true;
-                }
-            }
+            TriggerManager(other);
         }
     }
 
     private void OnTriggerStay(Collider other)
     {
-        if (triggerMode == TriggerMode.Stay)
+        if (triggerActivation == TriggerActivation.Stay)
         {
-            if (other.gameObject.tag == "Player")
-            {
-                foreach (GameObject enemy in enemies)
-                {
-                    enemy.GetComponent<Enemy>().enabled = true;
-                }
-            }
+            TriggerManager(other);
         }
     }
 
+    private void TriggerManager(Collider other)
+    {
+        if (other.gameObject.tag == "Player")
+        {
+            switch (triggerMode)
+            {
+                case TriggerMode.Enemy:
+                    if (enemies.Length > 0)
+                    {
+                        foreach (GameObject enemy in enemies)
+                        {
+                            enemy.GetComponent<Enemy>().enabled = true;
+                        }
+                    }
+                    else
+                    {
+                        Debug.LogError("Enemies list is empty", this);
+                    }
+                    break;
+                case TriggerMode.Dialog:
+                    if (player1Text != "" || player2Text != "")
+                    {
+                        GameManager.gameManager.UIManager.UpdateDialogBox(player1Text, player2Text, displayTime);
+                    }
+                    else
+                    {
+                        Debug.LogError("Where are the fucking dialogs!", this);
+                    }
+                    break;
+                default:
+                    break;
+            }
+            Destroy(this.gameObject);
+        }
+    }
 }

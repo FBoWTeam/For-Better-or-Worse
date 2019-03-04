@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.UI;
+using TMPro;
 using UnityEngine;
 
 public class UIManager : MonoBehaviour
@@ -50,11 +51,56 @@ public class UIManager : MonoBehaviour
 
     #endregion
 
-    #region All Functions
 
-    #region PowerSlot Functions
+    #region All Methods
 
+    #region Dialog Methods
 
+    /// <summary>
+    /// In this case, the method check if dialog are display and removed them
+    /// </summary>
+    public void UpdateDialogBox()
+    {
+        if (dialogBoxFox.activeSelf || dialogBoxRaccoon.activeSelf)
+        {
+            dialogBoxFox.GetComponentInChildren<TextMeshProUGUI>().SetText("");
+            dialogBoxRaccoon.GetComponentInChildren<TextMeshProUGUI>().SetText("");
+            dialogBoxFox.SetActive(false);
+            dialogBoxRaccoon.SetActive(false);
+        }
+    }
+
+    /// <summary>
+    /// In this case, the method check which dialog box display and update the text
+    /// </summary>
+    /// <param name="player1Text">text display in the player 1 dialog box</param>
+    /// <param name="player2Text">text display in the player 2 dialog box</param>
+    /// <param name="displayTime">use for the invoke, to determine how much time display the text</param>
+    public void UpdateDialogBox(string player1Text, string player2Text, int displayTime)
+    {
+        if (player1Text != "")
+        {
+            dialogBoxFox.GetComponentInChildren<TextMeshProUGUI>().SetText(player1Text);
+            dialogBoxFox.SetActive(true);
+        }
+        if (player2Text != "")
+        {
+            dialogBoxRaccoon.GetComponentInChildren<TextMeshProUGUI>().SetText(player2Text);
+            dialogBoxRaccoon.SetActive(true);
+        }
+        Invoke("UpdateDialogBox", displayTime);
+    }
+
+    #endregion
+
+    #region PowerSlot Methods
+
+    /// <summary>
+    /// Update the UI power slot according to the new power obtained
+    /// </summary>
+    /// <param name="slot">use to know the slot to update</param>
+    /// <param name="player1">use to know the player affected</param>
+    /// <param name="powerSlot">refers to the new powerType obtained</param>
     public void UpdatePowerSlot(int slot, bool player1, GameManager.PowerType powerSlot)
     {
         switch (slot)
@@ -85,8 +131,14 @@ public class UIManager : MonoBehaviour
                 break;
         }
     }
+
     #endregion
 
+    /// <summary>
+    /// Assign the image corresponding to the power
+    /// </summary>
+    /// <param name="powerType">refers to the new powerType obtained</param>
+    /// <returns></returns>
     public Sprite ImageAssignment(GameManager.PowerType powerType)
     {
         switch (powerType)
@@ -114,8 +166,6 @@ public class UIManager : MonoBehaviour
             default:
                 return none;
         }
-
-
     }
 
     #endregion
