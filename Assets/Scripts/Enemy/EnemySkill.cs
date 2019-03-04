@@ -104,7 +104,7 @@ public class EnemySkill : MonoBehaviour
         {
             if (collision.gameObject.CompareTag("Player") && collision.gameObject == Enemy.aimPlayer)
             {
-                GameManager.gameManager.TakeDamage(collision.gameObject, damage);
+                GameManager.gameManager.TakeDamage(collision.gameObject, damage, transform.position);
             }
         }
     }
@@ -150,7 +150,7 @@ public class EnemySkill : MonoBehaviour
                 myMat.color = Color.red;
                 if (Time.time > nextAttack)
                 {
-                    GameManager.gameManager.TakeDamage(target, damage);
+                    GameManager.gameManager.TakeDamage(target, damage, transform.position);
                     nextAttack = Time.time + aoeCooldown;
                 }
                 break;
