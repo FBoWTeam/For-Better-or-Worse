@@ -15,14 +15,14 @@ public class LiftBridge : MonoBehaviour
 
     private void Start()
     {
-        actualAngle = -50;
+        actualAngle = 50;
     }
 
     private void Update()
     {
         Capstan cap = capstan.GetComponent<Capstan>();
 
-        targetAngle = ((float)(cap.actualAngle - cap.maxAngle) / (float)cap.maxAngle) * -50.0f * -1.0f;
+        targetAngle = ((float)(cap.actualAngle - cap.maxAngle) / (float)cap.maxAngle) * 50.0f * -1.0f;
 
         //moves the bridge in function of the desired angle
         if ((int)actualAngle != (int)targetAngle)
