@@ -13,6 +13,8 @@ public class TriggerSystem : MonoBehaviour
 
     public GameObject[] enemies;
 
+    [DrawIf(new string[] { "triggerMode" },TriggerMode.Dialog)]
+    public int displayTime;
     [TextArea]
     public string player1Text;
     [TextArea]
@@ -62,9 +64,10 @@ public class TriggerSystem : MonoBehaviour
                     }
                     break;
                 case TriggerMode.Dialog:
-                    if (player1Text != "" && player2Text != "")
+                    if (player1Text != "" ||   player2Text != "")
                     {
                         //UpdateUI
+                        GameManager.gameManager.UIManager.UpdateDialogBox(player1Text, player2Text, displayTime);
                     }
                     else
                     {
