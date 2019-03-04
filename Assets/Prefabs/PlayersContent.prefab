@@ -1072,11 +1072,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: add04915dcedc254c8f1e93d5588c2ea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isActive: 0
+  timeToActivate: 0
   speed: 10
   minSpeed: 10
   maxSpeed: 20
-  amortized: 0
   combo: 0
+  damageComboIncrease: 1
+  damageIncreaseStep: 1
+  maxComboDamage: 20
+  amortized: 0
   canHitEnemy: 1
   canHitPlayer: 0
   veryLowFixedCoefficient: 0.3
@@ -1122,6 +1127,7 @@ MonoBehaviour:
   lifeSteel: 50
   slugMaterial: {fileID: 2100000, guid: 7468f8944ac1ed94490c837a13e8b672, type: 2}
   slugDuration: 4
+  mitigatedDamageSlug: 0
   slugCooldown: 8
   slug: {fileID: 1635892733598159781, guid: f1fb8f1469f8aab42bc8a4f47c49f15c, type: 3}
   shieldMaterial: {fileID: 2100000, guid: 075f406c77a9ee34db02bb28f18db12c, type: 2}
@@ -1135,10 +1141,12 @@ MonoBehaviour:
   iceDamage: 0
   fireMaterial: {fileID: 2100000, guid: dbaea46d10d0aee4898f0b579c7a84fd, type: 2}
   fireDuration: 8
+  fireDurationBrazier: 0
   fireCooldown: 5
   fireDamage: 5
   fireTicksDamage: 5
   fireTickDuration: 5
+  isActivatedByBrazier: 0
   electricMaterial: {fileID: 2100000, guid: c5714c959eba6964cb5543af1128b646, type: 2}
   electricDuration: 3
   electricCooldown: 10

@@ -107,10 +107,13 @@ public class PowerController : MonoBehaviour
 	public Material fireMaterial;
 	[DrawIf(new string[] { "editingPower" }, GameManager.PowerType.Fire)]
 	public float fireDuration;
-	[DrawIf(new string[] { "editingPower" }, GameManager.PowerType.Fire)]
+    [DrawIf(new string[] { "editingPower" }, GameManager.PowerType.Fire)]
+    public float fireDurationBrazier;
+    [DrawIf(new string[] { "editingPower" }, GameManager.PowerType.Fire)]
 	public float fireCooldown;
 	[DrawIf(new string[] { "editingPower" }, GameManager.PowerType.Fire)]
 	public int fireDamage;
+
 	[DrawIf(new string[] { "editingPower" }, GameManager.PowerType.Fire)]
 	[Tooltip("Damage is over time , should be >= to fireDuration")]
     public int fireTicksDamage = 5;
@@ -118,6 +121,8 @@ public class PowerController : MonoBehaviour
 	public float fireTickDuration = 5;
 	[DrawIf(new string[] { "editingPower" }, GameManager.PowerType.Fire)]
 	private float nextAttack = 0f;
+
+    public bool isActivatedByBrazier;
 	#endregion
 
 	#region Electric Param
@@ -195,7 +200,10 @@ public class PowerController : MonoBehaviour
 					ActivateIce();
 					break;
 				case GameManager.PowerType.Fire:
-					StartCoroutine(cooldownCoroutine(GameManager.PowerType.Fire, fireCooldown));
+                    if (!isActivatedByBrazier)
+                    {
+                        StartCoroutine(cooldownCoroutine(GameManager.PowerType.Fire, fireCooldown));
+                    }
 					ActivateFire();
 					break;
 				case GameManager.PowerType.Electric:
@@ -386,7 +394,15 @@ public class PowerController : MonoBehaviour
     {
         elementalPower = GameManager.PowerType.Fire;
 		GetComponent<MeshRenderer>().material = fireMaterial;
-		StartCoroutine(DurationCoroutine(GameManager.PowerType.Fire, fireDuration));
+        if (isActivatedByBrazier)
+        {
+            StartCoroutine(DurationCoroutine(GameManager.PowerType.Fire, fireDurationBrazier));
+            isActivatedByBrazier = false;
+        }
+        else
+        {
+            StartCoroutine(DurationCoroutine(GameManager.PowerType.Fire, fireDuration));
+        }
 	}
 
     void DeactivateFire()
