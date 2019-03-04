@@ -3346,9 +3346,24 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5363819850765582481, guid: 71cdf7595d7fb2848841b0e6667053c9,
         type: 3}
+      propertyPath: objectToActivate.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5363819850765582481, guid: 71cdf7595d7fb2848841b0e6667053c9,
+        type: 3}
       propertyPath: objectToActivate
       value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 5363819850765582481, guid: 71cdf7595d7fb2848841b0e6667053c9,
+        type: 3}
+      propertyPath: objectToActivate.Array.data[0]
+      value: 
       objectReference: {fileID: 473666726}
+    - target: {fileID: 5363819850765582481, guid: 71cdf7595d7fb2848841b0e6667053c9,
+        type: 3}
+      propertyPath: activatedByOrb
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 71cdf7595d7fb2848841b0e6667053c9, type: 3}
 --- !u!4 &1256961983 stripped
@@ -3647,6 +3662,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalScale.z
       value: 3.333333
+      objectReference: {fileID: 0}
+    - target: {fileID: 5984466512164282798, guid: 5301f5588e36b51458433c43fb17b836,
+        type: 3}
+      propertyPath: objectsConditions.Array.size
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 5984466512164282798, guid: 5301f5588e36b51458433c43fb17b836,
         type: 3}
@@ -5552,6 +5572,16 @@ PrefabInstance:
       propertyPath: m_TagString
       value: Orb
       objectReference: {fileID: 0}
+    - target: {fileID: 2970527385879693205, guid: e0c803f7f12a09b4cb87b0f68746c41b,
+        type: 3}
+      propertyPath: editingPower
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 2970527385879693205, guid: e0c803f7f12a09b4cb87b0f68746c41b,
+        type: 3}
+      propertyPath: fireDurationBrazier
+      value: 4
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e0c803f7f12a09b4cb87b0f68746c41b, type: 3}
 --- !u!1 &8708506529447797091 stripped
@@ -5609,10 +5639,12 @@ MonoBehaviour:
   iceDamage: 0
   fireMaterial: {fileID: 0}
   fireDuration: 5
+  fireDurationBrazier: 0
   fireCooldown: 0
   fireDamage: 5
   fireTicksDamage: 5
   fireTickDuration: 5
+  isActivatedByBrazier: 0
   electricMaterial: {fileID: 0}
   electricDuration: 0
   electricCooldown: 0
