@@ -102,7 +102,7 @@ public class PowerController : MonoBehaviour
 	#endregion
 
 	#region Fire Param
-	//Fire
+	//Fire 
 	[DrawIf(new string[] { "editingPower" }, GameManager.PowerType.Fire)]
 	public Material fireMaterial;
 	[DrawIf(new string[] { "editingPower" }, GameManager.PowerType.Fire)]
@@ -122,12 +122,13 @@ public class PowerController : MonoBehaviour
 	[DrawIf(new string[] { "editingPower" }, GameManager.PowerType.Fire)]
 	private float nextAttack = 0f;
 
-    public bool isActivatedByBrazier;
-	#endregion
 
-	#region Electric Param
-	//Electric
-	[DrawIf(new string[] { "editingPower" }, GameManager.PowerType.Electric)]
+    public bool isActivatedByBrazier;
+    #endregion
+
+    #region Electric Param
+    //Electric
+    [DrawIf(new string[] { "editingPower" }, GameManager.PowerType.Electric)]
 	public Material electricMaterial;
 	[DrawIf(new string[] { "editingPower" }, GameManager.PowerType.Electric)]
 	public float electricDuration;
@@ -204,7 +205,7 @@ public class PowerController : MonoBehaviour
                     {
                         StartCoroutine(cooldownCoroutine(GameManager.PowerType.Fire, fireCooldown));
                     }
-					ActivateFire();
+                    ActivateFire();
 					break;
 				case GameManager.PowerType.Electric:
 					StartCoroutine(cooldownCoroutine(GameManager.PowerType.Electric, electricCooldown));
@@ -394,6 +395,7 @@ public class PowerController : MonoBehaviour
     {
         elementalPower = GameManager.PowerType.Fire;
 		GetComponent<MeshRenderer>().material = fireMaterial;
+
         if (isActivatedByBrazier)
         {
             StartCoroutine(DurationCoroutine(GameManager.PowerType.Fire, fireDurationBrazier));
@@ -403,7 +405,7 @@ public class PowerController : MonoBehaviour
         {
             StartCoroutine(DurationCoroutine(GameManager.PowerType.Fire, fireDuration));
         }
-	}
+    }
 
     void DeactivateFire()
     {
