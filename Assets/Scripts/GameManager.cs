@@ -28,6 +28,7 @@ public class GameManager : MonoBehaviour
 	public bool player1HasTaunt;
 	public bool player2HasTaunt;
     public int tauntRange = 10;
+    public float tauntCooldown = 15f;
 
 	[Header("[HealingOrbs]")]
 	public GameObject normalHealingOrbPrefab;
