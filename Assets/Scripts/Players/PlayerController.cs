@@ -55,8 +55,6 @@ public class PlayerController : MonoBehaviour
         transform.localEulerAngles = new Vector3(0.0f, transform.localEulerAngles.y, 0.0f);
     }
 
-
-
     void CheckTaunt()
     {
         if ((player1 && (Input.GetKeyDown(KeyCode.Joystick1Button4) || Input.GetKeyDown(KeyCode.Space))) || (!player1 && (Input.GetKeyDown(KeyCode.Joystick2Button4) || Input.GetKeyDown(KeyCode.Keypad0))))

@@ -52,13 +52,6 @@ public class EnemyMovement : MonoBehaviour
         line = this.GetComponent<LineRenderer>();
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
-
-
     #region Movement Methods
 
     public void DoMovement()
