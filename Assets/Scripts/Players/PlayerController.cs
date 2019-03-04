@@ -31,6 +31,15 @@ public class PlayerController : MonoBehaviour
         oldestSlotIs3 = true;
     }
 
+    private void Start()
+    {
+        //Update UI (for development)
+        GameManager.gameManager.UIManager.UpdatePowerSlot(1, player1, powerSlot1);
+        GameManager.gameManager.UIManager.UpdatePowerSlot(2, player1, powerSlot2);
+        GameManager.gameManager.UIManager.UpdatePowerSlot(3, player1, powerSlot3);
+        GameManager.gameManager.UIManager.UpdatePowerSlot(4, player1, powerSlot4);
+    }
+
     void Update()
     {
         Move();
@@ -57,11 +66,11 @@ public class PlayerController : MonoBehaviour
 
     void CheckTaunt()
     {
-        if (  ((player1 && (Input.GetKeyDown(KeyCode.Joystick1Button4) || Input.GetKeyDown(KeyCode.Space))) || (!player1 && (Input.GetKeyDown(KeyCode.Joystick2Button4) || Input.GetKeyDown(KeyCode.Keypad0)))) && Time.time > nextTaunt     )
-        {           
+        if (((player1 && (Input.GetKeyDown(KeyCode.Joystick1Button4) || Input.GetKeyDown(KeyCode.Space))) || (!player1 && (Input.GetKeyDown(KeyCode.Joystick2Button4) || Input.GetKeyDown(KeyCode.Keypad0)))) && Time.time > nextTaunt)
+        {
             StartCoroutine(TauntCoroutine());
             nextTaunt = Time.time + GameManager.gameManager.tauntCooldown;
-           
+
         }
     }
 
@@ -120,19 +129,19 @@ public class PlayerController : MonoBehaviour
         if (isFixedPower)
         {
             if (powerSlot1 == GameManager.PowerType.None)
-			{
-				GameManager.gameManager.player1.GetComponent<PlayerController>().powerSlot1 = newPower;
-				GameManager.gameManager.player2.GetComponent<PlayerController>().powerSlot1 = newPower;
-				GameManager.gameManager.UIManager.UpdatePowerSlot(1, true, newPower);
-				GameManager.gameManager.UIManager.UpdatePowerSlot(1, false, newPower);
-			}
+            {
+                GameManager.gameManager.player1.GetComponent<PlayerController>().powerSlot1 = newPower;
+                GameManager.gameManager.player2.GetComponent<PlayerController>().powerSlot1 = newPower;
+                GameManager.gameManager.UIManager.UpdatePowerSlot(1, true, newPower);
+                GameManager.gameManager.UIManager.UpdatePowerSlot(1, false, newPower);
+            }
             else if (powerSlot2 == GameManager.PowerType.None)
-			{
-				GameManager.gameManager.player1.GetComponent<PlayerController>().powerSlot2 = newPower;
-				GameManager.gameManager.player2.GetComponent<PlayerController>().powerSlot2 = newPower;
-				GameManager.gameManager.UIManager.UpdatePowerSlot(2, true, newPower);
-				GameManager.gameManager.UIManager.UpdatePowerSlot(2, false, newPower);
-			}
+            {
+                GameManager.gameManager.player1.GetComponent<PlayerController>().powerSlot2 = newPower;
+                GameManager.gameManager.player2.GetComponent<PlayerController>().powerSlot2 = newPower;
+                GameManager.gameManager.UIManager.UpdatePowerSlot(2, true, newPower);
+                GameManager.gameManager.UIManager.UpdatePowerSlot(2, false, newPower);
+            }
         }
         else
         {
@@ -148,20 +157,20 @@ public class PlayerController : MonoBehaviour
             }
             else
             {
-				if(powerSlot3 != newPower && powerSlot4 != newPower)
-				{
-					if (oldestSlotIs3)
-					{
-						powerSlot3 = newPower;
-						GameManager.gameManager.UIManager.UpdatePowerSlot(3, player1, powerSlot3);
-					}
-					else
-					{
-						powerSlot4 = newPower;
-						GameManager.gameManager.UIManager.UpdatePowerSlot(4, player1, powerSlot4);
-					}
-					oldestSlotIs3 = !oldestSlotIs3;
-				}
+                if (powerSlot3 != newPower && powerSlot4 != newPower)
+                {
+                    if (oldestSlotIs3)
+                    {
+                        powerSlot3 = newPower;
+                        GameManager.gameManager.UIManager.UpdatePowerSlot(3, player1, powerSlot3);
+                    }
+                    else
+                    {
+                        powerSlot4 = newPower;
+                        GameManager.gameManager.UIManager.UpdatePowerSlot(4, player1, powerSlot4);
+                    }
+                    oldestSlotIs3 = !oldestSlotIs3;
+                }
             }
         }
     }
