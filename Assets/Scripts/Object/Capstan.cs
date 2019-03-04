@@ -43,12 +43,10 @@ public class Capstan : MonoBehaviour, IActivable
     {
         if (OnTheRight(pivot, border, orb.transform))
         {
-            GetComponent<Renderer>().material.color = Color.red;
             orbOnTheRight = true;
         }
         else
         {
-            GetComponent<Renderer>().material.color = Color.blue;
             orbOnTheRight = false;
         }
 
@@ -57,6 +55,17 @@ public class Capstan : MonoBehaviour, IActivable
             int sign = targetAngle > actualAngle ? 1 : -1;
             transform.parent.localEulerAngles = new Vector3(0.0f, actualAngle += (rotationSpeed * sign), 0.0f);
         }
+
+        if (!GetComponentInParent<Animation>().IsPlaying("CapstanUp") && !GetComponentInParent<Animation>().IsPlaying("CapstanDown"))
+        {
+            GetComponent<BoxCollider>().enabled = true;
+        }
+        else
+        {
+            GetComponent<BoxCollider>().enabled = false;
+        }
+
+
     }
 
     private void OnTriggerEnter(Collider other)
