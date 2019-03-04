@@ -158,7 +158,7 @@ public class OrbController : MonoBehaviour
     {
         if (other.CompareTag("Player") && canHitPlayer == true && amortized == false)
         {
-            GameManager.gameManager.TakeDamage(other.gameObject, gameObject.GetComponent<PowerController>().baseDamage);
+            GameManager.gameManager.TakeDamage(other.gameObject, gameObject.GetComponent<PowerController>().baseDamage, other.transform.position);
             combo = 0;
             speed = minSpeed;
             GetComponent<PowerController>().CheckPowerAttribution("miss", other.GetComponent<PlayerController>().player1);

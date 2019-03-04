@@ -52,6 +52,8 @@ public class Enemy : MonoBehaviour
     public int baseHP = 100;
     public int hp;
 
+	public float knockBackForce;
+
     [HideInInspector]
     public EnemyMovement enemyMovement;
 
@@ -182,9 +184,10 @@ public class Enemy : MonoBehaviour
 
     #endregion
 
-    public void TakeDamage(int damage)
+    public void TakeDamage(int damage, Vector3 hitPosition)
     {
         hp -= damage;
+		enemyMovement.agent.velocity = (transform.position - hitPosition) * knockBackForce;
 		if (hp <= 0)
 		{
 			GetComponent<LootTable>().LootEnemy();
