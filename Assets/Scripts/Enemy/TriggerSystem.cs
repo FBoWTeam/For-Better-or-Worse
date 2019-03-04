@@ -5,21 +5,28 @@ using UnityEngine.UI;
 
 public class TriggerSystem : MonoBehaviour
 {
+    #region All Variables
+
     public enum TriggerActivation { Enter, Exit, Stay };
     public TriggerActivation triggerActivation;
 
-    public enum TriggerMode { Enemy, Dialog };
+    public enum TriggerMode { Enemy, Dialog, EnemyAndDialog };
     public TriggerMode triggerMode;
 
     public GameObject[] enemies;
-
-    [DrawIf(new string[] { "triggerMode" }, TriggerMode.Dialog)]
+    
+    [Tooltip("Display time of dialogs")]
     public int displayTime;
     [TextArea]
     public string player1Text;
     [TextArea]
     public string player2Text;
 
+    #endregion
+
+    #region All Methods
+
+    #region OnTrigger Methods
     private void OnTriggerEnter(Collider other)
     {
         if (triggerActivation == TriggerActivation.Enter)
@@ -44,6 +51,35 @@ public class TriggerSystem : MonoBehaviour
         }
     }
 
+    #endregion
+
+    private void TriggerEnemy()
+    {
+        if (enemies.Length > 0)
+        {
+            foreach (GameObject enemy in enemies)
+            {
+                enemy.GetComponent<Enemy>().enabled = true;
+            }
+        }
+        else
+        {
+            Debug.LogError("Enemies list is empty", this);
+        }
+    }
+
+    private void TriggerDialog()
+    {
+        if (player1Text != "" || player2Text != "")
+        {
+            GameManager.gameManager.UIManager.UpdateDialogBox(player1Text, player2Text, displayTime);
+        }
+        else
+        {
+            Debug.LogError("Where are the fucking dialogs!", this);
+        }
+    }
+
     private void TriggerManager(Collider other)
     {
         if (other.gameObject.tag == "Player")
@@ -51,27 +87,14 @@ public class TriggerSystem : MonoBehaviour
             switch (triggerMode)
             {
                 case TriggerMode.Enemy:
-                    if (enemies.Length > 0)
-                    {
-                        foreach (GameObject enemy in enemies)
-                        {
-                            enemy.GetComponent<Enemy>().enabled = true;
-                        }
-                    }
-                    else
-                    {
-                        Debug.LogError("Enemies list is empty", this);
-                    }
+                    TriggerEnemy();
                     break;
                 case TriggerMode.Dialog:
-                    if (player1Text != "" || player2Text != "")
-                    {
-                        GameManager.gameManager.UIManager.UpdateDialogBox(player1Text, player2Text, displayTime);
-                    }
-                    else
-                    {
-                        Debug.LogError("Where are the fucking dialogs!", this);
-                    }
+                    TriggerDialog();
+                    break;
+                case TriggerMode.EnemyAndDialog:
+                    TriggerEnemy();
+                    TriggerDialog();
                     break;
                 default:
                     break;
@@ -79,4 +102,6 @@ public class TriggerSystem : MonoBehaviour
             Destroy(this.gameObject);
         }
     }
+
+    #endregion
 }
