@@ -102,7 +102,7 @@ public class PowerController : MonoBehaviour
 	#endregion
 
 	#region Fire Param
-	//Fire
+	//Fire 
 	[DrawIf(new string[] { "editingPower" }, GameManager.PowerType.Fire)]
 	public Material fireMaterial;
 	[DrawIf(new string[] { "editingPower" }, GameManager.PowerType.Fire)]
