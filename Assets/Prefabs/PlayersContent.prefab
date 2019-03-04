@@ -1076,11 +1076,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: add04915dcedc254c8f1e93d5588c2ea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isActive: 0
+  timeToActivate: 0
   speed: 10
   minSpeed: 10
   maxSpeed: 20
-  amortized: 0
   combo: 0
+  damageComboIncrease: 0
+  damageIncreaseStep: 0
+  maxComboDamage: 0
+  amortized: 0
   canHitEnemy: 1
   canHitPlayer: 1
   veryLowFixedCoefficient: 0.3
@@ -1140,10 +1145,12 @@ MonoBehaviour:
   iceDamage: 2
   fireMaterial: {fileID: 2100000, guid: dbaea46d10d0aee4898f0b579c7a84fd, type: 2}
   fireDuration: 5
+  fireDurationBrazier: 4
   fireCooldown: 10
   fireDamage: 2
   fireTicksDamage: 3
   fireTickDuration: 3
+  isActivatedByBrazier: 0
   electricMaterial: {fileID: 2100000, guid: c5714c959eba6964cb5543af1128b646, type: 2}
   electricDuration: 3
   electricCooldown: 10
