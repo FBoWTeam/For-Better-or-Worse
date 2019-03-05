@@ -44,9 +44,12 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-        Move();
-        CheckTaunt();
-        GetCurrentPower();
+		if (!GameManager.gameManager.isPaused)
+		{
+			Move();
+			CheckTaunt();
+			GetCurrentPower();
+		}
     }
 
     /// <summary>

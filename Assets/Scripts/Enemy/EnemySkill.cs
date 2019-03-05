@@ -167,9 +167,6 @@ public class EnemySkill : MonoBehaviour
         }
     }
 
-
-
-
     IEnumerator Impact(Transform target)
     {
 
