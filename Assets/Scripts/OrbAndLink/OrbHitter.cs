@@ -59,12 +59,12 @@ public class OrbHitter : MonoBehaviour
                 orbController.speed = accelerationFactor * orbController.combo + orbController.minSpeed;
                 orbController.combo++;
                 CheckPowerActivation();
-                GameManager.gameManager.orb.GetComponent<PowerController>().CheckPowerAttribution("hit", true);
+                GameManager.gameManager.orb.GetComponent<PowerController>().CheckPowerAttribution("hit", player1);
             }
             if (amortizing && !orbController.amortized)
             {
                 StartCoroutine(AmortizeCoroutine());
-                GameManager.gameManager.orb.GetComponent<PowerController>().CheckPowerAttribution("amortize", true);
+                GameManager.gameManager.orb.GetComponent<PowerController>().CheckPowerAttribution("amortize", player1);
             }
             else if (!amortizing && orbController.amortized)
             {
@@ -136,14 +136,14 @@ public class OrbHitter : MonoBehaviour
                 orbController.GetComponent<PowerController>().currentShieldStack--;
             }
         }
-        else if (orbController.GetComponent<PowerController>().behavioralPower == GameManager.PowerType.Shield && orbController.GetComponent<PowerController>().currentShieldStack == 0)
+        else if (orbController.GetComponent<PowerController>().behavioralPower == GameManager.PowerType.Shield && orbController.GetComponent<PowerController>().currentShieldStack <= 0)
         {
             orbController.GetComponent<PowerController>().DeactivatePower(GameManager.PowerType.Shield);
         }
     }
 
 	/// <summary>
-	/// 
+	/// extend the time to hit the orb from a frame to a range of frame
 	/// </summary>
 	/// <returns></returns>
 	IEnumerator HitCoroutine()

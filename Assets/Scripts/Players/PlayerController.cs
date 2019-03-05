@@ -130,16 +130,16 @@ public class PlayerController : MonoBehaviour
     {
         if (isFixedPower)
         {
-            if (powerSlot1 == GameManager.PowerType.None)
+			if (powerSlot1 == GameManager.PowerType.None)
             {
-                GameManager.gameManager.player1.GetComponent<PlayerController>().powerSlot1 = newPower;
+				GameManager.gameManager.player1.GetComponent<PlayerController>().powerSlot1 = newPower;
                 GameManager.gameManager.player2.GetComponent<PlayerController>().powerSlot1 = newPower;
                 GameManager.gameManager.UIManager.UpdatePowerSlot(1, true, newPower);
                 GameManager.gameManager.UIManager.UpdatePowerSlot(1, false, newPower);
             }
             else if (powerSlot2 == GameManager.PowerType.None)
             {
-                GameManager.gameManager.player1.GetComponent<PlayerController>().powerSlot2 = newPower;
+				GameManager.gameManager.player1.GetComponent<PlayerController>().powerSlot2 = newPower;
                 GameManager.gameManager.player2.GetComponent<PlayerController>().powerSlot2 = newPower;
                 GameManager.gameManager.UIManager.UpdatePowerSlot(2, true, newPower);
                 GameManager.gameManager.UIManager.UpdatePowerSlot(2, false, newPower);
@@ -147,28 +147,28 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
-            if (powerSlot3 == GameManager.PowerType.None)
+			if (powerSlot3 == GameManager.PowerType.None)
             {
-                powerSlot3 = newPower;
+				powerSlot3 = newPower;
                 GameManager.gameManager.UIManager.UpdatePowerSlot(3, player1, powerSlot3);
             }
             else if (powerSlot4 == GameManager.PowerType.None)
             {
-                powerSlot4 = newPower;
+				powerSlot4 = newPower;
                 GameManager.gameManager.UIManager.UpdatePowerSlot(4, player1, powerSlot4);
             }
             else
             {
-                if (powerSlot3 != newPower && powerSlot4 != newPower)
+				if (powerSlot3 != newPower && powerSlot4 != newPower)
                 {
                     if (oldestSlotIs3)
                     {
-                        powerSlot3 = newPower;
+						powerSlot3 = newPower;
                         GameManager.gameManager.UIManager.UpdatePowerSlot(3, player1, powerSlot3);
                     }
                     else
-                    {
-                        powerSlot4 = newPower;
+					{
+						powerSlot4 = newPower;
                         GameManager.gameManager.UIManager.UpdatePowerSlot(4, player1, powerSlot4);
                     }
                     oldestSlotIs3 = !oldestSlotIs3;
