@@ -155,9 +155,8 @@ public class EnemySkill : MonoBehaviour
                 }
                 break;
             case Skill.Ranged:
-                myMat.color = Color.red;              
-                         
-
+                myMat.color = Color.red;
+              
                 if (Time.time > nextAttack && isVisible(transform.position, target.transform.position))
                 {
                     Shoot(bulletPrefab, transform, target.transform, damage);
@@ -213,18 +212,14 @@ public class EnemySkill : MonoBehaviour
     /// <returns></returns>
     bool isVisible(Vector3 start, Vector3 end)
     {
-        RaycastHit hitInfo;
-        //raycast should only hit player
-        int playerLayer = 1 << LayerMask.NameToLayer("Players");
 
-        if (Physics.Linecast(start, end, out hitInfo, playerLayer))
-        {
-           
-            if (hitInfo.transform.CompareTag("Player"))
-            {
-               
-                return true;
-            }
+        // This would cast rays only against colliders in Player layer .
+        // But instead we want to collide against everything except layer 8. The ~ operator does this, it inverts a bitmask.
+        int playerLayer = 1 << LayerMask.NameToLayer("Players");
+       
+        if (!Physics.Linecast(start, end, ~playerLayer)){
+            return true;
+            
         }
         return false;
     }
