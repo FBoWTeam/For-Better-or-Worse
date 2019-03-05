@@ -136,14 +136,14 @@ public class OrbHitter : MonoBehaviour
                 orbController.GetComponent<PowerController>().currentShieldStack--;
             }
         }
-        else if (orbController.GetComponent<PowerController>().behavioralPower == GameManager.PowerType.Shield && orbController.GetComponent<PowerController>().currentShieldStack == 0)
+        else if (orbController.GetComponent<PowerController>().behavioralPower == GameManager.PowerType.Shield && orbController.GetComponent<PowerController>().currentShieldStack <= 0)
         {
             orbController.GetComponent<PowerController>().DeactivatePower(GameManager.PowerType.Shield);
         }
     }
 
 	/// <summary>
-	/// 
+	/// extend the time to hit the orb from a frame to a range of frame
 	/// </summary>
 	/// <returns></returns>
 	IEnumerator HitCoroutine()

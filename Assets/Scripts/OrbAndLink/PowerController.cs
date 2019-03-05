@@ -44,6 +44,10 @@ public class PowerController : MonoBehaviour
     public float vortexDuration;
     [DrawIf(new string[] { "editingPower" }, GameManager.PowerType.Vortex)]
     public float vortexCooldown;
+    [DrawIf(new string[] { "editingPower" }, GameManager.PowerType.Vortex)]
+    public float vortexRangeOfEffect;
+    [DrawIf(new string[] { "editingPower" }, GameManager.PowerType.Vortex)]
+    public float vortexAttractionPower;
     #endregion
 
     #region Leech Life Param
@@ -153,6 +157,7 @@ public class PowerController : MonoBehaviour
     {
         canBeActivated = new List<bool> { true, true, true, true, true, true, true, true, true };
         orbController = gameObject.GetComponent<OrbController>();
+        ActivateVortex();
     }
 
     #region Activation and Deactivation Functions
@@ -289,14 +294,37 @@ public class PowerController : MonoBehaviour
     void ActivateVortex()
     {
         behavioralPower = GameManager.PowerType.Vortex;
+        StartCoroutine(VortexPower());
         transform.GetChild(0).GetComponent<MeshRenderer>().material = vortexMaterial;
         StartCoroutine(DurationCoroutine(GameManager.PowerType.Vortex, vortexDuration));
     }
 
     void DeactivateVortex()
     {
+        StopCoroutine(VortexPower());
         behavioralPower = GameManager.PowerType.None;
         transform.GetChild(0).GetComponent<MeshRenderer>().material = normalMaterial;
+    }
+
+    IEnumerator VortexPower()
+    {
+        while (true)
+        {
+            yield return new WaitUntil(() => orbController.progression == 0.5f);
+            AttractEnemies();
+        }
+    }
+    void AttractEnemies()
+    {
+        Collider[] enemiesInRange = Physics.OverlapSphere(transform.position, vortexRangeOfEffect);
+        for (int i = 0; i < enemiesInRange.Length; i++)
+        {
+            if (enemiesInRange[i].transform.gameObject.CompareTag("Enemy"))
+            {
+                GameObject currentEnemy = enemiesInRange[i].transform.gameObject;
+                currentEnemy.GetComponent<EnemyMovement>().agent.velocity = (transform.position - currentEnemy.transform.position) * vortexAttractionPower;
+            }
+        }
     }
 
     #endregion
