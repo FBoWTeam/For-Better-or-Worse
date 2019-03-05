@@ -31,7 +31,10 @@ public class OrbHitter : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        OrbHit();
+		if(!GameManager.gameManager.isPaused)
+		{
+			OrbHit();
+		}
     }
 
     /// <summary>
