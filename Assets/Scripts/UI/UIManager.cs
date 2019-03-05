@@ -7,9 +7,13 @@ using UnityEngine;
 public class UIManager : MonoBehaviour
 {
 
-    #region All Variables
+	#region All Variables
 
-    [Header("Dialog Box")]
+	[Header("Health Bar")]
+	public Image damageTakenP1;
+	public Image damageTakenP2;
+
+	[Header("Dialog Box")]
     public GameObject dialogBoxFox;
     public GameObject dialogBoxRaccoon;
 
@@ -49,17 +53,17 @@ public class UIManager : MonoBehaviour
     public Sprite darkness;
     public Sprite none;
 
-    #endregion
+	#endregion
 
 
-    #region All Methods
+	#region All Methods
 
-    #region Dialog Methods
+	#region Dialog Methods
 
-    /// <summary>
-    /// In this case, the method check if dialog are display and removed them
-    /// </summary>
-    public void UpdateDialogBox()
+	/// <summary>
+	/// In this case, the method check if dialog are display and removed them
+	/// </summary>
+	public void UpdateDialogBox()
     {
         if (dialogBoxFox.activeSelf || dialogBoxRaccoon.activeSelf)
         {
@@ -137,14 +141,23 @@ public class UIManager : MonoBehaviour
         orbPower.sprite = ImageAssignment(droppedPower);
     }
 
-    #endregion
+	#endregion
 
-    /// <summary>
-    /// Assign the image corresponding to the power
-    /// </summary>
-    /// <param name="powerType">refers to the new powerType obtained</param>
-    /// <returns></returns>
-    public Sprite ImageAssignment(GameManager.PowerType powerType)
+	/// <summary>
+	/// Update Health Bar 
+	/// </summary>
+	public void UpdateHealthBar()
+	{
+		damageTakenP1.fillAmount = (float)GameManager.gameManager.damageTakenP1 / (float)GameManager.gameManager.hp;
+		damageTakenP2.fillAmount = (float)GameManager.gameManager.damageTakenP2 / (float)GameManager.gameManager.hp;
+	}
+
+	/// <summary>
+	/// Assign the image corresponding to the power
+	/// </summary>
+	/// <param name="powerType">refers to the new powerType obtained</param>
+	/// <returns></returns>
+	public Sprite ImageAssignment(GameManager.PowerType powerType)
     {
         switch (powerType)
         {
