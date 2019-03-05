@@ -100,12 +100,9 @@ public class EnemySkill : MonoBehaviour
     //Dammage player on collision
     private void OnCollisionEnter(Collision collision)
     {
-        if (skillOne == Skill.Impact)
+        if (collision.gameObject.CompareTag("Player"))
         {
-            if (collision.gameObject.CompareTag("Player") && collision.gameObject == Enemy.aimPlayer)
-            {
-                GameManager.gameManager.TakeDamage(collision.gameObject, damage, transform.position);
-            }
+            GameManager.gameManager.TakeDamage(collision.gameObject, damage, transform.position);
         }
     }
 
