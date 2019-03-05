@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 [RequireComponent(typeof(Rigidbody))]
 public class PlayerController : MonoBehaviour
@@ -22,8 +23,8 @@ public class PlayerController : MonoBehaviour
     public GameManager.PowerType powerSlot4;
     public bool oldestSlotIs3;
     
-    float nextTaunt = 0f;
-
+   
+    bool canTaunt = true;
     OrbHitter orbHitter;
 
     void Awake()
@@ -68,30 +69,40 @@ public class PlayerController : MonoBehaviour
 
     void CheckTaunt()
     {
-        if (((player1 && (Input.GetKeyDown(KeyCode.Joystick1Button4) || Input.GetKeyDown(KeyCode.Space))) || (!player1 && (Input.GetKeyDown(KeyCode.Joystick2Button4) || Input.GetKeyDown(KeyCode.Keypad0)))) && Time.time > nextTaunt)
+        if (((player1 && (Input.GetKeyDown(KeyCode.Joystick1Button4) || Input.GetKeyDown(KeyCode.Space))) || (!player1 && (Input.GetKeyDown(KeyCode.Joystick2Button4) || Input.GetKeyDown(KeyCode.Keypad0)))) && canTaunt)
         {
             StartCoroutine(TauntCoroutine());
-            nextTaunt = Time.time + GameManager.gameManager.tauntCooldown;
-
+            StartCoroutine(TauntCoolDown(GameManager.gameManager.tauntCooldown));
         }
+    }
+
+    IEnumerator TauntCoolDown(float cd) {
+        canTaunt = false;
+        yield return new WaitForSeconds(cd);
+        canTaunt = true;
     }
 
     IEnumerator TauntCoroutine()
     {
         yield return new WaitForEndOfFrame();
-
-        if (player1)
+        
+        if (player1) {
             GameManager.gameManager.player1HasTaunt = true;
-        else
+           
+        } else {
             GameManager.gameManager.player2HasTaunt = true;
+
+        }
 
         yield return new WaitForEndOfFrame();
 
-        if (player1)
+        if (player1) {
             GameManager.gameManager.player1HasTaunt = false;
-        else
+        } else {
             GameManager.gameManager.player2HasTaunt = false;
+        }
     }
+           
 
     /// <summary>
     /// gets the current power that is going to be apllied on the orb by checking the input
