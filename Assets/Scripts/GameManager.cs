@@ -16,6 +16,8 @@ public class GameManager : MonoBehaviour
 	[HideInInspector]
 	public UIManager UIManager;
 
+	public bool isPaused;
+
 	[Header("[Hps]")]
 	public int hp;
 	public int damageTakenP1;
@@ -71,13 +73,10 @@ public class GameManager : MonoBehaviour
 
 		damageTakenP1 = 0;
 		damageTakenP2 = 0;
+
+		StartCoroutine(UIManager.FadeCoroutine("FadeIn"));
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
     /// <summary>
     /// Handle taking damage from an Ennemy or other things
     /// </summary>
@@ -116,7 +115,7 @@ public class GameManager : MonoBehaviour
 			}
 			if ((damageTakenP1 + damageTakenP2 >= hp) && restartWhenDead)
 			{
-				SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+				StartCoroutine(deathCoroutine());
 			}
 
 			hitPosition = new Vector3(hitPosition.x, 0.0f, hitPosition.z);
@@ -179,5 +178,12 @@ public class GameManager : MonoBehaviour
 			healingOrb2.progression = orb.GetComponent<OrbController>().progression;
 			healingOrb2.toPlayer2 = true;
 		}
+	}
+
+	IEnumerator deathCoroutine()
+	{
+		StartCoroutine(UIManager.FadeCoroutine("FadeOut"));
+		yield return new WaitUntil(() => isPaused == false);
+		SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
 	}
 }

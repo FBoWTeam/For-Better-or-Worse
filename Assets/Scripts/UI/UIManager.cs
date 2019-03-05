@@ -9,6 +9,9 @@ public class UIManager : MonoBehaviour
 
 	#region All Variables
 
+	[Header("Fader")]
+	public Canvas fader;
+
 	[Header("Health Bar")]
 	public Image damageTakenP1;
 	public Image damageTakenP2;
@@ -61,6 +64,29 @@ public class UIManager : MonoBehaviour
 
 
 	#region All Methods
+
+	#region Other Methods
+
+	public IEnumerator FadeCoroutine(string fadeName)
+	{
+		GameManager.gameManager.isPaused = true;
+		Animation anim = fader.GetComponent<Animation>();
+		anim.clip = anim.GetClip(fadeName);
+		anim.Play();
+		yield return new WaitForSeconds(1.2f);
+		GameManager.gameManager.isPaused = false;
+	}
+
+	/// <summary>
+	/// Update Health Bar 
+	/// </summary>
+	public void UpdateHealthBar()
+	{
+		damageTakenP1.fillAmount = (float)GameManager.gameManager.damageTakenP1 / (float)GameManager.gameManager.hp;
+		damageTakenP2.fillAmount = (float)GameManager.gameManager.damageTakenP2 / (float)GameManager.gameManager.hp;
+	}
+
+	#endregion
 
 	#region Dialog Methods
 
@@ -148,15 +174,6 @@ public class UIManager : MonoBehaviour
     }
 
 	#endregion
-
-	/// <summary>
-	/// Update Health Bar 
-	/// </summary>
-	public void UpdateHealthBar()
-	{
-		damageTakenP1.fillAmount = (float)GameManager.gameManager.damageTakenP1 / (float)GameManager.gameManager.hp;
-		damageTakenP2.fillAmount = (float)GameManager.gameManager.damageTakenP2 / (float)GameManager.gameManager.hp;
-	}
 
 	/// <summary>
 	/// Assign the image corresponding to the power
