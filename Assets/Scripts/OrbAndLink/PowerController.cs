@@ -473,7 +473,8 @@ public class PowerController : MonoBehaviour
     }
 
     public IEnumerator cooldownCoroutine(GameManager.PowerType power, float cooldown)
-    {
+    {   
+        GameManager.gameManager.UIManager.Cooldown(power, cooldown);
         canBeActivated[(int)power - 1] = false;
         yield return new WaitForSeconds(cooldown);
         canBeActivated[(int)power - 1] = true;
