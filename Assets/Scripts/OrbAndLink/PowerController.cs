@@ -614,9 +614,6 @@ public class PowerController : MonoBehaviour
         }
     }
 
-
-
-
     private void OnDrawGizmos()
     {
         if (behavioralPower == GameManager.PowerType.Vortex)
