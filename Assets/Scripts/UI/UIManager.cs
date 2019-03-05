@@ -53,7 +53,11 @@ public class UIManager : MonoBehaviour
     public Sprite darkness;
     public Sprite none;
 
-	#endregion
+    [HideInInspector]
+    Dictionary<int, GameManager.PowerType> busySlot = new Dictionary<int, GameManager.PowerType>(4);
+
+    #endregion
+
 
 
 	#region All Methods
@@ -107,9 +111,11 @@ public class UIManager : MonoBehaviour
     /// <param name="powerSlot">refers to the new powerType obtained</param>
     public void UpdatePowerSlot(int slot, bool player1, GameManager.PowerType powerSlot)
     {
+        busySlot[slot] = powerSlot;
         switch (slot)
         {
             case 1:
+
                 if (player1)
                     mainPower1Fox.sprite = ImageAssignment(powerSlot);
                 else
@@ -187,5 +193,88 @@ public class UIManager : MonoBehaviour
     }
 
     #endregion
+
+    private void Awake() {
+        //init dico
+        busySlot.Add(1, GameManager.PowerType.None);
+        busySlot.Add(2, GameManager.PowerType.None);
+        busySlot.Add(3, GameManager.PowerType.None);
+        busySlot.Add(4, GameManager.PowerType.None);
+    }
+
+
+    private void Update() {
+        if (GameManager.gameManager.player1HasTaunt) {           
+            StartCoroutine(startCooldown(GameManager.gameManager.tauntCooldown, tauntCooldownFox.GetComponent<Image>()));          
+        }
+        if (GameManager.gameManager.player2HasTaunt) {
+            StartCoroutine(startCooldown(GameManager.gameManager.tauntCooldown, tauntCooldownRaccoon.GetComponent<Image>()));
+        }
+    }
+
+
+    /// <summary>
+    /// Launch cooldown visualisation based on power
+    /// </summary>
+    /// <param name="power"></param>
+    /// <param name="cd"></param>
+    public void Cooldown(GameManager.PowerType power,float cd) {
+        // lancer start cooldown sur les ( p1 et p2) slot assigner au power
+        int slot = getSlotByPower(power);
+        if (slot > -1 ) {
+            switch (slot) {
+                case 1:
+                    StartCoroutine(startCooldown(cd, mainPower1Fox));
+                    StartCoroutine(startCooldown(cd, mainPower1Raccoon));
+                    break;
+                case 2:
+                    StartCoroutine(startCooldown(cd, mainPower2Fox));
+                    StartCoroutine(startCooldown(cd, mainPower2Raccoon));
+                    break;
+                case 3:
+                    StartCoroutine(startCooldown(cd, secondaryPower1Fox));
+                    StartCoroutine(startCooldown(cd, secondaryPower1Raccoon));
+                    break;
+                case 4:
+                    StartCoroutine(startCooldown(cd, secondaryPower2Fox));
+                    StartCoroutine(startCooldown(cd, secondaryPower2Raccoon));
+                    break;
+                default:
+                    break;
+            }
+        } else {
+            Debug.LogError("NO SLOT FOUND FOR THIS POWER");
+        }
+    }
+
+    int getSlotByPower(GameManager.PowerType power) {
+       
+        if (busySlot.ContainsValue(power)) {
+            foreach (KeyValuePair<int,GameManager.PowerType> item in busySlot) {
+                if (item.Value == power) {
+                    return item.Key;
+                }
+            }
+        }
+
+        return -1;
+    }
+
+    IEnumerator startCooldown(float cd , Image image) {
+        
+        image.fillAmount = 0.00001f;
+        while (image.fillAmount != 0) {
+           
+            image.fillAmount += 1 / cd * Time.deltaTime;
+            if (image.fillAmount >= 1) {
+                image.fillAmount = 0;
+            }
+            yield return new WaitForEndOfFrame();
+        }
+        
+        yield return null;
+    }
+
+    
 
 }

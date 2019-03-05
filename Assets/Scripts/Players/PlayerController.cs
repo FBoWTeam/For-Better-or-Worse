@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 [RequireComponent(typeof(Rigidbody))]
 public class PlayerController : MonoBehaviour
@@ -22,8 +23,8 @@ public class PlayerController : MonoBehaviour
     public GameManager.PowerType powerSlot4;
     public bool oldestSlotIs3;
     
-    float nextTaunt = 0f;
-
+   
+    bool canTaunt = true;
     OrbHitter orbHitter;
 
     void Awake()
@@ -68,30 +69,40 @@ public class PlayerController : MonoBehaviour
 
     void CheckTaunt()
     {
-        if (((player1 && (Input.GetKeyDown(KeyCode.Joystick1Button4) || Input.GetKeyDown(KeyCode.Space))) || (!player1 && (Input.GetKeyDown(KeyCode.Joystick2Button4) || Input.GetKeyDown(KeyCode.Keypad0)))) && Time.time > nextTaunt)
+        if (((player1 && (Input.GetKeyDown(KeyCode.Joystick1Button4) || Input.GetKeyDown(KeyCode.Space))) || (!player1 && (Input.GetKeyDown(KeyCode.Joystick2Button4) || Input.GetKeyDown(KeyCode.Keypad0)))) && canTaunt)
         {
             StartCoroutine(TauntCoroutine());
-            nextTaunt = Time.time + GameManager.gameManager.tauntCooldown;
-
+            StartCoroutine(TauntCoolDown(GameManager.gameManager.tauntCooldown));
         }
+    }
+
+    IEnumerator TauntCoolDown(float cd) {
+        canTaunt = false;
+        yield return new WaitForSeconds(cd);
+        canTaunt = true;
     }
 
     IEnumerator TauntCoroutine()
     {
         yield return new WaitForEndOfFrame();
-
-        if (player1)
+        
+        if (player1) {
             GameManager.gameManager.player1HasTaunt = true;
-        else
+           
+        } else {
             GameManager.gameManager.player2HasTaunt = true;
+
+        }
 
         yield return new WaitForEndOfFrame();
 
-        if (player1)
+        if (player1) {
             GameManager.gameManager.player1HasTaunt = false;
-        else
+        } else {
             GameManager.gameManager.player2HasTaunt = false;
+        }
     }
+           
 
     /// <summary>
     /// gets the current power that is going to be apllied on the orb by checking the input
@@ -128,53 +139,54 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     public void AttributePower(GameManager.PowerType newPower, bool isFixedPower)
     {
-        if (isFixedPower)
-        {
+		if (isFixedPower)
+		{
 			if (powerSlot1 == GameManager.PowerType.None)
-            {
+			{
 				GameManager.gameManager.player1.GetComponent<PlayerController>().powerSlot1 = newPower;
-                GameManager.gameManager.player2.GetComponent<PlayerController>().powerSlot1 = newPower;
-                GameManager.gameManager.UIManager.UpdatePowerSlot(1, true, newPower);
-                GameManager.gameManager.UIManager.UpdatePowerSlot(1, false, newPower);
-            }
-            else if (powerSlot2 == GameManager.PowerType.None)
-            {
+				GameManager.gameManager.player2.GetComponent<PlayerController>().powerSlot1 = newPower;
+				GameManager.gameManager.UIManager.UpdatePowerSlot(1, true, newPower);
+				GameManager.gameManager.UIManager.UpdatePowerSlot(1, false, newPower);
+			}
+			else if (powerSlot2 == GameManager.PowerType.None)
+			{
 				GameManager.gameManager.player1.GetComponent<PlayerController>().powerSlot2 = newPower;
-                GameManager.gameManager.player2.GetComponent<PlayerController>().powerSlot2 = newPower;
-                GameManager.gameManager.UIManager.UpdatePowerSlot(2, true, newPower);
-                GameManager.gameManager.UIManager.UpdatePowerSlot(2, false, newPower);
-            }
-        }
-        else
-        {
-			if (powerSlot3 == GameManager.PowerType.None)
-            {
-				powerSlot3 = newPower;
-                GameManager.gameManager.UIManager.UpdatePowerSlot(3, player1, powerSlot3);
-            }
-            else if (powerSlot4 == GameManager.PowerType.None)
-            {
-				powerSlot4 = newPower;
-                GameManager.gameManager.UIManager.UpdatePowerSlot(4, player1, powerSlot4);
-            }
-            else
-            {
-				if (powerSlot3 != newPower && powerSlot4 != newPower)
-                {
-                    if (oldestSlotIs3)
-                    {
+				GameManager.gameManager.player2.GetComponent<PlayerController>().powerSlot2 = newPower;
+				GameManager.gameManager.UIManager.UpdatePowerSlot(2, true, newPower);
+				GameManager.gameManager.UIManager.UpdatePowerSlot(2, false, newPower);
+			}
+		}
+		else
+		{
+			if (powerSlot3 != newPower && powerSlot4 != newPower)
+			{
+				if (powerSlot3 == GameManager.PowerType.None)
+				{
+					powerSlot3 = newPower;
+					GameManager.gameManager.UIManager.UpdatePowerSlot(3, player1, powerSlot3);
+				}
+				else if (powerSlot4 == GameManager.PowerType.None)
+				{
+					powerSlot4 = newPower;
+					GameManager.gameManager.UIManager.UpdatePowerSlot(4, player1, powerSlot4);
+				}
+				else
+				{
+
+					if (oldestSlotIs3)
+					{
 						powerSlot3 = newPower;
-                        GameManager.gameManager.UIManager.UpdatePowerSlot(3, player1, powerSlot3);
-                    }
-                    else
+						GameManager.gameManager.UIManager.UpdatePowerSlot(3, player1, powerSlot3);
+					}
+					else
 					{
 						powerSlot4 = newPower;
-                        GameManager.gameManager.UIManager.UpdatePowerSlot(4, player1, powerSlot4);
-                    }
-                    oldestSlotIs3 = !oldestSlotIs3;
-                }
-            }
-        }
+						GameManager.gameManager.UIManager.UpdatePowerSlot(4, player1, powerSlot4);
+					}
+					oldestSlotIs3 = !oldestSlotIs3;
+				}
+			}
+		}
     }
 
     private void OnDrawGizmos()
