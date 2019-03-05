@@ -59,12 +59,12 @@ public class OrbHitter : MonoBehaviour
                 orbController.speed = accelerationFactor * orbController.combo + orbController.minSpeed;
                 orbController.combo++;
                 CheckPowerActivation();
-                GameManager.gameManager.orb.GetComponent<PowerController>().CheckPowerAttribution("hit", true);
+                GameManager.gameManager.orb.GetComponent<PowerController>().CheckPowerAttribution("hit", player1);
             }
             if (amortizing && !orbController.amortized)
             {
                 StartCoroutine(AmortizeCoroutine());
-                GameManager.gameManager.orb.GetComponent<PowerController>().CheckPowerAttribution("amortize", true);
+                GameManager.gameManager.orb.GetComponent<PowerController>().CheckPowerAttribution("amortize", player1);
             }
             else if (!amortizing && orbController.amortized)
             {
