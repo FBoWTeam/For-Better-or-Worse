@@ -52,6 +52,8 @@ public class Enemy : MonoBehaviour
     public int baseHP = 100;
     public int hp;
 
+	public float knockBackForce;
+
     [HideInInspector]
     public EnemyMovement enemyMovement;
 
@@ -136,7 +138,7 @@ public class Enemy : MonoBehaviour
 
     private void TauntManagement()
     {
-		if (GameManager.gameManager.player1HasTaunt && Vector3.Distance(transform.position, GameManager.gameManager.player1.transform.position) <= GameManager.gameManager.tauntRange)
+        if (GameManager.gameManager.player1HasTaunt && Vector3.Distance(transform.position, GameManager.gameManager.player1.transform.position) <= GameManager.gameManager.tauntRange)
         {
             taunter = players[0];
             isTaunted = true;
@@ -182,9 +184,10 @@ public class Enemy : MonoBehaviour
 
     #endregion
 
-    public void TakeDamage(int damage)
+    public void TakeDamage(int damage, Vector3 hitPosition)
     {
         hp -= damage;
+		enemyMovement.agent.velocity = (transform.position - hitPosition) * knockBackForce;
 		if (hp <= 0)
 		{
 			GetComponent<LootTable>().LootEnemy();

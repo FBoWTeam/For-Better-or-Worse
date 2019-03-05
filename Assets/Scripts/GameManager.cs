@@ -19,6 +19,7 @@ public class GameManager : MonoBehaviour
 	[Header("[Hps]")]
 	public int baseHP;
     public int hp;
+	public float knockBackForce;
 	public bool restartWhenDead;
 
     public int shieldP1;
@@ -28,6 +29,7 @@ public class GameManager : MonoBehaviour
 	public bool player1HasTaunt;
 	public bool player2HasTaunt;
     public int tauntRange = 10;
+    public float tauntCooldown = 15f;
 
 	[Header("[HealingOrbs]")]
 	public GameObject normalHealingOrbPrefab;
@@ -79,41 +81,48 @@ public class GameManager : MonoBehaviour
     /// Handle taking damage from an Ennemy or other things
     /// </summary>
     /// <param name="impactDamage"></param>
-    public void TakeDamage(GameObject targetPlayer, int damage)
+    public void TakeDamage(GameObject targetPlayer, int damage, Vector3 hitPosition)
     {
-        if (targetPlayer == player1)
-        {
-            if (damage >= shieldP1)
-            {
-                damage -= shieldP1;
-                shieldP1 = 0;
-            }
-            else if (damage < shieldP1)
-            {
-                shieldP1 -= damage;
-                damage = 0;
-            }
-            hp -= damage;
-        }
-        if (targetPlayer == player2)
-        {
-            if (damage >= shieldP2)
-            {
-                damage -= shieldP2;
-                shieldP2 = 0;
-            }
-            else if (damage < shieldP2)
-            {
-                shieldP2 -= damage;
-                damage = 0;
-            }
-            hp -= damage;
-        }
-        if (hp <= 0 && restartWhenDead)
-        {
-			SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-        }
-    }
+		if(!targetPlayer.GetComponent<PlayerController>().invincible)
+		{
+			if (targetPlayer == player1)
+			{
+				if (damage >= shieldP1)
+				{
+					damage -= shieldP1;
+					shieldP1 = 0;
+				}
+				else if (damage < shieldP1)
+				{
+					shieldP1 -= damage;
+					damage = 0;
+				}
+				hp -= damage;
+			}
+			if (targetPlayer == player2)
+			{
+				if (damage >= shieldP2)
+				{
+					damage -= shieldP2;
+					shieldP2 = 0;
+				}
+				else if (damage < shieldP2)
+				{
+					shieldP2 -= damage;
+					damage = 0;
+				}
+				hp -= damage;
+			}
+			if (hp <= 0 && restartWhenDead)
+			{
+				SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+			}
+
+			hitPosition = new Vector3(hitPosition.x, 0.0f, hitPosition.z);
+			targetPlayer.GetComponent<Rigidbody>().AddForce((targetPlayer.transform.position - hitPosition) * knockBackForce);
+			StartCoroutine(targetPlayer.GetComponent<PlayerController>().InvincibilityCoroutine());
+		}
+	}
     
 
 

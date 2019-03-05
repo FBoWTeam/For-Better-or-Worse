@@ -5,21 +5,24 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody))]
 public class PlayerController : MonoBehaviour
 {
+	[Header("[Main Params]")]
     public bool player1;
     public float speed;
-
-    [HideInInspector]
-    public float initialSpeed;
-
     Rigidbody rb;
+	[HideInInspector]
     public Vector3 direction;
+	public bool invincible;
+	public float invicibilityDuration;
+	public int blinkNb;
 
+	[Header("[Power Slots]")]
     public GameManager.PowerType powerSlot1;
     public GameManager.PowerType powerSlot2;
     public GameManager.PowerType powerSlot3;
     public GameManager.PowerType powerSlot4;
     public bool oldestSlotIs3;
-
+    
+    float nextTaunt = 0f;
 
     OrbHitter orbHitter;
 
@@ -27,8 +30,16 @@ public class PlayerController : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();
         orbHitter = gameObject.GetComponent<OrbHitter>();
-        initialSpeed = speed;
         oldestSlotIs3 = true;
+    }
+
+    private void Start()
+    {
+        //Update UI (for development)
+        GameManager.gameManager.UIManager.UpdatePowerSlot(1, player1, powerSlot1);
+        GameManager.gameManager.UIManager.UpdatePowerSlot(2, player1, powerSlot2);
+        GameManager.gameManager.UIManager.UpdatePowerSlot(3, player1, powerSlot3);
+        GameManager.gameManager.UIManager.UpdatePowerSlot(4, player1, powerSlot4);
     }
 
     void Update()
@@ -57,9 +68,11 @@ public class PlayerController : MonoBehaviour
 
     void CheckTaunt()
     {
-        if ((player1 && (Input.GetKeyDown(KeyCode.Joystick1Button4) || Input.GetKeyDown(KeyCode.Space))) || (!player1 && (Input.GetKeyDown(KeyCode.Joystick2Button4) || Input.GetKeyDown(KeyCode.Keypad0))))
+        if (((player1 && (Input.GetKeyDown(KeyCode.Joystick1Button4) || Input.GetKeyDown(KeyCode.Space))) || (!player1 && (Input.GetKeyDown(KeyCode.Joystick2Button4) || Input.GetKeyDown(KeyCode.Keypad0)))) && Time.time > nextTaunt)
         {
             StartCoroutine(TauntCoroutine());
+            nextTaunt = Time.time + GameManager.gameManager.tauntCooldown;
+
         }
     }
 
@@ -118,19 +131,19 @@ public class PlayerController : MonoBehaviour
         if (isFixedPower)
         {
             if (powerSlot1 == GameManager.PowerType.None)
-			{
-				GameManager.gameManager.player1.GetComponent<PlayerController>().powerSlot1 = newPower;
-				GameManager.gameManager.player2.GetComponent<PlayerController>().powerSlot1 = newPower;
-				GameManager.gameManager.UIManager.UpdatePowerSlot(1, true, newPower);
-				GameManager.gameManager.UIManager.UpdatePowerSlot(1, false, newPower);
-			}
+            {
+                GameManager.gameManager.player1.GetComponent<PlayerController>().powerSlot1 = newPower;
+                GameManager.gameManager.player2.GetComponent<PlayerController>().powerSlot1 = newPower;
+                GameManager.gameManager.UIManager.UpdatePowerSlot(1, true, newPower);
+                GameManager.gameManager.UIManager.UpdatePowerSlot(1, false, newPower);
+            }
             else if (powerSlot2 == GameManager.PowerType.None)
-			{
-				GameManager.gameManager.player1.GetComponent<PlayerController>().powerSlot2 = newPower;
-				GameManager.gameManager.player2.GetComponent<PlayerController>().powerSlot2 = newPower;
-				GameManager.gameManager.UIManager.UpdatePowerSlot(2, true, newPower);
-				GameManager.gameManager.UIManager.UpdatePowerSlot(2, false, newPower);
-			}
+            {
+                GameManager.gameManager.player1.GetComponent<PlayerController>().powerSlot2 = newPower;
+                GameManager.gameManager.player2.GetComponent<PlayerController>().powerSlot2 = newPower;
+                GameManager.gameManager.UIManager.UpdatePowerSlot(2, true, newPower);
+                GameManager.gameManager.UIManager.UpdatePowerSlot(2, false, newPower);
+            }
         }
         else
         {
@@ -146,20 +159,20 @@ public class PlayerController : MonoBehaviour
             }
             else
             {
-				if(powerSlot3 != newPower && powerSlot4 != newPower)
-				{
-					if (oldestSlotIs3)
-					{
-						powerSlot3 = newPower;
-						GameManager.gameManager.UIManager.UpdatePowerSlot(3, player1, powerSlot3);
-					}
-					else
-					{
-						powerSlot4 = newPower;
-						GameManager.gameManager.UIManager.UpdatePowerSlot(4, player1, powerSlot4);
-					}
-					oldestSlotIs3 = !oldestSlotIs3;
-				}
+                if (powerSlot3 != newPower && powerSlot4 != newPower)
+                {
+                    if (oldestSlotIs3)
+                    {
+                        powerSlot3 = newPower;
+                        GameManager.gameManager.UIManager.UpdatePowerSlot(3, player1, powerSlot3);
+                    }
+                    else
+                    {
+                        powerSlot4 = newPower;
+                        GameManager.gameManager.UIManager.UpdatePowerSlot(4, player1, powerSlot4);
+                    }
+                    oldestSlotIs3 = !oldestSlotIs3;
+                }
             }
         }
     }
@@ -169,4 +182,22 @@ public class PlayerController : MonoBehaviour
         Gizmos.color = Color.magenta;
         Gizmos.DrawWireSphere(transform.position, gameObject.GetComponent<OrbHitter>().hitZone * 2);
     }
+
+	public IEnumerator InvincibilityCoroutine()
+	{
+		MeshRenderer renderer = GetComponent<MeshRenderer>();
+		float blinkTime = invicibilityDuration / blinkNb;
+
+		invincible = true;
+
+		for (int i = 0; i < blinkNb; i++)
+		{
+			renderer.enabled = false;
+			yield return new WaitForSeconds(blinkTime/2.0f);
+			renderer.enabled = true;
+			yield return new WaitForSeconds(blinkTime/2.0f);
+		}
+
+		invincible = false;
+	}
 }
