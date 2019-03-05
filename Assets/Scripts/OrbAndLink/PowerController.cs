@@ -550,29 +550,37 @@ public class PowerController : MonoBehaviour
             switch (mode)
             {
                 case "hit":
-                    if (player1)
-                        GameManager.gameManager.player1.GetComponent<PlayerController>().AttributePower(droppedPower, isFixedPower);
+					if (player1)
+					{
+						GameManager.gameManager.player1.GetComponent<PlayerController>().AttributePower(droppedPower, isFixedPower);
+					}
                     else
-                        GameManager.gameManager.player2.GetComponent<PlayerController>().AttributePower(droppedPower, isFixedPower);
+					{
+						GameManager.gameManager.player2.GetComponent<PlayerController>().AttributePower(droppedPower, isFixedPower);
+					}
                     droppedPower = GameManager.PowerType.None;
                     //UpdateUI
                     GameManager.gameManager.UIManager.UpdateDroppedPower(droppedPower);
                     break;
                 case "amortize":
-                case "miss":
-                    if (reflectedDrop)
+				case "miss":
+					if (reflectedDrop)
                     {
                         if (player1)
-                            GameManager.gameManager.player1.GetComponent<PlayerController>().AttributePower(droppedPower, isFixedPower);
+						{
+							GameManager.gameManager.player1.GetComponent<PlayerController>().AttributePower(droppedPower, isFixedPower);
+						}
                         else
-                            GameManager.gameManager.player2.GetComponent<PlayerController>().AttributePower(droppedPower, isFixedPower);
+						{
+							GameManager.gameManager.player2.GetComponent<PlayerController>().AttributePower(droppedPower, isFixedPower);
+						}
                         droppedPower = GameManager.PowerType.None;
                         //UpdateUI
                         GameManager.gameManager.UIManager.UpdateDroppedPower(droppedPower);
                     }
                     else
                     {
-                        reflectedDrop = true;
+						reflectedDrop = true;
                     }
                     break;
             }
