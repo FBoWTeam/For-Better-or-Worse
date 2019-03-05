@@ -207,6 +207,9 @@ public class UIManager : MonoBehaviour
         if (GameManager.gameManager.player1HasTaunt) {           
             StartCoroutine(startCooldown(GameManager.gameManager.tauntCooldown, tauntCooldownFox.GetComponent<Image>()));          
         }
+        if (GameManager.gameManager.player2HasTaunt) {
+            StartCoroutine(startCooldown(GameManager.gameManager.tauntCooldown, tauntCooldownRaccoon.GetComponent<Image>()));
+        }
     }
 
 
