@@ -75,7 +75,14 @@ public class OrbController : MonoBehaviour
 		{
 			if (isHealingOrb)
 			{
-				GameManager.gameManager.hp += healAmount;
+				if(progression == 0.0f)
+				{
+					GameManager.gameManager.Heal(true, healAmount);
+				}
+				else
+				{
+					GameManager.gameManager.Heal(false, healAmount);
+				}
 				Destroy(this.gameObject);
 			}
 			else

@@ -17,13 +17,13 @@ public class GameManager : MonoBehaviour
 	public UIManager UIManager;
 
 	[Header("[Hps]")]
-	public int baseHP;
-    public int hp;
+	public int hp;
+	public int damageTakenP1;
+	public int damageTakenP2;
+	public int shieldP1;
+	public int shieldP2;
 	public float knockBackForce;
 	public bool restartWhenDead;
-
-    public int shieldP1;
-    public int shieldP2;
 
 	[Header("[Taunt]")]
 	public bool player1HasTaunt;
@@ -69,7 +69,8 @@ public class GameManager : MonoBehaviour
         orb = GameObject.Find("Orb");
         UIManager = GameObject.FindGameObjectWithTag("UI").GetComponent<UIManager>();
 
-        hp = baseHP;
+		damageTakenP1 = 0;
+		damageTakenP2 = 0;
     }
 
     // Update is called once per frame
@@ -97,7 +98,7 @@ public class GameManager : MonoBehaviour
 					shieldP1 -= damage;
 					damage = 0;
 				}
-				hp -= damage;
+				damageTakenP1 += damage;
 			}
 			if (targetPlayer == player2)
 			{
@@ -111,9 +112,9 @@ public class GameManager : MonoBehaviour
 					shieldP2 -= damage;
 					damage = 0;
 				}
-				hp -= damage;
+				damageTakenP2 += damage;
 			}
-			if (hp <= 0 && restartWhenDead)
+			if ((damageTakenP1 + damageTakenP2 >= hp) && restartWhenDead)
 			{
 				SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
 			}
@@ -121,11 +122,37 @@ public class GameManager : MonoBehaviour
 			hitPosition = new Vector3(hitPosition.x, 0.0f, hitPosition.z);
 			targetPlayer.GetComponent<Rigidbody>().AddForce((targetPlayer.transform.position - hitPosition) * knockBackForce);
 			StartCoroutine(targetPlayer.GetComponent<PlayerController>().InvincibilityCoroutine());
+			UIManager.UpdateHealthBar();
 		}
 	}
-    
 
+	public void Heal(bool player1, int healAmount)
+	{
+		if (player1)
+		{
+			if (damageTakenP1 > healAmount)
+			{
+				damageTakenP1 -= healAmount;
+			}
+			else
+			{
+				damageTakenP1 = 0;
+			}
+		}
+		else
+		{
+			if (damageTakenP2 > healAmount)
+			{
+				damageTakenP2 -= healAmount;
+			}
+			else
+			{
+				damageTakenP2 = 0;
+			}
+		}
 
+		UIManager.UpdateHealthBar();
+	}
 
 	public void spawnHealingOrbs(int playerHealed, int healAmount, string mode)
 	{
