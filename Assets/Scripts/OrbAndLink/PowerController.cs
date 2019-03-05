@@ -157,7 +157,6 @@ public class PowerController : MonoBehaviour
     {
         canBeActivated = new List<bool> { true, true, true, true, true, true, true, true, true };
         orbController = gameObject.GetComponent<OrbController>();
-        ActivateVortex();
     }
 
     #region Activation and Deactivation Functions
