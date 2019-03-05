@@ -310,7 +310,7 @@ public class PowerController : MonoBehaviour
     {
         while (true)
         {
-            yield return new WaitUntil(() => orbController.progression == 0.5f);
+            yield return new WaitUntil(() => orbController.progression <= 0.51f && orbController.progression >= 0.49);
             AttractEnemies();
         }
     }
@@ -606,4 +606,18 @@ public class PowerController : MonoBehaviour
             }
         }
     }
+
+
+
+
+    private void OnDrawGizmos()
+    {
+        if (behavioralPower == GameManager.PowerType.Vortex)
+        {
+            Gizmos.color = Color.red;
+            Gizmos.DrawWireSphere(transform.position, vortexRangeOfEffect);
+        }
+    }
+
+
 }
