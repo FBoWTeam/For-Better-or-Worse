@@ -18,6 +18,10 @@ public class GameManager : MonoBehaviour
 
 	public bool isPaused;
 
+	[Header("[Distance Limits]")]
+	public float minDistance;
+	public float maxDistance;
+
 	[Header("[Hps]")]
 	public int hp;
 	public int damageTakenP1;
