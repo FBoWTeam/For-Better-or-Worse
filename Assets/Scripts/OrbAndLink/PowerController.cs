@@ -295,23 +295,23 @@ public class PowerController : MonoBehaviour
         behavioralPower = GameManager.PowerType.Vortex;
         StartCoroutine(VortexPower());
         transform.GetChild(0).GetComponent<MeshRenderer>().material = vortexMaterial;
-        StartCoroutine(DurationCoroutine(GameManager.PowerType.Vortex, vortexDuration));
     }
 
     void DeactivateVortex()
     {
-        StopCoroutine(VortexPower());
         behavioralPower = GameManager.PowerType.None;
         transform.GetChild(0).GetComponent<MeshRenderer>().material = normalMaterial;
     }
 
     IEnumerator VortexPower()
     {
-        while (true)
+        float timeStamp = Time.time;
+        while (Time.time - timeStamp <= vortexDuration)
         {
             yield return new WaitUntil(() => orbController.progression <= 0.51f && orbController.progression >= 0.49);
             AttractEnemies();
         }
+        DeactivateVortex();
     }
     void AttractEnemies()
     {
@@ -614,9 +614,6 @@ public class PowerController : MonoBehaviour
             }
         }
     }
-
-
-
 
     private void OnDrawGizmos()
     {

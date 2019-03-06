@@ -51,8 +51,8 @@ public class OrbHitter : MonoBehaviour
 		UpdateInputs();
 
 		if (inRange)
-        {
-			bool player1 = GetComponent<PlayerController>().player1;
+        {            
+            bool player1 = GetComponent<PlayerController>().player1;
 			if (hitting && ((player1 && !orbController.toPlayer2) || (!player1 && orbController.toPlayer2)))
             {
 				StopCoroutine(HitCoroutine());
@@ -61,6 +61,8 @@ public class OrbHitter : MonoBehaviour
 				orbController.toPlayer2 = !orbController.toPlayer2;
                 orbController.speed = accelerationFactor * orbController.combo + orbController.minSpeed;
                 orbController.combo++;
+                //Update combo UI
+                GameManager.gameManager.UIManager.UpdateCombo(orbController.combo);               
                 CheckPowerActivation();
                 GameManager.gameManager.orb.GetComponent<PowerController>().CheckPowerAttribution("hit", player1);
             }
@@ -118,7 +120,7 @@ public class OrbHitter : MonoBehaviour
     /// apply the power on the orb if not None
     /// </summary>
     void CheckPowerActivation()
-    {
+    {       
         if (powerToApply != GameManager.PowerType.None)
         {
             orbController.GetComponent<PowerController>().ActivatePower(powerToApply);
@@ -173,6 +175,8 @@ public class OrbHitter : MonoBehaviour
             orbController.amortized = false;
             orbController.speed = orbController.minSpeed;
 			orbController.combo = 0;
+            //reset combo ui
+            GameManager.gameManager.UIManager.UpdateCombo(orbController.combo);
         }
     }
 }

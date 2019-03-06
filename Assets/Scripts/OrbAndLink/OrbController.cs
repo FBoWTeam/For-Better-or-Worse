@@ -179,6 +179,7 @@ public class OrbController : MonoBehaviour
                 GameManager.gameManager.TakeDamage(other.gameObject, gameObject.GetComponent<PowerController>().baseDamage, other.transform.position);
             }
             combo = 0;
+            GameManager.gameManager.UIManager.UpdateCombo(combo);
             speed = minSpeed;
             GetComponent<PowerController>().CheckPowerAttribution("miss", other.GetComponent<PlayerController>().player1);
         }
