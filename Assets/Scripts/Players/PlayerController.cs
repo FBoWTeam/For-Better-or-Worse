@@ -65,10 +65,38 @@ public class PlayerController : MonoBehaviour
 
         Vector3 velocity = direction * speed * Time.deltaTime;
 
-        rb.MovePosition(transform.position + velocity);
-        transform.LookAt(transform.position + velocity);
+		checkDistance(ref velocity);
+
+		rb.MovePosition(transform.position + velocity);
+        transform.LookAt(transform.position + direction);
         transform.localEulerAngles = new Vector3(0.0f, transform.localEulerAngles.y, 0.0f);
     }
+
+	void checkDistance(ref Vector3 velocity)
+	{
+		GameObject otherPlayer;
+		if (player1)
+			otherPlayer = GameManager.gameManager.player2;
+		else
+			otherPlayer = GameManager.gameManager.player1;
+
+		if (Vector3.Distance(transform.position + velocity, otherPlayer.transform.position) > GameManager.gameManager.maxDistance)
+		{
+			Vector3 toPlayer = ((transform.position + velocity) - otherPlayer.transform.position).normalized;
+
+			Vector3 fixedPos = otherPlayer.transform.position + toPlayer * GameManager.gameManager.maxDistance;
+
+			velocity = fixedPos - transform.position;
+		}
+		if (Vector3.Distance(transform.position + velocity, otherPlayer.transform.position) < GameManager.gameManager.minDistance)
+		{
+			Vector3 toPlayer = ((transform.position + velocity) - otherPlayer.transform.position).normalized;
+
+			Vector3 fixedPos = otherPlayer.transform.position + toPlayer * GameManager.gameManager.minDistance;
+
+			velocity = fixedPos - transform.position;
+		}
+	}
 
     void CheckTaunt()
     {
@@ -88,7 +116,6 @@ public class PlayerController : MonoBehaviour
     IEnumerator TauntCoroutine()
     {
         yield return new WaitForEndOfFrame();
-        
         if (player1) {
             GameManager.gameManager.player1HasTaunt = true;
            
