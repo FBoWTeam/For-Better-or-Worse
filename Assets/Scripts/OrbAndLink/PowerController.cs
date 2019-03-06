@@ -16,7 +16,6 @@ public class PowerController : MonoBehaviour
 
     [Header("[Drop Container]")]
     public GameManager.PowerType droppedPower;
-    public bool isFixedPower;
     public bool reflectedDrop;
 
     [Header("[Power Editing]")]
@@ -169,11 +168,11 @@ public class PowerController : MonoBehaviour
     {
 		if(canBeActivated[(int)powerToActivate - 1])
 		{
-			if (!isBehavioral(powerToActivate) && elementalPower != GameManager.PowerType.None)
+			if (GameManager.isElemental(powerToActivate) && elementalPower != GameManager.PowerType.None)
 			{
 				DeactivatePower(elementalPower);
 			}
-			else if (isBehavioral(powerToActivate) && behavioralPower != GameManager.PowerType.None)
+			else if (!GameManager.isElemental(powerToActivate) && behavioralPower != GameManager.PowerType.None)
 			{
 				DeactivatePower(behavioralPower);
 			}
@@ -509,14 +508,6 @@ public class PowerController : MonoBehaviour
 
     //==========OTHERS==========
 
-    public bool isBehavioral(GameManager.PowerType power)
-    {
-        if (power == GameManager.PowerType.LargeOrb || power == GameManager.PowerType.LeechLife || power == GameManager.PowerType.Shield || power == GameManager.PowerType.Slug || power == GameManager.PowerType.Vortex)
-            return true;
-        else
-            return false;
-    }
-
     public void onEnemyHit(GameObject target)
     {
         Enemy enemy = target.GetComponent<Enemy>();
@@ -580,11 +571,11 @@ public class PowerController : MonoBehaviour
                 case "hit":
 					if (player1)
 					{
-						GameManager.gameManager.player1.GetComponent<PlayerController>().AttributePower(droppedPower, isFixedPower);
+						GameManager.gameManager.player1.GetComponent<PlayerController>().AttributePower(droppedPower);
 					}
                     else
 					{
-						GameManager.gameManager.player2.GetComponent<PlayerController>().AttributePower(droppedPower, isFixedPower);
+						GameManager.gameManager.player2.GetComponent<PlayerController>().AttributePower(droppedPower);
 					}
                     droppedPower = GameManager.PowerType.None;
                     //UpdateUI
@@ -596,11 +587,11 @@ public class PowerController : MonoBehaviour
                     {
                         if (player1)
 						{
-							GameManager.gameManager.player1.GetComponent<PlayerController>().AttributePower(droppedPower, isFixedPower);
+							GameManager.gameManager.player1.GetComponent<PlayerController>().AttributePower(droppedPower);
 						}
                         else
 						{
-							GameManager.gameManager.player2.GetComponent<PlayerController>().AttributePower(droppedPower, isFixedPower);
+							GameManager.gameManager.player2.GetComponent<PlayerController>().AttributePower(droppedPower);
 						}
                         droppedPower = GameManager.PowerType.None;
                         //UpdateUI

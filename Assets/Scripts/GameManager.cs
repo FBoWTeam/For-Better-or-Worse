@@ -129,6 +129,14 @@ public class GameManager : MonoBehaviour
 		}
 	}
 
+	public static bool isElemental(PowerType power)
+	{
+		if (power == PowerType.LargeOrb || power == PowerType.LeechLife || power == PowerType.Shield || power == PowerType.Slug || power == PowerType.Vortex)
+			return false;
+		else
+			return true;
+	}
+
 	public void Heal(bool player1, int healAmount)
 	{
 		if (player1)
