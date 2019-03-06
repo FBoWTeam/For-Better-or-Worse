@@ -18,6 +18,8 @@ public class RoomSystem : MonoBehaviour, IActivable
     [Tooltip("indicates if the players left the room or not")]
     private bool playerLeft;
 
+    private bool enemiesLeft;
+
     [Header("Public variables  => Can touch this")]
     public GameObject[] doorsToClose;
 
@@ -35,7 +37,7 @@ public class RoomSystem : MonoBehaviour, IActivable
         {
             this.Activate();
         }
-        else if (numberPlayerPresent == 0 && !playerLeft && numberEnemiesPresent == 0)
+        else if (numberPlayerPresent == 0 && !playerLeft && numberEnemiesPresent == 0 && !enemiesLeft)
         {
             this.Deactivate();
         }
@@ -54,6 +56,7 @@ public class RoomSystem : MonoBehaviour, IActivable
 
     public void Deactivate()
     {
+        enemiesLeft = true;
         playerLeft = true;
         CloseDoors();
     }
@@ -67,6 +70,7 @@ public class RoomSystem : MonoBehaviour, IActivable
         }
         if (other.CompareTag("Enemy"))
         {
+            enemiesLeft = false;
             numberEnemiesPresent++;
         }
     }
