@@ -56,9 +56,19 @@ public class UIManager : MonoBehaviour
     public Sprite darkness;
     public Sprite none;
 
+    [Header("Text Quote")]
+    public float displayTime;
+    [TextArea]
+    public string player1Text_Enemy;
+    [TextArea]
+    public string player2Text_Enemy;
+    [TextArea]
+    public string player1Text_Orb;
+    [TextArea]
+    public string player2Text_Orb;
+
     [HideInInspector]
     Dictionary<int, GameManager.PowerType> busySlot = new Dictionary<int, GameManager.PowerType>(4);
-
     #endregion
 
 
@@ -115,38 +125,62 @@ public class UIManager : MonoBehaviour
     #region Dialog Methods
 
     /// <summary>
-    /// In this case, the method check if dialog are display and removed them
+    /// In this case, the method check if dialog are display and removed them for the player 1
     /// </summary>
-    public void UpdateDialogBox()
+    public void UpdateDialogBox1()
     {
         if (dialogBoxFox.activeSelf || dialogBoxRaccoon.activeSelf)
         {
             dialogBoxFox.GetComponentInChildren<TextMeshProUGUI>().SetText("");
-            dialogBoxRaccoon.GetComponentInChildren<TextMeshProUGUI>().SetText("");
             dialogBoxFox.SetActive(false);
+        }
+    }
+
+    /// <summary>
+    /// In this case, the method check which dialog box display and update the text for the player 1
+    /// </summary>
+    /// <param name="player1Text">text display in the player 1 dialog box</param>
+    /// <param name="player2Text">text display in the player 2 dialog box</param>
+    /// <param name="displayTime">use for the invoke, to determine how much time display the text</param>
+    public void UpdateDialogBox1(string playerText, float displayTime)
+    {
+        CancelInvoke("UpdateDialogBox1");
+        if (playerText != "")
+        {
+            dialogBoxFox.GetComponentInChildren<TextMeshProUGUI>().SetText(playerText);
+            dialogBoxFox.SetActive(true);
+        }
+        Invoke("UpdateDialogBox1", displayTime);
+    }
+
+
+    /// <summary>
+	/// In this case, the method check if dialog are display and removed them for the player 2
+	/// </summary>
+	public void UpdateDialogBox2()
+    {
+        if (dialogBoxFox.activeSelf || dialogBoxRaccoon.activeSelf)
+        {
+            dialogBoxRaccoon.GetComponentInChildren<TextMeshProUGUI>().SetText("");
             dialogBoxRaccoon.SetActive(false);
         }
     }
 
     /// <summary>
-    /// In this case, the method check which dialog box display and update the text
+    /// In this case, the method check which dialog box display and update the text for the player 2
     /// </summary>
     /// <param name="player1Text">text display in the player 1 dialog box</param>
     /// <param name="player2Text">text display in the player 2 dialog box</param>
     /// <param name="displayTime">use for the invoke, to determine how much time display the text</param>
-    public void UpdateDialogBox(string player1Text, string player2Text, int displayTime)
+    public void UpdateDialogBox2(string playerText, float displayTime)
     {
-        if (player1Text != "")
+        CancelInvoke("UpdateDialogBox2");
+        if (playerText != "")
         {
-            dialogBoxFox.GetComponentInChildren<TextMeshProUGUI>().SetText(player1Text);
-            dialogBoxFox.SetActive(true);
-        }
-        if (player2Text != "")
-        {
-            dialogBoxRaccoon.GetComponentInChildren<TextMeshProUGUI>().SetText(player2Text);
+            dialogBoxRaccoon.GetComponentInChildren<TextMeshProUGUI>().SetText(playerText);
             dialogBoxRaccoon.SetActive(true);
         }
-        Invoke("UpdateDialogBox", displayTime);
+        Invoke("UpdateDialogBox2", displayTime);
     }
 
     #endregion
@@ -326,6 +360,39 @@ public class UIManager : MonoBehaviour
             combo.transform.GetChild(1).GetComponent<TextMeshProUGUI>().text = "x" + nb;
         }
 
+    }
+    
+    /// <summary>
+    /// Call the UpdateDialogBox randomly
+    /// </summary>
+    public void QuoteOnDamage(string damageDealer, GameObject targetPlayer)
+    {
+        
+        if (Random.Range(1, 2)/*return an integer between 1(in) and 5(out)*/ == 1)
+        {
+            if(damageDealer == "enemy")
+            { 
+                if (targetPlayer == GameManager.gameManager.player1)
+                {
+                    UpdateDialogBox1(player1Text_Enemy, displayTime);
+                }
+                if (targetPlayer == GameManager.gameManager.player2)
+                {
+                    UpdateDialogBox2(player2Text_Enemy, displayTime);
+                }
+            }
+            else if(damageDealer == "orb")
+            {
+                if (targetPlayer == GameManager.gameManager.player1)
+                {
+                    UpdateDialogBox1(player1Text_Orb, displayTime);
+                }
+                if (targetPlayer == GameManager.gameManager.player2)
+                {
+                    UpdateDialogBox2(player2Text_Orb, displayTime);
+                }
+            }
+        }
     }
 
     /// <summary>

@@ -70,11 +70,17 @@ public class TriggerSystem : MonoBehaviour
 
     private void TriggerDialog()
     {
-        if (player1Text != "" || player2Text != "")
+        if (player1Text != "")
         {
-            GameManager.gameManager.UIManager.UpdateDialogBox(player1Text, player2Text, displayTime);
+            GameManager.gameManager.UIManager.UpdateDialogBox1(player1Text, displayTime);
         }
-        else
+
+        if (player2Text != "")
+        {
+            GameManager.gameManager.UIManager.UpdateDialogBox2(player2Text, displayTime);
+        }
+
+        if (player1Text == "" && player2Text == "")
         {
             Debug.LogError("Where are the fucking dialogs!", this);
         }
