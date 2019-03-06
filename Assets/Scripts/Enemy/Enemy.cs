@@ -75,18 +75,21 @@ public class Enemy : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        FocusManagement();
-        TauntManagement();
+		if (!GameManager.gameManager.isPaused)
+		{
+			FocusManagement();
+			TauntManagement();
 
-        if (!enemyMovement.agent.isStopped)
-        {
-            enemyMovement.DoMovement();
-        }
+			if (!enemyMovement.agent.isStopped)
+			{
+				enemyMovement.DoMovement();
+			}
 
-        if (drawView)
-        {
-            Debug.DrawRay(this.transform.position, this.transform.forward * lengthView, Color.magenta);
-        }
+			if (drawView)
+			{
+				Debug.DrawRay(this.transform.position, this.transform.forward * lengthView, Color.magenta);
+			}
+		}
     }
 
     #region Focus Methods

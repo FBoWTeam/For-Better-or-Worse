@@ -76,7 +76,10 @@ public class EnemySkill : MonoBehaviour
     SphereCollider rangeCollider;
 
     #endregion
+
    
+    
+
 
     private void Awake()
     {
@@ -153,7 +156,8 @@ public class EnemySkill : MonoBehaviour
                 break;
             case Skill.Ranged:
                 myMat.color = Color.red;
-              
+
+                print(isVisible(transform.position, target.transform.position));
                 if (Time.time > nextAttack && isVisible(transform.position, target.transform.position))
                 {
                     Shoot(bulletPrefab, transform, target.transform, damage);
@@ -167,14 +171,11 @@ public class EnemySkill : MonoBehaviour
         }
     }
 
-
-
-
     IEnumerator Impact(Transform target)
     {
 
         Vector3 originalPosition = transform.position;
-		Vector3 targetPos = new Vector3(target.position.x, target.position.y + 1, target.position.z);
+		Vector3 targetPos = new Vector3(target.position.x, target.position.y + 1, target.position.z);// PIVOT DE ....
         Vector3 dirToTarget = (targetPos - transform.position).normalized;
         Vector3 attackPosition = targetPos + dirToTarget;
         //Debug.Log(attackPosition);
@@ -212,11 +213,13 @@ public class EnemySkill : MonoBehaviour
 
         // This would cast rays only against colliders in Player layer .
         // But instead we want to collide against everything except layer 8. The ~ operator does this, it inverts a bitmask.
+
+        
         int playerLayer = 1 << LayerMask.NameToLayer("Players");
-       
-        if (!Physics.Linecast(start, end, ~playerLayer)){
+        end = new Vector3(end.x, end.y + 1.5f, end.z);// PIVOT DE ....
+
+        if (!Physics.Linecast(start,end,~playerLayer)) {
             return true;
-            
         }
         return false;
     }
@@ -230,14 +233,8 @@ public class EnemySkill : MonoBehaviour
     /// <param name="damage"></param>
     void Shoot(GameObject projectilePrefab, Transform firePoint, Transform target, int damage)
     {
-        GameObject projectile = (GameObject)Instantiate(projectilePrefab, firePoint.position, firePoint.rotation);
-        //Bullet bullet = bulletGO.GetComponent<Bullet>();
+        GameObject projectile = (GameObject)Instantiate(projectilePrefab, firePoint.position, firePoint.rotation);    
         EnemyShot enemyShot = projectile.GetComponent<EnemyShot>();
-
-        //if (bullet != null)
-        //{
-        //    bullet.Seek(target, damage, bulletSpeed);
-        //}
 
         if (enemyShot != null)
         {

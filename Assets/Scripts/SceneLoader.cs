@@ -8,7 +8,7 @@ public class SceneLoader : MonoBehaviour
 {
 	public int sceneToLoad;
 	public bool player1, player2;
-
+	bool loading;
 
 	[Header("[UI References]")]
 	public Canvas charactersHead;
@@ -22,11 +22,11 @@ public class SceneLoader : MonoBehaviour
     void Update()
     {
 		charactersHead.transform.LookAt(Camera.main.transform);
-		if(player1 && player2)
+		if (player1 && player2 && !loading)
 		{
-			SceneManager.LoadScene(sceneToLoad);
+			StartCoroutine(loadSceneCoroutine());
 		}
-		else if(player1 || player2)
+		else if (player1 || player2)
 		{
 			charactersHead.enabled = true;
 		}
@@ -68,5 +68,14 @@ public class SceneLoader : MonoBehaviour
 				racoon.sprite = racoonGreySprite;
 			}
 		}
+	}
+
+	IEnumerator loadSceneCoroutine()
+	{
+		loading = true;
+		yield return new WaitForSeconds(0.25f);
+		StartCoroutine(GameManager.gameManager.UIManager.FadeCoroutine("FadeOut"));
+		yield return new WaitUntil(() => GameManager.gameManager.isPaused == false);
+		SceneManager.LoadScene(sceneToLoad);
 	}
 }
