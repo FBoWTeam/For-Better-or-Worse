@@ -77,10 +77,6 @@ public class EnemySkill : MonoBehaviour
 
     #endregion
 
-   
-    
-
-
     private void Awake()
     {
         //set the sphereCollider to trigger just to be sure
