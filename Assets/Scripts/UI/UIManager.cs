@@ -317,12 +317,12 @@ public class UIManager : MonoBehaviour
     {
         if (nb < 2)
         {
-            combo.transform.GetChild(1).GetComponent<TextMeshProUGUI>().text = string.Empty;
+            combo.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = string.Empty;
             combo.transform.GetChild(1).GetComponent<TextMeshProUGUI>().text = string.Empty;
         }
         else if (nb >= 2)
         {
-            combo.transform.GetChild(1).GetComponent<TextMeshProUGUI>().text = "Combo !";
+            combo.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "Combo !";
             combo.transform.GetChild(1).GetComponent<TextMeshProUGUI>().text = "x" + nb;
         }
 
