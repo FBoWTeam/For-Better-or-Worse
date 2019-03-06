@@ -31,7 +31,7 @@ public class RoomSystem : MonoBehaviour, IActivable
     
     public GameObject nextRoom;
 
-    void Update()
+    void LateUpdate()
     {
         CleanNullInEnemyList();
         if (!roomCleared && enemies.Count == 0)

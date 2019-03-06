@@ -8911,14 +8911,11 @@ MonoBehaviour:
   playerLeft: 0
   doorsToClose:
   - {fileID: 2141789875}
-  enemies:
-  - {fileID: 1278256359}
-  - {fileID: 1954171797}
-  - {fileID: 1688880941}
-  - {fileID: 1208194208}
+  enemies: []
   objectsToActivate:
   - {fileID: 1083522317}
   - {fileID: 1441859650}
+  nextRoom: {fileID: 413124037}
 --- !u!1001 &203390726
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -10294,11 +10291,10 @@ MonoBehaviour:
   playerLeft: 0
   doorsToClose:
   - {fileID: 1543421112}
-  enemies:
-  - {fileID: 44512618}
-  - {fileID: 430351073}
+  enemies: []
   objectsToActivate:
   - {fileID: 1543421112}
+  nextRoom: {fileID: 1928573479}
 --- !u!1001 &223147842
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -11444,10 +11440,10 @@ MonoBehaviour:
   roomCleared: 0
   playerLeft: 0
   doorsToClose: []
-  enemies:
-  - {fileID: 512961797}
+  enemies: []
   objectsToActivate:
   - {fileID: 2141789875}
+  nextRoom: {fileID: 202471938}
 --- !u!65 &268983115
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -35857,12 +35853,10 @@ MonoBehaviour:
   playerLeft: 0
   doorsToClose:
   - {fileID: 2076773287}
-  enemies:
-  - {fileID: 1560900214}
-  - {fileID: 1680434348}
-  - {fileID: 1070726945}
+  enemies: []
   objectsToActivate:
   - {fileID: 2076773287}
+  nextRoom: {fileID: 202471938}
 --- !u!1001 &854454455
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -46835,11 +46829,10 @@ MonoBehaviour:
   playerLeft: 0
   doorsToClose:
   - {fileID: 163058771}
-  enemies:
-  - {fileID: 223147843}
-  - {fileID: 753238610}
+  enemies: []
   objectsToActivate:
   - {fileID: 163058771}
+  nextRoom: {fileID: 1861167677}
 --- !u!65 &1116263734
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -47428,11 +47421,10 @@ MonoBehaviour:
   playerLeft: 0
   doorsToClose:
   - {fileID: 467974282}
-  enemies:
-  - {fileID: 1751878242}
-  - {fileID: 1349111862}
+  enemies: []
   objectsToActivate:
   - {fileID: 467974282}
+  nextRoom: {fileID: 202471938}
 --- !u!65 &1126585247
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -69795,7 +69787,7 @@ PrefabInstance:
     - target: {fileID: 8896361620369587927, guid: 88ac0b2d964b153488a65f115a787617,
         type: 3}
       propertyPath: m_RootOrder
-      value: 2
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8896361620369587927, guid: 88ac0b2d964b153488a65f115a787617,
         type: 3}
@@ -69835,22 +69827,22 @@ PrefabInstance:
     - target: {fileID: 8547305596723751332, guid: 88ac0b2d964b153488a65f115a787617,
         type: 3}
       propertyPath: m_havePropertiesChanged
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8547305596723751332, guid: 88ac0b2d964b153488a65f115a787617,
         type: 3}
       propertyPath: m_isInputParsingRequired
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 550409200800128677, guid: 88ac0b2d964b153488a65f115a787617,
         type: 3}
       propertyPath: m_havePropertiesChanged
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 550409200800128677, guid: 88ac0b2d964b153488a65f115a787617,
         type: 3}
       propertyPath: m_isInputParsingRequired
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3925799550049323854, guid: 88ac0b2d964b153488a65f115a787617,
         type: 3}
@@ -69967,6 +69959,41 @@ PrefabInstance:
       propertyPath: m_LocalPosition.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8896361620837593977, guid: 88ac0b2d964b153488a65f115a787617,
+        type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8896361620837593977, guid: 88ac0b2d964b153488a65f115a787617,
+        type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8896361620837593977, guid: 88ac0b2d964b153488a65f115a787617,
+        type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8896361620837593977, guid: 88ac0b2d964b153488a65f115a787617,
+        type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8896361620837593977, guid: 88ac0b2d964b153488a65f115a787617,
+        type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8896361620837593977, guid: 88ac0b2d964b153488a65f115a787617,
+        type: 3}
+      propertyPath: m_Pivot.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8896361620837593977, guid: 88ac0b2d964b153488a65f115a787617,
+        type: 3}
+      propertyPath: m_Pivot.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8896361620837593976, guid: 88ac0b2d964b153488a65f115a787617,
         type: 3}
       propertyPath: m_IsActive
@@ -69976,6 +70003,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_RenderMode
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6004186947864677294, guid: 88ac0b2d964b153488a65f115a787617,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3016941986383489281, guid: 88ac0b2d964b153488a65f115a787617,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 88ac0b2d964b153488a65f115a787617, type: 3}
@@ -72928,12 +72965,10 @@ MonoBehaviour:
   playerLeft: 0
   doorsToClose:
   - {fileID: 25205780}
-  enemies:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  enemies: []
   objectsToActivate:
   - {fileID: 25205780}
+  nextRoom: {fileID: 268983112}
 --- !u!65 &1729358387
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -78150,13 +78185,11 @@ MonoBehaviour:
   playerLeft: 0
   doorsToClose:
   - {fileID: 1373454348}
-  enemies:
-  - {fileID: 1301931751}
-  - {fileID: 1921772017}
-  - {fileID: 1952840157}
+  enemies: []
   objectsToActivate:
   - {fileID: 1373454348}
   - {fileID: 644837653}
+  nextRoom: {fileID: 852952170}
 --- !u!4 &1861167679
 Transform:
   m_ObjectHideFlags: 0
@@ -80912,15 +80945,12 @@ MonoBehaviour:
   playerLeft: 0
   doorsToClose:
   - {fileID: 1303716491}
-  enemies:
-  - {fileID: 679467983}
-  - {fileID: 1251202313}
-  - {fileID: 1838549962}
-  - {fileID: 926343771}
+  enemies: []
   objectsToActivate:
   - {fileID: 1303716491}
   - {fileID: 738396568}
   - {fileID: 165204377}
+  nextRoom: {fileID: 1126585244}
 --- !u!1 &1929697267
 GameObject:
   m_ObjectHideFlags: 0
@@ -84143,9 +84173,9 @@ MonoBehaviour:
   playerLeft: 0
   doorsToClose:
   - {fileID: 1230363008}
-  enemies:
-  - {fileID: 0}
+  enemies: []
   objectsToActivate: []
+  nextRoom: {fileID: 0}
 --- !u!1 &2040171126
 GameObject:
   m_ObjectHideFlags: 0
