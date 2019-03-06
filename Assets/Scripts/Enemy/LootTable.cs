@@ -27,7 +27,6 @@ public class LootTable : MonoBehaviour
 			controller.droppedPower = droppedPower;
 			controller.reflectedDrop = false;
 
-            //UpdateUI
             GameManager.gameManager.UIManager.UpdateDroppedPower(droppedPower);
         }
     }

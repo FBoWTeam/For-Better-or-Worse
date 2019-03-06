@@ -7,16 +7,16 @@ using UnityEngine;
 public class UIManager : MonoBehaviour
 {
 
-	#region All Variables
+    #region All Variables
 
-	[Header("Fader")]
-	public Canvas fader;
+    [Header("Fader")]
+    public Canvas fader;
 
-	[Header("Health Bar")]
-	public Image damageTakenP1;
-	public Image damageTakenP2;
+    [Header("Health Bar")]
+    public Image damageTakenP1;
+    public Image damageTakenP2;
 
-	[Header("Dialog Box")]
+    [Header("Dialog Box")]
     public GameObject dialogBoxFox;
     public GameObject dialogBoxRaccoon;
 
@@ -24,7 +24,7 @@ public class UIManager : MonoBehaviour
     public Image orbPower;
 
     [Header("Combo")]
-    public GameObject combo;  
+    public GameObject combo;
 
     [Header("Main Powers of Fox")]
     public GameObject mainPower1Fox;
@@ -63,37 +63,61 @@ public class UIManager : MonoBehaviour
 
 
 
-	#region All Methods
+    #region All Methods
 
-	#region Other Methods
+    private void Awake()
+    {
+        //init dico
+        busySlot.Add(1, GameManager.PowerType.None);
+        busySlot.Add(2, GameManager.PowerType.None);
+        busySlot.Add(3, GameManager.PowerType.None);
+        busySlot.Add(4, GameManager.PowerType.None);
 
-	public IEnumerator FadeCoroutine(string fadeName)
-	{
-		GameManager.gameManager.isPaused = true;
-		Animation anim = fader.GetComponent<Animation>();
-		anim.clip = anim.GetClip(fadeName);
-		anim.Play();
-		yield return new WaitForSeconds(1.2f);
-		GameManager.gameManager.isPaused = false;
-	}
 
-	/// <summary>
-	/// Update Health Bar 
-	/// </summary>
-	public void UpdateHealthBar()
-	{
-		damageTakenP1.fillAmount = (float)GameManager.gameManager.damageTakenP1 / (float)GameManager.gameManager.hp;
-		damageTakenP2.fillAmount = (float)GameManager.gameManager.damageTakenP2 / (float)GameManager.gameManager.hp;
-	}
+    }
 
-	#endregion
 
-	#region Dialog Methods
+    private void Update()
+    {
+        if (GameManager.gameManager.player1HasTaunt)
+        {
+            StartCoroutine(startCooldown(GameManager.gameManager.tauntCooldown, tauntCooldownFox.GetComponent<Image>()));
+        }
+        if (GameManager.gameManager.player2HasTaunt)
+        {
+            StartCoroutine(startCooldown(GameManager.gameManager.tauntCooldown, tauntCooldownRaccoon.GetComponent<Image>()));
+        }
+    }
 
-	/// <summary>
-	/// In this case, the method check if dialog are display and removed them
-	/// </summary>
-	public void UpdateDialogBox()
+    #region Other Methods
+
+    public IEnumerator FadeCoroutine(string fadeName)
+    {
+        GameManager.gameManager.isPaused = true;
+        Animation anim = fader.GetComponent<Animation>();
+        anim.clip = anim.GetClip(fadeName);
+        anim.Play();
+        yield return new WaitForSeconds(1.2f);
+        GameManager.gameManager.isPaused = false;
+    }
+
+    /// <summary>
+    /// Update Health Bar 
+    /// </summary>
+    public void UpdateHealthBar()
+    {
+        damageTakenP1.fillAmount = (float)GameManager.gameManager.damageTakenP1 / (float)GameManager.gameManager.hp;
+        damageTakenP2.fillAmount = (float)GameManager.gameManager.damageTakenP2 / (float)GameManager.gameManager.hp;
+    }
+
+    #endregion
+
+    #region Dialog Methods
+
+    /// <summary>
+    /// In this case, the method check if dialog are display and removed them
+    /// </summary>
+    public void UpdateDialogBox()
     {
         if (dialogBoxFox.activeSelf || dialogBoxRaccoon.activeSelf)
         {
@@ -173,14 +197,14 @@ public class UIManager : MonoBehaviour
         orbPower.sprite = ImageAssignment(droppedPower);
     }
 
-	#endregion
+    #endregion
 
-	/// <summary>
-	/// Assign the image corresponding to the power
-	/// </summary>
-	/// <param name="powerType">refers to the new powerType obtained</param>
-	/// <returns></returns>
-	public Sprite ImageAssignment(GameManager.PowerType powerType)
+    /// <summary>
+    /// Assign the image corresponding to the power
+    /// </summary>
+    /// <param name="powerType">refers to the new powerType obtained</param>
+    /// <returns></returns>
+    public Sprite ImageAssignment(GameManager.PowerType powerType)
     {
         switch (powerType)
         {
@@ -211,39 +235,20 @@ public class UIManager : MonoBehaviour
 
     #endregion
 
-    private void Awake() {
-        //init dico
-        busySlot.Add(1, GameManager.PowerType.None);
-        busySlot.Add(2, GameManager.PowerType.None);
-        busySlot.Add(3, GameManager.PowerType.None);
-        busySlot.Add(4, GameManager.PowerType.None);
-
-
-    }
-
-
-    private void Update() {
-        if (GameManager.gameManager.player1HasTaunt) {           
-            StartCoroutine(startCooldown(GameManager.gameManager.tauntCooldown, tauntCooldownFox.GetComponent<Image>()));          
-        }
-        if (GameManager.gameManager.player2HasTaunt) {
-            StartCoroutine(startCooldown(GameManager.gameManager.tauntCooldown, tauntCooldownRaccoon.GetComponent<Image>()));
-        }
-    }
-
-
     /// <summary>
     /// Launch cooldown visualisation based on power
     /// </summary>
     /// <param name="power"></param>
     /// <param name="cd"></param>
-    public void Cooldown(GameManager.PowerType power,float cd) {
+    public void Cooldown(GameManager.PowerType power, float cd)
+    {
         // lancer start cooldown sur les ( p1 et p2) slot assigner au power
         
         int slot = getSlotByPower(power);
-        if (slot > -1 ) {
-          
-            switch (slot) {
+        if (slot > -1)
+        {
+            switch (slot)
+            {
                 case 1:
                     StartCoroutine(startCooldown(cd, GetCdImage(mainPower1Fox)));
                     StartCoroutine(startCooldown(cd, GetCdImage( mainPower1Raccoon)));
@@ -263,16 +268,22 @@ public class UIManager : MonoBehaviour
                 default:
                     break;
             }
-        } else {
+        }
+        else
+        {
             Debug.LogError("NO SLOT FOUND FOR THIS POWER");
         }
     }
 
-    int getSlotByPower(GameManager.PowerType power) {
-       
-        if (busySlot.ContainsValue(power)) {
-            foreach (KeyValuePair<int,GameManager.PowerType> item in busySlot) {
-                if (item.Value == power) {
+    int getSlotByPower(GameManager.PowerType power)
+    {
+
+        if (busySlot.ContainsValue(power))
+        {
+            foreach (KeyValuePair<int, GameManager.PowerType> item in busySlot)
+            {
+                if (item.Value == power)
+                {
                     return item.Key;
                 }
             }
@@ -281,11 +292,15 @@ public class UIManager : MonoBehaviour
         return -1;
     }
 
-    IEnumerator startCooldown(float cd , Image image) {
+    IEnumerator startCooldown(float cd, Image image)
+    {
+
         image.fillAmount = 0.999f;
-        while (image.fillAmount != 1) {           
+        while (image.fillAmount != 1)
+        {
             image.fillAmount -= 1 / cd * Time.deltaTime;
-            if (image.fillAmount <= 0.001f) {
+            if (image.fillAmount <= 0.001f)
+            {
                 image.fillAmount = 1;
             }
             yield return new WaitForEndOfFrame();
@@ -298,15 +313,19 @@ public class UIManager : MonoBehaviour
     /// Update Combo UI
     /// </summary>
     /// <param name="nb"></param>
-    public void UpdateCombo(int nb) {      
-        if (nb <2) {
+    public void UpdateCombo(int nb)
+    {
+        if (nb < 2)
+        {
             combo.transform.GetChild(1).GetComponent<TextMeshProUGUI>().text = string.Empty;
             combo.transform.GetChild(1).GetComponent<TextMeshProUGUI>().text = string.Empty;
-        } else if (nb >=2) {
+        }
+        else if (nb >= 2)
+        {
             combo.transform.GetChild(1).GetComponent<TextMeshProUGUI>().text = "Combo !";
             combo.transform.GetChild(1).GetComponent<TextMeshProUGUI>().text = "x" + nb;
         }
-      
+
     }
 
     /// <summary>

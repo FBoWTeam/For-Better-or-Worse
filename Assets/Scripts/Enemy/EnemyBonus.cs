@@ -33,6 +33,7 @@ public class EnemyBonus : MonoBehaviour
 		}
     }
 
+    //comment
 	public IEnumerator DeactivateShieldCoroutine()
 	{
 		mirrorChild.GetComponent<BoxCollider>().enabled = false;

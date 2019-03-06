@@ -65,6 +65,9 @@ public class LinkDeformation : MonoBehaviour
 		Vector3 player1DeformInput = new Vector3(Input.GetAxis("DeformP1X"), 0.0f, Input.GetAxis("DeformP1Z"));
 		Vector3 player2DeformInput = new Vector3(Input.GetAxis("DeformP2X"), 0.0f, Input.GetAxis("DeformP2Z"));
 
+		player1DeformInput = (player1DeformInput.x * Camera.main.transform.right + player1DeformInput.z * Camera.main.transform.forward);
+		player2DeformInput = (player2DeformInput.x * Camera.main.transform.right + player2DeformInput.z * Camera.main.transform.forward);
+
 		Vector3 deformAxis = maxDeform.position - transform.position;
 		deformAxis = deformAxis.normalized;
 
