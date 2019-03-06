@@ -322,7 +322,7 @@ public class UIManager : MonoBehaviour
         }
         else if (nb >= 2)
         {
-            combo.transform.GetChild(1).GetComponent<TextMeshProUGUI>().text = "Combo !";
+            combo.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "Combo !";
             combo.transform.GetChild(1).GetComponent<TextMeshProUGUI>().text = "x" + nb;
         }
 
