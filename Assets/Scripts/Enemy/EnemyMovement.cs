@@ -93,6 +93,11 @@ public class EnemyMovement : MonoBehaviour
         agent.destination = Enemy.aimPlayer.transform.position;
     }
 
+    void RangedMovement()
+    {
+
+    }
+
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.CompareTag("Player"))
