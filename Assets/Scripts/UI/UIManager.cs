@@ -24,18 +24,18 @@ public class UIManager : MonoBehaviour
     public GameObject combo;  
 
     [Header("Main Powers of Fox")]
-    public Image mainPower1Fox;
-    public Image mainPower2Fox;
+    public GameObject mainPower1Fox;
+    public GameObject mainPower2Fox;
     [Header("Main Powers of Raccoon")]
-    public Image mainPower1Raccoon;
-    public Image mainPower2Raccoon;
+    public GameObject mainPower1Raccoon;
+    public GameObject mainPower2Raccoon;
 
     [Header("Secondary Powers of Fox")]
-    public Image secondaryPower1Fox;
-    public Image secondaryPower2Fox;
+    public GameObject secondaryPower1Fox;
+    public GameObject secondaryPower2Fox;
     [Header("Secondary Powers of Raccoon")]
-    public Image secondaryPower1Raccoon;
-    public Image secondaryPower2Raccoon;
+    public GameObject secondaryPower1Raccoon;
+    public GameObject secondaryPower2Raccoon;
 
     [Header("Taunt")]
     public GameObject tauntCooldownFox;
@@ -117,27 +117,27 @@ public class UIManager : MonoBehaviour
             case 1:
 
                 if (player1)
-                    mainPower1Fox.sprite = ImageAssignment(powerSlot);
+                    GetImage(mainPower1Fox).sprite = ImageAssignment(powerSlot);
                 else
-                    mainPower1Raccoon.sprite = ImageAssignment(powerSlot);
+                    GetImage(mainPower1Raccoon).sprite = ImageAssignment(powerSlot);
                 break;
             case 2:
                 if (player1)
-                    mainPower2Fox.sprite = ImageAssignment(powerSlot);
+                    GetImage(mainPower2Fox).sprite = ImageAssignment(powerSlot);
                 else
-                    mainPower2Raccoon.sprite = ImageAssignment(powerSlot);
+                    GetImage(mainPower2Raccoon).sprite = ImageAssignment(powerSlot);
                 break;
             case 3:
                 if (player1)
-                    secondaryPower1Fox.sprite = ImageAssignment(powerSlot);
+                    GetImage(secondaryPower1Fox).sprite = ImageAssignment(powerSlot);
                 else
-                    secondaryPower1Raccoon.sprite = ImageAssignment(powerSlot);
+                    GetImage(secondaryPower1Raccoon).sprite = ImageAssignment(powerSlot);
                 break;
             case 4:
                 if (player1)
-                    secondaryPower2Fox.sprite = ImageAssignment(powerSlot);
+                    GetImage(secondaryPower2Fox).sprite = ImageAssignment(powerSlot);
                 else
-                    secondaryPower2Raccoon.sprite = ImageAssignment(powerSlot);
+                    GetImage(secondaryPower2Raccoon).sprite = ImageAssignment(powerSlot);
                 break;
         }
     }
@@ -222,24 +222,26 @@ public class UIManager : MonoBehaviour
     /// <param name="cd"></param>
     public void Cooldown(GameManager.PowerType power,float cd) {
         // lancer start cooldown sur les ( p1 et p2) slot assigner au power
+        
         int slot = getSlotByPower(power);
         if (slot > -1 ) {
+          
             switch (slot) {
                 case 1:
-                    StartCoroutine(startCooldown(cd, mainPower1Fox));
-                    StartCoroutine(startCooldown(cd, mainPower1Raccoon));
+                    StartCoroutine(startCooldown(cd, GetCdImage(mainPower1Fox)));
+                    StartCoroutine(startCooldown(cd, GetCdImage( mainPower1Raccoon)));
                     break;
                 case 2:
-                    StartCoroutine(startCooldown(cd, mainPower2Fox));
-                    StartCoroutine(startCooldown(cd, mainPower2Raccoon));
+                    StartCoroutine(startCooldown(cd, GetCdImage(mainPower2Fox)));
+                    StartCoroutine(startCooldown(cd, GetCdImage(mainPower2Raccoon)));
                     break;
                 case 3:
-                    StartCoroutine(startCooldown(cd, secondaryPower1Fox));
-                    StartCoroutine(startCooldown(cd, secondaryPower1Raccoon));
+                    StartCoroutine(startCooldown(cd, GetCdImage(secondaryPower1Fox)));
+                    StartCoroutine(startCooldown(cd, GetCdImage(secondaryPower1Raccoon)));
                     break;
                 case 4:
-                    StartCoroutine(startCooldown(cd, secondaryPower2Fox));
-                    StartCoroutine(startCooldown(cd, secondaryPower2Raccoon));
+                    StartCoroutine(startCooldown(cd, GetCdImage(secondaryPower2Fox)));
+                    StartCoroutine(startCooldown(cd, GetCdImage(secondaryPower2Raccoon)));
                     break;
                 default:
                     break;
@@ -263,7 +265,6 @@ public class UIManager : MonoBehaviour
     }
 
     IEnumerator startCooldown(float cd , Image image) {
-        
         image.fillAmount = 0.999f;
         while (image.fillAmount != 1) {           
             image.fillAmount -= 1 / cd * Time.deltaTime;
@@ -290,6 +291,21 @@ public class UIManager : MonoBehaviour
         }
       
     }
-    
 
+    /// <summary>
+    /// return 'Sprite' Image coponent from Ui gameObject
+    /// </summary>
+    /// <param name="go"></param>
+    /// <returns></returns>
+    Image GetImage(GameObject go) {
+        return go.transform.GetChild(0).GetComponent<Image>();
+    }
+    /// <summary>
+    /// return Cooldown Image coponent from Ui gameObject
+    /// </summary>
+    /// <param name="go"></param>
+    /// <returns></returns>
+    Image GetCdImage(GameObject go) {
+        return go.transform.GetChild(1).GetComponent<Image>();
+    }
 }
