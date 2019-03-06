@@ -5,11 +5,9 @@ using UnityEngine;
 public class RoomSystem : MonoBehaviour, IActivable
 {
     [Header("Private variables  => Can't touch this")]
-    [SerializeField]
+    //private
     [Tooltip("number of player present in the current room")]
-    private int numberPlayerPresent;
-
-    private int numberEnemiesPresent;
+    public int numberPlayerPresent;
 
     [Tooltip("if the room is cleared or not")]
     [SerializeField]
@@ -17,18 +15,21 @@ public class RoomSystem : MonoBehaviour, IActivable
     [SerializeField]
     [Tooltip("indicates if the players left the room or not")]
     private bool playerLeft;
-
-    private bool enemiesLeft;
+    [SerializeField]
 
     [Header("Public variables  => Can touch this")]
     public GameObject[] doorsToClose;
 
+    //private dans le futur
     [Tooltip("game object coontaining the enemies of the room")]
     public List<GameObject> enemies;
+
     [Tooltip("objects to activate when the room is cleared")]
     public GameObject[] objectsToActivate;
 
     public bool isActive { get; set; }
+    
+    public GameObject nextRoom;
 
     void Update()
     {
@@ -37,9 +38,12 @@ public class RoomSystem : MonoBehaviour, IActivable
         {
             this.Activate();
         }
-        else if (numberPlayerPresent == 0 && !playerLeft && numberEnemiesPresent == 0 && !enemiesLeft)
+        else if (numberPlayerPresent == 0 && !playerLeft && enemies.Count == 0)
         {
-            this.Deactivate();
+            if (nextRoom != null && nextRoom.GetComponent<RoomSystem>().numberPlayerPresent == 2)
+            {
+                this.Deactivate();
+            }
         }
     }
 
@@ -56,7 +60,6 @@ public class RoomSystem : MonoBehaviour, IActivable
 
     public void Deactivate()
     {
-        enemiesLeft = true;
         playerLeft = true;
         CloseDoors();
     }
@@ -70,8 +73,7 @@ public class RoomSystem : MonoBehaviour, IActivable
         }
         if (other.CompareTag("Enemy"))
         {
-            enemiesLeft = false;
-            numberEnemiesPresent++;
+            enemies.Add(other.gameObject);
         }
     }
 
@@ -81,12 +83,8 @@ public class RoomSystem : MonoBehaviour, IActivable
         {
             numberPlayerPresent--;
         }
-        if (other.CompareTag("Enemy"))
-        {
-            numberEnemiesPresent--;
-        }
     }
-    
+
     void CloseDoors()
     {
         for (int i = 0; i < doorsToClose.Length; i++)
