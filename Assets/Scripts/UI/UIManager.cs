@@ -24,7 +24,7 @@ public class UIManager : MonoBehaviour
     public Image orbPower;
 
     [Header("Combo")]
-    public GameObject combo;
+    public GameObject combo;  
 
     [Header("Main Powers of Fox")]
     public Image mainPower1Fox;
@@ -217,6 +217,8 @@ public class UIManager : MonoBehaviour
         busySlot.Add(2, GameManager.PowerType.None);
         busySlot.Add(3, GameManager.PowerType.None);
         busySlot.Add(4, GameManager.PowerType.None);
+
+
     }
 
 
@@ -291,6 +293,20 @@ public class UIManager : MonoBehaviour
         yield return null;
     }
 
+    /// <summary>
+    /// Update Combo UI
+    /// </summary>
+    /// <param name="nb"></param>
+    public void UpdateCombo(int nb) {      
+        if (nb <2) {
+            combo.transform.GetChild(1).GetComponent<TextMeshProUGUI>().text = string.Empty;
+            combo.transform.GetChild(1).GetComponent<TextMeshProUGUI>().text = string.Empty;
+        } else if (nb >=2) {
+            combo.transform.GetChild(1).GetComponent<TextMeshProUGUI>().text = "Combo !";
+            combo.transform.GetChild(1).GetComponent<TextMeshProUGUI>().text = "x" + nb;
+        }
+      
+    }
     
 
 }
