@@ -279,16 +279,15 @@ public class UIManager : MonoBehaviour
 
     IEnumerator startCooldown(float cd , Image image) {
         
-        image.fillAmount = 0.00001f;
-        while (image.fillAmount != 0) {
-           
-            image.fillAmount += 1 / cd * Time.deltaTime;
-            if (image.fillAmount >= 1) {
-                image.fillAmount = 0;
+        image.fillAmount = 0.999f;
+        while (image.fillAmount != 1) {           
+            image.fillAmount -= 1 / cd * Time.deltaTime;
+            if (image.fillAmount <= 0.001f) {
+                image.fillAmount = 1;
             }
             yield return new WaitForEndOfFrame();
         }
-        
+        image.fillAmount = 0f;
         yield return null;
     }
 
