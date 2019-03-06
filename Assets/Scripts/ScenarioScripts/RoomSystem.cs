@@ -9,6 +9,8 @@ public class RoomSystem : MonoBehaviour, IActivable
     [Tooltip("number of player present in the current room")]
     private int numberPlayerPresent;
 
+    private int numberEnemiesPresent;
+
     [Tooltip("if the room is cleared or not")]
     [SerializeField]
     private bool roomCleared;
@@ -33,7 +35,7 @@ public class RoomSystem : MonoBehaviour, IActivable
         {
             this.Activate();
         }
-        else if (numberPlayerPresent == 0 && !playerLeft)
+        else if (numberPlayerPresent == 0 && !playerLeft && numberEnemiesPresent == 0)
         {
             this.Deactivate();
         }
@@ -63,6 +65,10 @@ public class RoomSystem : MonoBehaviour, IActivable
             playerLeft = false;
             numberPlayerPresent++;
         }
+        if (other.CompareTag("Enemy"))
+        {
+            numberEnemiesPresent++;
+        }
     }
 
     private void OnTriggerExit(Collider other)
@@ -70,6 +76,10 @@ public class RoomSystem : MonoBehaviour, IActivable
         if (other.CompareTag("Player"))
         {
             numberPlayerPresent--;
+        }
+        if (other.CompareTag("Enemy"))
+        {
+            numberEnemiesPresent--;
         }
     }
     
