@@ -43,9 +43,7 @@ public class EnemyMovement : MonoBehaviour
 
     //private
     public bool isSlowed;
-
-    //private
-    public bool isMoving;
+    
 
     EnemySkill enemySkill;
 
@@ -56,7 +54,6 @@ public class EnemyMovement : MonoBehaviour
         agent = this.GetComponent<NavMeshAgent>();
         agent.speed = initialSpeed;
         agent.isStopped = false;
-        isMoving = false;
         line = this.GetComponent<LineRenderer>();
     }
 
@@ -89,9 +86,7 @@ public class EnemyMovement : MonoBehaviour
         {
             line.enabled = false;
         }
-
-        isMoving = true;
-
+        
     }
 
     void StaticMovement()
@@ -99,14 +94,12 @@ public class EnemyMovement : MonoBehaviour
         this.transform.LookAt(Enemy.aimPlayer.transform);
         this.transform.eulerAngles = new Vector3(0, this.transform.eulerAngles.y, 0);
         this.GetComponent<Rigidbody>().isKinematic = true;
-        Debug.Log("static");
 
     }
 
     void ClassicMovement()
     {
         agent.destination = Enemy.aimPlayer.transform.position;
-        Debug.Log("classic");
     }
 
     void RangedMovement()
@@ -118,7 +111,6 @@ public class EnemyMovement : MonoBehaviour
             EnemyEscape(nearestPlayer.Item1);
             Debug.Log("fleeing ...");
         }
-        Debug.Log("ranged");
     }
 
     /// <summary>
