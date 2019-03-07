@@ -26,19 +26,13 @@ public class UIManager : MonoBehaviour
     [Header("Combo")]
     public GameObject combo;
 
-    [Header("Main Powers of Fox")]
-    public GameObject mainPower1Fox;
-    public GameObject mainPower2Fox;
-    [Header("Main Powers of Raccoon")]
-    public GameObject mainPower1Raccoon;
-    public GameObject mainPower2Raccoon;
+    [Header("Fox Powers")]
+    public GameObject elementalPowerFox;
+	public GameObject behaviouralPowerFox;
 
-    [Header("Secondary Powers of Fox")]
-    public GameObject secondaryPower1Fox;
-    public GameObject secondaryPower2Fox;
-    [Header("Secondary Powers of Raccoon")]
-    public GameObject secondaryPower1Raccoon;
-    public GameObject secondaryPower2Raccoon;
+	[Header("Raccoon Powers")]
+    public GameObject elementalPowerRaccoon;
+    public GameObject behaviouralPowerRaccoon;
 
     [Header("Taunt")]
     public GameObject tauntCooldownFox;
@@ -56,8 +50,20 @@ public class UIManager : MonoBehaviour
     public Sprite darkness;
     public Sprite none;
 
+    [Header("Text Quote")]
+    public float displayTime;
+    public int pourcentageQuote;
+    [TextArea]
+    public string player1TextEnemy;
+    [TextArea]
+    public string player2TextEnemy;
+    [TextArea]
+    public string player1TextOrb;
+    [TextArea]
+    public string player2TextOrb;
+
     [HideInInspector]
-    Dictionary<int, GameManager.PowerType> busySlot = new Dictionary<int, GameManager.PowerType>(4);
+    Dictionary<int, GameManager.PowerType> busySlot = new Dictionary<int, GameManager.PowerType>(2);
 
     #endregion
 
@@ -70,8 +76,6 @@ public class UIManager : MonoBehaviour
         //init dico
         busySlot.Add(1, GameManager.PowerType.None);
         busySlot.Add(2, GameManager.PowerType.None);
-        busySlot.Add(3, GameManager.PowerType.None);
-        busySlot.Add(4, GameManager.PowerType.None);
 
 
     }
@@ -115,38 +119,62 @@ public class UIManager : MonoBehaviour
     #region Dialog Methods
 
     /// <summary>
-    /// In this case, the method check if dialog are display and removed them
+    /// In this case, the method check if dialog are display and removed them for the player 1
     /// </summary>
-    public void UpdateDialogBox()
+    public void UpdateDialogBox1()
     {
         if (dialogBoxFox.activeSelf || dialogBoxRaccoon.activeSelf)
         {
             dialogBoxFox.GetComponentInChildren<TextMeshProUGUI>().SetText("");
-            dialogBoxRaccoon.GetComponentInChildren<TextMeshProUGUI>().SetText("");
             dialogBoxFox.SetActive(false);
+        }
+    }
+
+    /// <summary>
+    /// In this case, the method check which dialog box display and update the text for the player 1
+    /// </summary>
+    /// <param name="player1Text">text display in the player 1 dialog box</param>
+    /// <param name="player2Text">text display in the player 2 dialog box</param>
+    /// <param name="displayTime">use for the invoke, to determine how much time display the text</param>
+    public void UpdateDialogBox1(string playerText, float displayTime)
+    {
+        CancelInvoke("UpdateDialogBox1");
+        if (playerText != "")
+        {
+            dialogBoxFox.GetComponentInChildren<TextMeshProUGUI>().SetText(playerText);
+            dialogBoxFox.SetActive(true);
+        }
+        Invoke("UpdateDialogBox1", displayTime);
+    }
+
+
+    /// <summary>
+	/// In this case, the method check if dialog are display and removed them for the player 2
+	/// </summary>
+	public void UpdateDialogBox2()
+    {
+        if (dialogBoxFox.activeSelf || dialogBoxRaccoon.activeSelf)
+        {
+            dialogBoxRaccoon.GetComponentInChildren<TextMeshProUGUI>().SetText("");
             dialogBoxRaccoon.SetActive(false);
         }
     }
 
     /// <summary>
-    /// In this case, the method check which dialog box display and update the text
+    /// In this case, the method check which dialog box display and update the text for the player 2
     /// </summary>
     /// <param name="player1Text">text display in the player 1 dialog box</param>
     /// <param name="player2Text">text display in the player 2 dialog box</param>
     /// <param name="displayTime">use for the invoke, to determine how much time display the text</param>
-    public void UpdateDialogBox(string player1Text, string player2Text, int displayTime)
+    public void UpdateDialogBox2(string playerText, float displayTime)
     {
-        if (player1Text != "")
+        CancelInvoke("UpdateDialogBox2");
+        if (playerText != "")
         {
-            dialogBoxFox.GetComponentInChildren<TextMeshProUGUI>().SetText(player1Text);
-            dialogBoxFox.SetActive(true);
-        }
-        if (player2Text != "")
-        {
-            dialogBoxRaccoon.GetComponentInChildren<TextMeshProUGUI>().SetText(player2Text);
+            dialogBoxRaccoon.GetComponentInChildren<TextMeshProUGUI>().SetText(playerText);
             dialogBoxRaccoon.SetActive(true);
         }
-        Invoke("UpdateDialogBox", displayTime);
+        Invoke("UpdateDialogBox2", displayTime);
     }
 
     #endregion
@@ -167,27 +195,15 @@ public class UIManager : MonoBehaviour
             case 1:
 
                 if (player1)
-                    GetImage(mainPower1Fox).sprite = ImageAssignment(powerSlot);
+                    GetImage(elementalPowerFox).sprite = ImageAssignment(powerSlot);
                 else
-                    GetImage(mainPower1Raccoon).sprite = ImageAssignment(powerSlot);
+                    GetImage(elementalPowerRaccoon).sprite = ImageAssignment(powerSlot);
                 break;
             case 2:
                 if (player1)
-                    GetImage(mainPower2Fox).sprite = ImageAssignment(powerSlot);
+                    GetImage(behaviouralPowerFox).sprite = ImageAssignment(powerSlot);
                 else
-                    GetImage(mainPower2Raccoon).sprite = ImageAssignment(powerSlot);
-                break;
-            case 3:
-                if (player1)
-                    GetImage(secondaryPower1Fox).sprite = ImageAssignment(powerSlot);
-                else
-                    GetImage(secondaryPower1Raccoon).sprite = ImageAssignment(powerSlot);
-                break;
-            case 4:
-                if (player1)
-                    GetImage(secondaryPower2Fox).sprite = ImageAssignment(powerSlot);
-                else
-                    GetImage(secondaryPower2Raccoon).sprite = ImageAssignment(powerSlot);
+                    GetImage(behaviouralPowerRaccoon).sprite = ImageAssignment(powerSlot);
                 break;
         }
     }
@@ -240,7 +256,7 @@ public class UIManager : MonoBehaviour
     /// </summary>
     /// <param name="power"></param>
     /// <param name="cd"></param>
-    public void Cooldown(GameManager.PowerType power, float cd)
+    public void Cooldown(GameManager.PowerType power, float cd, bool player1)
     {
         // lancer start cooldown sur les ( p1 et p2) slot assigner au power
         
@@ -250,20 +266,16 @@ public class UIManager : MonoBehaviour
             switch (slot)
             {
                 case 1:
-                    StartCoroutine(startCooldown(cd, GetCdImage(mainPower1Fox)));
-                    StartCoroutine(startCooldown(cd, GetCdImage( mainPower1Raccoon)));
+					if(player1)
+						StartCoroutine(startCooldown(cd, GetCdImage(elementalPowerFox)));
+					else
+						StartCoroutine(startCooldown(cd, GetCdImage(elementalPowerRaccoon)));
                     break;
                 case 2:
-                    StartCoroutine(startCooldown(cd, GetCdImage(mainPower2Fox)));
-                    StartCoroutine(startCooldown(cd, GetCdImage(mainPower2Raccoon)));
-                    break;
-                case 3:
-                    StartCoroutine(startCooldown(cd, GetCdImage(secondaryPower1Fox)));
-                    StartCoroutine(startCooldown(cd, GetCdImage(secondaryPower1Raccoon)));
-                    break;
-                case 4:
-                    StartCoroutine(startCooldown(cd, GetCdImage(secondaryPower2Fox)));
-                    StartCoroutine(startCooldown(cd, GetCdImage(secondaryPower2Raccoon)));
+					if (player1)
+						StartCoroutine(startCooldown(cd, GetCdImage(behaviouralPowerFox)));
+					else
+						StartCoroutine(startCooldown(cd, GetCdImage(behaviouralPowerRaccoon)));
                     break;
                 default:
                     break;
@@ -326,6 +338,38 @@ public class UIManager : MonoBehaviour
             combo.transform.GetChild(1).GetComponent<TextMeshProUGUI>().text = "x" + nb;
         }
 
+    }
+    
+    /// <summary>
+    /// Call the UpdateDialogBox randomly
+    /// </summary>
+    public void QuoteOnDamage(string damageDealer, GameObject targetPlayer)
+    {
+        if (Random.Range(1, 101)/*return an integer between 1(in) and 101(out)*/ <= pourcentageQuote)
+        {
+            if(damageDealer == "enemy")
+            { 
+                if (targetPlayer == GameManager.gameManager.player1)
+                {
+                    UpdateDialogBox1(player1TextEnemy, displayTime);
+                }
+                if (targetPlayer == GameManager.gameManager.player2)
+                {
+                    UpdateDialogBox2(player2TextEnemy, displayTime);
+                }
+            }
+            else if(damageDealer == "orb")
+            {
+                if (targetPlayer == GameManager.gameManager.player1)
+                {
+                    UpdateDialogBox1(player1TextOrb, displayTime);
+                }
+                if (targetPlayer == GameManager.gameManager.player2)
+                {
+                    UpdateDialogBox2(player2TextOrb, displayTime);
+                }
+            }
+        }
     }
 
     /// <summary>

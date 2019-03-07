@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
@@ -11,6 +12,7 @@ public class EnemyMovement : MonoBehaviour
     {
         Static,
         Basic,
+        Ranged,
         Fleeing,
         Dodging,
         ZigZag,
@@ -42,10 +44,12 @@ public class EnemyMovement : MonoBehaviour
     [SerializeField]
     private bool isSlowed;
 
+    EnemySkill enemySkill;
 
     // Start is called before the first frame update
     void Start()
     {
+        enemySkill = this.GetComponent<EnemySkill>();
         agent = this.GetComponent<NavMeshAgent>();
         agent.speed = initialSpeed;
         agent.isStopped = false;
@@ -63,6 +67,9 @@ public class EnemyMovement : MonoBehaviour
                 break;
             case Movement.Basic:
                 ClassicMovement();
+                break;
+            case Movement.Ranged:
+                RangedMovement();
                 break;
             default:
                 Debug.LogWarning("Movement not implemented");
@@ -92,6 +99,55 @@ public class EnemyMovement : MonoBehaviour
     {
         agent.destination = Enemy.aimPlayer.transform.position;
     }
+
+    void RangedMovement()
+    {
+        Tuple<GameObject, float> nearestPlayer = ClosestPlayer();
+
+        if (nearestPlayer.Item2 < enemySkill.range)
+        {
+            EnemyEscape();
+            Debug.Log("fleeing ...");
+        }
+    }
+
+    /// <summary>
+    /// will move around the players (the point between the players)
+    /// </summary>
+    void MoveAndAttack(float distanceToKeep)
+    {
+        Vector3 origin = GameManager.gameManager.player1.transform.position - GameManager.gameManager.player2.transform.position;
+        float rotationMove = UnityEngine.Random.Range((float)-Math.PI / 2, (float)Mathf.PI / 2);
+        Vector3 destination = new Vector3(origin.x + distanceToKeep * Mathf.Cos(rotationMove), Enemy.aimPlayer.transform.position.y, origin.z + distanceToKeep * Mathf.Sin(rotationMove));
+        agent.destination = destination;
+    }
+
+    /// <summary>
+    /// run away from the orb (because why not)
+    /// </summary>
+    void EnemyEscape()
+    {
+        Vector3 dir = this.transform.position - GameManager.gameManager.orb.transform.position;
+        agent.destination = this.transform.position + dir;
+    }
+
+    void MoveToPlayer(GameObject target,float enemyRange)
+    {
+        agent.destination = (Enemy.aimPlayer.transform.position - target.transform.position).normalized * enemyRange;
+    }
+
+    /// <summary>
+    /// returns the nearest player from the enemy
+    /// </summary>
+    /// <returns></returns>
+    Tuple<GameObject, float> ClosestPlayer()
+    {
+        float distanceP1 = Vector3.Distance(this.transform.position, GameManager.gameManager.player1.transform.position);
+        float distanceP2 = Vector3.Distance(this.transform.position, GameManager.gameManager.player2.transform.position);
+        return distanceP1 > distanceP2 ? Tuple.Create(GameManager.gameManager.player2, distanceP2) : Tuple.Create(GameManager.gameManager.player1,distanceP2);
+    }
+
+
 
     private void OnCollisionEnter(Collision collision)
     {

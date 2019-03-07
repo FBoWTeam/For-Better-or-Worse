@@ -123,8 +123,8 @@ public class OrbHitter : MonoBehaviour
     {       
         if (powerToApply != GameManager.PowerType.None)
         {
-            orbController.GetComponent<PowerController>().ActivatePower(powerToApply);
-
+			string mode = GetComponent<PlayerController>().player1 ? "player1" : "player2";
+			orbController.GetComponent<PowerController>().ActivatePower(powerToApply, mode);
             powerToApply = GameManager.PowerType.None;
         }
         

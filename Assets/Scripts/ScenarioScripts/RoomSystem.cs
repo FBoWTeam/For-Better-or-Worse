@@ -15,12 +15,12 @@ public class RoomSystem : MonoBehaviour, IActivable
     [SerializeField]
     [Tooltip("indicates if the players left the room or not")]
     private bool playerLeft;
-    [SerializeField]
 
+    //private
     [Header("Public variables  => Can touch this")]
     public GameObject[] doorsToClose;
 
-    //private dans le futur
+    //private
     [Tooltip("game object coontaining the enemies of the room")]
     public List<GameObject> enemies;
 
