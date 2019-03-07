@@ -58,14 +58,15 @@ public class UIManager : MonoBehaviour
 
     [Header("Text Quote")]
     public float displayTime;
+    public int pourcentageQuote;
     [TextArea]
-    public string player1Text_Enemy;
+    public string player1TextEnemy;
     [TextArea]
-    public string player2Text_Enemy;
+    public string player2TextEnemy;
     [TextArea]
-    public string player1Text_Orb;
+    public string player1TextOrb;
     [TextArea]
-    public string player2Text_Orb;
+    public string player2TextOrb;
 
     [HideInInspector]
     Dictionary<int, GameManager.PowerType> busySlot = new Dictionary<int, GameManager.PowerType>(4);
@@ -367,29 +368,28 @@ public class UIManager : MonoBehaviour
     /// </summary>
     public void QuoteOnDamage(string damageDealer, GameObject targetPlayer)
     {
-        
-        if (Random.Range(1, 2)/*return an integer between 1(in) and 5(out)*/ == 1)
+        if (Random.Range(1, 101)/*return an integer between 1(in) and 101(out)*/ <= pourcentageQuote)
         {
             if(damageDealer == "enemy")
             { 
                 if (targetPlayer == GameManager.gameManager.player1)
                 {
-                    UpdateDialogBox1(player1Text_Enemy, displayTime);
+                    UpdateDialogBox1(player1TextEnemy, displayTime);
                 }
                 if (targetPlayer == GameManager.gameManager.player2)
                 {
-                    UpdateDialogBox2(player2Text_Enemy, displayTime);
+                    UpdateDialogBox2(player2TextEnemy, displayTime);
                 }
             }
             else if(damageDealer == "orb")
             {
                 if (targetPlayer == GameManager.gameManager.player1)
                 {
-                    UpdateDialogBox1(player1Text_Orb, displayTime);
+                    UpdateDialogBox1(player1TextOrb, displayTime);
                 }
                 if (targetPlayer == GameManager.gameManager.player2)
                 {
-                    UpdateDialogBox2(player2Text_Orb, displayTime);
+                    UpdateDialogBox2(player2TextOrb, displayTime);
                 }
             }
         }
