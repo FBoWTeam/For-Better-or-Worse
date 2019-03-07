@@ -256,7 +256,7 @@ public class UIManager : MonoBehaviour
     /// </summary>
     /// <param name="power"></param>
     /// <param name="cd"></param>
-    public void Cooldown(GameManager.PowerType power, float cd)
+    public void Cooldown(GameManager.PowerType power, float cd, bool player1)
     {
         // lancer start cooldown sur les ( p1 et p2) slot assigner au power
         
@@ -266,12 +266,16 @@ public class UIManager : MonoBehaviour
             switch (slot)
             {
                 case 1:
-                    StartCoroutine(startCooldown(cd, GetCdImage(elementalPowerFox)));
-                    StartCoroutine(startCooldown(cd, GetCdImage(elementalPowerRaccoon)));
+					if(player1)
+						StartCoroutine(startCooldown(cd, GetCdImage(elementalPowerFox)));
+					else
+						StartCoroutine(startCooldown(cd, GetCdImage(elementalPowerRaccoon)));
                     break;
                 case 2:
-                    StartCoroutine(startCooldown(cd, GetCdImage(behaviouralPowerFox)));
-                    StartCoroutine(startCooldown(cd, GetCdImage(behaviouralPowerRaccoon)));
+					if (player1)
+						StartCoroutine(startCooldown(cd, GetCdImage(behaviouralPowerFox)));
+					else
+						StartCoroutine(startCooldown(cd, GetCdImage(behaviouralPowerRaccoon)));
                     break;
                 default:
                     break;
