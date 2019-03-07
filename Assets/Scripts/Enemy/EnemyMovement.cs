@@ -44,7 +44,7 @@ public class EnemyMovement : MonoBehaviour
     //private
     public bool isSlowed;
 
-    public bool isStrifing;
+    public bool isStrafing;
 
     EnemySkill enemySkill;
 
@@ -108,20 +108,19 @@ public class EnemyMovement : MonoBehaviour
         Tuple<GameObject, float> nearestPlayer = ClosestPlayer();
         if (nearestPlayer.Item2 < enemySkill.range/2)
         {
-            StopCoroutine("Strifing");
-            isStrifing = false;
+            StopCoroutine("Strafing");
+            isStrafing = false;
             EnemyEscape(nearestPlayer.Item1, enemySkill.range);
-            Debug.Log("fleeing ...");
         }
-        else if (nearestPlayer.Item2 < enemySkill.range && !isStrifing)
+        else if (nearestPlayer.Item2 < enemySkill.range - 2 && !isStrafing)
         {
-            Debug.Log("strifing ...");
-            StartCoroutine(Strifing(nearestPlayer.Item1, nearestPlayer.Item2));
+            StartCoroutine(Strafing(nearestPlayer.Item1, enemySkill.range));
         }
-        else
+        else if (nearestPlayer.Item2 > enemySkill.range)
         {
-            StopCoroutine("Strifing");
-            isStrifing = false;
+            StopCoroutine("Strafing");
+            isStrafing = false;
+            MoveToPlayer(nearestPlayer.Item1, nearestPlayer.Item2);
         }
 
     }
@@ -132,21 +131,23 @@ public class EnemyMovement : MonoBehaviour
     /// <param name="target"></param>
     /// <param name="distance"></param>
     /// <returns></returns>
-    IEnumerator Strifing(GameObject target, float distance)
+    IEnumerator Strafing(GameObject target, float distance)
     {
-        float strifeDuration = UnityEngine.Random.Range(1f, 3f);
-        isStrifing = true;
-        float timeStamp = Time.time;
+        float strafeDuration = UnityEngine.Random.Range(1f, 3f);
+        isStrafing = true;
+        float timer = 0f;
         bool goRight = UnityEngine.Random.Range(0, 1) < 0.5f ? true : false;
         float x = target.transform.position.x + distance * Mathf.Cos(goRight ? Mathf.PI / 2 : -Mathf.PI / 2);
         float z = target.transform.position.z + distance * Mathf.Sin(goRight ? Mathf.PI / 2 : -Mathf.PI / 2);
         Vector3 destination = new Vector3(x, transform.position.y, z);
         agent.destination = destination;
-        while (Time.time - timeStamp < strifeDuration)
+        while (timer < strafeDuration)
         {
+            timer += Time.deltaTime;
             yield return new WaitForEndOfFrame();
         }
-        isStrifing = false;
+        isStrafing = false;
+        Debug.Log("oui");
     }
     
 
@@ -161,7 +162,7 @@ public class EnemyMovement : MonoBehaviour
 
     void MoveToPlayer(GameObject target,float enemyRange)
     {
-        agent.destination = (Enemy.aimPlayer.transform.position - target.transform.position).normalized * enemyRange;
+        agent.destination = Enemy.aimPlayer.transform.position;
     }
 
     /// <summary>
