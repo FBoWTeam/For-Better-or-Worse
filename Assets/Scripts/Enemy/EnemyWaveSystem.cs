@@ -65,7 +65,7 @@ public class EnemyWaveSystem : MonoBehaviour,IActivable
     {
         if (!isActive)
         {
-            InstanciateEnemyWave();
+            StartCoroutine(InstanciateEnemyWave());
         }
     }
 }
