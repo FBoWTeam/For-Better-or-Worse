@@ -41,8 +41,11 @@ public class EnemyMovement : MonoBehaviour
     [HideInInspector]
     public NavMeshAgent agent;
 
-    [SerializeField]
-    private bool isSlowed;
+    //private
+    public bool isSlowed;
+
+    //private
+    public bool isMoving;
 
     EnemySkill enemySkill;
 
@@ -53,6 +56,7 @@ public class EnemyMovement : MonoBehaviour
         agent = this.GetComponent<NavMeshAgent>();
         agent.speed = initialSpeed;
         agent.isStopped = false;
+        isMoving = false;
         line = this.GetComponent<LineRenderer>();
     }
 
@@ -85,6 +89,9 @@ public class EnemyMovement : MonoBehaviour
         {
             line.enabled = false;
         }
+
+        isMoving = true;
+
     }
 
     void StaticMovement()
@@ -92,12 +99,14 @@ public class EnemyMovement : MonoBehaviour
         this.transform.LookAt(Enemy.aimPlayer.transform);
         this.transform.eulerAngles = new Vector3(0, this.transform.eulerAngles.y, 0);
         this.GetComponent<Rigidbody>().isKinematic = true;
+        Debug.Log("static");
 
     }
 
     void ClassicMovement()
     {
         agent.destination = Enemy.aimPlayer.transform.position;
+        Debug.Log("classic");
     }
 
     void RangedMovement()
@@ -106,9 +115,10 @@ public class EnemyMovement : MonoBehaviour
 
         if (nearestPlayer.Item2 < enemySkill.range)
         {
-            EnemyEscape();
+            EnemyEscape(nearestPlayer.Item1);
             Debug.Log("fleeing ...");
         }
+        Debug.Log("ranged");
     }
 
     /// <summary>
@@ -125,9 +135,9 @@ public class EnemyMovement : MonoBehaviour
     /// <summary>
     /// run away from the orb (because why not)
     /// </summary>
-    void EnemyEscape()
+    void EnemyEscape(GameObject target)
     {
-        Vector3 dir = this.transform.position - GameManager.gameManager.orb.transform.position;
+        Vector3 dir = this.transform.position - target.transform.position;
         agent.destination = this.transform.position + dir;
     }
 
