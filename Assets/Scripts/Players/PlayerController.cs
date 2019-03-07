@@ -1,39 +1,49 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 [RequireComponent(typeof(Rigidbody))]
 public class PlayerController : MonoBehaviour
 {
+	[Header("[Main Params]")]
     public bool player1;
     public float speed;
-
-    [HideInInspector]
-    public float initialSpeed;
-
     Rigidbody rb;
+	[HideInInspector]
     public Vector3 direction;
+	public bool invincible;
+	public float invicibilityDuration;
+	public int blinkNb;
 
-    public GameManager.PowerType powerSlot1;
-    public GameManager.PowerType powerSlot2;
-    public GameManager.PowerType powerSlot3;
-    public GameManager.PowerType powerSlot4;
-
-
+	[Header("[Power Slots]")]
+    public GameManager.PowerType elementalPowerSlot;
+    public GameManager.PowerType behaviouralPowerSlot;
+    
+    bool canTaunt = true;
     OrbHitter orbHitter;
 
     void Awake()
     {
         rb = GetComponent<Rigidbody>();
         orbHitter = gameObject.GetComponent<OrbHitter>();
-        initialSpeed = speed;
+    }
+
+    private void Start()
+    {
+        //Update UI (for development)
+        GameManager.gameManager.UIManager.UpdatePowerSlot(1, player1, elementalPowerSlot);
+        GameManager.gameManager.UIManager.UpdatePowerSlot(2, player1, behaviouralPowerSlot);
     }
 
     void Update()
     {
-        Move();
-		CheckTaunt();
-        GetCurrentPower();
+		if (!GameManager.gameManager.isPaused)
+		{
+			Move();
+			CheckTaunt();
+			GetCurrentPower();
+		}
     }
 
     /// <summary>
@@ -42,41 +52,80 @@ public class PlayerController : MonoBehaviour
     /// </summary>
 	public void Move()
     {
-		direction = player1 ? new Vector3(Input.GetAxis("HorizontalP1"), 0.0f, Input.GetAxis("VerticalP1")) : new Vector3(Input.GetAxis("HorizontalP2"), 0.0f, Input.GetAxis("VerticalP2"));
+        direction = player1 ? new Vector3(Input.GetAxis("HorizontalP1"), 0.0f, Input.GetAxis("VerticalP1")) : new Vector3(Input.GetAxis("HorizontalP2"), 0.0f, Input.GetAxis("VerticalP2"));
 
-		direction = (direction.x * Camera.main.transform.right + direction.z * Camera.main.transform.forward);
+        direction = (direction.x * Camera.main.transform.right + direction.z * Camera.main.transform.forward);
 
         Vector3 velocity = direction * speed * Time.deltaTime;
 
-        rb.MovePosition(transform.position + velocity);
+		checkDistance(ref velocity);
+
+		rb.MovePosition(transform.position + velocity);
+        transform.LookAt(transform.position + direction);
+        transform.localEulerAngles = new Vector3(0.0f, transform.localEulerAngles.y, 0.0f);
     }
 
-
-
-	void CheckTaunt()
+	void checkDistance(ref Vector3 velocity)
 	{
-		if ( (player1 && (Input.GetKeyDown(KeyCode.Joystick1Button4) || Input.GetKeyDown(KeyCode.Space))) || (!player1 && (Input.GetKeyDown(KeyCode.Joystick2Button4) || Input.GetKeyDown(KeyCode.Keypad0))))
+		GameObject otherPlayer;
+		if (player1)
+			otherPlayer = GameManager.gameManager.player2;
+		else
+			otherPlayer = GameManager.gameManager.player1;
+
+		if (Vector3.Distance(transform.position + velocity, otherPlayer.transform.position) > GameManager.gameManager.maxDistance)
 		{
-			StartCoroutine(TauntCoroutine());
+			Vector3 toPlayer = ((transform.position + velocity) - otherPlayer.transform.position).normalized;
+
+			Vector3 fixedPos = otherPlayer.transform.position + toPlayer * GameManager.gameManager.maxDistance;
+
+			velocity = fixedPos - transform.position;
+		}
+		if (Vector3.Distance(transform.position + velocity, otherPlayer.transform.position) < GameManager.gameManager.minDistance)
+		{
+			Vector3 toPlayer = ((transform.position + velocity) - otherPlayer.transform.position).normalized;
+
+			Vector3 fixedPos = otherPlayer.transform.position + toPlayer * GameManager.gameManager.minDistance;
+
+			velocity = fixedPos - transform.position;
 		}
 	}
 
-	IEnumerator TauntCoroutine()
-	{
-		yield return new WaitForEndOfFrame();
+    void CheckTaunt()
+    {
+        if (((player1 && (Input.GetKeyDown(KeyCode.Joystick1Button4) || Input.GetKeyDown(KeyCode.Space))) || (!player1 && (Input.GetKeyDown(KeyCode.Joystick2Button4) || Input.GetKeyDown(KeyCode.Keypad0)))) && canTaunt)
+        {
+            StartCoroutine(TauntCoroutine());
+            StartCoroutine(TauntCoolDown(GameManager.gameManager.tauntCooldown));
+        }
+    }
 
-		if (player1)
-			GameManager.gameManager.player1HasTaunt = true;
-		else
-			GameManager.gameManager.player2HasTaunt = true;
+    IEnumerator TauntCoolDown(float cd) {
+        canTaunt = false;
+        yield return new WaitForSeconds(cd);
+        canTaunt = true;
+    }
 
-		yield return new WaitForEndOfFrame();
+    IEnumerator TauntCoroutine()
+    {
+        yield return new WaitForEndOfFrame();
+        if (player1) {
+            GameManager.gameManager.player1HasTaunt = true;
+           
+        } else {
+            GameManager.gameManager.player2HasTaunt = true;
 
-		if (player1)
-			GameManager.gameManager.player1HasTaunt = false;
-		else
-			GameManager.gameManager.player2HasTaunt = false;
-	}
+        }
+
+        yield return new WaitForEndOfFrame();
+
+        if (player1) {
+            GameManager.gameManager.player1HasTaunt = false;
+        } else {
+            GameManager.gameManager.player2HasTaunt = false;
+        }
+    }
+           
 
     /// <summary>
     /// gets the current power that is going to be apllied on the orb by checking the input
@@ -84,26 +133,58 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     public void GetCurrentPower()
     {
-        bool power1 = player1 ? Input.GetKeyDown(KeyCode.Joystick1Button0) : Input.GetKeyDown(KeyCode.Joystick2Button0);
-        bool power2 = player1 ? Input.GetKeyDown(KeyCode.Joystick1Button1) : Input.GetKeyDown(KeyCode.Joystick2Button1);
-        bool power3 = player1 ? Input.GetKeyDown(KeyCode.Joystick1Button2) : Input.GetKeyDown(KeyCode.Joystick2Button2);
-        bool power4 = player1 ? Input.GetKeyDown(KeyCode.Joystick1Button3) : Input.GetKeyDown(KeyCode.Joystick2Button3);
+        bool elementalPower = player1 ? Input.GetKeyDown(KeyCode.Joystick1Button3) || Input.GetKeyDown(KeyCode.Joystick1Button1) : Input.GetKeyDown(KeyCode.Joystick2Button3) || Input.GetKeyDown(KeyCode.Joystick2Button1);
+        bool behaviouralPower = player1 ? Input.GetKeyDown(KeyCode.Joystick1Button2) || Input.GetKeyDown(KeyCode.Joystick1Button0) : Input.GetKeyDown(KeyCode.Joystick2Button2) || Input.GetKeyDown(KeyCode.Joystick2Button0);
 
-        if (power1)
-        {
-            orbHitter.powerToApply = powerSlot1;
+		if (elementalPower && elementalPowerSlot != GameManager.PowerType.None)
+        {           
+            orbHitter.powerToApply = elementalPowerSlot;
         }
-        if (power2)
+        if (behaviouralPower && behaviouralPowerSlot != GameManager.PowerType.None)
         {
-            orbHitter.powerToApply = powerSlot2;
-        }
-        if (power3)
-        {
-            orbHitter.powerToApply = powerSlot3;
-        }
-        if (power4)
-        {
-            orbHitter.powerToApply = powerSlot3;
+            orbHitter.powerToApply = behaviouralPowerSlot;
         }
     }
+
+
+    /// <summary>
+    /// Gives a power dropped by an enemy, and place it on the good slot
+    /// </summary>
+    public void AttributePower(GameManager.PowerType newPower)
+    {
+		if (GameManager.isElemental(newPower))
+		{
+			elementalPowerSlot = newPower;
+			GameManager.gameManager.UIManager.UpdatePowerSlot(1, player1, newPower);
+		}
+		else
+		{
+			behaviouralPowerSlot = newPower;
+			GameManager.gameManager.UIManager.UpdatePowerSlot(2, player1, newPower);
+		}
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.magenta;
+        Gizmos.DrawWireSphere(transform.position, gameObject.GetComponent<OrbHitter>().hitZone * 2);
+    }
+
+	public IEnumerator InvincibilityCoroutine()
+	{
+		MeshRenderer renderer = GetComponent<MeshRenderer>();
+		float blinkTime = invicibilityDuration / blinkNb;
+
+		invincible = true;
+
+		for (int i = 0; i < blinkNb; i++)
+		{
+			renderer.enabled = false;
+			yield return new WaitForSeconds(blinkTime/2.0f);
+			renderer.enabled = true;
+			yield return new WaitForSeconds(blinkTime/2.0f);
+		}
+
+		invincible = false;
+	}
 }

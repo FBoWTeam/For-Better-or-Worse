@@ -4,32 +4,37 @@ using UnityEngine;
 
 public class OrbHitter : MonoBehaviour
 {
-    OrbController orb;
+    OrbController orbController;
 
-    [Header("[Parameters]")]
     [Tooltip("represents the orb hitting range")]
     public float hitZone;
-    public float accelerationFactor;
-    public float maxAmortizeTime;
+	bool inRange;
+	public GameManager.PowerType powerToApply;
 
-    bool inRange;
-
+	[Header("[Hit]")]
+	public bool hitting;
+	public float hitDuration;
     public float hitCooldown;
     float hitTimer;
+	public float accelerationFactor;
 
-
-    public GameManager.PowerType powerToApply;
+	[Header("[Amortize]")]
+	public bool amortizing;
+	public float amortizeDuration;
 
     void Start()
     {
-        orb = GameObject.Find("Orb").GetComponent<OrbController>();
+        orbController = GameManager.gameManager.orb.GetComponent<OrbController>();
         inRange = false;
     }
 
     // Update is called once per frame
     void Update()
     {
-        OrbHit();
+		if(!GameManager.gameManager.isPaused)
+		{
+			OrbHit();
+		}
     }
 
     /// <summary>
@@ -43,69 +48,65 @@ public class OrbHitter : MonoBehaviour
         }
         CheckRange();
 
-        if (GetComponent<PlayerController>().player1)
-        {
-            if (inRange)
+		UpdateInputs();
+
+		if (inRange)
+        {            
+            bool player1 = GetComponent<PlayerController>().player1;
+			if (hitting && ((player1 && !orbController.toPlayer2) || (!player1 && orbController.toPlayer2)))
             {
-                if (!orb.GetComponent<OrbController>().toPlayer2)
-                {
-                    if (Input.GetAxisRaw("OrbHitterP1") != 0 && hitTimer <= 0.0f)
-                    {
-                        hitTimer = hitCooldown;
-                        orb.toPlayer2 = !orb.toPlayer2;
-                        orb.speed += accelerationFactor;
-                        CheckPowerActivation();
-                    }
-                    if (Input.GetAxisRaw("OrbAmortizerP1") != 0 && !orb.amortized)
-                    {
-                        StartCoroutine(AmortizeCoroutine());
-                    }
-                    else if (Input.GetAxisRaw("OrbAmortizerP1") == 0 && orb.amortized)
-                    {
-                        StopCoroutine(AmortizeCoroutine());
-                        orb.toPlayer2 = !orb.toPlayer2;
-                        orb.amortized = false;
-                        orb.speed = orb.minSpeed;
-                    }
-                }
+				StopCoroutine(HitCoroutine());
+				hitting = false;
+				hitTimer = hitCooldown;
+				orbController.toPlayer2 = !orbController.toPlayer2;
+                orbController.speed = accelerationFactor * orbController.combo + orbController.minSpeed;
+                orbController.combo++;
+                //Update combo UI
+                GameManager.gameManager.UIManager.UpdateCombo(orbController.combo);               
+                CheckPowerActivation();
+                GameManager.gameManager.orb.GetComponent<PowerController>().CheckPowerAttribution("hit", player1);
             }
-        }
-        else
-        {
-            if (inRange)
+            if (amortizing && !orbController.amortized)
             {
-                if (orb.GetComponent<OrbController>().toPlayer2)
-                {
-                    if (Input.GetAxisRaw("OrbHitterP2") != 0)
-                    {
-                        orb.toPlayer2 = !orb.toPlayer2;
-                        orb.speed += accelerationFactor;
-                        CheckPowerActivation();
-                    }
-                    if (Input.GetAxisRaw("OrbAmortizerP2") != 0 && !orb.amortized)
-                    {
-                        StartCoroutine(AmortizeCoroutine());
-                    }
-                    else if (Input.GetAxisRaw("OrbAmortizerP2") == 0 && orb.amortized)
-                    {
-                        StopCoroutine(AmortizeCoroutine());
-                        orb.toPlayer2 = !orb.toPlayer2;
-                        orb.amortized = false;
-                        orb.speed = orb.minSpeed;
-                    }
-                }
+                StartCoroutine(AmortizeCoroutine());
+                GameManager.gameManager.orb.GetComponent<PowerController>().CheckPowerAttribution("amortize", player1);
+            }
+            else if (!amortizing && orbController.amortized)
+            {
+                StopCoroutine(AmortizeCoroutine());
+                orbController.toPlayer2 = !orbController.toPlayer2;
+                orbController.amortized = false;
+                orbController.speed = orbController.minSpeed;
             }
         }
     }
 
-    /// <summary>
-    /// function that check if the orb is close enough to let the player to hit the ball
-    /// the range is defined by the default hitzone AND the radius of the orb (so that we can hit the orb on it's border no matter it's size)
-    /// orb.transform.localScale.x / 2 is the radius of the orb
-    /// </summary>
-    void CheckRange()
+	public void UpdateInputs()
+	{
+		bool player1 = GetComponent<PlayerController>().player1;
+		if (((Input.GetAxisRaw("OrbHitterP1") != 0 && player1) || (Input.GetAxisRaw("OrbHitterP2") != 0 && !player1)) && hitTimer <= 0.0f && !hitting)
+		{
+			StartCoroutine(HitCoroutine());
+		}
+
+		if ((Input.GetAxisRaw("OrbAmortizerP1") != 0 && player1 && !orbController.toPlayer2) || (Input.GetAxisRaw("OrbAmortizerP2") != 0 && !player1 && orbController.toPlayer2))
+		{
+			amortizing = true;
+		}
+		else
+		{
+			amortizing = false;
+		}
+	}
+
+	/// <summary>
+	/// function that check if the orb is close enough to let the player to hit the ball
+	/// the range is defined by the default hitzone AND the radius of the orb (so that we can hit the orb on it's border no matter it's size)
+	/// orb.transform.localScale.x / 2 is the radius of the orb
+	/// </summary>
+	void CheckRange()
     {
-        if (Vector3.Distance(transform.position, orb.transform.position) < hitZone + orb.transform.localScale.x / 2)
+        if (Vector3.Distance(transform.position, orbController.transform.position) < hitZone + orbController.transform.localScale.x / 2)
         {
             inRange = true;
         }
@@ -119,45 +120,63 @@ public class OrbHitter : MonoBehaviour
     /// apply the power on the orb if not None
     /// </summary>
     void CheckPowerActivation()
-    {
-		if (powerToApply != GameManager.PowerType.None)
+    {       
+        if (powerToApply != GameManager.PowerType.None)
         {
-            orb.GetComponent<PowerController>().ActivatePower(powerToApply);
-            
+			string mode = GetComponent<PlayerController>().player1 ? "player1" : "player2";
+			orbController.GetComponent<PowerController>().ActivatePower(powerToApply, mode);
             powerToApply = GameManager.PowerType.None;
         }
-
-        //TEST ZONE si l'orb a le pouvoir shield
-        if (orb.GetComponent<PowerController>().behavioralPower == GameManager.PowerType.Shield && orb.GetComponent<PowerController>().currentShieldStack > 0)
+        
+        if (orbController.GetComponent<PowerController>().behavioralPower == GameManager.PowerType.Shield && orbController.GetComponent<PowerController>().currentShieldStack > 0)
         {
             if (gameObject.GetComponent<PlayerController>().player1)
             {
-                GameManager.gameManager.shieldP1 = orb.GetComponent<PowerController>().shieldAmount;
-                orb.GetComponent<PowerController>().currentShieldStack--;
+                GameManager.gameManager.shieldP1 = orbController.GetComponent<PowerController>().shieldAmount;
+                orbController.GetComponent<PowerController>().currentShieldStack--;
             }
             else if (!gameObject.GetComponent<PlayerController>().player1)
             {
-                GameManager.gameManager.shieldP2 = orb.GetComponent<PowerController>().shieldAmount;
-                orb.GetComponent<PowerController>().currentShieldStack--;
+                GameManager.gameManager.shieldP2 = orbController.GetComponent<PowerController>().shieldAmount;
+                orbController.GetComponent<PowerController>().currentShieldStack--;
             }
         }
-        //FIN TEST ZONE
+        else if (orbController.GetComponent<PowerController>().behavioralPower == GameManager.PowerType.Shield && orbController.GetComponent<PowerController>().currentShieldStack <= 0)
+        {
+            orbController.GetComponent<PowerController>().DeactivatePower(GameManager.PowerType.Shield);
+        }
     }
 
-    /// <summary>
-    /// coroutine that manage the amortize of the orb
-    /// </summary>
-    /// <returns></returns>
-    IEnumerator AmortizeCoroutine()
+	/// <summary>
+	/// extend the time to hit the orb from a frame to a range of frame
+	/// </summary>
+	/// <returns></returns>
+	IEnumerator HitCoroutine()
+	{
+		hitting = true;
+		GetComponent<Animation>().Play();
+		yield return new WaitForSeconds(hitDuration);
+		hitting = false;
+		hitTimer = hitCooldown;
+	}
+
+	/// <summary>
+	/// coroutine that manage the amortize of the orb
+	/// </summary>
+	/// <returns></returns>
+	IEnumerator AmortizeCoroutine()
     {
-        orb.speed = 0.0f;
-        orb.amortized = true;
-        yield return new WaitForSeconds(maxAmortizeTime);
-        if (orb.amortized)
+        orbController.speed = 0.0f;
+        orbController.amortized = true;
+        yield return new WaitForSeconds(amortizeDuration);
+        if (orbController.amortized)
         {
-            orb.toPlayer2 = !orb.toPlayer2;
-            orb.amortized = false;
-            orb.speed = orb.minSpeed;
+            orbController.toPlayer2 = !orbController.toPlayer2;
+            orbController.amortized = false;
+            orbController.speed = orbController.minSpeed;
+			orbController.combo = 0;
+            //reset combo ui
+            GameManager.gameManager.UIManager.UpdateCombo(orbController.combo);
         }
     }
 }

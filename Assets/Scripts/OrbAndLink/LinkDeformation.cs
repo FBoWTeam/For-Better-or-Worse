@@ -7,8 +7,10 @@ public class LinkDeformation : MonoBehaviour
 	Transform deformPoint1, deformPointMid, deformPoint2;
 	Transform minDeform, maxDeform;
 
-    [Tooltip("represents the maximum amplitude of the deformation")]
+	[Tooltip("represents the maximum amplitude of the deformation")]
+	public float minDeformheight;
     public float maxDeformHeight;
+	public float deformHeight;
 
 	float deformAmountP1, deformAmountP2;
 	public float smoothTime;
@@ -38,8 +40,10 @@ public class LinkDeformation : MonoBehaviour
 
 		float playersDistance = Vector3.Distance(GameManager.gameManager.player1.transform.position, GameManager.gameManager.player2.transform.position);
 
-		deformPoint1.localPosition = new Vector3(deformAmountP1 * maxDeformHeight, 0.0f, (playersDistance / 4.0f));
-		deformPoint2.localPosition = new Vector3(deformAmountP2 * maxDeformHeight, 0.0f, -(playersDistance / 4.0f));
+		deformHeight = (((playersDistance - GameManager.gameManager.minDistance) * (maxDeformHeight - minDeformheight)) / (GameManager.gameManager.maxDistance - GameManager.gameManager.minDistance)) + minDeformheight;
+
+		deformPoint1.localPosition = new Vector3(deformAmountP1 * deformHeight, 0.0f, (playersDistance / 4.0f));
+		deformPoint2.localPosition = new Vector3(deformAmountP2 * deformHeight, 0.0f, -(playersDistance / 4.0f));
 		deformPointMid.localPosition = new Vector3(((deformPoint1.localPosition.x + deformPoint2.localPosition.x) / 2.0f), 0.0f, 0.0f);
 	}
 
@@ -48,8 +52,9 @@ public class LinkDeformation : MonoBehaviour
 	/// </summary>
 	void FixPosition()
 	{
-		transform.position = GameManager.gameManager.player1.transform.position + (GameManager.gameManager.player2.transform.position - GameManager.gameManager.player1.transform.position) / 2;
-		transform.LookAt(GameManager.gameManager.player1.transform.position);
+		(Vector3 player1LinkPoint, Vector3 player2LinkPoint) = BezierCurve.UpdateLinkPoints();
+		transform.position = player1LinkPoint + (player2LinkPoint - player1LinkPoint) / 2;
+		transform.LookAt(player1LinkPoint);
 
 		minDeform.localPosition = new Vector3(transform.localPosition.x - maxDeformHeight, transform.localPosition.y, transform.localPosition.z);
 		maxDeform.localPosition = new Vector3(transform.localPosition.x + maxDeformHeight, transform.localPosition.y, transform.localPosition.z);
@@ -63,6 +68,9 @@ public class LinkDeformation : MonoBehaviour
 	{
 		Vector3 player1DeformInput = new Vector3(Input.GetAxis("DeformP1X"), 0.0f, Input.GetAxis("DeformP1Z"));
 		Vector3 player2DeformInput = new Vector3(Input.GetAxis("DeformP2X"), 0.0f, Input.GetAxis("DeformP2Z"));
+
+		player1DeformInput = (player1DeformInput.x * Camera.main.transform.right + player1DeformInput.z * Camera.main.transform.forward);
+		player2DeformInput = (player2DeformInput.x * Camera.main.transform.right + player2DeformInput.z * Camera.main.transform.forward);
 
 		Vector3 deformAxis = maxDeform.position - transform.position;
 		deformAxis = deformAxis.normalized;

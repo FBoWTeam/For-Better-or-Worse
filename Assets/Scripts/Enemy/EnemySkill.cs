@@ -99,12 +99,10 @@ public class EnemySkill : MonoBehaviour
     //Dammage player on collision
     private void OnCollisionEnter(Collision collision)
     {
-        if (skillOne == Skill.Impact)
+        if (collision.gameObject.CompareTag("Player"))
         {
-            if (collision.gameObject.CompareTag("Player") && collision.gameObject == Enemy.aimPlayer)
-            {
-                GameManager.gameManager.TakeDamage(collision.gameObject, damage);
-            }
+            GameManager.gameManager.TakeDamage(collision.gameObject, damage, transform.position);
+            GameManager.gameManager.UIManager.QuoteOnDamage("enemy", collision.gameObject);
         }
     }
 
@@ -149,16 +147,15 @@ public class EnemySkill : MonoBehaviour
                 myMat.color = Color.red;
                 if (Time.time > nextAttack)
                 {
-                    GameManager.gameManager.TakeDamage(target, damage);
+                    GameManager.gameManager.TakeDamage(target, damage, transform.position);
+                    GameManager.gameManager.UIManager.QuoteOnDamage("enemy", target);
                     nextAttack = Time.time + aoeCooldown;
                 }
                 break;
             case Skill.Ranged:
                 myMat.color = Color.red;
-                // ne renvoie pas toujours vrai alors que 'visuelement' on sait que oui
-                // BUG TO FIX : parfois le tag du collider toucher est 'DistanceLimiter'
-                //Debug.Log("wsh "+ isVisible(transform.position, target.transform.position));               
 
+                print(isVisible(transform.position, target.transform.position));
                 if (Time.time > nextAttack && isVisible(transform.position, target.transform.position))
                 {
                     Shoot(bulletPrefab, transform, target.transform, damage);
@@ -172,15 +169,13 @@ public class EnemySkill : MonoBehaviour
         }
     }
 
-
-
-
     IEnumerator Impact(Transform target)
     {
 
         Vector3 originalPosition = transform.position;
-        Vector3 dirToTarget = (target.position - transform.position).normalized;
-        Vector3 attackPosition = target.position + dirToTarget;
+		Vector3 targetPos = new Vector3(target.position.x, target.position.y + 1, target.position.z);// PIVOT DE ....
+        Vector3 dirToTarget = (targetPos - transform.position).normalized;
+        Vector3 attackPosition = targetPos + dirToTarget;
         //Debug.Log(attackPosition);
         float percent = 0;
 
@@ -213,14 +208,16 @@ public class EnemySkill : MonoBehaviour
     /// <returns></returns>
     bool isVisible(Vector3 start, Vector3 end)
     {
-        RaycastHit hitInfo;
-        //Debug.DrawLine(start,end);
-        if (Physics.Linecast(start, end, out hitInfo))
-        {
-            if (hitInfo.transform.CompareTag("Player"))
-            {
-                return true;
-            }
+
+        // This would cast rays only against colliders in Player layer .
+        // But instead we want to collide against everything except layer 8. The ~ operator does this, it inverts a bitmask.
+
+        
+        int playerLayer = 1 << LayerMask.NameToLayer("Players");
+        end = new Vector3(end.x, end.y + 1.5f, end.z);// PIVOT DE ....
+
+        if (!Physics.Linecast(start,end,~playerLayer)) {
+            return true;
         }
         return false;
     }
@@ -234,14 +231,8 @@ public class EnemySkill : MonoBehaviour
     /// <param name="damage"></param>
     void Shoot(GameObject projectilePrefab, Transform firePoint, Transform target, int damage)
     {
-        GameObject projectile = (GameObject)Instantiate(projectilePrefab, firePoint.position, firePoint.rotation);
-        //Bullet bullet = bulletGO.GetComponent<Bullet>();
+        GameObject projectile = (GameObject)Instantiate(projectilePrefab, firePoint.position, firePoint.rotation);    
         EnemyShot enemyShot = projectile.GetComponent<EnemyShot>();
-
-        //if (bullet != null)
-        //{
-        //    bullet.Seek(target, damage, bulletSpeed);
-        //}
 
         if (enemyShot != null)
         {
