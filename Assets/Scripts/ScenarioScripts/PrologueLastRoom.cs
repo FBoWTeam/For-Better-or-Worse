@@ -22,7 +22,7 @@ public class PrologueLastRoom : MonoBehaviour
         {
             if (!alreadyActive)
             {
-                waveSystem.SetActive(true);
+                waveSystem.GetComponent<EnemyWaveSystem>().Activate();
             }
 
             timer += Time.deltaTime;

@@ -41,8 +41,10 @@ public class EnemyMovement : MonoBehaviour
     [HideInInspector]
     public NavMeshAgent agent;
 
-    [SerializeField]
-    private bool isSlowed;
+    //private
+    public bool isSlowed;
+
+    public bool isStrifing;
 
     EnemySkill enemySkill;
 
@@ -85,6 +87,7 @@ public class EnemyMovement : MonoBehaviour
         {
             line.enabled = false;
         }
+        
     }
 
     void StaticMovement()
@@ -103,31 +106,56 @@ public class EnemyMovement : MonoBehaviour
     void RangedMovement()
     {
         Tuple<GameObject, float> nearestPlayer = ClosestPlayer();
-
-        if (nearestPlayer.Item2 < enemySkill.range)
+        if (nearestPlayer.Item2 < enemySkill.range/2)
         {
-            EnemyEscape();
+            StopCoroutine("Strifing");
+            isStrifing = false;
+            EnemyEscape(nearestPlayer.Item1, enemySkill.range);
             Debug.Log("fleeing ...");
         }
+        else if (nearestPlayer.Item2 < enemySkill.range && !isStrifing)
+        {
+            Debug.Log("strifing ...");
+            StartCoroutine(Strifing(nearestPlayer.Item1, nearestPlayer.Item2));
+        }
+        else
+        {
+            StopCoroutine("Strifing");
+            isStrifing = false;
+        }
+
     }
 
     /// <summary>
-    /// will move around the players (the point between the players)
+    /// the enemy begins to rotate around the players and attack at the same time
     /// </summary>
-    void MoveAndAttack(float distanceToKeep)
+    /// <param name="target"></param>
+    /// <param name="distance"></param>
+    /// <returns></returns>
+    IEnumerator Strifing(GameObject target, float distance)
     {
-        Vector3 origin = GameManager.gameManager.player1.transform.position - GameManager.gameManager.player2.transform.position;
-        float rotationMove = UnityEngine.Random.Range((float)-Math.PI / 2, (float)Mathf.PI / 2);
-        Vector3 destination = new Vector3(origin.x + distanceToKeep * Mathf.Cos(rotationMove), Enemy.aimPlayer.transform.position.y, origin.z + distanceToKeep * Mathf.Sin(rotationMove));
+        float strifeDuration = UnityEngine.Random.Range(1f, 3f);
+        isStrifing = true;
+        float timeStamp = Time.time;
+        bool goRight = UnityEngine.Random.Range(0, 1) < 0.5f ? true : false;
+        float x = target.transform.position.x + distance * Mathf.Cos(goRight ? Mathf.PI / 2 : -Mathf.PI / 2);
+        float z = target.transform.position.z + distance * Mathf.Sin(goRight ? Mathf.PI / 2 : -Mathf.PI / 2);
+        Vector3 destination = new Vector3(x, transform.position.y, z);
         agent.destination = destination;
+        while (Time.time - timeStamp < strifeDuration)
+        {
+            yield return new WaitForEndOfFrame();
+        }
+        isStrifing = false;
     }
+    
 
     /// <summary>
     /// run away from the orb (because why not)
     /// </summary>
-    void EnemyEscape()
+    void EnemyEscape(GameObject target, float enemyRange)
     {
-        Vector3 dir = this.transform.position - GameManager.gameManager.orb.transform.position;
+        Vector3 dir = (this.transform.position - target.transform.position).normalized * enemyRange;
         agent.destination = this.transform.position + dir;
     }
 
@@ -144,7 +172,7 @@ public class EnemyMovement : MonoBehaviour
     {
         float distanceP1 = Vector3.Distance(this.transform.position, GameManager.gameManager.player1.transform.position);
         float distanceP2 = Vector3.Distance(this.transform.position, GameManager.gameManager.player2.transform.position);
-        return distanceP1 > distanceP2 ? Tuple.Create(GameManager.gameManager.player2, distanceP2) : Tuple.Create(GameManager.gameManager.player1,distanceP2);
+        return distanceP1 > distanceP2 ? Tuple.Create(GameManager.gameManager.player2, distanceP2) : Tuple.Create(GameManager.gameManager.player1,distanceP1);
     }
 
 
