@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyWaveSystem : MonoBehaviour
+public class EnemyWaveSystem : MonoBehaviour,IActivable
 {
     [Tooltip("time between the spawn of the different waves")]
     public float timeBetweenWaves;
@@ -13,6 +13,8 @@ public class EnemyWaveSystem : MonoBehaviour
     public GameObject[] enemyWaves;
     private int currentWave;
 
+    public bool isActive { get; set; }
+
 
     /// <summary>
     /// coroutine that handles the wave system
@@ -20,8 +22,9 @@ public class EnemyWaveSystem : MonoBehaviour
     /// the prefabs are gameObjects that contain the enemies to spawn
     /// </summary>
     /// <returns></returns>
-    IEnumerator Start()
+    IEnumerator InstanciateEnemyWave()
     {
+        isActive = true;
         //if no waves to instanciate, exit the coroutine
         if (enemyWaves.Length == 0)
         {
@@ -56,5 +59,13 @@ public class EnemyWaveSystem : MonoBehaviour
 
         }
 
+    }
+
+    public void Activate()
+    {
+        if (!isActive)
+        {
+            StartCoroutine(InstanciateEnemyWave());
+        }
     }
 }

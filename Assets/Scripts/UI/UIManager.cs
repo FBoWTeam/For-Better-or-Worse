@@ -26,19 +26,13 @@ public class UIManager : MonoBehaviour
     [Header("Combo")]
     public GameObject combo;
 
-    [Header("Main Powers of Fox")]
-    public GameObject mainPower1Fox;
-    public GameObject mainPower2Fox;
-    [Header("Main Powers of Raccoon")]
-    public GameObject mainPower1Raccoon;
-    public GameObject mainPower2Raccoon;
+    [Header("Fox Powers")]
+    public GameObject elementalPowerFox;
+	public GameObject behaviouralPowerFox;
 
-    [Header("Secondary Powers of Fox")]
-    public GameObject secondaryPower1Fox;
-    public GameObject secondaryPower2Fox;
-    [Header("Secondary Powers of Raccoon")]
-    public GameObject secondaryPower1Raccoon;
-    public GameObject secondaryPower2Raccoon;
+	[Header("Raccoon Powers")]
+    public GameObject elementalPowerRaccoon;
+    public GameObject behaviouralPowerRaccoon;
 
     [Header("Taunt")]
     public GameObject tauntCooldownFox;
@@ -58,17 +52,19 @@ public class UIManager : MonoBehaviour
 
     [Header("Text Quote")]
     public float displayTime;
+    public int pourcentageQuote;
     [TextArea]
-    public string player1Text_Enemy;
+    public string player1TextEnemy;
     [TextArea]
-    public string player2Text_Enemy;
+    public string player2TextEnemy;
     [TextArea]
-    public string player1Text_Orb;
+    public string player1TextOrb;
     [TextArea]
-    public string player2Text_Orb;
+    public string player2TextOrb;
 
     [HideInInspector]
-    Dictionary<int, GameManager.PowerType> busySlot = new Dictionary<int, GameManager.PowerType>(4);
+    Dictionary<int, GameManager.PowerType> busySlot = new Dictionary<int, GameManager.PowerType>(2);
+
     #endregion
 
 
@@ -80,8 +76,6 @@ public class UIManager : MonoBehaviour
         //init dico
         busySlot.Add(1, GameManager.PowerType.None);
         busySlot.Add(2, GameManager.PowerType.None);
-        busySlot.Add(3, GameManager.PowerType.None);
-        busySlot.Add(4, GameManager.PowerType.None);
 
 
     }
@@ -201,27 +195,15 @@ public class UIManager : MonoBehaviour
             case 1:
 
                 if (player1)
-                    GetImage(mainPower1Fox).sprite = ImageAssignment(powerSlot);
+                    GetImage(elementalPowerFox).sprite = ImageAssignment(powerSlot);
                 else
-                    GetImage(mainPower1Raccoon).sprite = ImageAssignment(powerSlot);
+                    GetImage(elementalPowerRaccoon).sprite = ImageAssignment(powerSlot);
                 break;
             case 2:
                 if (player1)
-                    GetImage(mainPower2Fox).sprite = ImageAssignment(powerSlot);
+                    GetImage(behaviouralPowerFox).sprite = ImageAssignment(powerSlot);
                 else
-                    GetImage(mainPower2Raccoon).sprite = ImageAssignment(powerSlot);
-                break;
-            case 3:
-                if (player1)
-                    GetImage(secondaryPower1Fox).sprite = ImageAssignment(powerSlot);
-                else
-                    GetImage(secondaryPower1Raccoon).sprite = ImageAssignment(powerSlot);
-                break;
-            case 4:
-                if (player1)
-                    GetImage(secondaryPower2Fox).sprite = ImageAssignment(powerSlot);
-                else
-                    GetImage(secondaryPower2Raccoon).sprite = ImageAssignment(powerSlot);
+                    GetImage(behaviouralPowerRaccoon).sprite = ImageAssignment(powerSlot);
                 break;
         }
     }
@@ -274,7 +256,7 @@ public class UIManager : MonoBehaviour
     /// </summary>
     /// <param name="power"></param>
     /// <param name="cd"></param>
-    public void Cooldown(GameManager.PowerType power, float cd)
+    public void Cooldown(GameManager.PowerType power, float cd, bool player1)
     {
         // lancer start cooldown sur les ( p1 et p2) slot assigner au power
         
@@ -284,20 +266,16 @@ public class UIManager : MonoBehaviour
             switch (slot)
             {
                 case 1:
-                    StartCoroutine(startCooldown(cd, GetCdImage(mainPower1Fox)));
-                    StartCoroutine(startCooldown(cd, GetCdImage( mainPower1Raccoon)));
+					if(player1)
+						StartCoroutine(startCooldown(cd, GetCdImage(elementalPowerFox)));
+					else
+						StartCoroutine(startCooldown(cd, GetCdImage(elementalPowerRaccoon)));
                     break;
                 case 2:
-                    StartCoroutine(startCooldown(cd, GetCdImage(mainPower2Fox)));
-                    StartCoroutine(startCooldown(cd, GetCdImage(mainPower2Raccoon)));
-                    break;
-                case 3:
-                    StartCoroutine(startCooldown(cd, GetCdImage(secondaryPower1Fox)));
-                    StartCoroutine(startCooldown(cd, GetCdImage(secondaryPower1Raccoon)));
-                    break;
-                case 4:
-                    StartCoroutine(startCooldown(cd, GetCdImage(secondaryPower2Fox)));
-                    StartCoroutine(startCooldown(cd, GetCdImage(secondaryPower2Raccoon)));
+					if (player1)
+						StartCoroutine(startCooldown(cd, GetCdImage(behaviouralPowerFox)));
+					else
+						StartCoroutine(startCooldown(cd, GetCdImage(behaviouralPowerRaccoon)));
                     break;
                 default:
                     break;
@@ -367,29 +345,28 @@ public class UIManager : MonoBehaviour
     /// </summary>
     public void QuoteOnDamage(string damageDealer, GameObject targetPlayer)
     {
-        
-        if (Random.Range(1, 2)/*return an integer between 1(in) and 5(out)*/ == 1)
+        if (Random.Range(1, 101)/*return an integer between 1(in) and 101(out)*/ <= pourcentageQuote)
         {
             if(damageDealer == "enemy")
             { 
                 if (targetPlayer == GameManager.gameManager.player1)
                 {
-                    UpdateDialogBox1(player1Text_Enemy, displayTime);
+                    UpdateDialogBox1(player1TextEnemy, displayTime);
                 }
                 if (targetPlayer == GameManager.gameManager.player2)
                 {
-                    UpdateDialogBox2(player2Text_Enemy, displayTime);
+                    UpdateDialogBox2(player2TextEnemy, displayTime);
                 }
             }
             else if(damageDealer == "orb")
             {
                 if (targetPlayer == GameManager.gameManager.player1)
                 {
-                    UpdateDialogBox1(player1Text_Orb, displayTime);
+                    UpdateDialogBox1(player1TextOrb, displayTime);
                 }
                 if (targetPlayer == GameManager.gameManager.player2)
                 {
-                    UpdateDialogBox2(player2Text_Orb, displayTime);
+                    UpdateDialogBox2(player2TextOrb, displayTime);
                 }
             }
         }

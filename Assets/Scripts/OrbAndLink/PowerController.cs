@@ -6,17 +6,18 @@ public class PowerController : MonoBehaviour
 {
     public GameManager.PowerType elementalPower;
     public GameManager.PowerType behavioralPower;
+	public Coroutine actualDurationCoroutine;
 
     OrbController orbController;
 
     public Material normalMaterial;
     public int baseDamage;
 
-    public List<bool> canBeActivated;
+	public List<bool> canBeActivatedByPlayer1;
+	public List<bool> canBeActivatedByPlayer2;
 
-    [Header("[Drop Container]")]
+	[Header("[Drop Container]")]
     public GameManager.PowerType droppedPower;
-    public bool isFixedPower;
     public bool reflectedDrop;
 
     [Header("[Power Editing]")]
@@ -155,25 +156,44 @@ public class PowerController : MonoBehaviour
 
 	private void Start()
     {
-        canBeActivated = new List<bool> { true, true, true, true, true, true, true, true, true };
-        orbController = gameObject.GetComponent<OrbController>();
+		canBeActivatedByPlayer1 = new List<bool> { true, true, true, true, true, true, true, true, true };
+		canBeActivatedByPlayer2 = new List<bool> { true, true, true, true, true, true, true, true, true };
+
+		orbController = gameObject.GetComponent<OrbController>();
     }
 
-    #region Activation and Deactivation Functions
+	#region Activation and Deactivation Functions
 
-    /// <summary>
-    /// Activate the powerToActivate, deactivate the power of the same type if there's already an active one
-    /// </summary>
-    /// <param name="powerToActivate"></param>
-    public void ActivatePower(GameManager.PowerType powerToActivate)
+	/// <summary>
+	/// Activate the powerToActivate, deactivate the power of the same type if there's already an active one
+	/// </summary>
+	/// <param name="powerToActivate"></param>
+	public void ActivatePower(GameManager.PowerType powerToActivate, string mode)
     {
-		if(canBeActivated[(int)powerToActivate - 1])
+		bool activate = false;
+		switch(mode)
 		{
-			if (!isBehavioral(powerToActivate) && elementalPower != GameManager.PowerType.None)
+			case "forced":
+				activate = true;
+				break;
+			case "player1":
+				activate = canBeActivatedByPlayer1[(int)powerToActivate - 1];
+				break;
+			case "player2":
+				activate = canBeActivatedByPlayer2[(int)powerToActivate - 1];
+				break;
+		}
+
+		if (activate)
+		{
+			if(actualDurationCoroutine != null)
+				StopCoroutine(actualDurationCoroutine);
+
+			if (GameManager.isElemental(powerToActivate) && elementalPower != GameManager.PowerType.None)
 			{
 				DeactivatePower(elementalPower);
 			}
-			else if (isBehavioral(powerToActivate) && behavioralPower != GameManager.PowerType.None)
+			else if (!GameManager.isElemental(powerToActivate) && behavioralPower != GameManager.PowerType.None)
 			{
 				DeactivatePower(behavioralPower);
 			}
@@ -181,42 +201,39 @@ public class PowerController : MonoBehaviour
 			switch (powerToActivate)
 			{
 				case GameManager.PowerType.LargeOrb:
-					StartCoroutine(cooldownCoroutine(GameManager.PowerType.LargeOrb, largeOrbCooldown));
+					StartCoroutine(cooldownCoroutine(GameManager.PowerType.LargeOrb, largeOrbCooldown, mode));
 					ActivateLargeOrb();
 					break;
 				case GameManager.PowerType.Vortex:
-					StartCoroutine(cooldownCoroutine(GameManager.PowerType.Vortex, vortexCooldown));
+					StartCoroutine(cooldownCoroutine(GameManager.PowerType.Vortex, vortexCooldown, mode));
 					ActivateVortex();
 					break;
 				case GameManager.PowerType.LeechLife:
-					StartCoroutine(cooldownCoroutine(GameManager.PowerType.LeechLife, leechLifeCooldown));
+					StartCoroutine(cooldownCoroutine(GameManager.PowerType.LeechLife, leechLifeCooldown, mode));
 					ActivateLeechLife();
 					break;
 				case GameManager.PowerType.Slug:
-					StartCoroutine(cooldownCoroutine(GameManager.PowerType.Slug, slugCooldown));
+					StartCoroutine(cooldownCoroutine(GameManager.PowerType.Slug, slugCooldown, mode));
 					ActivateSlug();
 					break;
 				case GameManager.PowerType.Shield:
-					StartCoroutine(cooldownCoroutine(GameManager.PowerType.Shield, shieldCooldown));
+					StartCoroutine(cooldownCoroutine(GameManager.PowerType.Shield, shieldCooldown, mode));
 					ActivateShield();
 					break;
 				case GameManager.PowerType.Ice:
-					StartCoroutine(cooldownCoroutine(GameManager.PowerType.Ice, iceCooldown));
+					StartCoroutine(cooldownCoroutine(GameManager.PowerType.Ice, iceCooldown, mode));
 					ActivateIce();
 					break;
 				case GameManager.PowerType.Fire:
-                    if (!isActivatedByBrazier)
-                    {
-                        StartCoroutine(cooldownCoroutine(GameManager.PowerType.Fire, fireCooldown));
-                    }
+                    StartCoroutine(cooldownCoroutine(GameManager.PowerType.Fire, fireCooldown, mode));
                     ActivateFire();
 					break;
 				case GameManager.PowerType.Electric:
-					StartCoroutine(cooldownCoroutine(GameManager.PowerType.Electric, electricCooldown));
+					StartCoroutine(cooldownCoroutine(GameManager.PowerType.Electric, electricCooldown, mode));
 					ActivateElectric();
 					break;
 				case GameManager.PowerType.Darkness:
-					StartCoroutine(cooldownCoroutine(GameManager.PowerType.Darkness, darknessCooldown));
+					StartCoroutine(cooldownCoroutine(GameManager.PowerType.Darkness, darknessCooldown, mode));
 					ActivateDarkness();
 					break;
 			}
@@ -275,7 +292,7 @@ public class PowerController : MonoBehaviour
         behavioralPower = GameManager.PowerType.LargeOrb;
         transform.localScale = new Vector3(maxScale, maxScale, maxScale);
         transform.GetChild(0).GetComponent<MeshRenderer>().material = normalMaterial;
-        StartCoroutine(DurationCoroutine(GameManager.PowerType.LargeOrb, largeOrbDuration));
+        actualDurationCoroutine = StartCoroutine(DurationCoroutine(GameManager.PowerType.LargeOrb, largeOrbDuration));
     }
 
     void DeactivateLargeOrb()
@@ -293,7 +310,7 @@ public class PowerController : MonoBehaviour
     void ActivateVortex()
     {
         behavioralPower = GameManager.PowerType.Vortex;
-        StartCoroutine(VortexPower());
+		actualDurationCoroutine = StartCoroutine(VortexPower());
         transform.GetChild(0).GetComponent<MeshRenderer>().material = vortexMaterial;
     }
 
@@ -335,7 +352,7 @@ public class PowerController : MonoBehaviour
     {
         behavioralPower = GameManager.PowerType.LeechLife;
         transform.GetChild(0).GetComponent<MeshRenderer>().material = leechLifeMaterial;
-        StartCoroutine(DurationCoroutine(GameManager.PowerType.LeechLife, leechLifeDuration));
+		actualDurationCoroutine = StartCoroutine(DurationCoroutine(GameManager.PowerType.LeechLife, leechLifeDuration));
     }
 
     void DeactivateLeechLife()
@@ -352,7 +369,7 @@ public class PowerController : MonoBehaviour
     void ActivateSlug()
     {
         behavioralPower = GameManager.PowerType.Slug;
-        StartCoroutine("InstanciateSlug");
+		actualDurationCoroutine = StartCoroutine(InstanciateSlug());
         transform.GetChild(0).GetComponent<MeshRenderer>().material = slugMaterial;
     }
 
@@ -404,7 +421,7 @@ public class PowerController : MonoBehaviour
     {
         elementalPower = GameManager.PowerType.Ice;
         GetComponent<MeshRenderer>().material = iceMaterial;
-        StartCoroutine(DurationCoroutine(GameManager.PowerType.Ice, iceDuration));
+		actualDurationCoroutine = StartCoroutine(DurationCoroutine(GameManager.PowerType.Ice, iceDuration));
     }
 
     void DeactivateIce()
@@ -424,13 +441,13 @@ public class PowerController : MonoBehaviour
 		GetComponent<MeshRenderer>().material = fireMaterial;
 
         if (isActivatedByBrazier)
-        {
-            StartCoroutine(DurationCoroutine(GameManager.PowerType.Fire, fireDurationBrazier));
+		{
+			actualDurationCoroutine = StartCoroutine(DurationCoroutine(GameManager.PowerType.Fire, fireDurationBrazier));
             isActivatedByBrazier = false;
         }
         else
-        {
-            StartCoroutine(DurationCoroutine(GameManager.PowerType.Fire, fireDuration));
+		{
+			actualDurationCoroutine = StartCoroutine(DurationCoroutine(GameManager.PowerType.Fire, fireDuration));
         }
     }
 
@@ -462,7 +479,7 @@ public class PowerController : MonoBehaviour
     {
         elementalPower = GameManager.PowerType.Electric;
         GetComponent<MeshRenderer>().material = electricMaterial;
-        StartCoroutine(DurationCoroutine(GameManager.PowerType.Electric, electricDuration));
+		actualDurationCoroutine = StartCoroutine(DurationCoroutine(GameManager.PowerType.Electric, electricDuration));
     }
 
     void DeactivateElectric()
@@ -480,7 +497,7 @@ public class PowerController : MonoBehaviour
     {
         elementalPower = GameManager.PowerType.Darkness;
         GetComponent<MeshRenderer>().material = darknessMaterial;
-        StartCoroutine(DurationCoroutine(GameManager.PowerType.Darkness, darknessDuration));
+		actualDurationCoroutine = StartCoroutine(DurationCoroutine(GameManager.PowerType.Darkness, darknessDuration));
     }
 
     void DeactivateDarkness()
@@ -499,23 +516,28 @@ public class PowerController : MonoBehaviour
         DeactivatePower(power);
     }
 
-    public IEnumerator cooldownCoroutine(GameManager.PowerType power, float cooldown)
+    public IEnumerator cooldownCoroutine(GameManager.PowerType power, float cooldown, string mode)
     {   
-        GameManager.gameManager.UIManager.Cooldown(power, cooldown);
-        canBeActivated[(int)power - 1] = false;
-        yield return new WaitForSeconds(cooldown);
-        canBeActivated[(int)power - 1] = true;
-    }
+		switch (mode)
+		{
+			case "forced":
+				break;
+			case "player1":
+				canBeActivatedByPlayer1[(int)power - 1] = false;
+				GameManager.gameManager.UIManager.Cooldown(power, cooldown, true);
+				yield return new WaitForSeconds(cooldown);
+				canBeActivatedByPlayer1[(int)power - 1] = true;
+				break;
+			case "player2":
+				canBeActivatedByPlayer2[(int)power - 1] = false;
+				GameManager.gameManager.UIManager.Cooldown(power, cooldown, false);
+				yield return new WaitForSeconds(cooldown);
+				canBeActivatedByPlayer2[(int)power - 1] = true;
+				break;
+		}
+	}
 
     //==========OTHERS==========
-
-    public bool isBehavioral(GameManager.PowerType power)
-    {
-        if (power == GameManager.PowerType.LargeOrb || power == GameManager.PowerType.LeechLife || power == GameManager.PowerType.Shield || power == GameManager.PowerType.Slug || power == GameManager.PowerType.Vortex)
-            return true;
-        else
-            return false;
-    }
 
     public void onEnemyHit(GameObject target)
     {
@@ -575,44 +597,56 @@ public class PowerController : MonoBehaviour
     {
         if (droppedPower != GameManager.PowerType.None)
         {
-            switch (mode)
-            {
-                case "hit":
-					if (player1)
-					{
-						GameManager.gameManager.player1.GetComponent<PlayerController>().AttributePower(droppedPower, isFixedPower);
-					}
-                    else
-					{
-						GameManager.gameManager.player2.GetComponent<PlayerController>().AttributePower(droppedPower, isFixedPower);
-					}
-                    droppedPower = GameManager.PowerType.None;
-                    //UpdateUI
-                    GameManager.gameManager.UIManager.UpdateDroppedPower(droppedPower);
-                    break;
-                case "amortize":
-				case "miss":
-					if (reflectedDrop)
-                    {
-                        if (player1)
+			PlayerController player, otherPlayer;
+			if (player1)
+			{
+				player = GameManager.gameManager.player1.GetComponent<PlayerController>();
+				otherPlayer = GameManager.gameManager.player2.GetComponent<PlayerController>();
+			}
+			else
+			{
+				player = GameManager.gameManager.player2.GetComponent<PlayerController>();
+				otherPlayer = GameManager.gameManager.player1.GetComponent<PlayerController>();
+			}
+
+			if ((GameManager.isElemental(droppedPower) && player.elementalPowerSlot == GameManager.PowerType.None) || (!GameManager.isElemental(droppedPower) && player.behaviouralPowerSlot == GameManager.PowerType.None))
+			{
+				player.AttributePower(droppedPower);
+				droppedPower = GameManager.PowerType.None;
+				//UpdateUI
+				GameManager.gameManager.UIManager.UpdateDroppedPower(droppedPower);
+			}
+			else if ((GameManager.isElemental(droppedPower) && otherPlayer.elementalPowerSlot == GameManager.PowerType.None) || (!GameManager.isElemental(droppedPower) && otherPlayer.behaviouralPowerSlot == GameManager.PowerType.None))
+			{
+				reflectedDrop = true;
+			}
+			else
+			{
+				switch(mode)
+				{
+					case "hit":
+						player.AttributePower(droppedPower);
+						droppedPower = GameManager.PowerType.None;
+						//UpdateUI
+						GameManager.gameManager.UIManager.UpdateDroppedPower(droppedPower);
+						break;
+					case "amortize":
+					case "miss":
+						if(reflectedDrop)
 						{
-							GameManager.gameManager.player1.GetComponent<PlayerController>().AttributePower(droppedPower, isFixedPower);
+							player.AttributePower(droppedPower);
+							droppedPower = GameManager.PowerType.None;
+							//UpdateUI
+							GameManager.gameManager.UIManager.UpdateDroppedPower(droppedPower);
 						}
-                        else
+						else
 						{
-							GameManager.gameManager.player2.GetComponent<PlayerController>().AttributePower(droppedPower, isFixedPower);
+							reflectedDrop = true;
 						}
-                        droppedPower = GameManager.PowerType.None;
-                        //UpdateUI
-                        GameManager.gameManager.UIManager.UpdateDroppedPower(droppedPower);
-                    }
-                    else
-                    {
-						reflectedDrop = true;
-                    }
-                    break;
-            }
-        }
+						break;
+				}
+			}
+		}
     }
 
     private void OnDrawGizmos()

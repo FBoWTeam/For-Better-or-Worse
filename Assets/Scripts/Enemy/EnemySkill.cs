@@ -154,8 +154,7 @@ public class EnemySkill : MonoBehaviour
                 break;
             case Skill.Ranged:
                 myMat.color = Color.red;
-
-                print(isVisible(transform.position, target.transform.position));
+                
                 if (Time.time > nextAttack && isVisible(transform.position, target.transform.position))
                 {
                     Shoot(bulletPrefab, transform, target.transform, damage);
