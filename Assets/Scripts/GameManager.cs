@@ -126,6 +126,7 @@ public class GameManager : MonoBehaviour
             targetPlayer.GetComponent<Rigidbody>().AddForce((targetPlayer.transform.position - hitPosition) * knockBackForce);
             StartCoroutine(targetPlayer.GetComponent<PlayerController>().InvincibilityCoroutine());
             UIManager.UpdateHealthBar();
+            UIManager.UpdateCombo(0);
         }
     }
 
