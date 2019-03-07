@@ -26,19 +26,13 @@ public class UIManager : MonoBehaviour
     [Header("Combo")]
     public GameObject combo;
 
-    [Header("Main Powers of Fox")]
-    public GameObject mainPower1Fox;
-    public GameObject mainPower2Fox;
-    [Header("Main Powers of Raccoon")]
-    public GameObject mainPower1Raccoon;
-    public GameObject mainPower2Raccoon;
+    [Header("Fox Powers")]
+    public GameObject elementalPowerFox;
+	public GameObject behaviouralPowerFox;
 
-    [Header("Secondary Powers of Fox")]
-    public GameObject secondaryPower1Fox;
-    public GameObject secondaryPower2Fox;
-    [Header("Secondary Powers of Raccoon")]
-    public GameObject secondaryPower1Raccoon;
-    public GameObject secondaryPower2Raccoon;
+	[Header("Raccoon Powers")]
+    public GameObject elementalPowerRaccoon;
+    public GameObject behaviouralPowerRaccoon;
 
     [Header("Taunt")]
     public GameObject tauntCooldownFox;
@@ -57,7 +51,7 @@ public class UIManager : MonoBehaviour
     public Sprite none;
 
     [HideInInspector]
-    Dictionary<int, GameManager.PowerType> busySlot = new Dictionary<int, GameManager.PowerType>(4);
+    Dictionary<int, GameManager.PowerType> busySlot = new Dictionary<int, GameManager.PowerType>(2);
 
     #endregion
 
@@ -70,8 +64,6 @@ public class UIManager : MonoBehaviour
         //init dico
         busySlot.Add(1, GameManager.PowerType.None);
         busySlot.Add(2, GameManager.PowerType.None);
-        busySlot.Add(3, GameManager.PowerType.None);
-        busySlot.Add(4, GameManager.PowerType.None);
 
 
     }
@@ -167,27 +159,15 @@ public class UIManager : MonoBehaviour
             case 1:
 
                 if (player1)
-                    GetImage(mainPower1Fox).sprite = ImageAssignment(powerSlot);
+                    GetImage(elementalPowerFox).sprite = ImageAssignment(powerSlot);
                 else
-                    GetImage(mainPower1Raccoon).sprite = ImageAssignment(powerSlot);
+                    GetImage(elementalPowerRaccoon).sprite = ImageAssignment(powerSlot);
                 break;
             case 2:
                 if (player1)
-                    GetImage(mainPower2Fox).sprite = ImageAssignment(powerSlot);
+                    GetImage(behaviouralPowerFox).sprite = ImageAssignment(powerSlot);
                 else
-                    GetImage(mainPower2Raccoon).sprite = ImageAssignment(powerSlot);
-                break;
-            case 3:
-                if (player1)
-                    GetImage(secondaryPower1Fox).sprite = ImageAssignment(powerSlot);
-                else
-                    GetImage(secondaryPower1Raccoon).sprite = ImageAssignment(powerSlot);
-                break;
-            case 4:
-                if (player1)
-                    GetImage(secondaryPower2Fox).sprite = ImageAssignment(powerSlot);
-                else
-                    GetImage(secondaryPower2Raccoon).sprite = ImageAssignment(powerSlot);
+                    GetImage(behaviouralPowerRaccoon).sprite = ImageAssignment(powerSlot);
                 break;
         }
     }
@@ -250,20 +230,12 @@ public class UIManager : MonoBehaviour
             switch (slot)
             {
                 case 1:
-                    StartCoroutine(startCooldown(cd, GetCdImage(mainPower1Fox)));
-                    StartCoroutine(startCooldown(cd, GetCdImage( mainPower1Raccoon)));
+                    StartCoroutine(startCooldown(cd, GetCdImage(elementalPowerFox)));
+                    StartCoroutine(startCooldown(cd, GetCdImage(elementalPowerRaccoon)));
                     break;
                 case 2:
-                    StartCoroutine(startCooldown(cd, GetCdImage(mainPower2Fox)));
-                    StartCoroutine(startCooldown(cd, GetCdImage(mainPower2Raccoon)));
-                    break;
-                case 3:
-                    StartCoroutine(startCooldown(cd, GetCdImage(secondaryPower1Fox)));
-                    StartCoroutine(startCooldown(cd, GetCdImage(secondaryPower1Raccoon)));
-                    break;
-                case 4:
-                    StartCoroutine(startCooldown(cd, GetCdImage(secondaryPower2Fox)));
-                    StartCoroutine(startCooldown(cd, GetCdImage(secondaryPower2Raccoon)));
+                    StartCoroutine(startCooldown(cd, GetCdImage(behaviouralPowerFox)));
+                    StartCoroutine(startCooldown(cd, GetCdImage(behaviouralPowerRaccoon)));
                     break;
                 default:
                     break;
