@@ -566,44 +566,56 @@ public class PowerController : MonoBehaviour
     {
         if (droppedPower != GameManager.PowerType.None)
         {
-            switch (mode)
-            {
-                case "hit":
-					if (player1)
-					{
-						GameManager.gameManager.player1.GetComponent<PlayerController>().AttributePower(droppedPower);
-					}
-                    else
-					{
-						GameManager.gameManager.player2.GetComponent<PlayerController>().AttributePower(droppedPower);
-					}
-                    droppedPower = GameManager.PowerType.None;
-                    //UpdateUI
-                    GameManager.gameManager.UIManager.UpdateDroppedPower(droppedPower);
-                    break;
-                case "amortize":
-				case "miss":
-					if (reflectedDrop)
-                    {
-                        if (player1)
+			PlayerController player, otherPlayer;
+			if (player1)
+			{
+				player = GameManager.gameManager.player1.GetComponent<PlayerController>();
+				otherPlayer = GameManager.gameManager.player2.GetComponent<PlayerController>();
+			}
+			else
+			{
+				player = GameManager.gameManager.player2.GetComponent<PlayerController>();
+				otherPlayer = GameManager.gameManager.player1.GetComponent<PlayerController>();
+			}
+
+			if ((GameManager.isElemental(droppedPower) && player.elementalPowerSlot == GameManager.PowerType.None) || (!GameManager.isElemental(droppedPower) && player.behaviouralPowerSlot == GameManager.PowerType.None))
+			{
+				player.AttributePower(droppedPower);
+				droppedPower = GameManager.PowerType.None;
+				//UpdateUI
+				GameManager.gameManager.UIManager.UpdateDroppedPower(droppedPower);
+			}
+			else if ((GameManager.isElemental(droppedPower) && otherPlayer.elementalPowerSlot == GameManager.PowerType.None) || (!GameManager.isElemental(droppedPower) && otherPlayer.behaviouralPowerSlot == GameManager.PowerType.None))
+			{
+				reflectedDrop = true;
+			}
+			else
+			{
+				switch(mode)
+				{
+					case "hit":
+						player.AttributePower(droppedPower);
+						droppedPower = GameManager.PowerType.None;
+						//UpdateUI
+						GameManager.gameManager.UIManager.UpdateDroppedPower(droppedPower);
+						break;
+					case "amortize":
+					case "miss":
+						if(reflectedDrop)
 						{
-							GameManager.gameManager.player1.GetComponent<PlayerController>().AttributePower(droppedPower);
+							player.AttributePower(droppedPower);
+							droppedPower = GameManager.PowerType.None;
+							//UpdateUI
+							GameManager.gameManager.UIManager.UpdateDroppedPower(droppedPower);
 						}
-                        else
+						else
 						{
-							GameManager.gameManager.player2.GetComponent<PlayerController>().AttributePower(droppedPower);
+							reflectedDrop = true;
 						}
-                        droppedPower = GameManager.PowerType.None;
-                        //UpdateUI
-                        GameManager.gameManager.UIManager.UpdateDroppedPower(droppedPower);
-                    }
-                    else
-                    {
-						reflectedDrop = true;
-                    }
-                    break;
-            }
-        }
+						break;
+				}
+			}
+		}
     }
 
     private void OnDrawGizmos()
