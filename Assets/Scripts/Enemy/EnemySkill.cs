@@ -102,6 +102,7 @@ public class EnemySkill : MonoBehaviour
         if (collision.gameObject.CompareTag("Player"))
         {
             GameManager.gameManager.TakeDamage(collision.gameObject, damage, transform.position);
+            GameManager.gameManager.UIManager.QuoteOnDamage("enemy", collision.gameObject);
         }
     }
 
@@ -147,6 +148,7 @@ public class EnemySkill : MonoBehaviour
                 if (Time.time > nextAttack)
                 {
                     GameManager.gameManager.TakeDamage(target, damage, transform.position);
+                    GameManager.gameManager.UIManager.QuoteOnDamage("enemy", target);
                     nextAttack = Time.time + aoeCooldown;
                 }
                 break;
