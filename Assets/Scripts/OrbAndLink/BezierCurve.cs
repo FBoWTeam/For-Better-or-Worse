@@ -7,7 +7,6 @@ public class BezierCurve : MonoBehaviour
 {
 	LineRenderer lineRenderer;
 
-	static Transform player1, player2;
 	static Vector3 player1LinkPoint, player2LinkPoint;
 	static Transform deformPoint1, deformPointMid, deformPoint2;
 
@@ -16,8 +15,6 @@ public class BezierCurve : MonoBehaviour
 
 	void Awake()
 	{
-		player1 = GameObject.Find("Player1").transform;
-		player2 = GameObject.Find("Player2").transform;
 		deformPoint1 = transform.GetChild(0).GetChild(0);
 		deformPointMid = transform.GetChild(0).GetChild(1);
 		deformPoint2 = transform.GetChild(0).GetChild(2);
@@ -70,19 +67,19 @@ public class BezierCurve : MonoBehaviour
 	/// <returns></returns>
 	public static float GetPlayersDistance()
 	{
-		return Vector3.Distance(player1.position, player2.position);
+		return Vector3.Distance(GameManager.gameManager.player1.transform.position, GameManager.gameManager.player2.transform.position);
 	}
 
 	public static (Vector3, Vector3) UpdateLinkPoints()
 	{
-		Vector3 toPlayer2 = player2.position - player1.position;
+		Vector3 toPlayer2 = GameManager.gameManager.player2.transform.position - GameManager.gameManager.player1.transform.position;
 		toPlayer2 = toPlayer2.normalized;
-		player1LinkPoint = player1.position + player1.GetComponent<CapsuleCollider>().radius * toPlayer2;
+		player1LinkPoint = GameManager.gameManager.player1.transform.position + GameManager.gameManager.player1.transform.GetComponent<CapsuleCollider>().radius * toPlayer2;
 		player1LinkPoint = new Vector3(player1LinkPoint.x, player1LinkPoint.y + 1.0f, player1LinkPoint.z);
 
-		Vector3 toPlayer1 = player1.position - player2.position;
+		Vector3 toPlayer1 = GameManager.gameManager.player1.transform.position - GameManager.gameManager.player2.transform.position;
 		toPlayer1 = toPlayer1.normalized;
-		player2LinkPoint = player2.position + player2.GetComponent<CapsuleCollider>().radius * toPlayer1;
+		player2LinkPoint = GameManager.gameManager.player2.transform.position + GameManager.gameManager.player2.transform.GetComponent<CapsuleCollider>().radius * toPlayer1;
 		player2LinkPoint = new Vector3(player2LinkPoint.x, player2LinkPoint.y + 1.0f, player2LinkPoint.z);
 
 		return (player1LinkPoint, player2LinkPoint);
