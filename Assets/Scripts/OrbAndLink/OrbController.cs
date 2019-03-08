@@ -42,6 +42,9 @@ public class OrbController : MonoBehaviour
 	public bool isHealingOrb;
 	public int healAmount;
 
+
+    public bool hasHitEnemy;
+
 	void Start()
     {
 		if (!isHealingOrb)
@@ -188,7 +191,7 @@ public class OrbController : MonoBehaviour
         {
             GetComponent<PowerController>().CheckPowerAttribution("miss", other.GetComponent<PlayerController>().player1);
         }
-        else if (other.CompareTag("Enemy") && canHitEnemy == true)
+        else if (other.CompareTag("Enemy") && canHitEnemy == true && !amortized)
         {
             GetComponent<PowerController>().onEnemyHit(other.gameObject);
         }
