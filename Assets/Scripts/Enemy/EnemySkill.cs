@@ -119,10 +119,10 @@ public class EnemySkill : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        if (myMat.color != Color.white)
-        {
-            myMat.color = Color.white;
-        }
+        if (myMat.color != new Color(0.4f, 0.4f, 0.4f))
+		{
+            myMat.color = new Color(0.4f, 0.4f, 0.4f);
+		}
     }
 
 
@@ -135,7 +135,7 @@ public class EnemySkill : MonoBehaviour
 
                 if (Time.time > nextAttack)
                 {
-                    myMat.color = Color.red;
+                    myMat.color = new Color(0.4f, 0.0f, 0.0f);
                     StartCoroutine("Impact", target.transform);
 
                     nextAttack = Time.time + impactCooldown;
@@ -144,8 +144,8 @@ public class EnemySkill : MonoBehaviour
                 break;
             case Skill.AOE:
                 //DOT while in range
-                myMat.color = Color.red;
-                if (Time.time > nextAttack)
+                myMat.color = new Color(0.4f, 0.0f, 0.0f);
+				if (Time.time > nextAttack)
                 {
                     GameManager.gameManager.TakeDamage(target, damage, transform.position);
                     GameManager.gameManager.UIManager.QuoteOnDamage("enemy", target);
@@ -153,9 +153,9 @@ public class EnemySkill : MonoBehaviour
                 }
                 break;
             case Skill.Ranged:
-                myMat.color = Color.red;
-                
-                if (Time.time > nextAttack && isVisible(transform.position, target.transform.position))
+                myMat.color = new Color(0.4f, 0.0f, 0.0f);
+
+				if (Time.time > nextAttack && isVisible(transform.position, target.transform.position))
                 {
                     Shoot(bulletPrefab, transform, target.transform, damage);
                     nextAttack = Time.time + fireRate;
@@ -191,7 +191,7 @@ public class EnemySkill : MonoBehaviour
             yield return null;
         }
 
-        myMat.color = Color.white;
+        myMat.color = new Color(0.4f, 0.4f, 0.4f);
 
     }
 
