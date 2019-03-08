@@ -190,6 +190,7 @@ public class Enemy : MonoBehaviour
     public void TakeDamage(int damage, Vector3 hitPosition)
     {
         hp -= damage;
+        GameManager.gameManager.orb.GetComponent<OrbController>().hasHitEnemy = true;
 		enemyMovement.agent.velocity = (transform.position - hitPosition) * knockBackForce;
 		if (hp <= 0)
 		{
