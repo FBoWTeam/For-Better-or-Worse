@@ -53,6 +53,14 @@ public class GameManager : MonoBehaviour
         Darkness
     }
 
+    public enum PuddleType
+    {
+        None,
+        Slug,
+        Poison,
+        Mud
+    }
+
     // Start is called before the first frame update
     void Awake()
     {
