@@ -42,7 +42,6 @@ public class Brazier : MonoBehaviour, IActivable
             {
                 powerController.ActivatePower(GameManager.PowerType.Fire, "forced");
                 powerController.isActivatedByBrazier = true;
-                this.Deactivate();
             }
         }
     }
