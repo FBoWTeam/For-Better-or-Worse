@@ -30,7 +30,7 @@ public class Enemy : MonoBehaviour
         Player2,
         Nearest,
     }
-    public Focus focus = Focus.Nearest;
+    public Focus focus;
     #endregion
 
     #region Taunt Variables
@@ -39,9 +39,11 @@ public class Enemy : MonoBehaviour
         Taunter,
         Other,
     }
-    public Taunt taunt = Taunt.Taunter;
-    private GameObject taunter;
-    public bool isTaunted = false;
+    public Taunt taunt;
+    //if true player1, if false, player2
+    public bool taunter;
+    public bool isTaunted;
+
     public float tauntDuration;
 
     GameObject tauntCanvas;
@@ -54,7 +56,7 @@ public class Enemy : MonoBehaviour
     public int baseHP = 100;
     public int hp;
 
-	public float knockBackForce;
+    public float knockBackForce;
 
     public float timeImo; //temps d'immobilisation quand un ennemi se fait toucher par l'orbe
 
@@ -76,27 +78,26 @@ public class Enemy : MonoBehaviour
         enemyMovement = GetComponent<EnemyMovement>();
         sdrawPath = drawPath;
         tauntCanvas = transform.GetChild(2).gameObject;
-        FocusManagement();
+
     }
 
     // Update is called once per frame
     void Update()
     {
-		if (!GameManager.gameManager.isPaused)
-		{
+        if (!GameManager.gameManager.isPaused)
+        {
+            FocusManagement();
 
-			TauntManagement();
+            if (!enemyMovement.agent.isStopped)
+            {
+                enemyMovement.DoMovement();
+            }
 
-			if (!enemyMovement.agent.isStopped)
-			{
-				enemyMovement.DoMovement();
-			}
-
-			if (drawView)
-			{
-				Debug.DrawRay(this.transform.position, this.transform.forward * lengthView, Color.magenta);
-			}
-		}
+            if (drawView)
+            {
+                Debug.DrawRay(this.transform.position, this.transform.forward * lengthView, Color.magenta);
+            }
+        }
     }
 
     #region Focus Methods
@@ -105,86 +106,62 @@ public class Enemy : MonoBehaviour
     /// </summary>
     public void FocusManagement()
     {
-        switch (focus)
+        if (isTaunted)
         {
-            case Focus.Player1:
-                aimPlayer = GameManager.gameManager.player1;
-                break;
-            case Focus.Player2:
-                aimPlayer = GameManager.gameManager.player2;
-                break;
-            case Focus.Nearest:
-                aimPlayer = GetNearestGO(players);
-                break;
-            default:
-                break;
-        }
-    }
-
-    /// <summary>
-    /// Determines the nearest Gameobject (according to position) in the list
-    /// </summary>
-    /// <param name="gos">Take a GameObject list</param>
-    /// <returns></returns>
-    public GameObject GetNearestGO(GameObject[] gos)
-    {
-        float min = Mathf.Infinity;
-        GameObject nearest = null;
-        foreach (var item in gos)
-        {
-            float dist = Vector3.Distance(transform.position, item.transform.position);
-            if (dist < min)
+            switch (taunt)
             {
-                min = dist;
-                nearest = item.gameObject;
+                case Taunt.Taunter:
+                    aimPlayer = taunter ? GameManager.gameManager.player1 : GameManager.gameManager.player2;
+                    break;
+                case Taunt.Other:
+                    aimPlayer = taunter ? GameManager.gameManager.player2 : GameManager.gameManager.player1;
+                    break;
+                default:
+                    break;
             }
         }
-        return nearest;
+        else
+        {
+            switch (focus)
+            {
+                case Focus.Player1:
+                    aimPlayer = GameManager.gameManager.player1;
+                    break;
+                case Focus.Player2:
+                    aimPlayer = GameManager.gameManager.player2;
+                    break;
+                case Focus.Nearest:
+                    aimPlayer = GameManager.gameManager.Player1IsNearest(transform.position) ? GameManager.gameManager.player1 : GameManager.gameManager.player2;
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        TauntFeedback();
     }
 
     #endregion
 
     #region Taunt Methods
 
-    private void TauntManagement()
+    public IEnumerator TauntCoroutine(bool player1)
     {
-        if (GameManager.gameManager.player1HasTaunt && Vector3.Distance(transform.position, GameManager.gameManager.player1.transform.position) <= GameManager.gameManager.tauntRange)
+        isTaunted = true;
+        taunter = player1;
+        if (player1)
         {
-            taunter = players[0];
-            isTaunted = true;
             tauntCanvas.GetComponentInChildren<Text>().color = player1ColorTaunt;
         }
-        else if (GameManager.gameManager.player2HasTaunt && Vector3.Distance(transform.position, GameManager.gameManager.player2.transform.position) <= GameManager.gameManager.tauntRange)
+        else
         {
-            taunter = players[1];
-            isTaunted = true;
             tauntCanvas.GetComponentInChildren<Text>().color = player2ColorTaunt;
         }
-
-        if (taunter != null)
-        {
-            switch (taunt)
-            {
-                case Taunt.Taunter:
-                    aimPlayer = taunter;
-                    break;
-                case Taunt.Other:
-                    aimPlayer = (taunter.Equals(players[0])) ? players[1] : players[0];
-                    break;
-                default:
-                    break;
-            }
-        }
-        StartCoroutine("DeactivateTaunt", tauntDuration);
-        TauntFeedback();
-    }
-
-    IEnumerator DeactivateTaunt(float tauntDuration)
-    {
         yield return new WaitForSeconds(tauntDuration);
-        FocusManagement();
         isTaunted = false;
     }
+
+
 
     private void TauntFeedback()
     { 
