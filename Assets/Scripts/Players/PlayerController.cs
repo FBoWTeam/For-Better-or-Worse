@@ -16,17 +16,23 @@ public class PlayerController : MonoBehaviour
 	public float invicibilityDuration;
 	public int blinkNb;
 
-	[Header("[Power Slots]")]
+    [Header("[Taunt]")]
+    public int tauntRange;
+    public float tauntCooldown;
+
+    [Header("[Power Slots]")]
     public GameManager.PowerType elementalPowerSlot;
     public GameManager.PowerType behaviouralPowerSlot;
     
     bool canTaunt = true;
     OrbHitter orbHitter;
+    UIManager uiManager;
 
     void Awake()
     {
         rb = GetComponent<Rigidbody>();
         orbHitter = gameObject.GetComponent<OrbHitter>();
+        uiManager = GameObject.FindGameObjectWithTag("UI").GetComponent<UIManager>();
     }
 
     private void Start()
@@ -93,11 +99,16 @@ public class PlayerController : MonoBehaviour
 
     void CheckTaunt()
     {
-        if (((player1 && (Input.GetKeyDown(KeyCode.Joystick1Button4) || Input.GetKeyDown(KeyCode.Space))) || (!player1 && (Input.GetKeyDown(KeyCode.Joystick2Button4) || Input.GetKeyDown(KeyCode.Keypad0)))) && canTaunt)
+        if (((player1 && (Input.GetKeyDown(KeyCode.Joystick1Button4) 
+            || Input.GetKeyDown(KeyCode.Space))) 
+            || (!player1 && (Input.GetKeyDown(KeyCode.Joystick2Button4) 
+            || Input.GetKeyDown(KeyCode.Keypad0)))) && canTaunt)
         {
-            StartCoroutine(TauntCoroutine());
-            StartCoroutine(TauntCoolDown(GameManager.gameManager.tauntCooldown));
+            Taunt();
+            StartCoroutine(TauntCoolDown(tauntCooldown));
+            uiManager.TauntCooldownSystem(player1, tauntCooldown);
         }
+
     }
 
     IEnumerator TauntCoolDown(float cd) {
@@ -106,23 +117,15 @@ public class PlayerController : MonoBehaviour
         canTaunt = true;
     }
 
-    IEnumerator TauntCoroutine()
+    void Taunt()
     {
-        yield return new WaitForEndOfFrame();
-        if (player1) {
-            GameManager.gameManager.player1HasTaunt = true;
-           
-        } else {
-            GameManager.gameManager.player2HasTaunt = true;
-
-        }
-
-        yield return new WaitForEndOfFrame();
-
-        if (player1) {
-            GameManager.gameManager.player1HasTaunt = false;
-        } else {
-            GameManager.gameManager.player2HasTaunt = false;
+        Collider[] hitColliders = Physics.OverlapSphere(transform.position, tauntRange);
+        for (int i = 0; i < hitColliders.Length; i++)
+        {
+            if (hitColliders[i].CompareTag("Enemy"))
+            {
+                hitColliders[i].GetComponent<Enemy>().StartCoroutine(hitColliders[i].GetComponent<Enemy>().TauntCoroutine(player1));
+            }
         }
     }
            
