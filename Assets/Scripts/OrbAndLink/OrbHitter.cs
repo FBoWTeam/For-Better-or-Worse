@@ -17,7 +17,6 @@ public class OrbHitter : MonoBehaviour
     public float hitCooldown;
     float hitTimer;
 	public float accelerationFactor;
-   // public bool hasHitEnemy;
 
 	[Header("[Amortize]")]
 	public bool amortizing;

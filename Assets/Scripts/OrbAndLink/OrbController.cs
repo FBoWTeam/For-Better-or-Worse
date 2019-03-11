@@ -42,7 +42,6 @@ public class OrbController : MonoBehaviour
 	public bool isHealingOrb;
 	public int healAmount;
 
-
     public bool hasHitEnemy;
 
 	void Start()
