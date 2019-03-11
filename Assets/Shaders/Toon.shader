@@ -5,6 +5,7 @@
 		_Color("Color", Color) = (0.5, 0.65, 1, 1)
 		[HDR]
 		_AmbientColor("Ambient Color", Color) = (0.4,0.4,0.4,1)
+		_Sharpness("Sharpness", Float) = 0.01
 		[HDR]
 		_SpecularColor("Specular Color", Color) = (0.9,0.9,0.9,1)
 		_Glossiness("Glossiness", Float) = 32
@@ -64,6 +65,7 @@
 			
 			float4 _Color;
 			float4 _AmbientColor;
+			float _Sharpness;
 			float _Glossiness;
 			float4 _SpecularColor;
 			float4 _RimColor;
@@ -75,7 +77,7 @@
 				float3 normal = normalize(i.worldNormal);
 				float NdotL = dot(_WorldSpaceLightPos0, normal);
 				float shadow = SHADOW_ATTENUATION(i);
-				float lightIntensity = smoothstep(0, 0.01, NdotL * shadow);;
+				float lightIntensity = smoothstep(0, _Sharpness, NdotL * shadow);;
 				float4 light = lightIntensity * _LightColor0;
 
 				float3 viewDir = normalize(i.viewDir);
