@@ -54,11 +54,15 @@ public class Enemy : MonoBehaviour
 
 	public float knockBackForce;
 
+    public float timeImo; //temps d'immobilisation quand un ennemi se fait toucher par l'orbe
+
     [HideInInspector]
     public EnemyMovement enemyMovement;
 
     GameObject[] players;
     public static GameObject aimPlayer;
+
+    
 
     #endregion
 
@@ -173,7 +177,7 @@ public class Enemy : MonoBehaviour
     }
 
     private void TauntFeedback()
-    {
+    { 
         if (isTaunted)
         {
             tauntCanvas.SetActive(true);
@@ -188,10 +192,11 @@ public class Enemy : MonoBehaviour
     #endregion
 
     public void TakeDamage(int damage, Vector3 hitPosition)
-    {
+    { 
         hp -= damage;
         GameManager.gameManager.orb.GetComponent<OrbController>().hasHitEnemy = true;
-		enemyMovement.agent.velocity = (transform.position - hitPosition) * knockBackForce;
+        //enemyMovement.agent.velocity = (transform.position - hitPosition) * knockBackForce;
+        StartCoroutine("Stun");
 		if (hp <= 0)
 		{
 			GetComponent<LootTable>().LootEnemy();
@@ -200,5 +205,16 @@ public class Enemy : MonoBehaviour
 			Destroy(this.gameObject);
 		}
     }
+
+
+
+    IEnumerator Stun()
+    {
+        enemyMovement.agent.isStopped = true;
+
+        yield return new WaitForSecondsRealtime(timeImo);
+        enemyMovement.agent.isStopped = false;
+    }
+
 
 }
