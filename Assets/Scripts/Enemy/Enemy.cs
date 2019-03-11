@@ -42,10 +42,12 @@ public class Enemy : MonoBehaviour
     public Taunt taunt = Taunt.Taunter;
     private GameObject taunter;
     public bool isTaunted = false;
+    public float tauntDuration;
 
     GameObject tauntCanvas;
     Color player1ColorTaunt = new Color(255, 96, 0);
     Color player2ColorTaunt = new Color(82, 82, 82);
+
 
     #endregion
 
@@ -70,6 +72,7 @@ public class Enemy : MonoBehaviour
         enemyMovement = GetComponent<EnemyMovement>();
         sdrawPath = drawPath;
         tauntCanvas = transform.GetChild(2).gameObject;
+        FocusManagement();
     }
 
     // Update is called once per frame
@@ -77,7 +80,7 @@ public class Enemy : MonoBehaviour
     {
 		if (!GameManager.gameManager.isPaused)
 		{
-			FocusManagement();
+
 			TauntManagement();
 
 			if (!enemyMovement.agent.isStopped)
@@ -168,8 +171,15 @@ public class Enemy : MonoBehaviour
                     break;
             }
         }
-
+        StartCoroutine("DeactivateTaunt", tauntDuration);
         TauntFeedback();
+    }
+
+    IEnumerator DeactivateTaunt(float tauntDuration)
+    {
+        yield return new WaitForSeconds(tauntDuration);
+        FocusManagement();
+        isTaunted = false;
     }
 
     private void TauntFeedback()
