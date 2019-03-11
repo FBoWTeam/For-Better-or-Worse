@@ -5,9 +5,9 @@ using UnityEngine;
 public class RoomSystem : MonoBehaviour, IActivable
 {
     [Header("Private variables  => Can't touch this")]
-    [SerializeField]
+    //private
     [Tooltip("number of player present in the current room")]
-    private int numberPlayerPresent;
+    public int numberPlayerPresent;
 
     [Tooltip("if the room is cleared or not")]
     [SerializeField]
@@ -16,15 +16,20 @@ public class RoomSystem : MonoBehaviour, IActivable
     [Tooltip("indicates if the players left the room or not")]
     private bool playerLeft;
 
+    //private
     [Header("Public variables  => Can touch this")]
     public GameObject[] doorsToClose;
 
+    //private
     [Tooltip("game object coontaining the enemies of the room")]
     public List<GameObject> enemies;
+
     [Tooltip("objects to activate when the room is cleared")]
     public GameObject[] objectsToActivate;
 
     public bool isActive { get; set; }
+    
+    public GameObject nextRoom;
 
     void Update()
     {
@@ -33,9 +38,12 @@ public class RoomSystem : MonoBehaviour, IActivable
         {
             this.Activate();
         }
-        else if (numberPlayerPresent == 0 && !playerLeft)
+        else if (numberPlayerPresent == 0 && !playerLeft && enemies.Count == 0)
         {
-            this.Deactivate();
+            if (nextRoom != null && nextRoom.GetComponent<RoomSystem>().numberPlayerPresent == 2)
+            {
+                this.Deactivate();
+            }
         }
     }
 
@@ -63,6 +71,10 @@ public class RoomSystem : MonoBehaviour, IActivable
             playerLeft = false;
             numberPlayerPresent++;
         }
+        if (other.CompareTag("Enemy"))
+        {
+            enemies.Add(other.gameObject);
+        }
     }
 
     private void OnTriggerExit(Collider other)
@@ -72,7 +84,7 @@ public class RoomSystem : MonoBehaviour, IActivable
             numberPlayerPresent--;
         }
     }
-    
+
     void CloseDoors()
     {
         for (int i = 0; i < doorsToClose.Length; i++)

@@ -34,7 +34,8 @@ public class EnemyShot : MonoBehaviour
 
         if (other.CompareTag("Player"))
         {
-            GameManager.gameManager.TakeDamage(other.gameObject, damage);
+            GameManager.gameManager.TakeDamage(other.gameObject, damage, transform.position);
+            GameManager.gameManager.UIManager.QuoteOnDamage("enemy", other.gameObject);
             Destroy(this.gameObject);
         }
         else if (other.CompareTag("Wall"))

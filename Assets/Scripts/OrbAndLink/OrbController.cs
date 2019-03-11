@@ -4,12 +4,21 @@ using UnityEngine;
 
 public class OrbController : MonoBehaviour
 {
-    [Header("[Orb Statistics]")]
+	public bool isActive;
+	public float timeToActivate;
+    
+    [Header("[Orb speed Statistics]")]
     public float speed;
     public float minSpeed;
     public float maxSpeed;
+
+    [Header("[Orb combo Statistics]")]
+    public int combo;
+    public int damageComboIncrease;
+    public int damageIncreaseStep;
+    public int maxComboDamage;
+
     public bool amortized;
-    public float combo;
 
     [Header("[Valid Targets]")]
     public bool canHitEnemy;
@@ -33,6 +42,9 @@ public class OrbController : MonoBehaviour
 	public bool isHealingOrb;
 	public int healAmount;
 
+
+    public bool hasHitEnemy;
+
 	void Start()
     {
 		if (!isHealingOrb)
@@ -40,33 +52,48 @@ public class OrbController : MonoBehaviour
 			toPlayer2 = true;
 			progression = 0.5f;
 			transform.position = BezierCurve.CalculateCubicBezierPoint(progression);
+			StartCoroutine(ActivateCoroutine());
+		}
+		else
+		{
+			isActive = true;
 		}
     }
 
     void FixedUpdate()
     {
-        if (!amortized)
-        {
-            SetFixedSpeedCoefficient();
-            speed = Mathf.Clamp(speed, minSpeed, maxSpeed);
-            float fixedSpeed = speed * fixedSpeedCoefficient;
-
-            step = (fixedSpeed / BezierCurve.GetPlayersDistance()) * Time.fixedDeltaTime;
-            progression = toPlayer2 ? progression + step : progression - step;
-            progression = Mathf.Clamp01(progression);
-        }
-        transform.position = BezierCurve.CalculateCubicBezierPoint(progression);
-
-        if (progression == 1.0f || progression == 0.0f)
+		if(!GameManager.gameManager.isPaused)
 		{
-			if (isHealingOrb)
+			if (!amortized && isActive)
 			{
-				GameManager.gameManager.hp += healAmount;
-				Destroy(this.gameObject);
+				SetFixedSpeedCoefficient();
+				speed = Mathf.Clamp(speed, minSpeed, maxSpeed);
+				float fixedSpeed = speed * fixedSpeedCoefficient;
+
+				step = (fixedSpeed / BezierCurve.GetPlayersDistance()) * Time.fixedDeltaTime;
+				progression = toPlayer2 ? progression + step : progression - step;
+				progression = Mathf.Clamp01(progression);
 			}
-			else
+			transform.position = BezierCurve.CalculateCubicBezierPoint(progression);
+
+			if (progression == 1.0f || progression == 0.0f)
 			{
-				toPlayer2 = !toPlayer2;
+				if (isHealingOrb)
+				{
+					if (progression == 0.0f)
+					{
+						GameManager.gameManager.Heal(true, healAmount);
+					}
+					else
+					{
+						GameManager.gameManager.Heal(false, healAmount);
+					}
+					Destroy(this.gameObject);
+				}
+				else
+				{
+					toPlayer2 = !toPlayer2;
+				}
 			}
 		}
     }
@@ -148,10 +175,15 @@ public class OrbController : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player") && canHitPlayer == true && amortized == false)
+        if (other.CompareTag("Player") && amortized == false)
         {
-            GameManager.gameManager.TakeDamage(other.gameObject, gameObject.GetComponent<PowerController>().baseDamage);
+            if (canHitPlayer == true)
+            {
+                GameManager.gameManager.TakeDamage(other.gameObject, gameObject.GetComponent<PowerController>().baseDamage, other.transform.position);
+                GameManager.gameManager.UIManager.QuoteOnDamage("orb", other.gameObject);
+            }
             combo = 0;
+            GameManager.gameManager.UIManager.UpdateCombo(combo);
             speed = minSpeed;
             GetComponent<PowerController>().CheckPowerAttribution("miss", other.GetComponent<PlayerController>().player1);
         }
@@ -159,9 +191,16 @@ public class OrbController : MonoBehaviour
         {
             GetComponent<PowerController>().CheckPowerAttribution("miss", other.GetComponent<PlayerController>().player1);
         }
-        else if (other.CompareTag("Enemy") && canHitEnemy == true)
+        else if (other.CompareTag("Enemy") && canHitEnemy == true && !amortized)
         {
             GetComponent<PowerController>().onEnemyHit(other.gameObject);
         }
     }
+
+	IEnumerator ActivateCoroutine()
+	{
+		isActive = false;
+		yield return new WaitForSeconds(timeToActivate);
+		isActive = true;
+	}
 }

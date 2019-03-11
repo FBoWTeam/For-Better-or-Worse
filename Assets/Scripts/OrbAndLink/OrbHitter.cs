@@ -17,6 +17,7 @@ public class OrbHitter : MonoBehaviour
     public float hitCooldown;
     float hitTimer;
 	public float accelerationFactor;
+   // public bool hasHitEnemy;
 
 	[Header("[Amortize]")]
 	public bool amortizing;
@@ -31,7 +32,10 @@ public class OrbHitter : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        OrbHit();
+		if(!GameManager.gameManager.isPaused)
+		{
+			OrbHit();
+		}
     }
 
     /// <summary>
@@ -48,8 +52,8 @@ public class OrbHitter : MonoBehaviour
 		UpdateInputs();
 
 		if (inRange)
-        {
-			bool player1 = GetComponent<PlayerController>().player1;
+        {            
+            bool player1 = GetComponent<PlayerController>().player1;
 			if (hitting && ((player1 && !orbController.toPlayer2) || (!player1 && orbController.toPlayer2)))
             {
 				StopCoroutine(HitCoroutine());
@@ -57,14 +61,20 @@ public class OrbHitter : MonoBehaviour
 				hitTimer = hitCooldown;
 				orbController.toPlayer2 = !orbController.toPlayer2;
                 orbController.speed = accelerationFactor * orbController.combo + orbController.minSpeed;
-                orbController.combo++;
+                if(orbController.hasHitEnemy)
+                {
+                    orbController.combo++;
+                    orbController.hasHitEnemy = false;
+                }
+                //Update combo UI
+                GameManager.gameManager.UIManager.UpdateCombo(orbController.combo);               
                 CheckPowerActivation();
-                GameManager.gameManager.orb.GetComponent<PowerController>().CheckPowerAttribution("hit", true);
+                GameManager.gameManager.orb.GetComponent<PowerController>().CheckPowerAttribution("hit", player1);
             }
             if (amortizing && !orbController.amortized)
             {
                 StartCoroutine(AmortizeCoroutine());
-                GameManager.gameManager.orb.GetComponent<PowerController>().CheckPowerAttribution("amortize", true);
+                GameManager.gameManager.orb.GetComponent<PowerController>().CheckPowerAttribution("amortize", player1);
             }
             else if (!amortizing && orbController.amortized)
             {
@@ -115,11 +125,11 @@ public class OrbHitter : MonoBehaviour
     /// apply the power on the orb if not None
     /// </summary>
     void CheckPowerActivation()
-    {
+    {       
         if (powerToApply != GameManager.PowerType.None)
         {
-            orbController.GetComponent<PowerController>().ActivatePower(powerToApply);
-
+			string mode = GetComponent<PlayerController>().player1 ? "player1" : "player2";
+			orbController.GetComponent<PowerController>().ActivatePower(powerToApply, mode);
             powerToApply = GameManager.PowerType.None;
         }
         
@@ -136,14 +146,14 @@ public class OrbHitter : MonoBehaviour
                 orbController.GetComponent<PowerController>().currentShieldStack--;
             }
         }
-        else if (orbController.GetComponent<PowerController>().behavioralPower == GameManager.PowerType.Shield && orbController.GetComponent<PowerController>().currentShieldStack == 0)
+        else if (orbController.GetComponent<PowerController>().behavioralPower == GameManager.PowerType.Shield && orbController.GetComponent<PowerController>().currentShieldStack <= 0)
         {
             orbController.GetComponent<PowerController>().DeactivatePower(GameManager.PowerType.Shield);
         }
     }
 
 	/// <summary>
-	/// 
+	/// extend the time to hit the orb from a frame to a range of frame
 	/// </summary>
 	/// <returns></returns>
 	IEnumerator HitCoroutine()
@@ -163,13 +173,15 @@ public class OrbHitter : MonoBehaviour
     {
         orbController.speed = 0.0f;
         orbController.amortized = true;
+        orbController.speed = orbController.minSpeed;
+        orbController.combo = 0;
+        //reset combo ui
+        GameManager.gameManager.UIManager.UpdateCombo(orbController.combo);
         yield return new WaitForSeconds(amortizeDuration);
         if (orbController.amortized)
         {
             orbController.toPlayer2 = !orbController.toPlayer2;
             orbController.amortized = false;
-            orbController.speed = orbController.minSpeed;
-			orbController.combo = 0;
         }
     }
 }
