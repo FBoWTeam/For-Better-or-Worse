@@ -50,7 +50,7 @@ public class LinkDeformation : MonoBehaviour
 	/// <summary>
 	///	Set the position of the gameobject between player 1 and 2 looking at player 1
 	/// </summary>
-	void FixPosition()
+	public void FixPosition()
 	{
 		(Vector3 player1LinkPoint, Vector3 player2LinkPoint) = BezierCurve.UpdateLinkPoints();
 		transform.position = player1LinkPoint + (player2LinkPoint - player1LinkPoint) / 2;

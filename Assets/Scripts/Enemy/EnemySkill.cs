@@ -36,6 +36,12 @@ public class EnemySkill : MonoBehaviour
     public float impactCooldown = 3f;
     [DrawIf(new string[] { "skillOne" }, Skill.Impact)]
     public float impactSpeed = 1.5f;
+
+    public bool isAttacking;
+    private float timeAnimation = 1f;
+    public bool stopAfterHit;
+    [DrawIf(new string[] { "stopAfterHit" }, true)]
+    public float timeImoAfterHit;
     #endregion
 
     #region AoeFields
@@ -171,32 +177,28 @@ public class EnemySkill : MonoBehaviour
     IEnumerator Impact(Transform target)
     {
 
-        Vector3 originalPosition = transform.position;
-		Vector3 targetPos = new Vector3(target.position.x, target.position.y + 1, target.position.z);// PIVOT DE ....
-        Vector3 dirToTarget = (targetPos - transform.position).normalized;
-        Vector3 attackPosition = targetPos + dirToTarget;
-        //Debug.Log(attackPosition);
-        float percent = 0;
+         Vector3 originalPosition = transform.position;
+         Vector3 targetPos = new Vector3(target.position.x, target.position.y + 1, target.position.z);// PIVOT DE ....
+         Vector3 dirToTarget = (targetPos - transform.position).normalized;
+         Vector3 attackPosition = targetPos + dirToTarget;
+         //Debug.Log(attackPosition);
+         float percent = 0;
 
 
 
-        while (percent <= 1)
-        {
+         while (percent <= 1)
+         {
 
-            percent += Time.deltaTime * impactSpeed;
-            float interpolation = (-Mathf.Pow(percent, 2) + percent) * 4;
-            //Debug.Log(interpolation);
-            transform.position = Vector3.Lerp(originalPosition, attackPosition, interpolation);
+             percent += Time.deltaTime * impactSpeed;
+             float interpolation = (-Mathf.Pow(percent, 2) + percent) * 4;
+             //Debug.Log(interpolation);
+             transform.position = Vector3.Lerp(originalPosition, attackPosition, interpolation);
+             yield return null;
+         }
 
-            yield return null;
-        }
-
-        myMat.color = new Color(0.4f, 0.4f, 0.4f);
+         myMat.color = new Color(0.4f, 0.4f, 0.4f);
 
     }
-
-
-
 
     /// <summary>
     /// return true if a Player is "visible"

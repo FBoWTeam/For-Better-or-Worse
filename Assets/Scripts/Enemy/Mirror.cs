@@ -11,7 +11,7 @@ public class Mirror : MonoBehaviour
 	{
 		if (other.CompareTag("Orb"))
 		{
-			if(GameManager.gameManager.orb.GetComponent<PowerController>().behavioralPower == GameManager.PowerType.LargeOrb)
+			if(GameManager.gameManager.orb.GetComponent<PowerController>().behaviouralPower == GameManager.PowerType.LargeOrb)
 			{
 				EnemyBonus enemy = GetComponentInParent<EnemyBonus>();
 				enemy.bonus = EnemyBonus.Bonus.None;
