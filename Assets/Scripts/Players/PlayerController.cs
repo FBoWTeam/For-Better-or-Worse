@@ -8,7 +8,9 @@ public class PlayerController : MonoBehaviour
 {
 	[Header("[Main Params]")]
     public bool player1;
-    public float speed;
+    public float initialSpeed;
+    private float speed;
+    public bool isSlowed;
     Rigidbody rb;
 	[HideInInspector]
     public Vector3 direction;
@@ -36,6 +38,7 @@ public class PlayerController : MonoBehaviour
     private void Start()
     {
         //Update UI (for development)
+        speed = initialSpeed;
         GameManager.gameManager.UIManager.UpdatePowerSlot(1, player1, elementalPowerSlot);
         GameManager.gameManager.UIManager.UpdatePowerSlot(2, player1, behaviouralPowerSlot);
     }
@@ -188,6 +191,7 @@ public class PlayerController : MonoBehaviour
 
 		invincible = false;
 	}
+    
 
 	public void RespawnReset()
 	{
@@ -195,4 +199,23 @@ public class PlayerController : MonoBehaviour
 		canTaunt = true;
 		invincible = false;
 	}
+
+    public void SlowSpeed(float slowAmount)
+    {
+        if (!isSlowed)
+        {
+            speed = initialSpeed * ((100 - slowAmount) / 100);
+            isSlowed = true;
+        }
+    }
+
+    public void RestoreSpeed()
+    {
+        if (isSlowed)
+        {
+            speed = initialSpeed;
+            isSlowed = false;
+        }
+    }
+    
 }
