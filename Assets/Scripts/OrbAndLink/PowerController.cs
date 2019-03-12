@@ -5,7 +5,7 @@ using UnityEngine;
 public class PowerController : MonoBehaviour
 {
     public GameManager.PowerType elementalPower;
-    public GameManager.PowerType behavioralPower;
+    public GameManager.PowerType behaviouralPower;
 	public Coroutine actualDurationCoroutine;
 
     OrbController orbController;
@@ -193,9 +193,9 @@ public class PowerController : MonoBehaviour
 			{
 				DeactivatePower(elementalPower);
 			}
-			else if (!GameManager.isElemental(powerToActivate) && behavioralPower != GameManager.PowerType.None)
+			else if (!GameManager.isElemental(powerToActivate) && behaviouralPower != GameManager.PowerType.None)
 			{
-				DeactivatePower(behavioralPower);
+				DeactivatePower(behaviouralPower);
 			}
 
 			switch (powerToActivate)
@@ -289,7 +289,7 @@ public class PowerController : MonoBehaviour
 
     void ActivateLargeOrb()
     {
-        behavioralPower = GameManager.PowerType.LargeOrb;
+        behaviouralPower = GameManager.PowerType.LargeOrb;
         transform.localScale = new Vector3(maxScale, maxScale, maxScale);
         transform.GetChild(0).GetComponent<MeshRenderer>().material = normalMaterial;
         actualDurationCoroutine = StartCoroutine(DurationCoroutine(GameManager.PowerType.LargeOrb, largeOrbDuration));
@@ -297,7 +297,7 @@ public class PowerController : MonoBehaviour
 
     void DeactivateLargeOrb()
     {
-        behavioralPower = GameManager.PowerType.None;
+        behaviouralPower = GameManager.PowerType.None;
         transform.localScale = new Vector3(minScale, minScale, minScale);
         transform.GetChild(0).GetComponent<MeshRenderer>().material = normalMaterial;
     }
@@ -309,14 +309,14 @@ public class PowerController : MonoBehaviour
 
     void ActivateVortex()
     {
-        behavioralPower = GameManager.PowerType.Vortex;
+        behaviouralPower = GameManager.PowerType.Vortex;
 		actualDurationCoroutine = StartCoroutine(VortexPower());
         transform.GetChild(0).GetComponent<MeshRenderer>().material = vortexMaterial;
     }
 
     void DeactivateVortex()
     {
-        behavioralPower = GameManager.PowerType.None;
+        behaviouralPower = GameManager.PowerType.None;
         transform.GetChild(0).GetComponent<MeshRenderer>().material = normalMaterial;
     }
 
@@ -350,14 +350,14 @@ public class PowerController : MonoBehaviour
 
     void ActivateLeechLife()
     {
-        behavioralPower = GameManager.PowerType.LeechLife;
+        behaviouralPower = GameManager.PowerType.LeechLife;
         transform.GetChild(0).GetComponent<MeshRenderer>().material = leechLifeMaterial;
 		actualDurationCoroutine = StartCoroutine(DurationCoroutine(GameManager.PowerType.LeechLife, leechLifeDuration));
     }
 
     void DeactivateLeechLife()
     {
-        behavioralPower = GameManager.PowerType.None;
+        behaviouralPower = GameManager.PowerType.None;
         transform.GetChild(0).GetComponent<MeshRenderer>().material = normalMaterial;
     }
 
@@ -368,14 +368,14 @@ public class PowerController : MonoBehaviour
 
     void ActivateSlug()
     {
-        behavioralPower = GameManager.PowerType.Slug;
+        behaviouralPower = GameManager.PowerType.Slug;
 		actualDurationCoroutine = StartCoroutine(InstanciateSlug());
         transform.GetChild(0).GetComponent<MeshRenderer>().material = slugMaterial;
     }
 
     void DeactivateSlug()
     {
-        behavioralPower = GameManager.PowerType.None;
+        behaviouralPower = GameManager.PowerType.None;
         transform.GetChild(0).GetComponent<MeshRenderer>().material = normalMaterial;
     }
 
@@ -397,14 +397,14 @@ public class PowerController : MonoBehaviour
 
     void ActivateShield()
     {
-        behavioralPower = GameManager.PowerType.Shield;
+        behaviouralPower = GameManager.PowerType.Shield;
         currentShieldStack = 2;
         transform.GetChild(0).GetComponent<MeshRenderer>().material = shieldMaterial;
     }
 
     void DeactivateShield()
     {
-        behavioralPower = GameManager.PowerType.None;
+        behaviouralPower = GameManager.PowerType.None;
         GameManager.gameManager.shieldP1 = 0;
         GameManager.gameManager.shieldP2 = 0;
         transform.GetChild(0).GetComponent<MeshRenderer>().material = normalMaterial;
@@ -549,7 +549,7 @@ public class PowerController : MonoBehaviour
         }
         int damageTaken = baseDamage + bonusDamage;
 
-        switch (behavioralPower)
+        switch (behaviouralPower)
         {
             case GameManager.PowerType.LargeOrb:
                 damageTaken += largeOrbDamage;
@@ -580,7 +580,7 @@ public class PowerController : MonoBehaviour
         
 		enemy.TakeDamage(damageTaken);
 
-        if (behavioralPower == GameManager.PowerType.LeechLife)
+        if (behaviouralPower == GameManager.PowerType.LeechLife)
         {
             OrbController controller = GameManager.gameManager.orb.GetComponent<OrbController>();
             if (controller.toPlayer2)
@@ -651,12 +651,21 @@ public class PowerController : MonoBehaviour
 
     private void OnDrawGizmos()
     {
-        if (behavioralPower == GameManager.PowerType.Vortex)
+        if (behaviouralPower == GameManager.PowerType.Vortex)
         {
             Gizmos.color = Color.red;
             Gizmos.DrawWireSphere(transform.position, vortexRangeOfEffect);
         }
     }
 
-
+	public void RespawnReset()
+	{
+		droppedPower = GameManager.PowerType.None;
+		GameManager.gameManager.UIManager.UpdateDroppedPower(droppedPower);
+		DeactivatePower(elementalPower);
+		DeactivatePower(behaviouralPower);
+		StopAllCoroutines();
+		canBeActivatedByPlayer1 = new List<bool> { true, true, true, true, true, true, true, true, true };
+		canBeActivatedByPlayer2 = new List<bool> { true, true, true, true, true, true, true, true, true };
+	}
 }

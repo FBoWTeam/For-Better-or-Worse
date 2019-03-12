@@ -132,7 +132,7 @@ public class OrbHitter : MonoBehaviour
             powerToApply = GameManager.PowerType.None;
         }
         
-        if (orbController.GetComponent<PowerController>().behavioralPower == GameManager.PowerType.Shield && orbController.GetComponent<PowerController>().currentShieldStack > 0)
+        if (orbController.GetComponent<PowerController>().behaviouralPower == GameManager.PowerType.Shield && orbController.GetComponent<PowerController>().currentShieldStack > 0)
         {
             if (gameObject.GetComponent<PlayerController>().player1)
             {
@@ -145,7 +145,7 @@ public class OrbHitter : MonoBehaviour
                 orbController.GetComponent<PowerController>().currentShieldStack--;
             }
         }
-        else if (orbController.GetComponent<PowerController>().behavioralPower == GameManager.PowerType.Shield && orbController.GetComponent<PowerController>().currentShieldStack <= 0)
+        else if (orbController.GetComponent<PowerController>().behaviouralPower == GameManager.PowerType.Shield && orbController.GetComponent<PowerController>().currentShieldStack <= 0)
         {
             orbController.GetComponent<PowerController>().DeactivatePower(GameManager.PowerType.Shield);
         }
@@ -183,4 +183,11 @@ public class OrbHitter : MonoBehaviour
             orbController.amortized = false;
         }
     }
+
+	public void RespawnReset()
+	{
+		powerToApply = GameManager.PowerType.None;
+		StopAllCoroutines();
+		hitting = false;
+	}
 }

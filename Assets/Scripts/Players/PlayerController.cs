@@ -26,13 +26,11 @@ public class PlayerController : MonoBehaviour
     
     bool canTaunt = true;
     OrbHitter orbHitter;
-    UIManager uiManager;
 
     void Awake()
     {
         rb = GetComponent<Rigidbody>();
-        orbHitter = gameObject.GetComponent<OrbHitter>();
-        uiManager = GameObject.FindGameObjectWithTag("UI").GetComponent<UIManager>();
+        orbHitter = GetComponent<OrbHitter>();
     }
 
     private void Start()
@@ -106,7 +104,7 @@ public class PlayerController : MonoBehaviour
         {
             Taunt();
             StartCoroutine(TauntCoolDown(tauntCooldown));
-            uiManager.TauntCooldownSystem(player1, tauntCooldown);
+			GameManager.gameManager.UIManager.TauntCooldownSystem(player1, tauntCooldown);
         }
 
     }
@@ -188,6 +186,13 @@ public class PlayerController : MonoBehaviour
 			yield return new WaitForSeconds(blinkTime/2.0f);
 		}
 
+		invincible = false;
+	}
+
+	public void RespawnReset()
+	{
+		StopAllCoroutines();
+		canTaunt = true;
 		invincible = false;
 	}
 }
