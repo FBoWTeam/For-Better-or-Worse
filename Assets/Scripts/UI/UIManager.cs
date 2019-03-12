@@ -102,8 +102,8 @@ public class UIManager : MonoBehaviour
 
     public IEnumerator FadeCoroutine(string fadeName)
     {
-        GameManager.gameManager.isPaused = true;
-        Animation anim = fader.GetComponent<Animation>();
+		GameManager.gameManager.isPaused = true;
+		Animation anim = fader.GetComponent<Animation>();
         anim.clip = anim.GetClip(fadeName);
         anim.Play();
         yield return new WaitForSeconds(1.2f);
@@ -393,4 +393,15 @@ public class UIManager : MonoBehaviour
     Image GetCdImage(GameObject go) {
         return go.transform.GetChild(1).GetComponent<Image>();
     }
+
+	public void RespawnReset()
+	{
+		GetCdImage(elementalPowerFox).fillAmount = 0;
+		GetCdImage(behaviouralPowerFox).fillAmount = 0;
+		tauntCooldownFox.GetComponent<Image>().fillAmount = 0;
+
+		GetCdImage(elementalPowerRaccoon).fillAmount = 0;
+		GetCdImage(behaviouralPowerRaccoon).fillAmount = 0;
+		tauntCooldownRaccoon.GetComponent<Image>().fillAmount = 0;
+	}
 }

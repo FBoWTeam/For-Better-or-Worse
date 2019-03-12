@@ -4,29 +4,30 @@ using UnityEngine;
 
 public class Checkpoint : MonoBehaviour
 {
-	GameObject contentToLoad;
+	public GameObject content;
 	GameObject actualContent;
 
-
-	// Start is called before the first frame update
-	void Start()
+	bool checkpointActivated;
+	
+	void Awake()
     {
-		contentToLoad = transform.GetChild(1).gameObject;
-		actualContent = Instantiate(contentToLoad, transform);
-		Destroy(contentToLoad);
-
-		actualContent = Instantiate(contentToLoad, transform);
+		actualContent = transform.GetChild(1).gameObject;
+		checkpointActivated = false;
 	}
 
-	// Update is called once per frame
-	void Update()
-    {
-        
-    }
+	public void RespawnContent()
+	{
+		Destroy(actualContent);
+		actualContent = Instantiate(content, this.transform);
+	}
 
 	private void OnTriggerEnter(Collider other)
 	{
-		if(other.CompareTag("Player"))
-			Debug.Log("oui");
+		if(other.CompareTag("Player") && !checkpointActivated)
+		{
+			GameManager.gameManager.actualCheckpoint = this;
+			GameManager.gameManager.RecordPower();
+			checkpointActivated = true;
+		}
 	}
 }
