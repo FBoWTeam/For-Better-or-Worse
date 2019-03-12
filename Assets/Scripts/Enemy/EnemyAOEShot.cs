@@ -55,7 +55,7 @@ public class EnemyAOEShot: MonoBehaviour {
                 float distToPlayer = Vector3.Distance(transform.position, item.transform.position); //Optimisable               
                 if (distToPlayer < effectRadius) {
                     
-                    GameManager.gameManager.TakeDamage(item, damagePerS, transform.position);
+                    GameManager.gameManager.TakeDamage(item, damagePerS, transform.position, true);
                     GameManager.gameManager.UIManager.QuoteOnDamage("enemy", item);
                 }
             }
