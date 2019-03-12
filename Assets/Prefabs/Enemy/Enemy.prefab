@@ -445,9 +445,9 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6759876714258691839}
   serializedVersion: 2
-  m_Mass: 0.0000001
-  m_Drag: 1000000
-  m_AngularDrag: 1000000
+  m_Mass: 1
+  m_Drag: 10
+  m_AngularDrag: 10
   m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 0
@@ -588,11 +588,12 @@ MonoBehaviour:
   lengthView: 2
   focus: 2
   taunt: 0
+  taunter: 0
   isTaunted: 0
   tauntDuration: 5
   baseHP: 100
   hp: 100
-  knockBackForce: 10
+  timeImoIfHit: 0
   enemyMovement: {fileID: 0}
 --- !u!114 &9164865582948619922
 MonoBehaviour:
@@ -627,6 +628,9 @@ MonoBehaviour:
   skillOne: 0
   impactCooldown: 3
   impactSpeed: 1.5
+  isAttacking: 0
+  stopAfterHit: 0
+  timeImoAfterHit: 0
   aoeCooldown: 2
   fireRate: 1
   bulletSpeed: 70
