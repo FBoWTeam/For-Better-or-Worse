@@ -178,7 +178,7 @@ public class Enemy : MonoBehaviour
 
     #endregion
 
-    public void TakeDamage(int damage, Vector3 hitPosition)
+    public void TakeDamage(int damage)
     { 
         hp -= damage;
         GameManager.gameManager.orb.GetComponent<OrbController>().hasHitEnemy = true;

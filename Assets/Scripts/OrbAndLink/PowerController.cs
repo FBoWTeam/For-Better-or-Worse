@@ -464,7 +464,7 @@ public class PowerController : MonoBehaviour
 
 		while (curentDamage < totalDamage)
 		{
-			enemy.TakeDamage(tickDamage, enemy.transform.position);
+			enemy.TakeDamage(tickDamage);
 			yield return new WaitForSeconds(1f);
 			curentDamage += tickDamage;
 		}
@@ -578,7 +578,7 @@ public class PowerController : MonoBehaviour
                 break;
         }
         
-		enemy.TakeDamage(damageTaken, transform.position);
+		enemy.TakeDamage(damageTaken);
 
         if (behavioralPower == GameManager.PowerType.LeechLife)
         {

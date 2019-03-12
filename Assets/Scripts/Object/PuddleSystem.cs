@@ -147,7 +147,7 @@ public class PuddleSystem : MonoBehaviour
         }
         if (target.tag == "Enemy")
         {
-            //target.GetComponent<>
+            target.GetComponent<Enemy>().TakeDamage((int)acidDamage);
         }
         yield return new WaitForEndOfFrame();
     }
