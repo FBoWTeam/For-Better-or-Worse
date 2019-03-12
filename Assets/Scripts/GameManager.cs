@@ -31,11 +31,7 @@ public class GameManager : MonoBehaviour
 	public float knockBackForce;
 	public bool restartWhenDead;
 
-	[Header("[Taunt]")]
-	public bool player1HasTaunt;
-	public bool player2HasTaunt;
-    public int tauntRange = 10;
-    public float tauntCooldown = 15f;
+
 
     [Header("[HealingOrbs]")]
     public GameObject normalHealingOrbPrefab;
@@ -193,6 +189,16 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public bool Player1IsNearest(Vector3 position)
+    {
+        if (Vector3.Distance(position, player1.transform.position) < Vector3.Distance(position, player2.transform.position))
+        {
+            return true;
+        }
+        return false;
+    }
+
+
     IEnumerator deathCoroutine()
     {
         StartCoroutine(UIManager.FadeCoroutine("FadeOut"));
@@ -201,4 +207,5 @@ public class GameManager : MonoBehaviour
     }
 
     
+
 }
