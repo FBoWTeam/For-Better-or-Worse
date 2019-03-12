@@ -60,7 +60,11 @@ public class OrbHitter : MonoBehaviour
 				hitTimer = hitCooldown;
 				orbController.toPlayer2 = !orbController.toPlayer2;
                 orbController.speed = accelerationFactor * orbController.combo + orbController.minSpeed;
-                orbController.combo++;
+                if(orbController.hasHitEnemy)
+                {
+                    orbController.combo++;
+                    orbController.hasHitEnemy = false;
+                }
                 //Update combo UI
                 GameManager.gameManager.UIManager.UpdateCombo(orbController.combo);               
                 CheckPowerActivation();
@@ -168,15 +172,15 @@ public class OrbHitter : MonoBehaviour
     {
         orbController.speed = 0.0f;
         orbController.amortized = true;
+        orbController.speed = orbController.minSpeed;
+        orbController.combo = 0;
+        //reset combo ui
+        GameManager.gameManager.UIManager.UpdateCombo(orbController.combo);
         yield return new WaitForSeconds(amortizeDuration);
         if (orbController.amortized)
         {
             orbController.toPlayer2 = !orbController.toPlayer2;
             orbController.amortized = false;
-            orbController.speed = orbController.minSpeed;
-			orbController.combo = 0;
-            //reset combo ui
-            GameManager.gameManager.UIManager.UpdateCombo(orbController.combo);
         }
     }
 }

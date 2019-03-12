@@ -83,13 +83,18 @@ public class UIManager : MonoBehaviour
 
     private void Update()
     {
-        if (GameManager.gameManager.player1HasTaunt)
+
+    }
+
+    public void TauntCooldownSystem(bool player1, float tauntCooldown)
+    {
+        if (player1)
         {
-            StartCoroutine(startCooldown(GameManager.gameManager.tauntCooldown, tauntCooldownFox.GetComponent<Image>()));
+            StartCoroutine(startCooldown(tauntCooldown, tauntCooldownFox.GetComponent<Image>()));
         }
-        if (GameManager.gameManager.player2HasTaunt)
+        else
         {
-            StartCoroutine(startCooldown(GameManager.gameManager.tauntCooldown, tauntCooldownRaccoon.GetComponent<Image>()));
+            StartCoroutine(startCooldown(tauntCooldown, tauntCooldownRaccoon.GetComponent<Image>()));
         }
     }
 
