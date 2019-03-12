@@ -57,7 +57,9 @@ public class GameManager : MonoBehaviour
     {
         None,
         Slug,
-        Poison,
+        Acid,
+        Water,
+        Flammable,
         Mud
     }
 
