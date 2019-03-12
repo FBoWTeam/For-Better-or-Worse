@@ -56,9 +56,9 @@ public class Enemy : MonoBehaviour
     public int baseHP = 100;
     public int hp;
 
-    public float knockBackForce;
 
-    public float timeImo; //temps d'immobilisation quand un ennemi se fait toucher par l'orbe
+    public float timeImoIfHit; //temps d'immobilisation quand un ennemi se fait toucher par l'orbe
+
 
     [HideInInspector]
     public EnemyMovement enemyMovement;
@@ -182,7 +182,6 @@ public class Enemy : MonoBehaviour
     { 
         hp -= damage;
         GameManager.gameManager.orb.GetComponent<OrbController>().hasHitEnemy = true;
-        //enemyMovement.agent.velocity = (transform.position - hitPosition) * knockBackForce;
         StartCoroutine("Stun");
 		if (hp <= 0)
 		{
@@ -194,12 +193,11 @@ public class Enemy : MonoBehaviour
     }
 
 
-
     IEnumerator Stun()
     {
         enemyMovement.agent.isStopped = true;
 
-        yield return new WaitForSecondsRealtime(timeImo);
+        yield return new WaitForSecondsRealtime(timeImoIfHit);
         enemyMovement.agent.isStopped = false;
     }
 
