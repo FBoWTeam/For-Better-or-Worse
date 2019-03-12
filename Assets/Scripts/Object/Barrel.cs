@@ -45,7 +45,7 @@ public class Barrel : MonoBehaviour, IActivable
 
                 if (rb != null)
                 {
-                    rb.AddExplosionForce(0, explosionPos, rangeAOE, 0.0F, ForceMode.Impulse);
+                    rb.AddExplosionForce(0, explosionPos, rangeAOE, 0.0F, ForceMode.Impulse);//pas de force tant que le knock back est forcé dans TakeDamage
                     GameManager.gameManager.TakeDamage(hit.gameObject, damage, transform.position);
                 }
                   
@@ -53,23 +53,6 @@ public class Barrel : MonoBehaviour, IActivable
         }
 
         Destroy(gameObject);//le baril explose et est donc détruit
-
-
-        /*
-        Vector3 distPlayer1 = GameManager.gameManager.player1.transform.position - this.transform.position;
-        Vector3 distPlayer2 = GameManager.gameManager.player2.transform.position - this.transform.position;
-
-        //si le player 1 est dans la range de l'explosion du baril
-        if(distPlayer1.magnitude < rangeAOE)
-        {
-            GameManager.gameManager.TakeDamage(GameManager.gameManager.player1, damage, this.transform.position);
-        }
-
-        //si le player 2 est dans la range de l'explosion du baril
-        if (distPlayer2.magnitude < rangeAOE)
-        {
-            GameManager.gameManager.TakeDamage(GameManager.gameManager.player2, damage, this.transform.position);
-        }*/
 
     }
 }
