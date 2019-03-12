@@ -6,8 +6,9 @@ public class Barrel : MonoBehaviour, IActivable
 {
     public bool isActive { get; set; }
 
-    public float rangeAOE;//range de l'explosion
-    public int damage;//dégat de l'explosion
+    public float rangeAOE;//explosion range
+    public int damage;//explosion damage
+    public float powerForce;
 
     
     // Start is called before the first frame update
@@ -45,14 +46,24 @@ public class Barrel : MonoBehaviour, IActivable
 
                 if (rb != null)
                 {
-                    rb.AddExplosionForce(0, explosionPos, rangeAOE, 0.0F, ForceMode.Impulse);//pas de force tant que le knock back est forcé dans TakeDamage
-                    GameManager.gameManager.TakeDamage(hit.gameObject, damage, transform.position);
+                    rb.AddExplosionForce(powerForce, explosionPos, rangeAOE, 0.0F, ForceMode.Impulse);
+                    GameManager.gameManager.TakeDamage(hit.gameObject, damage, transform.position, false);
                 }
                   
             }
+
+            if(hit.CompareTag("Enemy"))
+            {
+                Rigidbody rb = hit.GetComponent<Rigidbody>();
+                if (rb != null)
+                {
+                    rb.AddExplosionForce(powerForce, explosionPos, rangeAOE, 0.0F, ForceMode.Impulse );
+                    hit.GetComponent<Enemy>().TakeDamage(damage);
+                }
+            }
         }
 
-        Destroy(gameObject);//le baril explose et est donc détruit
+        Destroy(gameObject);//the barrel explodes ans is destroyed
 
     }
 }

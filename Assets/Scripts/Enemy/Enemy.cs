@@ -182,7 +182,7 @@ public class Enemy : MonoBehaviour
     { 
         hp -= damage;
         GameManager.gameManager.orb.GetComponent<OrbController>().hasHitEnemy = true;
-        StartCoroutine("Stun");
+        //StartCoroutine("Stun");
 		if (hp <= 0)
 		{
 			GetComponent<LootTable>().LootEnemy();
