@@ -175,7 +175,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 8db8e2394e829ca44b1fb3744d45ec78, type: 3}
+  - {fileID: 2100000, guid: c85f8c1eb31264e4e93fe28924f583f1, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -262,11 +262,10 @@ MonoBehaviour:
   invincible: 0
   invicibilityDuration: 0.5
   blinkNb: 5
-  powerSlot1: 0
-  powerSlot2: 0
-  powerSlot3: 0
-  powerSlot4: 0
-  oldestSlotIs3: 0
+  tauntRange: 30
+  tauntCooldown: 15
+  elementalPowerSlot: 0
+  behaviouralPowerSlot: 0
 --- !u!114 &8708506529559422337
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -283,9 +282,9 @@ MonoBehaviour:
   hitZone: 2
   powerToApply: 0
   hitting: 0
-  hitDuration: 0.2
-  hitCooldown: 1
-  accelerationFactor: 0.5
+  hitDuration: 0.3
+  hitCooldown: 0.3
+  accelerationFactor: 1
   amortizing: 0
   amortizeDuration: 1
 --- !u!1 &8708506529803211955
@@ -588,9 +587,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   minDeformheight: 5
-  maxDeformHeight: 20
+  maxDeformHeight: 10
   deformHeight: 5
-  smoothTime: 0.15
+  smoothTime: 0.05
 --- !u!1 &8708506530400192830
 GameObject:
   m_ObjectHideFlags: 0
@@ -755,7 +754,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 6f234d6383bb9b3439d0798af10cb4b6, type: 3}
+  - {fileID: 2100000, guid: 26adc29fa72492c4c8f3f7e212864c21, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -842,11 +841,10 @@ MonoBehaviour:
   invincible: 0
   invicibilityDuration: 0.5
   blinkNb: 5
-  powerSlot1: 0
-  powerSlot2: 0
-  powerSlot3: 0
-  powerSlot4: 0
-  oldestSlotIs3: 0
+  tauntRange: 30
+  tauntCooldown: 15
+  elementalPowerSlot: 0
+  behaviouralPowerSlot: 0
 --- !u!114 &8708506530940788384
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -863,9 +861,9 @@ MonoBehaviour:
   hitZone: 2
   powerToApply: 0
   hitting: 0
-  hitDuration: 0.2
-  hitCooldown: 1
-  accelerationFactor: 0.5
+  hitDuration: 0.3
+  hitCooldown: 0.3
+  accelerationFactor: 1
   amortizing: 0
   amortizeDuration: 1
 --- !u!1 &8708506531061932086
@@ -1037,8 +1035,8 @@ MonoBehaviour:
   maxSpeed: 20
   combo: 0
   damageComboIncrease: 1
-  damageIncreaseStep: 1
-  maxComboDamage: 20
+  damageIncreaseStep: 2
+  maxComboDamage: 5
   amortized: 0
   canHitEnemy: 1
   canHitPlayer: 1
@@ -1050,6 +1048,7 @@ MonoBehaviour:
   progression: 0
   isHealingOrb: 0
   healAmount: 0
+  hasHitEnemy: 0
 --- !u!114 &2970527385879693205
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1066,11 +1065,11 @@ MonoBehaviour:
   behavioralPower: 0
   normalMaterial: {fileID: 2100000, guid: 76cf3b8074637204fb930c562b8cb61a, type: 2}
   baseDamage: 5
-  canBeActivated: 
+  canBeActivatedByPlayer1: 
+  canBeActivatedByPlayer2: 
   droppedPower: 0
-  isFixedPower: 0
   reflectedDrop: 0
-  editingPower: 2
+  editingPower: 0
   largeOrbDuration: 5
   largeOrbCooldown: 7
   minScale: 1

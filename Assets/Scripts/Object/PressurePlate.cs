@@ -11,29 +11,31 @@ public class PressurePlate : MonoBehaviour, IActivable
     [Tooltip("the object to activate id the current lever is active")]
     public GameObject objectToActivate;
 
+    private Animation animation;
+
+
+    private void Start()
+    {
+        animation = GetComponentInParent<Animation>();
+    }
+
     /// <summary>
     /// activates the pressure plate if the orb enter and stays on it's collider
     /// </summary>
     /// <param name="other"></param>
-    private void OnTriggerStay(Collider other)
+    private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player"))
+        if (other.CompareTag("Player") && !isActive)
         {
-            if (!isActive)
-            {
-                this.Activate();
-            }
+            this.Activate();
         }
     }
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.CompareTag("Player"))
+        if (other.CompareTag("Player") && isActive)
         {
-            if (isActive)
-            {
-                this.Activate();
-            }
+            this.Activate();
         }
     }
 
@@ -44,12 +46,12 @@ public class PressurePlate : MonoBehaviour, IActivable
         objectToActivate.GetComponent<IActivable>().Activate();
         if (isActive)
         {
-            GetComponentInParent<Animation>().Play("PressurePlateOn");
+            animation.Play("PressurePlateOn");
         }
         else
         {
-            GetComponentInParent<Animation>().Play("PressurePlateOff");
+            animation.Play("PressurePlateOff");
         }
     }
-    
+
 }

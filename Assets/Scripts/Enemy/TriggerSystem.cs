@@ -14,7 +14,7 @@ public class TriggerSystem : MonoBehaviour
     public TriggerMode triggerMode;
 
     public GameObject[] enemies;
-    
+
     [Tooltip("Display time of dialogs")]
     public int displayTime;
     [TextArea]
@@ -107,6 +107,27 @@ public class TriggerSystem : MonoBehaviour
             }
             Destroy(this.gameObject);
         }
+    }
+
+
+    void OnDrawGizmosSelected()
+    {
+
+        switch (triggerMode)
+        {
+            case TriggerMode.Enemy:
+                Gizmos.color = new Color(0.7f, 0.05f, 0.05f, 0.7f);
+                break;
+            case TriggerMode.Dialog:
+                Gizmos.color = new Color(0.25f, 0.5f, 0.95f, 0.7f);
+                break;
+            case TriggerMode.EnemyAndDialog:
+                Gizmos.color = new Color(0.6f, 0.05f, 0.9f, 0.7f);
+                break;
+            default:
+                break;
+        }
+        Gizmos.DrawCube(transform.position, GetComponent<Collider>().bounds.size);
     }
 
     #endregion

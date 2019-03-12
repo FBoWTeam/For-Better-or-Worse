@@ -463,7 +463,7 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: 0
   m_Radius: 0.5
-  m_Speed: 3.5
+  m_Speed: 6
   m_Acceleration: 1e+13
   avoidancePriority: 50
   m_AngularSpeed: 120
@@ -589,6 +589,7 @@ MonoBehaviour:
   focus: 2
   taunt: 0
   isTaunted: 0
+  tauntDuration: 5
   baseHP: 100
   hp: 100
   knockBackForce: 10
@@ -605,11 +606,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 69c82c46ed261b54380cc90c3c91eff2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  movement: 0
-  initialSpeed: 2
+  movement: 1
+  initialSpeed: 6
   stopTime: 2
   agent: {fileID: 0}
   isSlowed: 0
+  isStrafing: 0
 --- !u!114 &947384502557923801
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -630,7 +632,7 @@ MonoBehaviour:
   bulletSpeed: 70
   bulletPrefab: {fileID: 1327039134590348602, guid: a16ccfb362e58ec4588b618092d0c27c,
     type: 3}
-  range: 4
+  range: 1.5
   damage: 5
 --- !u!114 &5783902267319157312
 MonoBehaviour:
@@ -665,7 +667,6 @@ MonoBehaviour:
   healAmount: 0
   chanceOfPowerDrop: 0
   droppedPower: 0
-  isFixedPower: 0
 --- !u!1 &7200140934854383923
 GameObject:
   m_ObjectHideFlags: 0
