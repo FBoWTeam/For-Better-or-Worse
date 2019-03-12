@@ -14,6 +14,7 @@ public class EnemySkill : MonoBehaviour
         AOE,
         Ranged,
         Bloc,
+        RangedAOE,
         MudThrowing,
         Vortex,
         Inversion,
@@ -70,6 +71,22 @@ public class EnemySkill : MonoBehaviour
     //[DrawIf(new string[] { "skillOne" }, Skill.Ranged)]
     //public Transform firePoint; set to the transform postion for now , changed later
     #endregion
+
+    #region RangedAOE
+    [DrawIf(new string[] { "skillOne" }, Skill.RangedAOE)]
+    public GameObject aoeProjectilePrefab;
+    [DrawIf(new string[] { "skillOne" }, Skill.RangedAOE)]
+    public float projectileAoeRadius = 5f;
+    [DrawIf(new string[] { "skillOne" }, Skill.RangedAOE)]
+    public float projectileAoeDuration = 5f;
+    //like fire rate but the name is already used
+    [DrawIf(new string[] { "skillOne" }, Skill.RangedAOE)]
+    public float throwRate = 1f;
+    [DrawIf(new string[] { "skillOne" }, Skill.RangedAOE)]
+    public float maxHeight = 10;
+
+    #endregion
+
 
     public float range = 4f;
     public int damage = 5;
@@ -167,11 +184,48 @@ public class EnemySkill : MonoBehaviour
                     nextAttack = Time.time + fireRate;
                 }
                 break;
+            case Skill.RangedAOE:
+                myMat.color = new Color(0.4f, 0.0f, 0.0f);
+
+                if (Time.time > nextAttack ) {
+                    //print("FIRE IN THE HOLE");
+                    Throw(aoeProjectilePrefab, transform, target.transform, damage);
+                    nextAttack = Time.time + throwRate;
+                }
+                break;
             case Skill.None:
                 break;
             default:
                 break;
         }
+    }
+
+
+    void Throw(GameObject aoeProjectile, Transform firePoint, Transform target, int damage) {
+        GameObject projectile = Instantiate(aoeProjectile, firePoint.position, firePoint.rotation);
+        EnemyAOEShot enemyShot = projectile.GetComponent<EnemyAOEShot>();
+
+        
+        if (enemyShot != null) {
+            enemyShot.Init(projectileAoeRadius, projectileAoeDuration, damage);
+            enemyShot.Launch(ComputeThrowVelocity(target.position));
+        }
+    }
+
+    /// <summary>
+    /// Compute at wich velocity a gameobjet should go , in order to hit a target using Kinematic equation
+    /// MaxHeight should always be > dirY
+    /// </summary>
+    /// <param name="target"></param>
+    /// <returns></returns>
+    Vector3 ComputeThrowVelocity(Vector3 target) {
+        float dirY = target.y - transform.position.y;
+        Vector3 dirXZ = new Vector3(target.x - transform.position.x, 0, target.z - transform.position.z);
+        float time = Mathf.Sqrt(-2 * maxHeight / Physics.gravity.y) + Mathf.Sqrt(2*(dirY - maxHeight) / Physics.gravity.y);
+        Vector3 velocityY = Vector3.up * Mathf.Sqrt(-2 * Physics.gravity.y * maxHeight);
+        Vector3 velocityXZ = dirXZ / time;
+
+        return velocityXZ + velocityY * -Mathf.Sign(Physics.gravity.y);
     }
 
     IEnumerator Impact(Transform target)
