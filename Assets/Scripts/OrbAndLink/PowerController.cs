@@ -6,9 +6,10 @@ public class PowerController : MonoBehaviour
 {
     public GameManager.PowerType elementalPower;
     public GameManager.PowerType behaviouralPower;
-	public Coroutine actualDurationCoroutine;
+	public Coroutine elementalDurationCoroutine;
+	public Coroutine behaviouralDurationCoroutine;
 
-    OrbController orbController;
+	OrbController orbController;
 
     public Material normalMaterial;
     public int baseDamage;
@@ -186,15 +187,14 @@ public class PowerController : MonoBehaviour
 
 		if (activate)
 		{
-			if(actualDurationCoroutine != null)
-				StopCoroutine(actualDurationCoroutine);
-
 			if (GameManager.isElemental(powerToActivate) && elementalPower != GameManager.PowerType.None)
 			{
+				StopCoroutine(elementalDurationCoroutine);
 				DeactivatePower(elementalPower);
 			}
 			else if (!GameManager.isElemental(powerToActivate) && behaviouralPower != GameManager.PowerType.None)
 			{
+				StopCoroutine(behaviouralDurationCoroutine);
 				DeactivatePower(behaviouralPower);
 			}
 
@@ -292,7 +292,7 @@ public class PowerController : MonoBehaviour
         behaviouralPower = GameManager.PowerType.LargeOrb;
         transform.localScale = new Vector3(maxScale, maxScale, maxScale);
         transform.GetChild(0).GetComponent<MeshRenderer>().material = normalMaterial;
-        actualDurationCoroutine = StartCoroutine(DurationCoroutine(GameManager.PowerType.LargeOrb, largeOrbDuration));
+		behaviouralDurationCoroutine = StartCoroutine(DurationCoroutine(GameManager.PowerType.LargeOrb, largeOrbDuration));
     }
 
     void DeactivateLargeOrb()
@@ -310,7 +310,7 @@ public class PowerController : MonoBehaviour
     void ActivateVortex()
     {
         behaviouralPower = GameManager.PowerType.Vortex;
-		actualDurationCoroutine = StartCoroutine(VortexPower());
+		behaviouralDurationCoroutine = StartCoroutine(VortexPower());
         transform.GetChild(0).GetComponent<MeshRenderer>().material = vortexMaterial;
     }
 
@@ -352,7 +352,7 @@ public class PowerController : MonoBehaviour
     {
         behaviouralPower = GameManager.PowerType.LeechLife;
         transform.GetChild(0).GetComponent<MeshRenderer>().material = leechLifeMaterial;
-		actualDurationCoroutine = StartCoroutine(DurationCoroutine(GameManager.PowerType.LeechLife, leechLifeDuration));
+		behaviouralDurationCoroutine = StartCoroutine(DurationCoroutine(GameManager.PowerType.LeechLife, leechLifeDuration));
     }
 
     void DeactivateLeechLife()
@@ -369,7 +369,7 @@ public class PowerController : MonoBehaviour
     void ActivateSlug()
     {
         behaviouralPower = GameManager.PowerType.Slug;
-		actualDurationCoroutine = StartCoroutine(InstanciateSlug());
+		behaviouralDurationCoroutine = StartCoroutine(InstanciateSlug());
         transform.GetChild(0).GetComponent<MeshRenderer>().material = slugMaterial;
     }
 
@@ -421,7 +421,7 @@ public class PowerController : MonoBehaviour
     {
         elementalPower = GameManager.PowerType.Ice;
         GetComponent<MeshRenderer>().material = iceMaterial;
-		actualDurationCoroutine = StartCoroutine(DurationCoroutine(GameManager.PowerType.Ice, iceDuration));
+		elementalDurationCoroutine = StartCoroutine(DurationCoroutine(GameManager.PowerType.Ice, iceDuration));
     }
 
     void DeactivateIce()
@@ -442,12 +442,12 @@ public class PowerController : MonoBehaviour
 
         if (isActivatedByBrazier)
 		{
-			actualDurationCoroutine = StartCoroutine(DurationCoroutine(GameManager.PowerType.Fire, fireDurationBrazier));
+			elementalDurationCoroutine = StartCoroutine(DurationCoroutine(GameManager.PowerType.Fire, fireDurationBrazier));
             isActivatedByBrazier = false;
         }
         else
 		{
-			actualDurationCoroutine = StartCoroutine(DurationCoroutine(GameManager.PowerType.Fire, fireDuration));
+			elementalDurationCoroutine = StartCoroutine(DurationCoroutine(GameManager.PowerType.Fire, fireDuration));
         }
     }
 
@@ -479,7 +479,7 @@ public class PowerController : MonoBehaviour
     {
         elementalPower = GameManager.PowerType.Electric;
         GetComponent<MeshRenderer>().material = electricMaterial;
-		actualDurationCoroutine = StartCoroutine(DurationCoroutine(GameManager.PowerType.Electric, electricDuration));
+		elementalDurationCoroutine = StartCoroutine(DurationCoroutine(GameManager.PowerType.Electric, electricDuration));
     }
 
     void DeactivateElectric()
@@ -497,7 +497,7 @@ public class PowerController : MonoBehaviour
     {
         elementalPower = GameManager.PowerType.Darkness;
         GetComponent<MeshRenderer>().material = darknessMaterial;
-		actualDurationCoroutine = StartCoroutine(DurationCoroutine(GameManager.PowerType.Darkness, darknessDuration));
+		elementalDurationCoroutine = StartCoroutine(DurationCoroutine(GameManager.PowerType.Darkness, darknessDuration));
     }
 
     void DeactivateDarkness()
