@@ -57,7 +57,6 @@ public class Brazier : MonoBehaviour, IActivable
             {
                 for (int i = 0; i < objectToActivate.Count; i++)
                 {
-                    Debug.Log("oui");
                     objectToActivate[i].GetComponent<IActivable>().Activate();
                 }
             }
