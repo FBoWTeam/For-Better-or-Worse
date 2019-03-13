@@ -6,6 +6,8 @@ using UnityEngine.UI;
 
 [RequireComponent(typeof(Rigidbody))]
 [RequireComponent(typeof(NavMeshAgent))]
+[RequireComponent(typeof(EnemyMovement))]
+[RequireComponent(typeof(EnemySkill))]
 public class Enemy : MonoBehaviour
 {
     #region All Variables
@@ -62,6 +64,8 @@ public class Enemy : MonoBehaviour
 
     [HideInInspector]
     public EnemyMovement enemyMovement;
+    [HideInInspector]
+    public EnemySkill enemySkill;
 
     GameObject[] players;
     public static GameObject aimPlayer;
@@ -76,6 +80,7 @@ public class Enemy : MonoBehaviour
         hp = baseHP;
         players = new GameObject[] { GameManager.gameManager.player1, GameManager.gameManager.player2 };
         enemyMovement = GetComponent<EnemyMovement>();
+        enemySkill = GetComponent<EnemySkill>();
         sdrawPath = drawPath;
         tauntCanvas = transform.GetChild(2).gameObject;
 
@@ -84,12 +89,20 @@ public class Enemy : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        
         if (!GameManager.gameManager.isPaused)
         {
             FocusManagement();
 
+            if (enemySkill.isAttacking && enemySkill.stopWhenAttacking && enemyMovement.movement == EnemyMovement.Movement.Basic) 
+            {
+                enemyMovement.agent.isStopped = true;
+            }
+            else { enemyMovement.agent.isStopped = false; }
+
             if (!enemyMovement.agent.isStopped)
             {
+                
                 enemyMovement.DoMovement();
             }
 

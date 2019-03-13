@@ -12,12 +12,13 @@ public class EnemyAOEShot: MonoBehaviour {
     private bool isGrounded = false;
     private float effectDuration;
     private GameObject[] Players;
+    private Collider collider;
 
 
     private void Awake() {
         body = GetComponent<Rigidbody>();
         body.useGravity = false;
-
+        collider = GetComponent<SphereCollider>();
         Players = new GameObject[2] {GameManager.gameManager.player1,GameManager.gameManager.player2 };
        
     }
@@ -26,6 +27,7 @@ public class EnemyAOEShot: MonoBehaviour {
     public void Launch(Vector3 velocity) {
         body.useGravity = true;
         body.velocity = velocity;
+        collider.isTrigger = false;
    
     }
 
@@ -66,7 +68,7 @@ public class EnemyAOEShot: MonoBehaviour {
     IEnumerator Duration() {
         yield return new WaitForSeconds(effectDuration);
         StopAllCoroutines();
-        Destroy(this);
+        Destroy(gameObject);
     }
 
     private void OnDrawGizmos() {
