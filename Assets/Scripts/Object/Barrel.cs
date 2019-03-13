@@ -6,8 +6,9 @@ public class Barrel : MonoBehaviour, IActivable
 {
     public bool isActive { get; set; }
 
-    public float rangeAOE;//range de l'explosion
-    public int damage;//dégat de l'explosion
+    public float rangeAOE;//explosion range
+    public int damage;//explosion damage
+    public float powerForce;
 
     
     // Start is called before the first frame update
@@ -45,31 +46,24 @@ public class Barrel : MonoBehaviour, IActivable
 
                 if (rb != null)
                 {
-                    rb.AddExplosionForce(0, explosionPos, rangeAOE, 0.0F, ForceMode.Impulse);
-                    GameManager.gameManager.TakeDamage(hit.gameObject, damage, transform.position);
+                    rb.AddExplosionForce(powerForce, explosionPos, rangeAOE, 0.0F, ForceMode.Impulse);
+                    GameManager.gameManager.TakeDamage(hit.gameObject, damage, transform.position, false);
                 }
                   
             }
+
+            if(hit.CompareTag("Enemy"))
+            {
+                Rigidbody rb = hit.GetComponent<Rigidbody>();
+                if (rb != null)
+                {
+                    rb.AddExplosionForce(powerForce, explosionPos, rangeAOE, 0.0F, ForceMode.Impulse );
+                    hit.GetComponent<Enemy>().TakeDamage(damage);
+                }
+            }
         }
 
-        Destroy(gameObject);//le baril explose et est donc détruit
-
-
-        /*
-        Vector3 distPlayer1 = GameManager.gameManager.player1.transform.position - this.transform.position;
-        Vector3 distPlayer2 = GameManager.gameManager.player2.transform.position - this.transform.position;
-
-        //si le player 1 est dans la range de l'explosion du baril
-        if(distPlayer1.magnitude < rangeAOE)
-        {
-            GameManager.gameManager.TakeDamage(GameManager.gameManager.player1, damage, this.transform.position);
-        }
-
-        //si le player 2 est dans la range de l'explosion du baril
-        if (distPlayer2.magnitude < rangeAOE)
-        {
-            GameManager.gameManager.TakeDamage(GameManager.gameManager.player2, damage, this.transform.position);
-        }*/
+        Destroy(gameObject);//the barrel explodes ans is destroyed
 
     }
 }

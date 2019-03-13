@@ -8,13 +8,17 @@ public class PlayerController : MonoBehaviour
 {
 	[Header("[Main Params]")]
     public bool player1;
-    public float speed;
+    public float initialSpeed;
+    private float speed;
+    public bool isSlowed;
+    public bool isFrozen;
     Rigidbody rb;
 	[HideInInspector]
     public Vector3 direction;
 	public bool invincible;
 	public float invicibilityDuration;
 	public int blinkNb;
+    public bool isRoot;
 
     [Header("[Taunt]")]
     public int tauntRange;
@@ -36,6 +40,7 @@ public class PlayerController : MonoBehaviour
     private void Start()
     {
         //Update UI (for development)
+        speed = initialSpeed;
         GameManager.gameManager.UIManager.UpdatePowerSlot(1, player1, elementalPowerSlot);
         GameManager.gameManager.UIManager.UpdatePowerSlot(2, player1, behaviouralPowerSlot);
     }
@@ -56,17 +61,20 @@ public class PlayerController : MonoBehaviour
     /// </summary>
 	public void Move()
     {
-        direction = player1 ? new Vector3(Input.GetAxis("HorizontalP1"), 0.0f, Input.GetAxis("VerticalP1")) : new Vector3(Input.GetAxis("HorizontalP2"), 0.0f, Input.GetAxis("VerticalP2"));
+        if (!isFrozen && !isRoot)
+        {
+            direction = player1 ? new Vector3(Input.GetAxis("HorizontalP1"), 0.0f, Input.GetAxis("VerticalP1")) : new Vector3(Input.GetAxis("HorizontalP2"), 0.0f, Input.GetAxis("VerticalP2"));
 
-        direction = (direction.x * Camera.main.transform.right + direction.z * Camera.main.transform.forward);
+            direction = (direction.x * Camera.main.transform.right + direction.z * Camera.main.transform.forward);
 
-        Vector3 velocity = direction * speed * Time.deltaTime;
+            Vector3 velocity = direction * speed * Time.deltaTime;
 
-		checkDistance(ref velocity);
+		    checkDistance(ref velocity);
 
-		rb.MovePosition(transform.position + velocity);
-        transform.LookAt(transform.position + direction);
-        transform.localEulerAngles = new Vector3(0.0f, transform.localEulerAngles.y, 0.0f);
+		    rb.MovePosition(transform.position + velocity);
+            transform.LookAt(transform.position + direction);
+            transform.localEulerAngles = new Vector3(0.0f, transform.localEulerAngles.y, 0.0f);
+        }
     }
 
 	void checkDistance(ref Vector3 velocity)
@@ -188,6 +196,7 @@ public class PlayerController : MonoBehaviour
 
 		invincible = false;
 	}
+    
 
 	public void RespawnReset()
 	{
@@ -195,4 +204,30 @@ public class PlayerController : MonoBehaviour
 		canTaunt = true;
 		invincible = false;
 	}
+
+    public void SlowSpeed(float slowAmount)
+    {
+        if (!isSlowed)
+        {
+            speed = initialSpeed * ((100 - slowAmount) / 100);
+            isSlowed = true;
+        }
+    }
+
+    public void RestoreSpeed()
+    {
+        if (isSlowed)
+        {
+            speed = initialSpeed;
+            isSlowed = false;
+        }
+    }
+    
+    public IEnumerator FreezeCoroutine(float freezeTimer)
+    {
+        isFrozen = true;
+        yield return new WaitForSeconds(freezeTimer);
+        isFrozen = false;
+    }
+
 }

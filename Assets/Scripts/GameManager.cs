@@ -100,7 +100,7 @@ public class GameManager : MonoBehaviour
     /// Handle taking damage from an Ennemy or other things
     /// </summary>
     /// <param name="impactDamage"></param>
-    public void TakeDamage(GameObject targetPlayer, int damage, Vector3 hitPosition)
+    public void TakeDamage(GameObject targetPlayer, int damage, Vector3 hitPosition, bool applyKnockback)
     {
         if (!targetPlayer.GetComponent<PlayerController>().invincible)
         {
@@ -136,12 +136,17 @@ public class GameManager : MonoBehaviour
             {
                 StartCoroutine(deathCoroutine());
             }
-
-            hitPosition = new Vector3(hitPosition.x, 0.0f, hitPosition.z);
-            targetPlayer.GetComponent<Rigidbody>().AddForce((targetPlayer.transform.position - hitPosition).normalized * knockBackForce);
+            
+            if (applyKnockback)
+            {
+                hitPosition = new Vector3(hitPosition.x, 0.0f, hitPosition.z);
+                targetPlayer.GetComponent<Rigidbody>().AddForce((targetPlayer.transform.position - hitPosition) * knockBackForce);
+            }
+            
             StartCoroutine(targetPlayer.GetComponent<PlayerController>().InvincibilityCoroutine());
             UIManager.UpdateHealthBar();
             UIManager.UpdateCombo(0);
+            targetPlayer.GetComponent<PlayerController>().isRoot = false;
         }
     }
 

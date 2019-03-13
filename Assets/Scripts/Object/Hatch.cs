@@ -10,6 +10,13 @@ public class Hatch : MonoBehaviour, IActivable
     [Tooltip("list of activated objects needed to open the hatch")]
     public List<GameObject> objectsConditions;
 
+    private Animator anim;
+
+    private void Start()
+    {
+        anim = GetComponentInParent<Animator>();
+    }
+
     /// <summary>
     /// opens the hatch
     /// </summary>
@@ -19,7 +26,7 @@ public class Hatch : MonoBehaviour, IActivable
         {
             if (isActive == false)
             {
-                GetComponentInParent<Animation>().Play("HatchOpen");
+                anim.SetBool("isOpen", true);
             }
             isActive = true;
         }
@@ -27,7 +34,7 @@ public class Hatch : MonoBehaviour, IActivable
         {
             if (isActive == true)
             {
-                GetComponentInParent<Animation>().Play("HatchClose");
+                anim.SetBool("isOpen", false);
             }
             isActive = false;
         }

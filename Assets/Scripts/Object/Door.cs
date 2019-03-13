@@ -10,6 +10,8 @@ public class Door : MonoBehaviour, IActivable
     [Tooltip("list of activated objects needed to open the door")]
     public List<GameObject> objectsConditions;
 
+
+
     /// <summary>
     /// opens the door
     /// </summary>
