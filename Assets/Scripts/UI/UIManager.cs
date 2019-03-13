@@ -82,7 +82,6 @@ public class UIManager : MonoBehaviour
         busySlot.Add(1, GameManager.PowerType.None);
         busySlot.Add(2, GameManager.PowerType.None);
 
-
     }
 
 
@@ -259,53 +258,44 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    #endregion
 
+    #region CoolDown
     /// <summary>
     /// Launch cooldown visualisation based on power
     /// </summary>
     /// <param name="power"></param>
     /// <param name="cd"></param>
-    public void Cooldown(GameManager.PowerType power, float cd, bool player1)
-    {
+    public void Cooldown(GameManager.PowerType power, float cd, bool player1) {
         // lancer start cooldown sur les ( p1 et p2) slot assigner au power
-        
+
         int slot = getSlotByPower(power);
-        if (slot > -1)
-        {
-            switch (slot)
-            {
+        if (slot > -1) {
+            switch (slot) {
                 case 1:
-					if(player1)
-						StartCoroutine(startCooldown(cd, GetCdImage(elementalPowerFox)));
-					else
-						StartCoroutine(startCooldown(cd, GetCdImage(elementalPowerRaccoon)));
+                    if (player1)
+                        StartCoroutine(startCooldown(cd, GetCdImage(elementalPowerFox)));
+                    else
+                        StartCoroutine(startCooldown(cd, GetCdImage(elementalPowerRaccoon)));
                     break;
                 case 2:
-					if (player1)
-						StartCoroutine(startCooldown(cd, GetCdImage(behaviouralPowerFox)));
-					else
-						StartCoroutine(startCooldown(cd, GetCdImage(behaviouralPowerRaccoon)));
+                    if (player1)
+                        StartCoroutine(startCooldown(cd, GetCdImage(behaviouralPowerFox)));
+                    else
+                        StartCoroutine(startCooldown(cd, GetCdImage(behaviouralPowerRaccoon)));
                     break;
                 default:
                     break;
             }
-        }
-        else
-        {
+        } else {
             Debug.LogError("NO SLOT FOUND FOR THIS POWER");
         }
     }
 
-    int getSlotByPower(GameManager.PowerType power)
-    {
+    int getSlotByPower(GameManager.PowerType power) {
 
-        if (busySlot.ContainsValue(power))
-        {
-            foreach (KeyValuePair<int, GameManager.PowerType> item in busySlot)
-            {
-                if (item.Value == power)
-                {
+        if (busySlot.ContainsValue(power)) {
+            foreach (KeyValuePair<int, GameManager.PowerType> item in busySlot) {
+                if (item.Value == power) {
                     return item.Key;
                 }
             }
@@ -314,15 +304,12 @@ public class UIManager : MonoBehaviour
         return -1;
     }
 
-    IEnumerator startCooldown(float cd, Image image)
-    {
+    IEnumerator startCooldown(float cd, Image image) {
 
         image.fillAmount = 0.999f;
-        while (image.fillAmount != 1)
-        {
+        while (image.fillAmount != 1) {
             image.fillAmount -= 1 / cd * Time.deltaTime;
-            if (image.fillAmount <= 0.001f)
-            {
+            if (image.fillAmount <= 0.001f) {
                 image.fillAmount = 1;
             }
             yield return new WaitForEndOfFrame();
@@ -330,26 +317,50 @@ public class UIManager : MonoBehaviour
         image.fillAmount = 0f;
         yield return null;
     }
+    #endregion
+
+    #region Combo
 
     /// <summary>
     /// Update Combo UI
     /// </summary>
     /// <param name="nb"></param>
-    public void UpdateCombo(int nb)
-    {
-        if (nb < 2)
-        {
+    public void UpdateCombo(int nb) {
+        if (nb < 2) {
             combo.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = string.Empty;
             combo.transform.GetChild(1).GetComponent<TextMeshProUGUI>().text = string.Empty;
-        }
-        else if (nb >= 2)
-        {
+        } else if (nb >= 2) {
             combo.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "Combo !";
             combo.transform.GetChild(1).GetComponent<TextMeshProUGUI>().text = "x" + nb;
         }
 
     }
-    
+
+    #endregion
+
+    #region Getters
+
+    /// <summary>
+    /// return 'Sprite' Image coponent from Ui gameObject
+    /// </summary>
+    /// <param name="go"></param>
+    /// <returns></returns>
+    Image GetImage(GameObject go) {
+        return go.transform.GetChild(0).GetComponent<Image>();
+    }
+    /// <summary>
+    /// return Cooldown Image coponent from Ui gameObject
+    /// </summary>
+    /// <param name="go"></param>
+    /// <returns></returns>
+    Image GetCdImage(GameObject go) {
+        return go.transform.GetChild(1).GetComponent<Image>();
+    }
+
+    #endregion
+
+  
+
     /// <summary>
     /// Call the UpdateDialogBox randomly
     /// </summary>
@@ -387,22 +398,7 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// return 'Sprite' Image coponent from Ui gameObject
-    /// </summary>
-    /// <param name="go"></param>
-    /// <returns></returns>
-    Image GetImage(GameObject go) {
-        return go.transform.GetChild(0).GetComponent<Image>();
-    }
-    /// <summary>
-    /// return Cooldown Image coponent from Ui gameObject
-    /// </summary>
-    /// <param name="go"></param>
-    /// <returns></returns>
-    Image GetCdImage(GameObject go) {
-        return go.transform.GetChild(1).GetComponent<Image>();
-    }
+    
 
 	public void RespawnReset()
 	{
@@ -414,4 +410,5 @@ public class UIManager : MonoBehaviour
 		GetCdImage(behaviouralPowerRaccoon).fillAmount = 0;
 		tauntCooldownRaccoon.GetComponent<Image>().fillAmount = 0;
 	}
+    #endregion
 }
