@@ -52,28 +52,19 @@ public class UIManager : MonoBehaviour
 
     [Header("Text Quote")]
     public float displayTime;
-    public int pourcentageQuote;/*
-    [TextArea]
-    public string player1TextEnemy;
-    [TextArea]
-    public string player2TextEnemy;
-    [TextArea]
-    public string player1TextOrb;
-    [TextArea]
-    public string player2TextOrb;*/
+    public int pourcentageQuote;
 
+    public List<string> player1TextsGetHit;//quotes of the player 1 when hit by an enemy
+    public List<string> player1TextsOtherGetHit;//quotes of the player 1 when player 2 is hit by an enemy
 
-    public List<string> player1TextsGetHit;
-    public List<string> player1TextsOtherGetHit;
+    public List<string> player2TextsGetHit;//quotes of the player 2 when hit by an enemy
+    public List<string> player2TextsOtherGetHit;//quotes of the player 2 when player 1 is hit by an enemy
 
-    public List<string> player2TextsGetHit;
-    public List<string> player2TextsOtherGetHit;
+    public List<string> player1TextsOrbHit;//quotes of the player 1 when hit by an enemy
+    public List<string> player1TextsOtherOrbHit;//quotes of the player 1 when player 2 is hit by the orb
 
-    public List<string> player1TextsOrbHit;
-    public List<string> player1TextsOtherOrbHit;
-
-    public List<string> player2TextsOrbHit;
-    public List<string> player2TextsOtherOrbHit;
+    public List<string> player2TextsOrbHit;//quotes of the player 2 when hit by an enemy
+    public List<string> player2TextsOtherOrbHit;//quotes of the player 2 when player 1 is hit by the orb
 
 
     [HideInInspector]
@@ -93,7 +84,6 @@ public class UIManager : MonoBehaviour
 
 
     }
-
 
     private void Update()
     {
@@ -152,8 +142,7 @@ public class UIManager : MonoBehaviour
     /// <summary>
     /// In this case, the method check which dialog box display and update the text for the player 1
     /// </summary>
-    /// <param name="player1Text">text display in the player 1 dialog box</param>
-    /// <param name="player2Text">text display in the player 2 dialog box</param>
+    /// <param name="playerText">text display in the player 1 dialog box</param>
     /// <param name="displayTime">use for the invoke, to determine how much time display the text</param>
     public void UpdateDialogBox1(string playerText, float displayTime)
     {
@@ -182,8 +171,7 @@ public class UIManager : MonoBehaviour
     /// <summary>
     /// In this case, the method check which dialog box display and update the text for the player 2
     /// </summary>
-    /// <param name="player1Text">text display in the player 1 dialog box</param>
-    /// <param name="player2Text">text display in the player 2 dialog box</param>
+    /// <param name="playerText">text display in the player 1 dialog box</param>
     /// <param name="displayTime">use for the invoke, to determine how much time display the text</param>
     public void UpdateDialogBox2(string playerText, float displayTime)
     {
@@ -360,7 +348,7 @@ public class UIManager : MonoBehaviour
     }
     
     /// <summary>
-    /// Call the UpdateDialogBox randomly
+    /// Call the UpdateDialogBox randomly when a player get hit by anything
     /// </summary>
     public void QuoteOnDamage(string damageDealer, GameObject targetPlayer)
     {
