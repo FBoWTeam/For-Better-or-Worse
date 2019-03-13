@@ -118,15 +118,12 @@ public class EnemySkill : MonoBehaviour
         players = new GameObject[2] { GameManager.gameManager.player1, GameManager.gameManager.player2 };
     }
 
-    private void Update()
-    {
-        CheckRange();
-    }
+   
 
     /// <summary>
     /// Trigger InrangeEvent when players are in range
     /// </summary>
-    private void CheckRange() {
+    public void DoAttack() {
         foreach (GameObject item in players) {
             if (InRange(item.transform)) {
                 onPlayerinRange(item, skillOne);

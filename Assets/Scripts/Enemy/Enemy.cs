@@ -102,6 +102,7 @@ public class Enemy : MonoBehaviour
 
             if (!enemyMovement.agent.isStopped)
             {
+                enemySkill.DoAttack();
                 
                 enemyMovement.DoMovement();
             }
