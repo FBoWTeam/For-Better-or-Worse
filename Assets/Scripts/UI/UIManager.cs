@@ -62,10 +62,19 @@ public class UIManager : MonoBehaviour
     [TextArea]
     public string player2TextOrb;*/
 
-    public List<string> player1TextsEnemy;
-    public List<string> player2TextsEnemy;
-    public List<string> player1TextsOrb;
-    public List<string> player2TextsOrb;
+
+    public List<string> player1TextsGetHit;
+    public List<string> player1TextsOtherGetHit;
+
+    public List<string> player2TextsGetHit;
+    public List<string> player2TextsOtherGetHit;
+
+    public List<string> player1TextsOrbHit;
+    public List<string> player1TextsOtherOrbHit;
+
+    public List<string> player2TextsOrbHit;
+    public List<string> player2TextsOtherOrbHit;
+
 
     [HideInInspector]
     Dictionary<int, GameManager.PowerType> busySlot = new Dictionary<int, GameManager.PowerType>(2);
@@ -366,33 +375,56 @@ public class UIManager : MonoBehaviour
     /// </summary>
     public void QuoteOnDamage(string damageDealer, GameObject targetPlayer)
     {
-        int sizeList = 0;
-        if (Random.Range(1, 101)/*return an integer between 1(in) and 101(out)*/ <= pourcentageQuote)
+        if (Random.Range(1, 101)/*return an integer between 1(inclusive) and 101(exclusive)*/ <= pourcentageQuote)
         {
             if(damageDealer == "enemy")
             { 
                 if (targetPlayer == GameManager.gameManager.player1)
                 {
-                    sizeList = player1TextsEnemy.Count;
-                    UpdateDialogBox1(player1TextsEnemy[Random.Range(0,sizeList)], displayTime);
+                    if(Random.Range(1, 3) == 1 )//50%
+                    {
+                        UpdateDialogBox1(player1TextsGetHit[Random.Range(0, player1TextsGetHit.Count)], displayTime);
+                    }
+                    else
+                    {
+                        UpdateDialogBox2(player2TextsOtherGetHit[Random.Range(0, player2TextsOtherGetHit.Count)], displayTime);
+                    }
                 }
                 if (targetPlayer == GameManager.gameManager.player2)
                 {
-                    sizeList = player2TextsEnemy.Count;
-                    UpdateDialogBox2(player2TextsEnemy[Random.Range(0, sizeList)], displayTime);
+                    if (Random.Range(1, 3) == 1)//50%
+                    {
+                        UpdateDialogBox1(player1TextsOtherGetHit[Random.Range(0, player1TextsOtherGetHit.Count)], displayTime);
+                    }
+                    else
+                    {
+                        UpdateDialogBox2(player2TextsGetHit[Random.Range(0, player2TextsGetHit.Count)], displayTime);
+                    }
                 }
             }
             else if(damageDealer == "orb")
             {
                 if (targetPlayer == GameManager.gameManager.player1)
                 {
-                    sizeList = player1TextsOrb.Count;
-                    UpdateDialogBox1(player1TextsOrb[Random.Range(0, sizeList)], displayTime);
+                    if (Random.Range(1, 3) == 1)//50%
+                    {
+                        UpdateDialogBox1(player1TextsOrbHit[Random.Range(0, player1TextsOrbHit.Count)], displayTime);
+                    }
+                    else
+                    {
+                        UpdateDialogBox2(player2TextsOtherOrbHit[Random.Range(0, player2TextsOtherOrbHit.Count)], displayTime);
+                    }
                 }
                 if (targetPlayer == GameManager.gameManager.player2)
                 {
-                    sizeList = player2TextsOrb.Count;
-                    UpdateDialogBox2(player2TextsOrb[Random.Range(0, sizeList)], displayTime);
+                    if (Random.Range(1, 3) == 1)//50%
+                    {
+                        UpdateDialogBox1(player1TextsOtherOrbHit[Random.Range(0, player1TextsOtherOrbHit.Count)], displayTime);
+                    }
+                    else
+                    {
+                        UpdateDialogBox2(player2TextsOrbHit[Random.Range(0, player2TextsOrbHit.Count)], displayTime);
+                    }
                 }
             }
         }

@@ -316,15 +316,21 @@ public class EnemySkill : MonoBehaviour
         }
     }
 
-
-
+    /// <summary>
+    /// Coroutine for the root skill of the enemy
+    /// </summary>
+    /// <param name="targetPlayer"></param>
+    /// <returns></returns>
     IEnumerator RootCoroutine(GameObject targetPlayer)
     {
+        //the enemy doesn't move during the casting time of the root
         GetComponent<EnemyMovement>().agent.isStopped = true;
         yield return new WaitForSecondsRealtime(castingTime);
         GetComponent<EnemyMovement>().agent.isStopped = false;
 
+        //the player takes the damage then doesn't move during the root time
         GameManager.gameManager.TakeDamage(targetPlayer, damage, transform.position, false);
+        GameManager.gameManager.UIManager.QuoteOnDamage("enemy", targetPlayer);
         targetPlayer.GetComponent<PlayerController>().isRoot = true;        
         yield return new WaitForSecondsRealtime(rootTime);
         targetPlayer.GetComponent<PlayerController>().isRoot = false;
