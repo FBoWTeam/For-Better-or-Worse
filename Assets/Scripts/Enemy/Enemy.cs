@@ -77,7 +77,7 @@ public class Enemy : MonoBehaviour
         players = new GameObject[] { GameManager.gameManager.player1, GameManager.gameManager.player2 };
         enemyMovement = GetComponent<EnemyMovement>();
         sdrawPath = drawPath;
-        tauntCanvas = transform.GetChild(2).gameObject;
+        tauntCanvas = transform.GetChild(1).gameObject;
 
     }
 
