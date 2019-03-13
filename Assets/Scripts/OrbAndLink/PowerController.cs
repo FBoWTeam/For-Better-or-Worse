@@ -119,17 +119,15 @@ public class PowerController : MonoBehaviour
 	public float fireCooldown;
 	[DrawIf(new string[] { "editingPower" }, GameManager.PowerType.Fire)]
 	public int fireDamage;
-
-	[DrawIf(new string[] { "editingPower" }, GameManager.PowerType.Fire)]
 	[Tooltip("Damage is over time , should be >= to fireDuration")]
-    public int fireTicksDamage = 5;
+	[DrawIf(new string[] { "editingPower" }, GameManager.PowerType.Fire)]
+	public int fireTicksDamage = 5;
 	[DrawIf(new string[] { "editingPower" }, GameManager.PowerType.Fire)]
 	public float fireTickDuration = 5;
 	[DrawIf(new string[] { "editingPower" }, GameManager.PowerType.Fire)]
 	private float nextAttack = 0f;
-
-
-    public bool isActivatedByBrazier;
+	[DrawIf(new string[] { "editingPower" }, GameManager.PowerType.Fire)]
+	public bool isActivatedByBrazier;
     #endregion
 
     #region Electric Param
@@ -142,6 +140,18 @@ public class PowerController : MonoBehaviour
 	public float electricCooldown;
 	[DrawIf(new string[] { "editingPower" }, GameManager.PowerType.Electric)]
 	public int electricDamage;
+	[DrawIf(new string[] { "editingPower" }, GameManager.PowerType.Electric)]
+	public GameObject lightningRodPrefab;
+	[DrawIf(new string[] { "editingPower" }, GameManager.PowerType.Electric)]
+	public float zapRange;
+	[DrawIf(new string[] { "editingPower" }, GameManager.PowerType.Electric)]
+	public int zapDamage;
+	[DrawIf(new string[] { "editingPower" }, GameManager.PowerType.Electric)]
+	public int maxZapNb;
+	[DrawIf(new string[] { "editingPower" }, GameManager.PowerType.Electric)]
+	public float timeBetweenZap;
+	[DrawIf(new string[] { "editingPower" }, GameManager.PowerType.Electric)]
+	public LayerMask layerMask;
 	#endregion
 
 	#region Darkness Param
@@ -189,12 +199,10 @@ public class PowerController : MonoBehaviour
 		{
 			if (GameManager.isElemental(powerToActivate) && elementalPower != GameManager.PowerType.None)
 			{
-				StopCoroutine(elementalDurationCoroutine);
 				DeactivatePower(elementalPower);
 			}
 			else if (!GameManager.isElemental(powerToActivate) && behaviouralPower != GameManager.PowerType.None)
 			{
-				StopCoroutine(behaviouralDurationCoroutine);
 				DeactivatePower(behaviouralPower);
 			}
 
@@ -246,6 +254,15 @@ public class PowerController : MonoBehaviour
     /// <param name="powerToDeactivate"></param>
     public void DeactivatePower(GameManager.PowerType powerToDeactivate)
     {
+		if(GameManager.isElemental(powerToDeactivate))
+		{
+			StopCoroutine(elementalDurationCoroutine);
+		}
+		else
+		{
+			StopCoroutine(behaviouralDurationCoroutine);
+		}
+
         switch (powerToDeactivate)
         {
             case GameManager.PowerType.LargeOrb:
@@ -488,6 +505,51 @@ public class PowerController : MonoBehaviour
         GetComponent<MeshRenderer>().material = normalMaterial;
     }
 
+	IEnumerator ElectricZappingCoroutine(GameObject firstEnemy)
+	{
+		Vector3 actualPos = transform.position;
+		List<GameObject> zappedEnemies = new List<GameObject>();
+		zappedEnemies.Add(firstEnemy);
+		int zapNb = 0;
+		bool hasHitEnemy = true;
+
+		LightningRod rod = Instantiate(lightningRodPrefab, transform.position, Quaternion.identity, transform).GetComponent<LightningRod>();
+		rod.transform.position = actualPos;
+		rod.target = firstEnemy;
+
+		while(zapNb <= maxZapNb && hasHitEnemy)
+		{
+			GameObject nearestEnemy = null;
+			float minDist = zapRange + 1.0f;
+			hasHitEnemy = false;
+
+			Collider[] enemiesInRange = Physics.OverlapSphere(actualPos, zapRange, layerMask);
+			foreach(Collider col in enemiesInRange)
+			{
+				float dist = Vector3.Distance(actualPos, col.transform.position);
+				if (dist < minDist && !zappedEnemies.Contains(col.gameObject))
+				{
+					minDist = dist;
+					nearestEnemy = col.gameObject;
+				}
+			}
+
+			if (nearestEnemy != null)
+			{
+				rod.transform.position = actualPos;
+				rod.target = nearestEnemy;
+				nearestEnemy.GetComponent<Enemy>().TakeDamage(zapDamage);
+				actualPos = nearestEnemy.transform.position;
+				zappedEnemies.Add(nearestEnemy);
+				zapNb++;
+				hasHitEnemy = true;
+			}
+			yield return new WaitForSeconds(timeBetweenZap);
+		}
+
+		Destroy(rod.gameObject);
+	}
+
     #endregion
 
     #region Darkness
@@ -574,7 +636,9 @@ public class PowerController : MonoBehaviour
                 damageTaken += fireDamage;
                 break;
             case GameManager.PowerType.Electric:
+				StartCoroutine(ElectricZappingCoroutine(target));
                 damageTaken += electricDamage;
+				DeactivatePower(elementalPower);
                 break;
         }
         
