@@ -28,21 +28,23 @@ public class EnemySkill : MonoBehaviour
     };
 
     public Skill skillOne;
-    //public Skill skillTwo;
+    public bool stopWhenAttacking;
+    [HideInInspector]
+    public bool isAttacking;
+
 
     #region ImpactFields
-    //[DrawIf(new string[] { "skillOne"}, Skill.Impact)]
-    //public int impactDamage = 5;
     [DrawIf(new string[] { "skillOne" }, Skill.Impact)]
     public float impactCooldown = 3f;
     [DrawIf(new string[] { "skillOne" }, Skill.Impact)]
     public float impactSpeed = 1.5f;
 
-    public bool isAttacking;
-    private float timeAnimation = 1f;
-    public bool stopAfterHit;
-    [DrawIf(new string[] { "stopAfterHit" }, true)]
-    public float timeImoAfterHit;
+   
+    //private float timeAnimation = 1f;
+    
+
+    //[DrawIf(new string[] { "stopAfterHit" }, true)]
+    //public float timeImoAfterHit;
     #endregion
 
     #region AoeFields
@@ -52,14 +54,9 @@ public class EnemySkill : MonoBehaviour
 
     #region RangedFields
 
-    //[DrawIf(new string[] { "skillOne" }, Skill.Distance)]
-    //public int distanceDamage = 3;
-
     [DrawIf(new string[] { "skillOne" }, Skill.Ranged)]
     public float fireRate = 1f;
 
-    //[DrawIf(new string[] { "skillOne" }, Skill.Ranged)]
-    //private float fireCountdown = 0f;
     //public float turnSpeed = 6.5f;// Servira a tourner le joueur en direction de la target plus tard 
     //public Transform partToRotate;
 
@@ -67,7 +64,6 @@ public class EnemySkill : MonoBehaviour
     public float bulletSpeed = 70f;
     [DrawIf(new string[] { "skillOne" }, Skill.Ranged)]
     public GameObject bulletPrefab;
-
     //[DrawIf(new string[] { "skillOne" }, Skill.Ranged)]
     //public Transform firePoint; set to the transform postion for now , changed later
     #endregion
@@ -112,27 +108,35 @@ public class EnemySkill : MonoBehaviour
 
     Material myMat;
     float nextAttack = 0f;
-    SphereCollider rangeCollider;
-
+    GameObject[] players; 
     #endregion
 
-    private void Awake()
+    private void Start()
     {
-        //set the sphereCollider to trigger just to be sure
-        rangeCollider = transform.GetChild(1).GetComponent<SphereCollider>();
-        if (!rangeCollider.isTrigger)
-        {
-            rangeCollider.isTrigger = true;
-        }
-        rangeCollider.radius = range;
-
         inRangeEvent += onPlayerinRange;
         myMat = GetComponent<Renderer>().material;
+        players = new GameObject[2] { GameManager.gameManager.player1, GameManager.gameManager.player2 };
     }
 
     private void Update()
     {
-        rangeCollider.radius = range;
+        CheckRange();
+    }
+
+    /// <summary>
+    /// Trigger InrangeEvent when players are in range
+    /// </summary>
+    private void CheckRange() {
+        foreach (GameObject item in players) {
+            if (InRange(item.transform)) {
+                onPlayerinRange(item, skillOne);
+            }
+        }
+
+        if (!InRange(players[0].transform) && !InRange(players[1].transform)) {
+            myMat.color = new Color(0.4f, 0.4f, 0.4f);
+            isAttacking = false;
+        }
     }
 
     //Dammage player on collision
@@ -145,25 +149,18 @@ public class EnemySkill : MonoBehaviour
         }
     }
 
-    private void OnTriggerStay(Collider other)
-    {
-        if (other.CompareTag("Player"))
-        {
-            if (other.gameObject == Enemy.aimPlayer || skillOne == Skill.AOE)
-            {
-                inRangeEvent(other.gameObject, skillOne);
-            }
+    /// <summary>
+    /// Return trun if a target enter in range
+    /// </summary>
+    /// <param name="target"></param>
+    /// <returns></returns>
+    public bool InRange(Transform target) {
+        float dist = Vector3.Distance(transform.position, target.position);
+        if (dist < range) {
+            return true;
         }
+        return false;
     }
-
-    private void OnTriggerExit(Collider other)
-    {
-        if (myMat.color != new Color(0.4f, 0.4f, 0.4f))
-		{
-            myMat.color = new Color(0.4f, 0.4f, 0.4f);
-		}
-    }
-
 
     void onPlayerinRange(GameObject target, Skill skill)
     {
@@ -171,12 +168,11 @@ public class EnemySkill : MonoBehaviour
         switch (skill)
         {
             case Skill.Impact:
-
+                isAttacking = true;
+                myMat.color = new Color(0.4f, 0.0f, 0.0f);
                 if (Time.time > nextAttack)
-                {
-                    myMat.color = new Color(0.4f, 0.0f, 0.0f);
-                    StartCoroutine("Impact", target.transform);
-
+                {                   
+                    StartCoroutine("Impact", target.transform);        
                     nextAttack = Time.time + impactCooldown;
                 }
 
@@ -186,7 +182,8 @@ public class EnemySkill : MonoBehaviour
                 myMat.color = new Color(0.4f, 0.0f, 0.0f);
 				if (Time.time > nextAttack)
                 {
-                    GameManager.gameManager.TakeDamage(target, damage, transform.position, true);
+                    isAttacking = true;
+                    GameManager.gameManager.TakeDamage(target, damage, transform.position,true);
                     GameManager.gameManager.UIManager.QuoteOnDamage("enemy", target);
                     nextAttack = Time.time + aoeCooldown;
                 }
@@ -196,6 +193,7 @@ public class EnemySkill : MonoBehaviour
 
 				if (Time.time > nextAttack && isVisible(transform.position, target.transform.position))
                 {
+                    isAttacking = true;
                     Shoot(bulletPrefab, transform, target.transform, damage);
                     nextAttack = Time.time + fireRate;
                 }
@@ -205,6 +203,7 @@ public class EnemySkill : MonoBehaviour
 
                 if (Time.time > nextAttack ) {
                     //print("FIRE IN THE HOLE");
+                    isAttacking = true;
                     Throw(aoeProjectilePrefab, transform, target.transform, damage);
                     nextAttack = Time.time + throwRate;
                 }
@@ -318,6 +317,7 @@ public class EnemySkill : MonoBehaviour
     }
 
 
+
     IEnumerator RootCoroutine(GameObject targetPlayer)
     {
         GetComponent<EnemyMovement>().agent.isStopped = true;
@@ -331,6 +331,12 @@ public class EnemySkill : MonoBehaviour
 
     }
 
+
+
+    private void OnDrawGizmos() {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position, range);
+    }
 
 
 }
