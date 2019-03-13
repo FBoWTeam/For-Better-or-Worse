@@ -38,6 +38,8 @@ public class PuddleSystem : MonoBehaviour
     [DrawIf(new string[] { "editingPuddleType" }, GameManager.PuddleType.Water)]
     public int frozenWaterLifeTime;
     [DrawIf(new string[] { "editingPuddleType" }, GameManager.PuddleType.Water)]
+    public int freezeTime;
+    [DrawIf(new string[] { "editingPuddleType" }, GameManager.PuddleType.Water)]
     public bool electrified;
     [DrawIf(new string[] { "editingPuddleType" }, GameManager.PuddleType.Water)]
     public bool frozen;
@@ -71,11 +73,18 @@ public class PuddleSystem : MonoBehaviour
     [DrawIf(new string[] { "editingPuddleType" }, GameManager.PuddleType.Flammable)]
     public Material onFireFlammableMaterial;
 
+
+    //===== TIMERS
+    private float timeStamp;
+    private float delayDOT;
+
+
     #endregion
 
 
     private void Start()
     {
+        delayDOT = 1f;
         transform.localScale = new Vector3(size, 0.05f, size);
         switch (puddleType)
         {
@@ -151,14 +160,18 @@ public class PuddleSystem : MonoBehaviour
     {
         if (other.CompareTag("Enemy") || other.CompareTag("Player"))
         {
-            switch (puddleType)
+            if (Time.time - timeStamp > delayDOT)
             {
-                case GameManager.PuddleType.Acid:
-                    OnStayAcid(other.gameObject);
-                    break;
-                case GameManager.PuddleType.Flammable:
-                    OnStayFlammable(other.gameObject);
-                    break;
+                timeStamp = Time.time;
+                switch (puddleType)
+                {
+                    case GameManager.PuddleType.Acid:
+                        OnStayAcid(other.gameObject);
+                        break;
+                    case GameManager.PuddleType.Flammable:
+                        OnStayFlammable(other.gameObject);
+                        break;
+                }
             }
         }
     }
@@ -216,7 +229,10 @@ public class PuddleSystem : MonoBehaviour
         {
             if (target.GetComponent<PowerController>().elementalPower == GameManager.PowerType.Ice && !frozen)
             {
-                StopCoroutine(electrifiedWaterCoroutine);
+                if (electrifiedWaterCoroutine != null)
+                {
+                    StopCoroutine(electrifiedWaterCoroutine);
+                }
                 frozen = true;
                 GetComponent<MeshRenderer>().material = frozenWaterMaterial;
                 Collider[] hitColliders = Physics.OverlapSphere(transform.position, size / 2);
@@ -228,7 +244,7 @@ public class PuddleSystem : MonoBehaviour
                     }
                     else if (hitColliders[i].gameObject.CompareTag("Player"))
                     {
-                        Debug.Log("player freeze");
+                        hitColliders[i].gameObject.GetComponent<PlayerController>().StartCoroutine(hitColliders[i].gameObject.GetComponent<PlayerController>().FreezeCoroutine(freezeTime));
                     }
                 }
                 frozenWaterCoroutine = StartCoroutine(ReturnToWater(frozenWaterLifeTime));
@@ -239,14 +255,11 @@ public class PuddleSystem : MonoBehaviour
                 GetComponent<MeshRenderer>().material = ElectrifiedWaterMaterial;
                 electrifiedWaterCoroutine = StartCoroutine(ReturnToWater(electrifiedWaterLifeTime));
             }
-            else if (target.GetComponent<PowerController>().elementalPower == GameManager.PowerType.Fire)
+            else if (target.GetComponent<PowerController>().elementalPower == GameManager.PowerType.Fire && frozen)
             {
                 target.GetComponent<PowerController>().DeactivatePower(GameManager.PowerType.Fire);
-                if (frozen)
-                {
-                    frozen = false;
-                    GetComponent<MeshRenderer>().material = waterMaterial;
-                }
+                frozen = false;
+                GetComponent<MeshRenderer>().material = waterMaterial;
             }
         }
         else if ((target.CompareTag("Enemy") || target.CompareTag("Player")) && electrified)
@@ -257,6 +270,7 @@ public class PuddleSystem : MonoBehaviour
 
     IEnumerator ReturnToWater(float timeToWater)
     {
+        yield return new WaitForSeconds(timeToWater);
         if (frozen)
         {
             frozen = false;
@@ -266,7 +280,6 @@ public class PuddleSystem : MonoBehaviour
             electrified = false;
         }
         GetComponent<MeshRenderer>().material = waterMaterial;
-        yield return new WaitForSeconds(timeToWater);
     }
 
     #endregion
@@ -320,7 +333,10 @@ public class PuddleSystem : MonoBehaviour
         {
             while (currentDamage < burnTotalDamage)
             {
-                GameManager.gameManager.TakeDamage(target, tickDamage, Vector3.zero, false);
+                if (target.gameObject != null)
+                {
+                    GameManager.gameManager.TakeDamage(target, tickDamage, Vector3.zero, false);
+                }
                 yield return new WaitForSeconds(1f);
                 currentDamage += tickDamage;
             }
@@ -329,7 +345,10 @@ public class PuddleSystem : MonoBehaviour
         {
             while (currentDamage < burnTotalDamage)
             {
-                target.GetComponent<Enemy>().TakeDamage(tickDamage);
+                if (target.gameObject != null)
+                {
+                    target.GetComponent<Enemy>().TakeDamage(tickDamage);
+                }
                 yield return new WaitForSeconds(1f);
                 currentDamage += tickDamage;
             }
