@@ -82,7 +82,7 @@ public class Enemy : MonoBehaviour
         enemyMovement = GetComponent<EnemyMovement>();
         enemySkill = GetComponent<EnemySkill>();
         sdrawPath = drawPath;
-        tauntCanvas = transform.GetChild(2).gameObject;
+        tauntCanvas = transform.GetChild(1).gameObject;
 
     }
 
@@ -102,6 +102,7 @@ public class Enemy : MonoBehaviour
 
             if (!enemyMovement.agent.isStopped)
             {
+                enemySkill.DoAttack();
                 
                 enemyMovement.DoMovement();
             }
