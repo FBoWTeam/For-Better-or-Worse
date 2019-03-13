@@ -87,20 +87,23 @@ public class OrbHitter : MonoBehaviour
 
 	public void UpdateInputs()
 	{
-		bool player1 = GetComponent<PlayerController>().player1;
-		if (((Input.GetAxisRaw("OrbHitterP1") != 0 && player1) || (Input.GetAxisRaw("OrbHitterP2") != 0 && !player1)) && hitTimer <= 0.0f && !hitting)
-		{
-			StartCoroutine(HitCoroutine());
-		}
+        if (!gameObject.GetComponent<PlayerController>().isFrozen)
+        {
+            bool player1 = GetComponent<PlayerController>().player1;
+            if (((Input.GetAxisRaw("OrbHitterP1") != 0 && player1) || (Input.GetAxisRaw("OrbHitterP2") != 0 && !player1)) && hitTimer <= 0.0f && !hitting)
+            {
+                StartCoroutine(HitCoroutine());
+            }
 
-		if ((Input.GetAxisRaw("OrbAmortizerP1") != 0 && player1 && !orbController.toPlayer2) || (Input.GetAxisRaw("OrbAmortizerP2") != 0 && !player1 && orbController.toPlayer2))
-		{
-			amortizing = true;
-		}
-		else
-		{
-			amortizing = false;
-		}
+            if ((Input.GetAxisRaw("OrbAmortizerP1") != 0 && player1 && !orbController.toPlayer2) || (Input.GetAxisRaw("OrbAmortizerP2") != 0 && !player1 && orbController.toPlayer2))
+            {
+                amortizing = true;
+            }
+            else
+            {
+                amortizing = false;
+            }
+        }
 	}
 
 	/// <summary>

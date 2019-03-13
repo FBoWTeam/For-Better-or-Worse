@@ -11,6 +11,7 @@ public class PlayerController : MonoBehaviour
     public float initialSpeed;
     private float speed;
     public bool isSlowed;
+    public bool isFrozen;
     Rigidbody rb;
 	[HideInInspector]
     public Vector3 direction;
@@ -59,17 +60,20 @@ public class PlayerController : MonoBehaviour
     /// </summary>
 	public void Move()
     {
-        direction = player1 ? new Vector3(Input.GetAxis("HorizontalP1"), 0.0f, Input.GetAxis("VerticalP1")) : new Vector3(Input.GetAxis("HorizontalP2"), 0.0f, Input.GetAxis("VerticalP2"));
+        if (!isFrozen)
+        {
+            direction = player1 ? new Vector3(Input.GetAxis("HorizontalP1"), 0.0f, Input.GetAxis("VerticalP1")) : new Vector3(Input.GetAxis("HorizontalP2"), 0.0f, Input.GetAxis("VerticalP2"));
 
-        direction = (direction.x * Camera.main.transform.right + direction.z * Camera.main.transform.forward);
+            direction = (direction.x * Camera.main.transform.right + direction.z * Camera.main.transform.forward);
 
-        Vector3 velocity = direction * speed * Time.deltaTime;
+            Vector3 velocity = direction * speed * Time.deltaTime;
 
-		checkDistance(ref velocity);
+            checkDistance(ref velocity);
 
-		rb.MovePosition(transform.position + velocity);
-        transform.LookAt(transform.position + direction);
-        transform.localEulerAngles = new Vector3(0.0f, transform.localEulerAngles.y, 0.0f);
+            rb.MovePosition(transform.position + velocity);
+            transform.LookAt(transform.position + direction);
+            transform.localEulerAngles = new Vector3(0.0f, transform.localEulerAngles.y, 0.0f);
+        }
     }
 
 	void checkDistance(ref Vector3 velocity)
@@ -218,4 +222,11 @@ public class PlayerController : MonoBehaviour
         }
     }
     
+    public IEnumerator FreezeCoroutine(float freezeTimer)
+    {
+        isFrozen = true;
+        yield return new WaitForSeconds(freezeTimer);
+        isFrozen = false;
+    }
+
 }
