@@ -87,6 +87,22 @@ public class EnemySkill : MonoBehaviour
 
     #endregion
 
+    #region Root
+    [DrawIf(new string[] { "skillOne" }, Skill.Root)]
+    float nextRoot = 0f;
+    [DrawIf(new string[] { "skillOne" }, Skill.Root)]
+    public float rootCooldown;
+    [DrawIf(new string[] { "skillOne" }, Skill.Root)]
+    public float castingTime;
+    [DrawIf(new string[] { "skillOne" }, Skill.Root)]
+    public float rootTime;
+    /*[DrawIf(new string[] { "skillOne" }, Skill.Root)]
+    [DrawIf(new string[] { "skillOne" }, Skill.Root)]
+    [DrawIf(new string[] { "skillOne" }, Skill.Root)]
+    [DrawIf(new string[] { "skillOne" }, Skill.Root)]*/
+
+    #endregion
+
 
     public float range = 4f;
     public int damage = 5;
@@ -193,6 +209,14 @@ public class EnemySkill : MonoBehaviour
                     nextAttack = Time.time + throwRate;
                 }
                 break;
+            case Skill.Root:
+                if(Time.time > nextRoot)
+                {
+                    myMat.color = new Color(0.4f, 0.0f, 0.0f);
+                    StartCoroutine("RootCoroutine", target);
+                    nextRoot = Time.time + rootCooldown;
+                }
+                break;
             case Skill.None:
                 break;
             default:
@@ -237,9 +261,7 @@ public class EnemySkill : MonoBehaviour
          Vector3 attackPosition = targetPos + dirToTarget;
          //Debug.Log(attackPosition);
          float percent = 0;
-
-
-
+        
          while (percent <= 1)
          {
 
@@ -293,6 +315,20 @@ public class EnemySkill : MonoBehaviour
         {
             enemyShot.Initialise(target, damage, bulletSpeed);
         }
+    }
+
+
+    IEnumerator RootCoroutine(GameObject targetPlayer)
+    {
+        GetComponent<EnemyMovement>().agent.isStopped = true;
+        yield return new WaitForSecondsRealtime(castingTime);
+        GetComponent<EnemyMovement>().agent.isStopped = false;
+
+        GameManager.gameManager.TakeDamage(targetPlayer, damage, transform.position, false);
+        targetPlayer.GetComponent<PlayerController>().isRoot = true;        
+        yield return new WaitForSecondsRealtime(rootTime);
+        targetPlayer.GetComponent<PlayerController>().isRoot = false;
+
     }
 
 

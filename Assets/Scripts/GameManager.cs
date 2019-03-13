@@ -143,6 +143,7 @@ public class GameManager : MonoBehaviour
             StartCoroutine(targetPlayer.GetComponent<PlayerController>().InvincibilityCoroutine());
             UIManager.UpdateHealthBar();
             UIManager.UpdateCombo(0);
+            targetPlayer.GetComponent<PlayerController>().isRoot = false;
         }
     }
 

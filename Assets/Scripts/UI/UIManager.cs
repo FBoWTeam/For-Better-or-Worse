@@ -52,7 +52,7 @@ public class UIManager : MonoBehaviour
 
     [Header("Text Quote")]
     public float displayTime;
-    public int pourcentageQuote;
+    public int pourcentageQuote;/*
     [TextArea]
     public string player1TextEnemy;
     [TextArea]
@@ -60,7 +60,12 @@ public class UIManager : MonoBehaviour
     [TextArea]
     public string player1TextOrb;
     [TextArea]
-    public string player2TextOrb;
+    public string player2TextOrb;*/
+
+    public List<string> player1TextsEnemy;
+    public List<string> player2TextsEnemy;
+    public List<string> player1TextsOrb;
+    public List<string> player2TextsOrb;
 
     [HideInInspector]
     Dictionary<int, GameManager.PowerType> busySlot = new Dictionary<int, GameManager.PowerType>(2);
@@ -350,28 +355,33 @@ public class UIManager : MonoBehaviour
     /// </summary>
     public void QuoteOnDamage(string damageDealer, GameObject targetPlayer)
     {
+        int sizeList = 0;
         if (Random.Range(1, 101)/*return an integer between 1(in) and 101(out)*/ <= pourcentageQuote)
         {
             if(damageDealer == "enemy")
             { 
                 if (targetPlayer == GameManager.gameManager.player1)
                 {
-                    UpdateDialogBox1(player1TextEnemy, displayTime);
+                    sizeList = player1TextsEnemy.Count;
+                    UpdateDialogBox1(player1TextsEnemy[Random.Range(0,sizeList)], displayTime);
                 }
                 if (targetPlayer == GameManager.gameManager.player2)
                 {
-                    UpdateDialogBox2(player2TextEnemy, displayTime);
+                    sizeList = player2TextsEnemy.Count;
+                    UpdateDialogBox2(player2TextsEnemy[Random.Range(0, sizeList)], displayTime);
                 }
             }
             else if(damageDealer == "orb")
             {
                 if (targetPlayer == GameManager.gameManager.player1)
                 {
-                    UpdateDialogBox1(player1TextOrb, displayTime);
+                    sizeList = player1TextsOrb.Count;
+                    UpdateDialogBox1(player1TextsOrb[Random.Range(0, sizeList)], displayTime);
                 }
                 if (targetPlayer == GameManager.gameManager.player2)
                 {
-                    UpdateDialogBox2(player2TextOrb, displayTime);
+                    sizeList = player2TextsOrb.Count;
+                    UpdateDialogBox2(player2TextsOrb[Random.Range(0, sizeList)], displayTime);
                 }
             }
         }

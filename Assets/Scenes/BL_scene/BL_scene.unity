@@ -1751,7 +1751,7 @@ PrefabInstance:
     - target: {fileID: 9164865582948619922, guid: 8e72342c511536043883f2199df73730,
         type: 3}
       propertyPath: movement
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 9164865582948619922, guid: 8e72342c511536043883f2199df73730,
         type: 3}
@@ -1776,7 +1776,7 @@ PrefabInstance:
     - target: {fileID: 947384502557923801, guid: 8e72342c511536043883f2199df73730,
         type: 3}
       propertyPath: skillOne
-      value: 0
+      value: 11
       objectReference: {fileID: 0}
     - target: {fileID: 947384502557923801, guid: 8e72342c511536043883f2199df73730,
         type: 3}
@@ -1786,7 +1786,37 @@ PrefabInstance:
     - target: {fileID: 947384502557923801, guid: 8e72342c511536043883f2199df73730,
         type: 3}
       propertyPath: damage
-      value: 0
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 947384502557923801, guid: 8e72342c511536043883f2199df73730,
+        type: 3}
+      propertyPath: isAttacking
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 947384502557923801, guid: 8e72342c511536043883f2199df73730,
+        type: 3}
+      propertyPath: range
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 947384502557923801, guid: 8e72342c511536043883f2199df73730,
+        type: 3}
+      propertyPath: rootCooldown
+      value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: 947384502557923801, guid: 8e72342c511536043883f2199df73730,
+        type: 3}
+      propertyPath: castingTime
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 947384502557923801, guid: 8e72342c511536043883f2199df73730,
+        type: 3}
+      propertyPath: rootTime
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 947384502557923801, guid: 8e72342c511536043883f2199df73730,
+        type: 3}
+      propertyPath: stopAfterHit
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5783902267319157312, guid: 8e72342c511536043883f2199df73730,
         type: 3}
@@ -2473,7 +2503,7 @@ PrefabInstance:
     - target: {fileID: 8708506531089382189, guid: e0c803f7f12a09b4cb87b0f68746c41b,
         type: 3}
       propertyPath: canHitPlayer
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8708506531089382189, guid: e0c803f7f12a09b4cb87b0f68746c41b,
         type: 3}
@@ -2773,6 +2803,101 @@ PrefabInstance:
         type: 3}
       propertyPath: m_text
       value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 8528671160986675282, guid: 88ac0b2d964b153488a65f115a787617,
+        type: 3}
+      propertyPath: player1TextsEnemy.Array.size
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8528671160986675282, guid: 88ac0b2d964b153488a65f115a787617,
+        type: 3}
+      propertyPath: player2TextsEnemy.Array.size
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8528671160986675282, guid: 88ac0b2d964b153488a65f115a787617,
+        type: 3}
+      propertyPath: player1TextsOrb.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8528671160986675282, guid: 88ac0b2d964b153488a65f115a787617,
+        type: 3}
+      propertyPath: player2TextsOrb.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8528671160986675282, guid: 88ac0b2d964b153488a65f115a787617,
+        type: 3}
+      propertyPath: player1TextsEnemy.Array.data[0]
+      value: "Lamentable insecte\u2026"
+      objectReference: {fileID: 0}
+    - target: {fileID: 8528671160986675282, guid: 88ac0b2d964b153488a65f115a787617,
+        type: 3}
+      propertyPath: player1TextsEnemy.Array.data[1]
+      value: "Comment fais-tu pour \xEAtre si incomp\xE9tent ?"
+      objectReference: {fileID: 0}
+    - target: {fileID: 8528671160986675282, guid: 88ac0b2d964b153488a65f115a787617,
+        type: 3}
+      propertyPath: player1TextsEnemy.Array.data[2]
+      value: "Continue comme \xE7a si tu veux \xEAtre mort dans dix secondes."
+      objectReference: {fileID: 0}
+    - target: {fileID: 8528671160986675282, guid: 88ac0b2d964b153488a65f115a787617,
+        type: 3}
+      propertyPath: player1TextsEnemy.Array.data[3]
+      value: Ah, je vais finir par avoir un bleu.
+      objectReference: {fileID: 0}
+    - target: {fileID: 8528671160986675282, guid: 88ac0b2d964b153488a65f115a787617,
+        type: 3}
+      propertyPath: player1TextsEnemy.Array.data[4]
+      value: "Vous allez regretter de m\u2019avoir touch\xE9, bande d\u2019\xE2nes."
+      objectReference: {fileID: 0}
+    - target: {fileID: 8528671160986675282, guid: 88ac0b2d964b153488a65f115a787617,
+        type: 3}
+      propertyPath: player2TextsEnemy.Array.data[0]
+      value: "Ah, t\u2019es nulle !"
+      objectReference: {fileID: 0}
+    - target: {fileID: 8528671160986675282, guid: 88ac0b2d964b153488a65f115a787617,
+        type: 3}
+      propertyPath: player2TextsEnemy.Array.data[1]
+      value: "J\u2019esp\xE8re que \xE7a t\u2019a fait mal !"
+      objectReference: {fileID: 0}
+    - target: {fileID: 8528671160986675282, guid: 88ac0b2d964b153488a65f115a787617,
+        type: 3}
+      propertyPath: player2TextsEnemy.Array.data[2]
+      value: "Tu la ram\xE8nes moins maintenant, hein ?"
+      objectReference: {fileID: 0}
+    - target: {fileID: 8528671160986675282, guid: 88ac0b2d964b153488a65f115a787617,
+        type: 3}
+      propertyPath: player2TextsEnemy.Array.data[3]
+      value: "RAH ! \xC7a fait un mal de chien !"
+      objectReference: {fileID: 0}
+    - target: {fileID: 8528671160986675282, guid: 88ac0b2d964b153488a65f115a787617,
+        type: 3}
+      propertyPath: player2TextsEnemy.Array.data[4]
+      value: "J\u2019vais t\u2019crever, sale rat !"
+      objectReference: {fileID: 0}
+    - target: {fileID: 8528671160986675282, guid: 88ac0b2d964b153488a65f115a787617,
+        type: 3}
+      propertyPath: player1TextsOrb.Array.data[0]
+      value: Ah ! Je comprends pourquoi ils meurent, en fait.
+      objectReference: {fileID: 0}
+    - target: {fileID: 8528671160986675282, guid: 88ac0b2d964b153488a65f115a787617,
+        type: 3}
+      propertyPath: player1TextsOrb.Array.data[1]
+      value: "On n\u2019a pas le sens du rythme, blaireau ?"
+      objectReference: {fileID: 0}
+    - target: {fileID: 8528671160986675282, guid: 88ac0b2d964b153488a65f115a787617,
+        type: 3}
+      propertyPath: player2TextsOrb.Array.data[0]
+      value: "Punaise, \xE7a fait toujours aussi mal, c\u2019te truc !"
+      objectReference: {fileID: 0}
+    - target: {fileID: 8528671160986675282, guid: 88ac0b2d964b153488a65f115a787617,
+        type: 3}
+      propertyPath: player2TextsOrb.Array.data[1]
+      value: "Eh, t\u2019as jamais jou\xE9 au tennis, vieille pie ?"
+      objectReference: {fileID: 0}
+    - target: {fileID: 8528671160986675282, guid: 88ac0b2d964b153488a65f115a787617,
+        type: 3}
+      propertyPath: pourcentageQuote
+      value: 100
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 88ac0b2d964b153488a65f115a787617, type: 3}
