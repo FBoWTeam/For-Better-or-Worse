@@ -18,8 +18,8 @@ public class EnemyAOEShot: MonoBehaviour {
         body = GetComponent<Rigidbody>();
         body.useGravity = false;
 
-        Players = new GameObject[2];
-        Players = GameObject.FindGameObjectsWithTag("Player");
+        Players = new GameObject[2] {GameManager.gameManager.player1,GameManager.gameManager.player2 };
+       
     }
 
 
