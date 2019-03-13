@@ -27,8 +27,11 @@ public class Capstan : MonoBehaviour, IActivable
 
     public int rotationSpeed = 1;
 
+    private Animator anim;
+
     private void Start()
     {
+        anim = GetComponentInParent<Animator>();
         orb = GameManager.gameManager.orb;
         border = transform.GetChild(0);
         pivot = transform.GetChild(1);
@@ -55,8 +58,8 @@ public class Capstan : MonoBehaviour, IActivable
             int sign = targetAngle > actualAngle ? 1 : -1;
             transform.parent.localEulerAngles = new Vector3(0.0f, actualAngle += (rotationSpeed * sign), 0.0f);
         }
-
-        if (!GetComponentInParent<Animation>().IsPlaying("CapstanUp") && !GetComponentInParent<Animation>().IsPlaying("CapstanDown"))
+        
+        if (anim.GetCurrentAnimatorStateInfo(0).normalizedTime > 1 && !anim.IsInTransition(0))
         {
             GetComponent<BoxCollider>().enabled = true;
         }
@@ -89,7 +92,7 @@ public class Capstan : MonoBehaviour, IActivable
         {
             if (isActive == false)
             {
-                GetComponentInParent<Animation>().Play("CapstanUp");
+                anim.SetBool("isUp", true);
             }
             isActive = true;
         }
@@ -97,7 +100,7 @@ public class Capstan : MonoBehaviour, IActivable
         {
             if (isActive == true)
             {
-                GetComponentInParent<Animation>().Play("CapstanDown");
+                anim.SetBool("isUp", false);
             }
             isActive = false;
         }
