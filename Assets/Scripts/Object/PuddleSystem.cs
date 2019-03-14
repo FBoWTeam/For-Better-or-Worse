@@ -11,7 +11,6 @@ public class PuddleSystem : MonoBehaviour
 
     //===== COMMON PARAMETERS
     [Header("[Puddle common param]")]
-    public float size;
     public Material standardMaterial;
     [Header("[Puddle Effect Editing]")]
     public GameManager.PuddleType editingPuddleType;
@@ -85,7 +84,6 @@ public class PuddleSystem : MonoBehaviour
     private void Start()
     {
         delayDOT = 1f;
-        transform.localScale = new Vector3(size, 0.05f, size);
         switch (puddleType)
         {
             case GameManager.PuddleType.None:
