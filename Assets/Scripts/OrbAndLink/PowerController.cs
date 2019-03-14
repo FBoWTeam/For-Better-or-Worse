@@ -521,7 +521,16 @@ public class PowerController : MonoBehaviour
 		while(zapNb <= maxZapNb && hasHitObject)
 		{
 			GameObject nearestObject = null;
-			float minDist = zapRange + 1.0f;
+            float minDist;
+            if (isEnemy)
+            {
+                minDist = zapRange + 1.0f;
+            }
+            else
+            {
+                minDist = GameManager.gameManager.maxDistance + 2;
+            }
+			
             hasHitObject = false;
 
             Collider[] objectsInRange;
@@ -531,13 +540,13 @@ public class PowerController : MonoBehaviour
             }
             else
             {
-                objectsInRange = Physics.OverlapSphere(actualPos, GameManager.gameManager.maxDistance * 2, playerLayerMask);
+                objectsInRange = Physics.OverlapSphere(actualPos, GameManager.gameManager.maxDistance + 1, playerLayerMask);
             }
 
 			foreach(Collider col in objectsInRange)
 			{
 				float dist = Vector3.Distance(actualPos, col.transform.position);
-				if (dist < GameManager.gameManager.maxDistance * 2 && !zappedObjects.Contains(col.gameObject))
+				if (dist < minDist && !zappedObjects.Contains(col.gameObject))
 				{
 					minDist = dist;
                     nearestObject = col.gameObject;
