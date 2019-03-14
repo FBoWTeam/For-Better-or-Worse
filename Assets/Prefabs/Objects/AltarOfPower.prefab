@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &4985460314402858058
+--- !u!1 &6416001773494826285
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,47 +8,47 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 8465427327951984233}
-  - component: {fileID: 2895295157395959456}
-  - component: {fileID: 4378458398394856536}
-  - component: {fileID: 5038783304955062027}
-  - component: {fileID: 550201580726470068}
+  - component: {fileID: 6416001773494826288}
+  - component: {fileID: 6416001773494826289}
+  - component: {fileID: 6416001773494826290}
+  - component: {fileID: 6416001773494826291}
+  - component: {fileID: 6416001773494826284}
   m_Layer: 0
-  m_Name: Water
-  m_TagString: Puddle
+  m_Name: AltarOfPower
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &8465427327951984233
+--- !u!4 &6416001773494826288
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4985460314402858058}
+  m_GameObject: {fileID: 6416001773494826285}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.05, z: 0}
-  m_LocalScale: {x: 1, y: 0.05, z: 1}
+  m_LocalPosition: {x: 0, y: 1, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!33 &2895295157395959456
+--- !u!33 &6416001773494826289
 MeshFilter:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4985460314402858058}
+  m_GameObject: {fileID: 6416001773494826285}
   m_Mesh: {fileID: 10206, guid: 0000000000000000e000000000000000, type: 0}
---- !u!23 &4378458398394856536
+--- !u!23 &6416001773494826290
 MeshRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4985460314402858058}
+  m_GameObject: {fileID: 6416001773494826285}
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
@@ -79,58 +79,39 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!136 &5038783304955062027
+--- !u!136 &6416001773494826291
 CapsuleCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4985460314402858058}
+  m_GameObject: {fileID: 6416001773494826285}
   m_Material: {fileID: 0}
   m_IsTrigger: 1
   m_Enabled: 1
   m_Radius: 0.5
-  m_Height: 100
+  m_Height: 2
   m_Direction: 1
-  m_Center: {x: 0, y: 15, z: 0}
---- !u!114 &550201580726470068
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &6416001773494826284
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4985460314402858058}
+  m_GameObject: {fileID: 6416001773494826285}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0ed3f02844f9bde4a9dd78cc39a32dd1, type: 3}
+  m_Script: {fileID: 11500000, guid: 7161aca0843562a45b60d7f1a0bb76b0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  puddleType: 3
-  size: 5
-  standardMaterial: {fileID: 2100000, guid: b7c406cb993429e468071efef172b41a, type: 2}
-  editingPuddleType: 0
-  slugLifeTime: 5
-  slugSlowAmount: 50
-  slugMaterial: {fileID: 2100000, guid: 9092a9d2c0638004b95d09e9eab67239, type: 2}
-  acidDamage: 2
-  acidMaterial: {fileID: 2100000, guid: 4c0ef73f886ed914d81bce5bf74652b1, type: 2}
-  electrifiedWaterLifeTime: 10
-  frozenWaterLifeTime: 5
-  freezeTime: 2
-  electrified: 0
-  lightningRodPrefab: {fileID: 472907574596040486, guid: 106b9d0f1a9c2aa4292f190aecb799dd,
-    type: 3}
-  frozen: 0
-  waterMaterial: {fileID: 2100000, guid: 7796623e30955b748be2266eba43dde2, type: 2}
-  ElectrifiedWaterMaterial: {fileID: 2100000, guid: 2e7420f733012f147acb693bac2c0eef,
-    type: 2}
-  frozenWaterMaterial: {fileID: 2100000, guid: 607a6d7fb9ffe174d83b3cd0139b05d7, type: 2}
-  mudSlowAmount: 50
-  mudMaterial: {fileID: 2100000, guid: 944851ffc1a941d4b8d3d9fb904203f1, type: 2}
-  onFireFlammableLifeTime: 10
-  onFire: 0
-  burnTotalDamage: 10
-  burnTime: 5
-  flammableMaterial: {fileID: 2100000, guid: 08c582060b53a164b82c13ad81a3e098, type: 2}
-  onFireFlammableMaterial: {fileID: 2100000, guid: e50c46c42775cfa439aaa4d1a890ebf1,
-    type: 2}
+  powerToGive: 0
+  standardMaterial: {fileID: 2100000, guid: 76cf3b8074637204fb930c562b8cb61a, type: 2}
+  electricMaterial: {fileID: 2100000, guid: c5714c959eba6964cb5543af1128b646, type: 2}
+  fireMaterial: {fileID: 2100000, guid: dbaea46d10d0aee4898f0b579c7a84fd, type: 2}
+  iceMaterial: {fileID: 2100000, guid: e1c894261949685488e6031af020a36f, type: 2}
+  leechLifeMaterial: {fileID: 2100000, guid: 92b138bf65fea4941b08f59441c6770f, type: 2}
+  shieldMaterial: {fileID: 2100000, guid: 075f406c77a9ee34db02bb28f18db12c, type: 2}
+  slugMaterial: {fileID: 2100000, guid: 7468f8944ac1ed94490c837a13e8b672, type: 2}
+  vortexMaterial: {fileID: 2100000, guid: 7595e36051d4c9b42bd858bf1f438410, type: 2}
+  darknessMaterial: {fileID: 2100000, guid: 306a366e89de9e84dbc9e733941e50df, type: 2}
