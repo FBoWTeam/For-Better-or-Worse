@@ -15,8 +15,11 @@ public class GameManager : MonoBehaviour
 	public GameObject orb;
 	[HideInInspector]
 	public UIManager UIManager;
+    [HideInInspector]
+    public DialogSystem DialogSystem;
 
-	public bool isPaused;
+
+    public bool isPaused;
 
 	[Header("[Distance Limits]")]
 	public float minDistance;
@@ -89,6 +92,7 @@ public class GameManager : MonoBehaviour
         player2 = GameObject.Find("Player2");
         orb = GameObject.Find("Orb");
         UIManager = GameObject.FindGameObjectWithTag("UI").GetComponent<UIManager>();
+        DialogSystem = GameObject.FindGameObjectWithTag("Dialog").GetComponent<DialogSystem>();
 
         damageTakenP1 = 0;
         damageTakenP2 = 0;
