@@ -256,11 +256,11 @@ public class PowerController : MonoBehaviour
     /// <param name="powerToDeactivate"></param>
     public void DeactivatePower(GameManager.PowerType powerToDeactivate)
     {
-		if(GameManager.isElemental(powerToDeactivate))
+		if(GameManager.isElemental(powerToDeactivate) && elementalDurationCoroutine != null)
 		{
 			StopCoroutine(elementalDurationCoroutine);
 		}
-		else
+		else if (!GameManager.isElemental(powerToDeactivate) && behaviouralDurationCoroutine != null)
 		{
 			StopCoroutine(behaviouralDurationCoroutine);
 		}
