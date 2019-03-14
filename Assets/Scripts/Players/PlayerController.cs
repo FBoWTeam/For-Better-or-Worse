@@ -195,7 +195,7 @@ public class PlayerController : MonoBehaviour
 
 	public IEnumerator InvincibilityCoroutine()
 	{
-		MeshRenderer renderer = GetComponent<MeshRenderer>();
+		SkinnedMeshRenderer renderer = transform.GetChild(0).GetComponent<SkinnedMeshRenderer>();
 		float blinkTime = invicibilityDuration / blinkNb;
 
 		invincible = true;
