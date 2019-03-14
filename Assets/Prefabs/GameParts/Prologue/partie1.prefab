@@ -304,7 +304,9 @@ MonoBehaviour:
   baseHP: 15
   hp: 15
   timeImoIfHit: 0
+  isFrozen: 0
   enemyMovement: {fileID: 0}
+  enemySkill: {fileID: 0}
 --- !u!114 &2985913197442976484
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -336,16 +338,23 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   skillOne: 0
+  stopWhenAttacking: 0
+  isAttacking: 0
   impactCooldown: 3
   impactSpeed: 1
-  isAttacking: 0
-  stopAfterHit: 0
-  timeImoAfterHit: 0
   aoeCooldown: 2
   fireRate: 1
   bulletSpeed: 70
   bulletPrefab: {fileID: 1327039134590348602, guid: a16ccfb362e58ec4588b618092d0c27c,
     type: 3}
+  aoeProjectilePrefab: {fileID: 0}
+  projectileAoeRadius: 5
+  projectileAoeDuration: 5
+  throwRate: 1
+  maxHeight: 10
+  rootCooldown: 0
+  castingTime: 0
+  rootTime: 0
   range: 1.5
   damage: 5
 --- !u!114 &433666063486737974
@@ -1496,7 +1505,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1414174208905473041}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -3032,7 +3041,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3590049728914618677}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -31.907944, y: 0, z: -120.4673}
+  m_LocalPosition: {x: -32, y: 0, z: -121}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 7124540269851578670}
@@ -3192,7 +3201,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3590049730020304564}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -114.98218, y: 0, z: -131.34975}
+  m_LocalPosition: {x: -115, y: 0, z: -131}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 7124540270156939793}
@@ -3223,7 +3232,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3590049730173718769}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -59.787277, y: 0, z: -120.637436}
+  m_LocalPosition: {x: -60, y: 0, z: -121}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 7124540270404363748}
@@ -3872,7 +3881,9 @@ MonoBehaviour:
   baseHP: 25
   hp: 25
   timeImoIfHit: 0
+  isFrozen: 0
   enemyMovement: {fileID: 0}
+  enemySkill: {fileID: 0}
 --- !u!114 &7203844165283941892
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3904,16 +3915,23 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   skillOne: 0
+  stopWhenAttacking: 0
+  isAttacking: 0
   impactCooldown: 3
   impactSpeed: 1
-  isAttacking: 0
-  stopAfterHit: 0
-  timeImoAfterHit: 0
   aoeCooldown: 2
   fireRate: 1
   bulletSpeed: 70
   bulletPrefab: {fileID: 1327039134590348602, guid: a16ccfb362e58ec4588b618092d0c27c,
     type: 3}
+  aoeProjectilePrefab: {fileID: 0}
+  projectileAoeRadius: 5
+  projectileAoeDuration: 5
+  throwRate: 1
+  maxHeight: 10
+  rootCooldown: 0
+  castingTime: 0
+  rootTime: 0
   range: 1.5
   damage: 5
 --- !u!114 &5516235400630016726
@@ -4209,7 +4227,9 @@ MonoBehaviour:
   baseHP: 15
   hp: 15
   timeImoIfHit: 0
+  isFrozen: 0
   enemyMovement: {fileID: 0}
+  enemySkill: {fileID: 0}
 --- !u!114 &7203844165172406916
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4241,16 +4261,23 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   skillOne: 0
+  stopWhenAttacking: 0
+  isAttacking: 0
   impactCooldown: 3
   impactSpeed: 1
-  isAttacking: 0
-  stopAfterHit: 0
-  timeImoAfterHit: 0
   aoeCooldown: 2
   fireRate: 1
   bulletSpeed: 70
   bulletPrefab: {fileID: 1327039134590348602, guid: a16ccfb362e58ec4588b618092d0c27c,
     type: 3}
+  aoeProjectilePrefab: {fileID: 0}
+  projectileAoeRadius: 5
+  projectileAoeDuration: 5
+  throwRate: 1
+  maxHeight: 10
+  rootCooldown: 0
+  castingTime: 0
+  rootTime: 0
   range: 1.5
   damage: 5
 --- !u!114 &5516235400439840342
@@ -4546,7 +4573,9 @@ MonoBehaviour:
   baseHP: 15
   hp: 15
   timeImoIfHit: 0
+  isFrozen: 0
   enemyMovement: {fileID: 0}
+  enemySkill: {fileID: 0}
 --- !u!114 &7203844165586337261
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4578,16 +4607,23 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   skillOne: 0
+  stopWhenAttacking: 0
+  isAttacking: 0
   impactCooldown: 3
   impactSpeed: 1
-  isAttacking: 0
-  stopAfterHit: 0
-  timeImoAfterHit: 0
   aoeCooldown: 2
   fireRate: 1
   bulletSpeed: 70
   bulletPrefab: {fileID: 1327039134590348602, guid: a16ccfb362e58ec4588b618092d0c27c,
     type: 3}
+  aoeProjectilePrefab: {fileID: 0}
+  projectileAoeRadius: 5
+  projectileAoeDuration: 5
+  throwRate: 1
+  maxHeight: 10
+  rootCooldown: 0
+  castingTime: 0
+  rootTime: 0
   range: 1.5
   damage: 5
 --- !u!114 &5516235400327375167
@@ -4883,7 +4919,9 @@ MonoBehaviour:
   baseHP: 15
   hp: 15
   timeImoIfHit: 0
+  isFrozen: 0
   enemyMovement: {fileID: 0}
+  enemySkill: {fileID: 0}
 --- !u!114 &7203844164374422467
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4915,16 +4953,23 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   skillOne: 0
+  stopWhenAttacking: 0
+  isAttacking: 0
   impactCooldown: 3
   impactSpeed: 1
-  isAttacking: 0
-  stopAfterHit: 0
-  timeImoAfterHit: 0
   aoeCooldown: 2
   fireRate: 1
   bulletSpeed: 70
   bulletPrefab: {fileID: 1327039134590348602, guid: a16ccfb362e58ec4588b618092d0c27c,
     type: 3}
+  aoeProjectilePrefab: {fileID: 0}
+  projectileAoeRadius: 5
+  projectileAoeDuration: 5
+  throwRate: 1
+  maxHeight: 10
+  rootCooldown: 0
+  castingTime: 0
+  rootTime: 0
   range: 1.5
   damage: 5
 --- !u!114 &5516235399090370321
@@ -5220,7 +5265,9 @@ MonoBehaviour:
   baseHP: 15
   hp: 15
   timeImoIfHit: 0
+  isFrozen: 0
   enemyMovement: {fileID: 0}
+  enemySkill: {fileID: 0}
 --- !u!114 &7203844164421334155
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5252,16 +5299,23 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   skillOne: 0
+  stopWhenAttacking: 0
+  isAttacking: 0
   impactCooldown: 3
   impactSpeed: 1
-  isAttacking: 0
-  stopAfterHit: 0
-  timeImoAfterHit: 0
   aoeCooldown: 2
   fireRate: 1
   bulletSpeed: 70
   bulletPrefab: {fileID: 1327039134590348602, guid: a16ccfb362e58ec4588b618092d0c27c,
     type: 3}
+  aoeProjectilePrefab: {fileID: 0}
+  projectileAoeRadius: 5
+  projectileAoeDuration: 5
+  throwRate: 1
+  maxHeight: 10
+  rootCooldown: 0
+  castingTime: 0
+  rootTime: 0
   range: 1.5
   damage: 5
 --- !u!114 &5516235399076454489
@@ -5557,7 +5611,9 @@ MonoBehaviour:
   baseHP: 15
   hp: 15
   timeImoIfHit: 0
+  isFrozen: 0
   enemyMovement: {fileID: 0}
+  enemySkill: {fileID: 0}
 --- !u!114 &7203844164695165558
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5589,16 +5645,23 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   skillOne: 0
+  stopWhenAttacking: 0
+  isAttacking: 0
   impactCooldown: 3
   impactSpeed: 1
-  isAttacking: 0
-  stopAfterHit: 0
-  timeImoAfterHit: 0
   aoeCooldown: 2
   fireRate: 1
   bulletSpeed: 70
   bulletPrefab: {fileID: 1327039134590348602, guid: a16ccfb362e58ec4588b618092d0c27c,
     type: 3}
+  aoeProjectilePrefab: {fileID: 0}
+  projectileAoeRadius: 5
+  projectileAoeDuration: 5
+  throwRate: 1
+  maxHeight: 10
+  rootCooldown: 0
+  castingTime: 0
+  rootTime: 0
   range: 1.5
   damage: 5
 --- !u!114 &5516235399876615844
@@ -5894,7 +5957,9 @@ MonoBehaviour:
   baseHP: 15
   hp: 15
   timeImoIfHit: 0
+  isFrozen: 0
   enemyMovement: {fileID: 0}
+  enemySkill: {fileID: 0}
 --- !u!114 &7203844164865577122
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5926,16 +5991,23 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   skillOne: 0
+  stopWhenAttacking: 0
+  isAttacking: 0
   impactCooldown: 3
   impactSpeed: 1
-  isAttacking: 0
-  stopAfterHit: 0
-  timeImoAfterHit: 0
   aoeCooldown: 2
   fireRate: 1
   bulletSpeed: 70
   bulletPrefab: {fileID: 1327039134590348602, guid: a16ccfb362e58ec4588b618092d0c27c,
     type: 3}
+  aoeProjectilePrefab: {fileID: 0}
+  projectileAoeRadius: 5
+  projectileAoeDuration: 5
+  throwRate: 1
+  maxHeight: 10
+  rootCooldown: 0
+  castingTime: 0
+  rootTime: 0
   range: 1.5
   damage: 5
 --- !u!114 &5516235399672677488
@@ -7599,7 +7671,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7124540270156939795}
   m_LocalRotation: {x: -0, y: 0.70710576, z: -0, w: 0.70710784}
-  m_LocalPosition: {x: -12.1206665, y: 0, z: 135.17014}
+  m_LocalPosition: {x: -12, y: 0, z: 135}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 7124540269431673161}
@@ -7771,7 +7843,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7124540270404363750}
   m_LocalRotation: {x: -0, y: 0.70710576, z: -0, w: 0.70710784}
-  m_LocalPosition: {x: -40.120667, y: 0, z: 135.17014}
+  m_LocalPosition: {x: -40, y: 0, z: 135}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 7124540269117159100}
@@ -8706,8 +8778,8 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 51.944794, y: 2, z: 50.45195}
-  m_Center: {x: -152.2393, y: 1, z: 3.6183548}
+  m_Size: {x: 49.00357, y: 2, z: 50.45195}
+  m_Center: {x: -152.02437, y: 1, z: 3.6183548}
 --- !u!114 &8888769857285731150
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8774,8 +8846,8 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 28.151093, y: 2, z: 35.443115}
-  m_Center: {x: -16.284195, y: 1, z: 14.271683}
+  m_Size: {x: 28.465504, y: 2, z: 38.777893}
+  m_Center: {x: -16.192621, y: 1, z: 14}
 --- !u!114 &891392126662965480
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8842,8 +8914,8 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 36.405487, y: 2, z: 51.739166}
-  m_Center: {x: -110.17998, y: 1, z: 3.5267181}
+  m_Size: {x: 36.09517, y: 2, z: 50.271046}
+  m_Center: {x: -110.02482, y: 1, z: 4.0415287}
 --- !u!114 &8888769857450034696
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8923,7 +8995,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8888769858477736159}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -31.907944, y: 0, z: -120.4673}
+  m_LocalPosition: {x: -32, y: 0, z: -121}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 2906609028041565834}
@@ -8975,8 +9047,8 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 28.28009, y: 2, z: 49.270912}
-  m_Center: {x: -45.055023, y: 1, z: 14.909061}
+  m_Size: {x: 28.109093, y: 2, z: 38.559715}
+  m_Center: {x: -44.72047, y: 1, z: 13.766834}
 --- !u!114 &891392127317259787
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9043,8 +9115,8 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 42.997925, y: 2, z: 51.188965}
-  m_Center: {x: -79.52547, y: 1, z: 15.2753525}
+  m_Size: {x: 42.885803, y: 2, z: 49.526363}
+  m_Center: {x: -79.469406, y: 1, z: 14.444052}
 --- !u!114 &7524363652734407975
 MonoBehaviour:
   m_ObjectHideFlags: 0
