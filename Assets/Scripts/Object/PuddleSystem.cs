@@ -50,6 +50,8 @@ public class PuddleSystem : MonoBehaviour
     public Material frozenWaterMaterial;
     private Coroutine frozenWaterCoroutine;
     private Coroutine electrifiedWaterCoroutine;
+    private List<GameObject> objectsPresent;
+
 
     //===== MUD
     [DrawIf(new string[] { "editingPuddleType" }, GameManager.PuddleType.Mud)]
@@ -83,6 +85,7 @@ public class PuddleSystem : MonoBehaviour
 
     private void Start()
     {
+        objectsPresent = new List<GameObject>();
         delayDOT = 1f;
         switch (puddleType)
         {
@@ -141,6 +144,9 @@ public class PuddleSystem : MonoBehaviour
         {
             switch (puddleType)
             {
+                case GameManager.PuddleType.Water:
+                    OnExitWater(other.gameObject);
+                    break;
                 case GameManager.PuddleType.Slug:
                     OnExitSlug(other.gameObject);
                     break;
@@ -232,19 +238,21 @@ public class PuddleSystem : MonoBehaviour
                     StopCoroutine(electrifiedWaterCoroutine);
                 }
                 frozen = true;
+
                 GetComponent<MeshRenderer>().material = frozenWaterMaterial;
-                Collider[] hitColliders = Physics.OverlapSphere(transform.position, size / 2);
-                for (int i = 0; i < hitColliders.Length; i++)
+
+                for (int i = 0; i < objectsPresent.Count; i++)
                 {
-                    if (hitColliders[i].gameObject.CompareTag("Enemy"))
+                    if (objectsPresent[i].gameObject.CompareTag("Enemy"))
                     {
-                        hitColliders[i].gameObject.GetComponent<Enemy>().StartCoroutine(hitColliders[i].gameObject.GetComponent<Enemy>().FreezeCoroutine(freezeTime));
+                        objectsPresent[i].gameObject.GetComponent<Enemy>().StartCoroutine(objectsPresent[i].gameObject.GetComponent<Enemy>().FreezeCoroutine(freezeTime));
                     }
-                    else if (hitColliders[i].gameObject.CompareTag("Player"))
+                    else if (objectsPresent[i].gameObject.CompareTag("Player"))
                     {
-                        hitColliders[i].gameObject.GetComponent<PlayerController>().StartCoroutine(hitColliders[i].gameObject.GetComponent<PlayerController>().FreezeCoroutine(freezeTime));
+                        objectsPresent[i].gameObject.GetComponent<PlayerController>().StartCoroutine(objectsPresent[i].gameObject.GetComponent<PlayerController>().FreezeCoroutine(freezeTime));
                     }
                 }
+
                 frozenWaterCoroutine = StartCoroutine(ReturnToWater(frozenWaterLifeTime));
             }
             else if (target.GetComponent<PowerController>().elementalPower == GameManager.PowerType.Electric && !electrified && !frozen)
@@ -272,8 +280,16 @@ public class PuddleSystem : MonoBehaviour
             {
                 StartCoroutine(GameManager.gameManager.orb.GetComponent<PowerController>().ElectricZappingCoroutine(transform.position + Vector3.up, null, false));
             }
-            
         }
+        else if (target.CompareTag("Enemy") || target.CompareTag("Player"))
+        {
+            objectsPresent.Add(target.gameObject);
+        }
+    }
+
+    void OnExitWater(GameObject target)
+    {
+        objectsPresent.Remove(target.gameObject);
     }
 
     IEnumerator ReturnToWater(float timeToWater)
