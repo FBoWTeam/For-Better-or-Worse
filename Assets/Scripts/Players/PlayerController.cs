@@ -69,7 +69,17 @@ public class PlayerController : MonoBehaviour
             direction = player1 ? new Vector3(Input.GetAxis("HorizontalP1"), 0.0f, Input.GetAxis("VerticalP1")) : new Vector3(Input.GetAxis("HorizontalP2"), 0.0f, Input.GetAxis("VerticalP2"));
 
             direction = (direction.x * Camera.main.transform.right + direction.z * Camera.main.transform.forward);
+
 			animator.SetFloat("Speed", direction.magnitude);
+
+			if(direction.magnitude <= 0.5f)
+			{
+				animator.speed = (direction.magnitude / 0.5f) + 0.5f;
+			}
+			else
+			{
+				animator.speed = 1.5f;
+			}
 
             Vector3 velocity = direction * speed * Time.deltaTime;
 
