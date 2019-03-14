@@ -88,7 +88,7 @@ public class Capstan : MonoBehaviour, IActivable
 
     public void Activate()
     {
-        if (CheckValidObjects())
+        if (CheckValidObjects() && actualAngle < maxAngle)
         {
             if (isActive == false)
             {

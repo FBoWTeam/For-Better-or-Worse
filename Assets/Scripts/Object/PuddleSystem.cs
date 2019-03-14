@@ -240,7 +240,7 @@ public class PuddleSystem : MonoBehaviour
                 {
                     if (hitColliders[i].gameObject.CompareTag("Enemy"))
                     {
-                        Debug.Log("enemy freeze");
+                        hitColliders[i].gameObject.GetComponent<Enemy>().StartCoroutine(hitColliders[i].gameObject.GetComponent<Enemy>().FreezeCoroutine(freezeTime));
                     }
                     else if (hitColliders[i].gameObject.CompareTag("Player"))
                     {
