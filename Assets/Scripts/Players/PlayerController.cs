@@ -72,15 +72,6 @@ public class PlayerController : MonoBehaviour
 
 			animator.SetFloat("Speed", direction.magnitude);
 
-			if(direction.magnitude <= 0.5f)
-			{
-				animator.speed = (direction.magnitude / 0.5f) + 0.5f;
-			}
-			else
-			{
-				animator.speed = 1.5f;
-			}
-
             Vector3 velocity = direction * speed * Time.deltaTime;
 
 		    checkDistance(ref velocity);
