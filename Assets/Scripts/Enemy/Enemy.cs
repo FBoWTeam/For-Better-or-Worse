@@ -60,7 +60,7 @@ public class Enemy : MonoBehaviour
 
 
     public float timeImoIfHit; //temps d'immobilisation quand un ennemi se fait toucher par l'orbe
-
+    public bool isFrozen;
 
     [HideInInspector]
     public EnemyMovement enemyMovement;
@@ -82,7 +82,7 @@ public class Enemy : MonoBehaviour
         enemyMovement = GetComponent<EnemyMovement>();
         enemySkill = GetComponent<EnemySkill>();
         sdrawPath = drawPath;
-        tauntCanvas = transform.GetChild(2).gameObject;
+        tauntCanvas = transform.GetChild(1).gameObject;
 
     }
 
@@ -102,8 +102,14 @@ public class Enemy : MonoBehaviour
 
             if (!enemyMovement.agent.isStopped)
             {
+                enemySkill.DoAttack();
                 
                 enemyMovement.DoMovement();
+            }
+
+            if (isFrozen)
+            {
+                enemyMovement.agent.isStopped = true;
             }
 
             if (drawView)
@@ -212,6 +218,14 @@ public class Enemy : MonoBehaviour
 
         yield return new WaitForSecondsRealtime(timeImoIfHit);
         enemyMovement.agent.isStopped = false;
+    }
+
+    public IEnumerator FreezeCoroutine(float freezeTimer)
+    {
+        isFrozen = true;
+        yield return new WaitForSeconds(freezeTimer);
+        enemyMovement.agent.isStopped = false;
+        isFrozen = false;
     }
 
 
