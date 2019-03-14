@@ -250,10 +250,12 @@ MonoBehaviour:
   player1: 0
   initialSpeed: 15
   isSlowed: 0
+  isFrozen: 0
   direction: {x: 0, y: 0, z: 0}
   invincible: 0
   invicibilityDuration: 0.5
   blinkNb: 5
+  isRoot: 0
   tauntRange: 30
   tauntCooldown: 15
   elementalPowerSlot: 0
@@ -806,10 +808,12 @@ MonoBehaviour:
   player1: 1
   initialSpeed: 15
   isSlowed: 0
+  isFrozen: 0
   direction: {x: 0, y: 0, z: 0}
   invincible: 0
   invicibilityDuration: 0.5
   blinkNb: 5
+  isRoot: 0
   tauntRange: 30
   tauntCooldown: 15
   elementalPowerSlot: 0
@@ -1067,14 +1071,19 @@ MonoBehaviour:
   electricMaterial: {fileID: 2100000, guid: c5714c959eba6964cb5543af1128b646, type: 2}
   electricDuration: 3
   electricCooldown: 10
-  electricDamage: 0
-  zapRange: 0
-  zapDamage: 0
-  maxZapNb: 0
-  timeBetweenZap: 0
-  layerMask:
+  electricDamage: 5
+  lightningRodPrefab: {fileID: 472907574596040486, guid: 106b9d0f1a9c2aa4292f190aecb799dd,
+    type: 3}
+  zapRange: 10
+  zapDamage: 5
+  maxZapNb: 5
+  timeBetweenZap: 0.1
+  enemyLayerMask:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 16384
+  playerLayerMask:
+    serializedVersion: 2
+    m_Bits: 1024
   darknessMaterial: {fileID: 0}
   darknessDuration: 0
   darknessCooldown: 0
