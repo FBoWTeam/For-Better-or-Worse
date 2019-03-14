@@ -150,13 +150,15 @@ public class PowerController : MonoBehaviour
 	public int maxZapNb;
 	[DrawIf(new string[] { "editingPower" }, GameManager.PowerType.Electric)]
 	public float timeBetweenZap;
-	[DrawIf(new string[] { "editingPower" }, GameManager.PowerType.Electric)]
-	public LayerMask layerMask;
-	#endregion
+    [DrawIf(new string[] { "editingPower" }, GameManager.PowerType.Electric)]
+    public LayerMask enemyLayerMask;
+    [DrawIf(new string[] { "editingPower" }, GameManager.PowerType.Electric)]
+    public LayerMask playerLayerMask;
+    #endregion
 
-	#region Darkness Param
-	//Darkness
-	[DrawIf(new string[] { "editingPower" }, GameManager.PowerType.Darkness)]
+    #region Darkness Param
+    //Darkness
+    [DrawIf(new string[] { "editingPower" }, GameManager.PowerType.Darkness)]
 	public Material darknessMaterial;
 	[DrawIf(new string[] { "editingPower" }, GameManager.PowerType.Darkness)]
 	public float darknessDuration;
@@ -505,44 +507,72 @@ public class PowerController : MonoBehaviour
         GetComponent<MeshRenderer>().material = normalMaterial;
     }
 
-	IEnumerator ElectricZappingCoroutine(GameObject firstEnemy)
+	public IEnumerator ElectricZappingCoroutine(Vector3 startPos, GameObject firstObject, bool isEnemy)
 	{
-		Vector3 actualPos = transform.position;
-		List<GameObject> zappedEnemies = new List<GameObject>();
-		zappedEnemies.Add(firstEnemy);
+		Vector3 actualPos = startPos;
+		List<GameObject> zappedObjects = new List<GameObject>();
+        zappedObjects.Add(firstObject);
 		int zapNb = 0;
-		bool hasHitEnemy = true;
+		bool hasHitObject = true;
 
-		LightningRod rod = Instantiate(lightningRodPrefab, transform.position, Quaternion.identity, transform).GetComponent<LightningRod>();
-		rod.transform.position = actualPos;
-		rod.target = firstEnemy;
+		LightningRod rod = Instantiate(lightningRodPrefab, startPos, Quaternion.identity, transform).GetComponent<LightningRod>();
+		rod.target = firstObject;
 
-		while(zapNb <= maxZapNb && hasHitEnemy)
+		while(zapNb <= maxZapNb && hasHitObject)
 		{
-			GameObject nearestEnemy = null;
-			float minDist = zapRange + 1.0f;
-			hasHitEnemy = false;
+			GameObject nearestObject = null;
+            float minDist;
+            if (isEnemy)
+            {
+                minDist = zapRange + 1.0f;
+            }
+            else
+            {
+                minDist = GameManager.gameManager.maxDistance + 2;
+            }
+			
+            hasHitObject = false;
 
-			Collider[] enemiesInRange = Physics.OverlapSphere(actualPos, zapRange, layerMask);
-			foreach(Collider col in enemiesInRange)
+            Collider[] objectsInRange;
+            if (isEnemy)
+            {
+                objectsInRange = Physics.OverlapSphere(actualPos, zapRange, enemyLayerMask);
+            }
+            else
+            {
+                objectsInRange = Physics.OverlapSphere(actualPos, GameManager.gameManager.maxDistance + 1, playerLayerMask);
+            }
+
+			foreach(Collider col in objectsInRange)
 			{
 				float dist = Vector3.Distance(actualPos, col.transform.position);
-				if (dist < minDist && !zappedEnemies.Contains(col.gameObject))
+				if (dist < minDist && !zappedObjects.Contains(col.gameObject))
 				{
 					minDist = dist;
-					nearestEnemy = col.gameObject;
+                    nearestObject = col.gameObject;
 				}
 			}
 
-			if (nearestEnemy != null)
+			if (nearestObject != null)
 			{
 				rod.transform.position = actualPos;
-				rod.target = nearestEnemy;
-				nearestEnemy.GetComponent<Enemy>().TakeDamage(zapDamage);
-				actualPos = nearestEnemy.transform.position;
-				zappedEnemies.Add(nearestEnemy);
+				rod.target = nearestObject;
+                if (isEnemy)
+                {
+                    nearestObject.GetComponent<Enemy>().TakeDamage(zapDamage);
+                }
+                else
+                {
+                    GameManager.gameManager.TakeDamage(nearestObject, zapDamage, Vector3.zero, false);
+                }
+				actualPos = nearestObject.transform.position;
+                if (!isEnemy)
+                {
+                    actualPos += Vector3.up;
+                }
+                zappedObjects.Add(nearestObject);
 				zapNb++;
-				hasHitEnemy = true;
+                hasHitObject = true;
 			}
 			yield return new WaitForSeconds(timeBetweenZap);
 		}
@@ -636,7 +666,7 @@ public class PowerController : MonoBehaviour
                 damageTaken += fireDamage;
                 break;
             case GameManager.PowerType.Electric:
-				StartCoroutine(ElectricZappingCoroutine(target));
+				StartCoroutine(ElectricZappingCoroutine(transform.position, target, true));
                 damageTaken += electricDamage;
 				DeactivatePower(elementalPower);
                 break;

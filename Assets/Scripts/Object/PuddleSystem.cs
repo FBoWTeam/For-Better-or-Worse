@@ -252,6 +252,8 @@ public class PuddleSystem : MonoBehaviour
             else if (target.GetComponent<PowerController>().elementalPower == GameManager.PowerType.Electric && !electrified && !frozen)
             {
                 electrified = true;
+                GetComponent<Collider>().enabled = false;
+                GetComponent<Collider>().enabled = true;
                 GetComponent<MeshRenderer>().material = ElectrifiedWaterMaterial;
                 electrifiedWaterCoroutine = StartCoroutine(ReturnToWater(electrifiedWaterLifeTime));
             }
@@ -262,9 +264,17 @@ public class PuddleSystem : MonoBehaviour
                 GetComponent<MeshRenderer>().material = waterMaterial;
             }
         }
-        else if ((target.CompareTag("Enemy") || target.CompareTag("Player")) && electrified)
+        else if (electrified)
         {
-            Debug.Log("player or enemy electrified");
+            if ((target.CompareTag("Enemy")))
+            {
+                StartCoroutine(GameManager.gameManager.orb.GetComponent<PowerController>().ElectricZappingCoroutine(transform.position + Vector3.up, null, true));
+            }
+            else if (target.CompareTag("Player"))
+            {
+                StartCoroutine(GameManager.gameManager.orb.GetComponent<PowerController>().ElectricZappingCoroutine(transform.position + Vector3.up, null, false));
+            }
+            
         }
     }
 
