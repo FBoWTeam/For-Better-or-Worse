@@ -85,6 +85,7 @@ public class PuddleSystem : MonoBehaviour
 
     private void Start()
     {
+        objectsPresent = new List<GameObject>();
         delayDOT = 1f;
         switch (puddleType)
         {
