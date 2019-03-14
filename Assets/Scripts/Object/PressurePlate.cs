@@ -11,12 +11,12 @@ public class PressurePlate : MonoBehaviour, IActivable
     [Tooltip("the object to activate id the current lever is active")]
     public GameObject objectToActivate;
 
-    private Animation animation;
+    private Animator anim;
 
 
     private void Start()
     {
-        animation = GetComponentInParent<Animation>();
+        anim = GetComponentInParent<Animator>();
     }
 
     /// <summary>
@@ -46,11 +46,11 @@ public class PressurePlate : MonoBehaviour, IActivable
         objectToActivate.GetComponent<IActivable>().Activate();
         if (isActive)
         {
-            animation.Play("PressurePlateOn");
+            anim.SetBool("isActivated", true);
         }
         else
         {
-            animation.Play("PressurePlateOff");
+            anim.SetBool("isActivated", false);
         }
     }
 

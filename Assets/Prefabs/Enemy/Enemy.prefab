@@ -32,7 +32,7 @@ RectTransform:
   m_Children:
   - {fileID: 2143160604667426093}
   m_Father: {fileID: 6759876714258691776}
-  m_RootOrder: 2
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -290,50 +290,6 @@ MonoBehaviour:
     m_VerticalOverflow: 1
     m_LineSpacing: 0
   m_Text: '!'
---- !u!1 &6119800825286927116
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 3104341690813429601}
-  - component: {fileID: 3030536045141649466}
-  m_Layer: 13
-  m_Name: Range
-  m_TagString: EnemyRange
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &3104341690813429601
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6119800825286927116}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 6759876714258691776}
-  m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!135 &3030536045141649466
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6119800825286927116}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.5
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &6759876714258691839
 GameObject:
   m_ObjectHideFlags: 0
@@ -354,7 +310,7 @@ GameObject:
   - component: {fileID: 947384502557923801}
   - component: {fileID: 5783902267319157312}
   - component: {fileID: 211891462604177614}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: Enemy
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -373,7 +329,6 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 8566674626248025584}
-  - {fileID: 3104341690813429601}
   - {fileID: 2436781586444566838}
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -445,9 +400,9 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6759876714258691839}
   serializedVersion: 2
-  m_Mass: 0.0000001
-  m_Drag: 1000000
-  m_AngularDrag: 1000000
+  m_Mass: 1
+  m_Drag: 10
+  m_AngularDrag: 10
   m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 0
@@ -588,12 +543,14 @@ MonoBehaviour:
   lengthView: 2
   focus: 2
   taunt: 0
+  taunter: 0
   isTaunted: 0
   tauntDuration: 5
   baseHP: 100
   hp: 100
-  knockBackForce: 10
+  timeImoIfHit: 0
   enemyMovement: {fileID: 0}
+  enemySkill: {fileID: 0}
 --- !u!114 &9164865582948619922
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -625,6 +582,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   skillOne: 0
+  stopWhenAttacking: 0
+  isAttacking: 0
   impactCooldown: 3
   impactSpeed: 1.5
   aoeCooldown: 2
@@ -632,6 +591,14 @@ MonoBehaviour:
   bulletSpeed: 70
   bulletPrefab: {fileID: 1327039134590348602, guid: a16ccfb362e58ec4588b618092d0c27c,
     type: 3}
+  aoeProjectilePrefab: {fileID: 0}
+  projectileAoeRadius: 5
+  projectileAoeDuration: 5
+  throwRate: 1
+  maxHeight: 10
+  rootCooldown: 10
+  castingTime: 2
+  rootTime: 1.5
   range: 1.5
   damage: 5
 --- !u!114 &5783902267319157312

@@ -53,14 +53,19 @@ public class UIManager : MonoBehaviour
     [Header("Text Quote")]
     public float displayTime;
     public int pourcentageQuote;
-    [TextArea]
-    public string player1TextEnemy;
-    [TextArea]
-    public string player2TextEnemy;
-    [TextArea]
-    public string player1TextOrb;
-    [TextArea]
-    public string player2TextOrb;
+
+    public List<string> player1TextsGetHit;//quotes of the player 1 when hit by an enemy
+    public List<string> player1TextsOtherGetHit;//quotes of the player 1 when player 2 is hit by an enemy
+
+    public List<string> player2TextsGetHit;//quotes of the player 2 when hit by an enemy
+    public List<string> player2TextsOtherGetHit;//quotes of the player 2 when player 1 is hit by an enemy
+
+    public List<string> player1TextsOrbHit;//quotes of the player 1 when hit by an enemy
+    public List<string> player1TextsOtherOrbHit;//quotes of the player 1 when player 2 is hit by the orb
+
+    public List<string> player2TextsOrbHit;//quotes of the player 2 when hit by an enemy
+    public List<string> player2TextsOtherOrbHit;//quotes of the player 2 when player 1 is hit by the orb
+
 
     [HideInInspector]
     Dictionary<int, GameManager.PowerType> busySlot = new Dictionary<int, GameManager.PowerType>(2);
@@ -77,9 +82,7 @@ public class UIManager : MonoBehaviour
         busySlot.Add(1, GameManager.PowerType.None);
         busySlot.Add(2, GameManager.PowerType.None);
 
-
     }
-
 
     private void Update()
     {
@@ -102,8 +105,8 @@ public class UIManager : MonoBehaviour
 
     public IEnumerator FadeCoroutine(string fadeName)
     {
-        GameManager.gameManager.isPaused = true;
-        Animation anim = fader.GetComponent<Animation>();
+		GameManager.gameManager.isPaused = true;
+		Animation anim = fader.GetComponent<Animation>();
         anim.clip = anim.GetClip(fadeName);
         anim.Play();
         yield return new WaitForSeconds(1.2f);
@@ -138,8 +141,7 @@ public class UIManager : MonoBehaviour
     /// <summary>
     /// In this case, the method check which dialog box display and update the text for the player 1
     /// </summary>
-    /// <param name="player1Text">text display in the player 1 dialog box</param>
-    /// <param name="player2Text">text display in the player 2 dialog box</param>
+    /// <param name="playerText">text display in the player 1 dialog box</param>
     /// <param name="displayTime">use for the invoke, to determine how much time display the text</param>
     public void UpdateDialogBox1(string playerText, float displayTime)
     {
@@ -168,8 +170,7 @@ public class UIManager : MonoBehaviour
     /// <summary>
     /// In this case, the method check which dialog box display and update the text for the player 2
     /// </summary>
-    /// <param name="player1Text">text display in the player 1 dialog box</param>
-    /// <param name="player2Text">text display in the player 2 dialog box</param>
+    /// <param name="playerText">text display in the player 1 dialog box</param>
     /// <param name="displayTime">use for the invoke, to determine how much time display the text</param>
     public void UpdateDialogBox2(string playerText, float displayTime)
     {
@@ -254,53 +255,44 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    #endregion
 
+    #region CoolDown
     /// <summary>
     /// Launch cooldown visualisation based on power
     /// </summary>
     /// <param name="power"></param>
     /// <param name="cd"></param>
-    public void Cooldown(GameManager.PowerType power, float cd, bool player1)
-    {
+    public void Cooldown(GameManager.PowerType power, float cd, bool player1) {
         // lancer start cooldown sur les ( p1 et p2) slot assigner au power
-        
+
         int slot = getSlotByPower(power);
-        if (slot > -1)
-        {
-            switch (slot)
-            {
+        if (slot > -1) {
+            switch (slot) {
                 case 1:
-					if(player1)
-						StartCoroutine(startCooldown(cd, GetCdImage(elementalPowerFox)));
-					else
-						StartCoroutine(startCooldown(cd, GetCdImage(elementalPowerRaccoon)));
+                    if (player1)
+                        StartCoroutine(startCooldown(cd, GetCdImage(elementalPowerFox)));
+                    else
+                        StartCoroutine(startCooldown(cd, GetCdImage(elementalPowerRaccoon)));
                     break;
                 case 2:
-					if (player1)
-						StartCoroutine(startCooldown(cd, GetCdImage(behaviouralPowerFox)));
-					else
-						StartCoroutine(startCooldown(cd, GetCdImage(behaviouralPowerRaccoon)));
+                    if (player1)
+                        StartCoroutine(startCooldown(cd, GetCdImage(behaviouralPowerFox)));
+                    else
+                        StartCoroutine(startCooldown(cd, GetCdImage(behaviouralPowerRaccoon)));
                     break;
                 default:
                     break;
             }
-        }
-        else
-        {
+        } else {
             Debug.LogError("NO SLOT FOUND FOR THIS POWER");
         }
     }
 
-    int getSlotByPower(GameManager.PowerType power)
-    {
+    int getSlotByPower(GameManager.PowerType power) {
 
-        if (busySlot.ContainsValue(power))
-        {
-            foreach (KeyValuePair<int, GameManager.PowerType> item in busySlot)
-            {
-                if (item.Value == power)
-                {
+        if (busySlot.ContainsValue(power)) {
+            foreach (KeyValuePair<int, GameManager.PowerType> item in busySlot) {
+                if (item.Value == power) {
                     return item.Key;
                 }
             }
@@ -309,15 +301,12 @@ public class UIManager : MonoBehaviour
         return -1;
     }
 
-    IEnumerator startCooldown(float cd, Image image)
-    {
+    IEnumerator startCooldown(float cd, Image image) {
 
         image.fillAmount = 0.999f;
-        while (image.fillAmount != 1)
-        {
+        while (image.fillAmount != 1) {
             image.fillAmount -= 1 / cd * Time.deltaTime;
-            if (image.fillAmount <= 0.001f)
-            {
+            if (image.fillAmount <= 0.001f) {
                 image.fillAmount = 1;
             }
             yield return new WaitForEndOfFrame();
@@ -325,57 +314,28 @@ public class UIManager : MonoBehaviour
         image.fillAmount = 0f;
         yield return null;
     }
+    #endregion
+
+    #region Combo
 
     /// <summary>
     /// Update Combo UI
     /// </summary>
     /// <param name="nb"></param>
-    public void UpdateCombo(int nb)
-    {
-        if (nb < 2)
-        {
+    public void UpdateCombo(int nb) {
+        if (nb < 2) {
             combo.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = string.Empty;
             combo.transform.GetChild(1).GetComponent<TextMeshProUGUI>().text = string.Empty;
-        }
-        else if (nb >= 2)
-        {
+        } else if (nb >= 2) {
             combo.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "Combo !";
             combo.transform.GetChild(1).GetComponent<TextMeshProUGUI>().text = "x" + nb;
         }
 
     }
-    
-    /// <summary>
-    /// Call the UpdateDialogBox randomly
-    /// </summary>
-    public void QuoteOnDamage(string damageDealer, GameObject targetPlayer)
-    {
-        if (Random.Range(1, 101)/*return an integer between 1(in) and 101(out)*/ <= pourcentageQuote)
-        {
-            if(damageDealer == "enemy")
-            { 
-                if (targetPlayer == GameManager.gameManager.player1)
-                {
-                    UpdateDialogBox1(player1TextEnemy, displayTime);
-                }
-                if (targetPlayer == GameManager.gameManager.player2)
-                {
-                    UpdateDialogBox2(player2TextEnemy, displayTime);
-                }
-            }
-            else if(damageDealer == "orb")
-            {
-                if (targetPlayer == GameManager.gameManager.player1)
-                {
-                    UpdateDialogBox1(player1TextOrb, displayTime);
-                }
-                if (targetPlayer == GameManager.gameManager.player2)
-                {
-                    UpdateDialogBox2(player2TextOrb, displayTime);
-                }
-            }
-        }
-    }
+
+    #endregion
+
+    #region Getters
 
     /// <summary>
     /// return 'Sprite' Image coponent from Ui gameObject
@@ -393,4 +353,82 @@ public class UIManager : MonoBehaviour
     Image GetCdImage(GameObject go) {
         return go.transform.GetChild(1).GetComponent<Image>();
     }
+
+    #endregion
+
+  
+
+    /// <summary>
+    /// Call the UpdateDialogBox randomly when a player get hit by anything
+    /// </summary>
+    public void QuoteOnDamage(string damageDealer, GameObject targetPlayer)
+    {
+        if (Random.Range(1, 101)/*return an integer between 1(inclusive) and 101(exclusive)*/ <= pourcentageQuote)
+        {
+            if(damageDealer == "enemy")
+            { 
+                if (targetPlayer == GameManager.gameManager.player1)
+                {
+                    if(Random.Range(1, 3) == 1 )//50%
+                    {
+                        UpdateDialogBox1(player1TextsGetHit[Random.Range(0, player1TextsGetHit.Count)], displayTime);
+                    }
+                    else
+                    {
+                        UpdateDialogBox2(player2TextsOtherGetHit[Random.Range(0, player2TextsOtherGetHit.Count)], displayTime);
+                    }
+                }
+                if (targetPlayer == GameManager.gameManager.player2)
+                {
+                    if (Random.Range(1, 3) == 1)//50%
+                    {
+                        UpdateDialogBox1(player1TextsOtherGetHit[Random.Range(0, player1TextsOtherGetHit.Count)], displayTime);
+                    }
+                    else
+                    {
+                        UpdateDialogBox2(player2TextsGetHit[Random.Range(0, player2TextsGetHit.Count)], displayTime);
+                    }
+                }
+            }
+            else if(damageDealer == "orb")
+            {
+                if (targetPlayer == GameManager.gameManager.player1)
+                {
+                    if (Random.Range(1, 3) == 1)//50%
+                    {
+                        UpdateDialogBox1(player1TextsOrbHit[Random.Range(0, player1TextsOrbHit.Count)], displayTime);
+                    }
+                    else
+                    {
+                        UpdateDialogBox2(player2TextsOtherOrbHit[Random.Range(0, player2TextsOtherOrbHit.Count)], displayTime);
+                    }
+                }
+                if (targetPlayer == GameManager.gameManager.player2)
+                {
+                    if (Random.Range(1, 3) == 1)//50%
+                    {
+                        UpdateDialogBox1(player1TextsOtherOrbHit[Random.Range(0, player1TextsOtherOrbHit.Count)], displayTime);
+                    }
+                    else
+                    {
+                        UpdateDialogBox2(player2TextsOrbHit[Random.Range(0, player2TextsOrbHit.Count)], displayTime);
+                    }
+                }
+            }
+        }
+    }
+
+    
+
+	public void RespawnReset()
+	{
+		GetCdImage(elementalPowerFox).fillAmount = 0;
+		GetCdImage(behaviouralPowerFox).fillAmount = 0;
+		tauntCooldownFox.GetComponent<Image>().fillAmount = 0;
+
+		GetCdImage(elementalPowerRaccoon).fillAmount = 0;
+		GetCdImage(behaviouralPowerRaccoon).fillAmount = 0;
+		tauntCooldownRaccoon.GetComponent<Image>().fillAmount = 0;
+	}
+    #endregion
 }

@@ -1,0 +1,390 @@
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class PuddleSystem : MonoBehaviour
+{
+    [Header("[Puddle Type]")]
+    public GameManager.PuddleType puddleType;
+
+    #region Puddle parameters
+
+    //===== COMMON PARAMETERS
+    [Header("[Puddle common param]")]
+    public float size;
+    public Material standardMaterial;
+    [Header("[Puddle Effect Editing]")]
+    public GameManager.PuddleType editingPuddleType;
+
+    //===== SLUG
+    [DrawIf(new string[] { "editingPuddleType" }, GameManager.PuddleType.Slug)]
+    public float slugLifeTime;
+    [DrawIf(new string[] { "editingPuddleType" }, GameManager.PuddleType.Slug)]
+    [Tooltip("Amount in percentage of the slow")]
+    [Range(1, 100)]
+    public float slugSlowAmount;
+    [DrawIf(new string[] { "editingPuddleType" }, GameManager.PuddleType.Slug)]
+    public Material slugMaterial;
+
+    //===== ACID
+    [DrawIf(new string[] { "editingPuddleType" }, GameManager.PuddleType.Acid)]
+    public int acidDamage;
+    [DrawIf(new string[] { "editingPuddleType" }, GameManager.PuddleType.Acid)]
+    public Material acidMaterial;
+
+    //===== WATER
+    [DrawIf(new string[] { "editingPuddleType" }, GameManager.PuddleType.Water)]
+    public int electrifiedWaterLifeTime;
+    [DrawIf(new string[] { "editingPuddleType" }, GameManager.PuddleType.Water)]
+    public int frozenWaterLifeTime;
+    [DrawIf(new string[] { "editingPuddleType" }, GameManager.PuddleType.Water)]
+    public int freezeTime;
+    [DrawIf(new string[] { "editingPuddleType" }, GameManager.PuddleType.Water)]
+    public bool electrified;
+    [DrawIf(new string[] { "editingPuddleType" }, GameManager.PuddleType.Water)]
+    public bool frozen;
+    [DrawIf(new string[] { "editingPuddleType" }, GameManager.PuddleType.Water)]
+    public Material waterMaterial;
+    [DrawIf(new string[] { "editingPuddleType" }, GameManager.PuddleType.Water)]
+    public Material ElectrifiedWaterMaterial;
+    [DrawIf(new string[] { "editingPuddleType" }, GameManager.PuddleType.Water)]
+    public Material frozenWaterMaterial;
+    private Coroutine frozenWaterCoroutine;
+    private Coroutine electrifiedWaterCoroutine;
+
+    //===== MUD
+    [DrawIf(new string[] { "editingPuddleType" }, GameManager.PuddleType.Mud)]
+    [Range(1, 100)]
+    public float mudSlowAmount;
+    [DrawIf(new string[] { "editingPuddleType" }, GameManager.PuddleType.Mud)]
+    public Material mudMaterial;
+
+    //===== FLAMMABLE
+    [DrawIf(new string[] { "editingPuddleType" }, GameManager.PuddleType.Flammable)]
+    public int onFireFlammableLifeTime;
+    [DrawIf(new string[] { "editingPuddleType" }, GameManager.PuddleType.Flammable)]
+    public bool onFire;
+    [DrawIf(new string[] { "editingPuddleType" }, GameManager.PuddleType.Flammable)]
+    public int burnTotalDamage;
+    [DrawIf(new string[] { "editingPuddleType" }, GameManager.PuddleType.Flammable)]
+    public int burnTime;
+    [DrawIf(new string[] { "editingPuddleType" }, GameManager.PuddleType.Flammable)]
+    public Material flammableMaterial;
+    [DrawIf(new string[] { "editingPuddleType" }, GameManager.PuddleType.Flammable)]
+    public Material onFireFlammableMaterial;
+
+
+    //===== TIMERS
+    private float timeStamp;
+    private float delayDOT;
+
+
+    #endregion
+
+
+    private void Start()
+    {
+        delayDOT = 1f;
+        transform.localScale = new Vector3(size, 0.05f, size);
+        switch (puddleType)
+        {
+            case GameManager.PuddleType.None:
+                GetComponent<MeshRenderer>().material = standardMaterial;
+                break;
+            case GameManager.PuddleType.Slug:
+                GetComponent<MeshRenderer>().material = slugMaterial;
+                Destroy(gameObject, slugLifeTime);
+                break;
+            case GameManager.PuddleType.Acid:
+                GetComponent<MeshRenderer>().material = acidMaterial;
+                break;
+            case GameManager.PuddleType.Water:
+                GetComponent<MeshRenderer>().material = waterMaterial;
+                break;
+            case GameManager.PuddleType.Flammable:
+                GetComponent<MeshRenderer>().material = flammableMaterial;
+                break;
+            case GameManager.PuddleType.Mud:
+                GetComponent<MeshRenderer>().material = mudMaterial;
+                break;
+        }
+    }
+
+
+    #region On trigger Enter / Stay / Exit 
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Enemy") || other.CompareTag("Player") || other.CompareTag("Orb"))
+        {
+            switch (puddleType)
+            {
+                case GameManager.PuddleType.Slug:
+                    OnEnterSlug(other.gameObject);
+                    break;
+                case GameManager.PuddleType.Water:
+                    OnEnterWater(other.gameObject);
+                    break;
+                case GameManager.PuddleType.Flammable:
+                    OnEnterFlammable(other.gameObject);
+                    break;
+                case GameManager.PuddleType.Acid:
+                    OnEnterAcid(other.gameObject);
+                    break;
+                case GameManager.PuddleType.Mud:
+                    OnEnterMud(other.gameObject);
+                    break;
+            }
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.CompareTag("Enemy") || other.CompareTag("Player"))
+        {
+            switch (puddleType)
+            {
+                case GameManager.PuddleType.Slug:
+                    OnExitSlug(other.gameObject);
+                    break;
+                case GameManager.PuddleType.Mud:
+                    OnExitMud(other.gameObject);
+                    break;
+                case GameManager.PuddleType.Flammable:
+                    OnExitFlammable(other.gameObject);
+                    break;
+            }
+        }
+    }
+
+    private void OnTriggerStay(Collider other)
+    {
+        if (other.CompareTag("Enemy") || other.CompareTag("Player"))
+        {
+            if (Time.time - timeStamp > delayDOT)
+            {
+                timeStamp = Time.time;
+                switch (puddleType)
+                {
+                    case GameManager.PuddleType.Acid:
+                        OnStayAcid(other.gameObject);
+                        break;
+                    case GameManager.PuddleType.Flammable:
+                        OnStayFlammable(other.gameObject);
+                        break;
+                }
+            }
+        }
+    }
+
+    #endregion
+
+    #region Puddle Effects
+
+    #region Slug Effect
+    void OnEnterSlug(GameObject target)
+    {
+        if (target.CompareTag("Enemy"))
+        {
+            target.GetComponent<EnemyMovement>().SlowSpeed(slugSlowAmount);
+        }
+    }
+
+    void OnExitSlug(GameObject target)
+    {
+        if (target.CompareTag("Enemy"))
+        {
+            target.GetComponent<EnemyMovement>().RestoreSpeed();
+        }
+    }
+    #endregion
+
+
+    #region Acid Effect
+    void OnEnterAcid(GameObject target)
+    {
+        if (target.CompareTag("Orb") && target.GetComponent<PowerController>().elementalPower == GameManager.PowerType.Ice)
+        {
+            target.GetComponent<PowerController>().DeactivatePower(GameManager.PowerType.Ice);
+        }
+    }
+
+    void OnStayAcid(GameObject target)
+    {
+        if (target.CompareTag("Player"))
+        {
+            GameManager.gameManager.TakeDamage(target, acidDamage, Vector3.zero, false);
+        }
+        if (target.CompareTag("Enemy"))
+        {
+            target.GetComponent<Enemy>().TakeDamage(acidDamage);
+        }
+    }
+    #endregion
+
+
+    #region Water Effect
+    void OnEnterWater(GameObject target)
+    {
+        if (target.CompareTag("Orb"))
+        {
+            if (target.GetComponent<PowerController>().elementalPower == GameManager.PowerType.Ice && !frozen)
+            {
+                if (electrifiedWaterCoroutine != null)
+                {
+                    StopCoroutine(electrifiedWaterCoroutine);
+                }
+                frozen = true;
+                GetComponent<MeshRenderer>().material = frozenWaterMaterial;
+                Collider[] hitColliders = Physics.OverlapSphere(transform.position, size / 2);
+                for (int i = 0; i < hitColliders.Length; i++)
+                {
+                    if (hitColliders[i].gameObject.CompareTag("Enemy"))
+                    {
+                        hitColliders[i].gameObject.GetComponent<Enemy>().StartCoroutine(hitColliders[i].gameObject.GetComponent<Enemy>().FreezeCoroutine(freezeTime));
+                    }
+                    else if (hitColliders[i].gameObject.CompareTag("Player"))
+                    {
+                        hitColliders[i].gameObject.GetComponent<PlayerController>().StartCoroutine(hitColliders[i].gameObject.GetComponent<PlayerController>().FreezeCoroutine(freezeTime));
+                    }
+                }
+                frozenWaterCoroutine = StartCoroutine(ReturnToWater(frozenWaterLifeTime));
+            }
+            else if (target.GetComponent<PowerController>().elementalPower == GameManager.PowerType.Electric && !electrified && !frozen)
+            {
+                electrified = true;
+                GetComponent<MeshRenderer>().material = ElectrifiedWaterMaterial;
+                electrifiedWaterCoroutine = StartCoroutine(ReturnToWater(electrifiedWaterLifeTime));
+            }
+            else if (target.GetComponent<PowerController>().elementalPower == GameManager.PowerType.Fire && frozen)
+            {
+                target.GetComponent<PowerController>().DeactivatePower(GameManager.PowerType.Fire);
+                frozen = false;
+                GetComponent<MeshRenderer>().material = waterMaterial;
+            }
+        }
+        else if ((target.CompareTag("Enemy") || target.CompareTag("Player")) && electrified)
+        {
+            Debug.Log("player or enemy electrified");
+        }
+    }
+
+    IEnumerator ReturnToWater(float timeToWater)
+    {
+        yield return new WaitForSeconds(timeToWater);
+        if (frozen)
+        {
+            frozen = false;
+        }
+        else if (electrified)
+        {
+            electrified = false;
+        }
+        GetComponent<MeshRenderer>().material = waterMaterial;
+    }
+
+    #endregion
+
+
+    #region Flammable Effect
+    void OnEnterFlammable(GameObject target)
+    {
+        if (target.CompareTag("Orb"))
+        {
+            if (target.GetComponent<PowerController>().elementalPower == GameManager.PowerType.Fire && !onFire)
+            {
+                onFire = true;
+                GetComponent<MeshRenderer>().material = onFireFlammableMaterial;
+                Destroy(gameObject, onFireFlammableLifeTime);
+            }
+            else if (target.GetComponent<PowerController>().elementalPower == GameManager.PowerType.Ice && onFire)
+            {
+                target.GetComponent<PowerController>().DeactivatePower(GameManager.PowerType.Ice);
+            }
+        }
+    }
+    void OnStayFlammable(GameObject target)
+    {
+        if (onFire)
+        {
+            if (target.CompareTag("Player"))
+            {
+                GameManager.gameManager.TakeDamage(target, (int)burnTotalDamage / burnTime, Vector3.zero, false);
+            }
+            if (target.CompareTag("Enemy"))
+            {
+                target.GetComponent<Enemy>().TakeDamage((int)burnTotalDamage / burnTime);
+            }
+        }
+    }
+    void OnExitFlammable(GameObject target)
+    {
+        if (onFire)
+        {
+            StartCoroutine(Burn(target));
+        }
+    }
+
+    IEnumerator Burn(GameObject target)
+    {
+        int tickDamage = Mathf.RoundToInt(burnTotalDamage / burnTime);
+        int currentDamage = 0;
+
+        if (target.CompareTag("Player"))
+        {
+            while (currentDamage < burnTotalDamage)
+            {
+                if (target.gameObject != null)
+                {
+                    GameManager.gameManager.TakeDamage(target, tickDamage, Vector3.zero, false);
+                }
+                yield return new WaitForSeconds(1f);
+                currentDamage += tickDamage;
+            }
+        }
+        else if (target.CompareTag("Enemy"))
+        {
+            while (currentDamage < burnTotalDamage)
+            {
+                if (target.gameObject != null)
+                {
+                    target.GetComponent<Enemy>().TakeDamage(tickDamage);
+                }
+                yield return new WaitForSeconds(1f);
+                currentDamage += tickDamage;
+            }
+        }
+    }
+    #endregion
+
+
+    #region Mud Effect
+    void OnEnterMud(GameObject target)
+    {
+        if (target.CompareTag("Orb") && target.GetComponent<PowerController>().elementalPower == GameManager.PowerType.Electric)
+        {
+            target.GetComponent<PowerController>().DeactivatePower(GameManager.PowerType.Electric);
+        }
+        else if (target.CompareTag("Player"))
+        {
+            target.GetComponent<PlayerController>().SlowSpeed(mudSlowAmount);
+        }
+        else if (target.CompareTag("Enemy"))
+        {
+            target.GetComponent<EnemyMovement>().SlowSpeed(mudSlowAmount);
+        }
+    }
+    void OnExitMud(GameObject target)
+    {
+        if (target.CompareTag("Player"))
+        {
+            target.GetComponent<PlayerController>().RestoreSpeed();
+        }
+        if (target.CompareTag("Enemy"))
+        {
+            target.GetComponent<EnemyMovement>().RestoreSpeed();
+        }
+    }
+    #endregion
+
+    #endregion
+}
