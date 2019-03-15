@@ -35,7 +35,6 @@ public class EnemyMovement : MonoBehaviour
     //[Tooltip("represents the remaining distance between the enemy and the player")]
     //public float distanceBetweenPlayer = 5f;
 
-    private LineRenderer line;
     #endregion
 
     [HideInInspector]
@@ -55,7 +54,6 @@ public class EnemyMovement : MonoBehaviour
         agent = this.GetComponent<NavMeshAgent>();
         agent.speed = initialSpeed;
         agent.isStopped = false;
-        line = this.GetComponent<LineRenderer>();
     }
 
     #region Movement Methods
@@ -77,17 +75,6 @@ public class EnemyMovement : MonoBehaviour
                 Debug.LogWarning("Movement not implemented");
                 break;
         }
-
-        if (Enemy.sdrawPath)
-        {
-            line.enabled = true;
-            DrawPath(agent.path);
-        }
-        else
-        {
-            line.enabled = false;
-        }
-        
     }
 
     void StaticMovement()
@@ -193,16 +180,6 @@ public class EnemyMovement : MonoBehaviour
             agent.isStopped = false;
         }
     }
-
-    void DrawPath(NavMeshPath path)
-    {
-        if (path.corners.Length < 2) //if the path has 1 or no corners, there is no need
-        {
-            return;
-        }
-        line.SetPositions(path.corners); //set the array of positions to the amount of corners
-    }
-
 
     public void SlowSpeed(float slowAmount)
     {

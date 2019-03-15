@@ -69,13 +69,13 @@ public class Enemy : MonoBehaviour
 
     GameObject[] players;
     public static GameObject aimPlayer;
+	
+	Animator animator;
 
-    
+	#endregion
 
-    #endregion
-
-    // Start is called before the first frame update
-    void Start()
+	// Start is called before the first frame update
+	void Start()
     {
         hp = baseHP;
         players = new GameObject[] { GameManager.gameManager.player1, GameManager.gameManager.player2 };
@@ -83,8 +83,8 @@ public class Enemy : MonoBehaviour
         enemySkill = GetComponent<EnemySkill>();
         sdrawPath = drawPath;
         tauntCanvas = transform.GetChild(1).gameObject;
-
-    }
+		animator = GetComponent<Animator>();
+	}
 
     // Update is called once per frame
     void Update()
@@ -105,6 +105,7 @@ public class Enemy : MonoBehaviour
                 enemySkill.DoAttack();
                 
                 enemyMovement.DoMovement();
+				UpdateAnimatorParams(enemyMovement.agent.velocity.magnitude / enemyMovement.initialSpeed);
             }
 
             if (isFrozen)
@@ -228,5 +229,17 @@ public class Enemy : MonoBehaviour
         isFrozen = false;
     }
 
+	public void UpdateAnimatorParams(float speed)
+	{
+		animator.SetFloat("Speed", speed);
 
+		if (speed >= 0.01 && speed < 0.5)
+		{
+			animator.SetFloat("WalkSpeed", (speed / 0.5f) + 0.5f);
+		}
+		else if (speed >= 0.5f)
+		{
+			animator.SetFloat("RunSpeed", 0.7f);
+		}
+	}
 }
