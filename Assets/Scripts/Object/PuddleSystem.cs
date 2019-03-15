@@ -263,11 +263,14 @@ public class PuddleSystem : MonoBehaviour
                 GetComponent<MeshRenderer>().material = ElectrifiedWaterMaterial;
                 electrifiedWaterCoroutine = StartCoroutine(ReturnToWater(electrifiedWaterLifeTime));
             }
-            else if (target.GetComponent<PowerController>().elementalPower == GameManager.PowerType.Fire && frozen)
+            else if (target.GetComponent<PowerController>().elementalPower == GameManager.PowerType.Fire)
             {
                 target.GetComponent<PowerController>().DeactivatePower(GameManager.PowerType.Fire);
-                frozen = false;
                 GetComponent<MeshRenderer>().material = waterMaterial;
+                if (frozen)
+                {
+                    frozen = false;
+                }
             }
         }
         else if (electrified)
