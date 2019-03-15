@@ -147,7 +147,7 @@ public class EnemyMovement : MonoBehaviour
             yield return new WaitForEndOfFrame();
         }
         isStrafing = false;
-        Debug.Log("oui");
+        //Debug.Log("oui");
     }
     
 
