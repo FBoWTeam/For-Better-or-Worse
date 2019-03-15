@@ -70,7 +70,7 @@ public class PlayerController : MonoBehaviour
 
             direction = (direction.x * Camera.main.transform.right + direction.z * Camera.main.transform.forward);
 
-			animator.SetFloat("Speed", direction.magnitude);
+			UpdateAnimatorParams(direction.magnitude);
 
             Vector3 velocity = direction * speed * Time.deltaTime;
 
@@ -201,7 +201,6 @@ public class PlayerController : MonoBehaviour
 
 		invincible = false;
 	}
-    
 
 	public void RespawnReset()
 	{
@@ -235,4 +234,17 @@ public class PlayerController : MonoBehaviour
         isFrozen = false;
     }
 
+	public void UpdateAnimatorParams(float speed)
+	{
+		animator.SetFloat("Speed", speed);
+
+		if(speed >= 0.01 && speed < 0.5)
+		{
+			animator.SetFloat("WalkSpeed", (speed / 0.5f) + 0.5f);
+		}
+		else if(speed >= 0.5f)
+		{
+			animator.SetFloat("RunSpeed", 1.0f);
+		}
+	}
 }
