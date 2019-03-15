@@ -27,6 +27,12 @@ public class Checkpoint : MonoBehaviour
 		{
 			GameManager.gameManager.actualCheckpoint = this;
 			GameManager.gameManager.RecordPower();
+
+			Debug.Log(GameManager.gameManager.respawnPowerRecord.player1ElementalPower);
+			Debug.Log(GameManager.gameManager.respawnPowerRecord.player1BehaviouralPower);
+			Debug.Log(GameManager.gameManager.respawnPowerRecord.player2ElementalPower);
+			Debug.Log(GameManager.gameManager.respawnPowerRecord.player2BehaviouralPower);
+
 			checkpointActivated = true;
 		}
 	}

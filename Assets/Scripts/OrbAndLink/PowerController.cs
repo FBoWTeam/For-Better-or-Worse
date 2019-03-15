@@ -449,6 +449,12 @@ public class PowerController : MonoBehaviour
         GetComponent<MeshRenderer>().material = normalMaterial;
     }
 
+    IEnumerator Freeze(Enemy target,float duration) {
+        target.isFrozen = true; 
+        yield return new WaitForSeconds(duration);
+        target.isFrozen = false;
+    }
+
     #endregion
 
     #region Fire
@@ -657,7 +663,7 @@ public class PowerController : MonoBehaviour
         switch (elementalPower)
         {
             case GameManager.PowerType.Ice:
-                Debug.Log("Slow down bitch");
+                StartCoroutine(Freeze(enemy, iceDuration));
                 damageTaken += iceDamage;
                 break;
             case GameManager.PowerType.Fire:
