@@ -52,7 +52,7 @@ public class CameraFollow : MonoBehaviour
 	/// <returns></returns>
 	Vector3 GetCenterPoint()
 	{
-		return GameManager.gameManager.player1.transform.position;
-		//return (GameManager.gameManager.player1.transform.position + GameManager.gameManager.player2.transform.position) / 2;
+		//return GameManager.gameManager.player1.transform.position;
+		return (GameManager.gameManager.player1.transform.position + GameManager.gameManager.player2.transform.position) / 2;
 	}
 }
