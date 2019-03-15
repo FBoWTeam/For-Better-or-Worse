@@ -6,6 +6,8 @@ using UnityEngine.UI;
 
 [RequireComponent(typeof(Rigidbody))]
 [RequireComponent(typeof(NavMeshAgent))]
+[RequireComponent(typeof(EnemyMovement))]
+[RequireComponent(typeof(EnemySkill))]
 public class Enemy : MonoBehaviour
 {
     #region All Variables
@@ -56,12 +58,14 @@ public class Enemy : MonoBehaviour
     public int baseHP = 100;
     public int hp;
 
-    public float knockBackForce;
 
-    public float timeImo; //temps d'immobilisation quand un ennemi se fait toucher par l'orbe
+    public float timeImoIfHit; //temps d'immobilisation quand un ennemi se fait toucher par l'orbe
+    public bool isFrozen;
 
     [HideInInspector]
     public EnemyMovement enemyMovement;
+    [HideInInspector]
+    public EnemySkill enemySkill;
 
     GameObject[] players;
     public static GameObject aimPlayer;
@@ -76,21 +80,36 @@ public class Enemy : MonoBehaviour
         hp = baseHP;
         players = new GameObject[] { GameManager.gameManager.player1, GameManager.gameManager.player2 };
         enemyMovement = GetComponent<EnemyMovement>();
+        enemySkill = GetComponent<EnemySkill>();
         sdrawPath = drawPath;
-        tauntCanvas = transform.GetChild(2).gameObject;
+        tauntCanvas = transform.GetChild(1).gameObject;
 
     }
 
     // Update is called once per frame
     void Update()
     {
+        
         if (!GameManager.gameManager.isPaused)
         {
             FocusManagement();
 
+            if (enemySkill.isAttacking && enemySkill.stopWhenAttacking && enemyMovement.movement == EnemyMovement.Movement.Basic) 
+            {
+                enemyMovement.agent.isStopped = true;
+            }
+            else { enemyMovement.agent.isStopped = false; }
+
             if (!enemyMovement.agent.isStopped)
             {
+                enemySkill.DoAttack();
+                
                 enemyMovement.DoMovement();
+            }
+
+            if (isFrozen)
+            {
+                enemyMovement.agent.isStopped = true;
             }
 
             if (drawView)
@@ -178,12 +197,11 @@ public class Enemy : MonoBehaviour
 
     #endregion
 
-    public void TakeDamage(int damage, Vector3 hitPosition)
+    public void TakeDamage(int damage)
     { 
         hp -= damage;
         GameManager.gameManager.orb.GetComponent<OrbController>().hasHitEnemy = true;
-        //enemyMovement.agent.velocity = (transform.position - hitPosition) * knockBackForce;
-        StartCoroutine("Stun");
+        //StartCoroutine("Stun");
 		if (hp <= 0)
 		{
 			GetComponent<LootTable>().LootEnemy();
@@ -194,13 +212,20 @@ public class Enemy : MonoBehaviour
     }
 
 
-
     IEnumerator Stun()
     {
         enemyMovement.agent.isStopped = true;
 
-        yield return new WaitForSecondsRealtime(timeImo);
+        yield return new WaitForSecondsRealtime(timeImoIfHit);
         enemyMovement.agent.isStopped = false;
+    }
+
+    public IEnumerator FreezeCoroutine(float freezeTimer)
+    {
+        isFrozen = true;
+        yield return new WaitForSeconds(freezeTimer);
+        enemyMovement.agent.isStopped = false;
+        isFrozen = false;
     }
 
 

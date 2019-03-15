@@ -3116,10 +3116,28 @@ MonoBehaviour:
   none: {fileID: 21300000, guid: 63db1044b595bee499bbc5fd040f636c, type: 3}
   displayTime: 3
   pourcentageQuote: 20
-  player1TextEnemy: "jvai l'd\xE9mont' !"
-  player2TextEnemy: la shankla !
-  player1TextOrb: t mor !
-  player2TextOrb: wallah !
+  player1TextsGetHit:
+  - Ah, je vais finir par avoir un bleu.
+  - "Vous allez regretter de m\u2019avoir touch\xE9, bande d\u2019\xE2nes."
+  player1TextsOtherGetHit:
+  - "Lamentable insecte\u2026"
+  - "Comment fais-tu pour \xEAtre si incomp\xE9tent ?"
+  - "Continue comme \xE7a si tu veux \xEAtre mort dans dix secondes."
+  player2TextsGetHit:
+  - "RAH ! \xC7a fait un mal de chien !"
+  - "J\u2019vais t\u2019crever, sale rat !"
+  player2TextsOtherGetHit:
+  - "Ah, t\u2019es nulle !"
+  - "J\u2019esp\xE8re que \xE7a t\u2019a fait mal !"
+  - "Tu la ram\xE8nes moins maintenant, hein ?"
+  player1TextsOrbHit:
+  - Ah ! Je comprends pourquoi ils meurent, en fait.
+  player1TextsOtherOrbHit:
+  - "On n\u2019a pas le sens du rythme, blaireau ?"
+  player2TextsOrbHit:
+  - "Punaise, \xE7a fait toujours aussi mal, c\u2019te truc !"
+  player2TextsOtherOrbHit:
+  - "Eh, t\u2019as jamais jou\xE9 au tennis, vieille pie ?"
 --- !u!1 &8528671161010565467
 GameObject:
   m_ObjectHideFlags: 0
@@ -3669,11 +3687,16 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 8528671160986675277}
     m_Modifications:
-    - target: {fileID: 4874840138690594673, guid: 91b643bc3d0a7b044ad28e3fac3ad533,
+    - target: {fileID: 4874840139625467725, guid: 91b643bc3d0a7b044ad28e3fac3ad533,
         type: 3}
-      propertyPath: m_textInfo.textComponent
-      value: 
-      objectReference: {fileID: 2585431467028815301}
+      propertyPath: m_Name
+      value: Dialog
+      objectReference: {fileID: 0}
+    - target: {fileID: 4874840139625467725, guid: 91b643bc3d0a7b044ad28e3fac3ad533,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4874840139625467722, guid: 91b643bc3d0a7b044ad28e3fac3ad533,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -3779,16 +3802,11 @@ PrefabInstance:
       propertyPath: m_Pivot.y
       value: 0.5
       objectReference: {fileID: 0}
-    - target: {fileID: 4874840139625467725, guid: 91b643bc3d0a7b044ad28e3fac3ad533,
+    - target: {fileID: 4874840138690594673, guid: 91b643bc3d0a7b044ad28e3fac3ad533,
         type: 3}
-      propertyPath: m_Name
-      value: Dialog
-      objectReference: {fileID: 0}
-    - target: {fileID: 4874840139625467725, guid: 91b643bc3d0a7b044ad28e3fac3ad533,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
+      propertyPath: m_textInfo.textComponent
+      value: 
+      objectReference: {fileID: 2585431467028815301}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 91b643bc3d0a7b044ad28e3fac3ad533, type: 3}
 --- !u!224 &2585431467963684350 stripped

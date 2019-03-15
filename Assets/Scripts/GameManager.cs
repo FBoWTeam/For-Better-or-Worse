@@ -15,8 +15,11 @@ public class GameManager : MonoBehaviour
 	public GameObject orb;
 	[HideInInspector]
 	public UIManager UIManager;
+    [HideInInspector]
+    public DialogSystem DialogSystem;
 
-	public bool isPaused;
+
+    public bool isPaused;
 
 	[Header("[Distance Limits]")]
 	public float minDistance;
@@ -31,13 +34,22 @@ public class GameManager : MonoBehaviour
 	public float knockBackForce;
 	public bool restartWhenDead;
 
-
-
     [Header("[HealingOrbs]")]
     public GameObject normalHealingOrbPrefab;
     public GameObject leechLifeHealingOrbPrefab;
 
-    public enum PowerType
+
+	public Checkpoint actualCheckpoint;
+	public struct PowerRecord
+	{
+		public PowerType player1ElementalPower;
+		public PowerType player1BehaviouralPower;
+		public PowerType player2ElementalPower;
+		public PowerType player2BehaviouralPower;
+	}
+	public PowerRecord respawnPowerRecord;
+
+	public enum PowerType
     {
         None,
 
@@ -51,6 +63,16 @@ public class GameManager : MonoBehaviour
         Fire,
         Electric,
         Darkness
+    }
+
+    public enum PuddleType
+    {
+        None,
+        Slug,
+        Acid,
+        Water,
+        Flammable,
+        Mud
     }
 
     // Start is called before the first frame update
@@ -70,6 +92,7 @@ public class GameManager : MonoBehaviour
         player2 = GameObject.Find("Player2");
         orb = GameObject.Find("Orb");
         UIManager = GameObject.FindGameObjectWithTag("UI").GetComponent<UIManager>();
+        DialogSystem = GameObject.FindGameObjectWithTag("Dialog").GetComponent<DialogSystem>();
 
         damageTakenP1 = 0;
         damageTakenP2 = 0;
@@ -81,7 +104,7 @@ public class GameManager : MonoBehaviour
     /// Handle taking damage from an Ennemy or other things
     /// </summary>
     /// <param name="impactDamage"></param>
-    public void TakeDamage(GameObject targetPlayer, int damage, Vector3 hitPosition)
+    public void TakeDamage(GameObject targetPlayer, int damage, Vector3 hitPosition, bool applyKnockback)
     {
         if (!targetPlayer.GetComponent<PlayerController>().invincible)
         {
@@ -117,12 +140,17 @@ public class GameManager : MonoBehaviour
             {
                 StartCoroutine(deathCoroutine());
             }
-
-            hitPosition = new Vector3(hitPosition.x, 0.0f, hitPosition.z);
-            targetPlayer.GetComponent<Rigidbody>().AddForce((targetPlayer.transform.position - hitPosition) * knockBackForce);
+            
+            if (applyKnockback)
+            {
+                hitPosition = new Vector3(hitPosition.x, 0.0f, hitPosition.z);
+                targetPlayer.GetComponent<Rigidbody>().AddForce((targetPlayer.transform.position - hitPosition) * knockBackForce);
+            }
+            
             StartCoroutine(targetPlayer.GetComponent<PlayerController>().InvincibilityCoroutine());
             UIManager.UpdateHealthBar();
             UIManager.UpdateCombo(0);
+            targetPlayer.GetComponent<PlayerController>().isRoot = false;
         }
     }
 
@@ -132,6 +160,14 @@ public class GameManager : MonoBehaviour
 			return false;
 		else
 			return true;
+	}
+
+	public void RecordPower()
+	{
+		respawnPowerRecord.player1ElementalPower = player1.GetComponent<PlayerController>().elementalPowerSlot;
+		respawnPowerRecord.player1BehaviouralPower = player1.GetComponent<PlayerController>().behaviouralPowerSlot;
+		respawnPowerRecord.player2ElementalPower = player2.GetComponent<PlayerController>().elementalPowerSlot;
+		respawnPowerRecord.player2BehaviouralPower = player2.GetComponent<PlayerController>().behaviouralPowerSlot;
 	}
 
     public void Heal(bool player1, int healAmount)
@@ -203,8 +239,39 @@ public class GameManager : MonoBehaviour
     {
         StartCoroutine(UIManager.FadeCoroutine("FadeOut"));
         yield return new WaitUntil(() => isPaused == false);
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-    }
+
+		isPaused = true;
+
+		player1.transform.position = actualCheckpoint.transform.GetChild(0).position - 5 * Camera.main.transform.right;
+		player2.transform.position = actualCheckpoint.transform.GetChild(0).position + 5 * Camera.main.transform.right;
+
+		damageTakenP1 = 0;
+		damageTakenP2 = 0;
+		shieldP1 = 0;
+		shieldP2 = 0;
+		UIManager.UpdateHealthBar();
+
+		player1.GetComponent<PlayerController>().elementalPowerSlot = respawnPowerRecord.player1ElementalPower;
+		player1.GetComponent<PlayerController>().behaviouralPowerSlot = respawnPowerRecord.player1BehaviouralPower;
+		player2.GetComponent<PlayerController>().elementalPowerSlot = respawnPowerRecord.player2ElementalPower;
+		player2.GetComponent<PlayerController>().behaviouralPowerSlot = respawnPowerRecord.player2BehaviouralPower;
+		UIManager.UpdatePowerSlot(1, true, respawnPowerRecord.player1ElementalPower);
+		UIManager.UpdatePowerSlot(2, true, respawnPowerRecord.player1BehaviouralPower);
+		UIManager.UpdatePowerSlot(1, false, respawnPowerRecord.player2ElementalPower);
+		UIManager.UpdatePowerSlot(2, false, respawnPowerRecord.player2BehaviouralPower);
+
+		player1.GetComponent<PlayerController>().RespawnReset();
+		player2.GetComponent<PlayerController>().RespawnReset();
+		player1.GetComponent<OrbHitter>().RespawnReset();
+		player2.GetComponent<OrbHitter>().RespawnReset();
+		orb.GetComponent<OrbController>().RespawnReset();
+		orb.GetComponent<PowerController>().RespawnReset();
+		UIManager.RespawnReset();
+
+		actualCheckpoint.RespawnContent();
+
+		StartCoroutine(UIManager.FadeCoroutine("FadeIn"));
+	}
 
     
 

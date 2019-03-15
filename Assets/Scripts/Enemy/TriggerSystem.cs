@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -10,7 +11,7 @@ public class TriggerSystem : MonoBehaviour
     public enum TriggerActivation { Enter, Exit, Stay };
     public TriggerActivation triggerActivation;
 
-    public enum TriggerMode { Enemy, Dialog, EnemyAndDialog };
+    public enum TriggerMode { Enemy, Dialog, EnemyAndDialog, ScenarioDialog };
     public TriggerMode triggerMode;
 
     public GameObject[] enemies;
@@ -21,6 +22,11 @@ public class TriggerSystem : MonoBehaviour
     public string player1Text;
     [TextArea]
     public string player2Text;
+
+    [Header("Dialog scénarisé")]  
+    public bool foxFirst = true;
+    public string[] foxDialogScenario; 
+    public string[] racoonDialogScenario;
 
     #endregion
 
@@ -102,6 +108,9 @@ public class TriggerSystem : MonoBehaviour
                     TriggerEnemy();
                     TriggerDialog();
                     break;
+                case TriggerMode.ScenarioDialog:
+                    TriggerScenarioDialog();
+                    break;
                 default:
                     break;
             }
@@ -109,6 +118,15 @@ public class TriggerSystem : MonoBehaviour
         }
     }
 
+    private void TriggerScenarioDialog() {
+        if (foxDialogScenario.Length>0 || racoonDialogScenario.Length>0) {
+            GameManager.gameManager.DialogSystem.StartCoroutine(GameManager.gameManager.DialogSystem.StartDialog(foxDialogScenario, racoonDialogScenario, foxFirst));
+            //StartCoroutine(GameManager.gameManager.DialogSystem.StartDialog(foxDialogScenario,racoonDialogScenario,foxFirst));
+        }
+        if (foxDialogScenario.Length == 0 && racoonDialogScenario.Length == 0) {
+            Debug.LogError("Where are the fucking dialogs!", this);
+        } 
+    }
 
     void OnDrawGizmosSelected()
     {

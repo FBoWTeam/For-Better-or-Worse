@@ -8,13 +8,17 @@ public class PlayerController : MonoBehaviour
 {
 	[Header("[Main Params]")]
     public bool player1;
-    public float speed;
+    public float initialSpeed;
+    private float speed;
+    public bool isSlowed;
+    public bool isFrozen;
     Rigidbody rb;
 	[HideInInspector]
     public Vector3 direction;
 	public bool invincible;
 	public float invicibilityDuration;
 	public int blinkNb;
+    public bool isRoot;
 
     [Header("[Taunt]")]
     public int tauntRange;
@@ -26,18 +30,20 @@ public class PlayerController : MonoBehaviour
     
     bool canTaunt = true;
     OrbHitter orbHitter;
-    UIManager uiManager;
+
+	Animator animator;
 
     void Awake()
     {
         rb = GetComponent<Rigidbody>();
-        orbHitter = gameObject.GetComponent<OrbHitter>();
-        uiManager = GameObject.FindGameObjectWithTag("UI").GetComponent<UIManager>();
+        orbHitter = GetComponent<OrbHitter>();
+		animator = GetComponent<Animator>();
     }
 
     private void Start()
     {
         //Update UI (for development)
+        speed = initialSpeed;
         GameManager.gameManager.UIManager.UpdatePowerSlot(1, player1, elementalPowerSlot);
         GameManager.gameManager.UIManager.UpdatePowerSlot(2, player1, behaviouralPowerSlot);
     }
@@ -58,17 +64,22 @@ public class PlayerController : MonoBehaviour
     /// </summary>
 	public void Move()
     {
-        direction = player1 ? new Vector3(Input.GetAxis("HorizontalP1"), 0.0f, Input.GetAxis("VerticalP1")) : new Vector3(Input.GetAxis("HorizontalP2"), 0.0f, Input.GetAxis("VerticalP2"));
+        if (!isFrozen && !isRoot)
+        {
+            direction = player1 ? new Vector3(Input.GetAxis("HorizontalP1"), 0.0f, Input.GetAxis("VerticalP1")) : new Vector3(Input.GetAxis("HorizontalP2"), 0.0f, Input.GetAxis("VerticalP2"));
 
-        direction = (direction.x * Camera.main.transform.right + direction.z * Camera.main.transform.forward);
+            direction = (direction.x * Camera.main.transform.right + direction.z * Camera.main.transform.forward);
 
-        Vector3 velocity = direction * speed * Time.deltaTime;
+			UpdateAnimatorParams(direction.magnitude);
 
-		checkDistance(ref velocity);
+            Vector3 velocity = direction * speed * Time.deltaTime;
 
-		rb.MovePosition(transform.position + velocity);
-        transform.LookAt(transform.position + direction);
-        transform.localEulerAngles = new Vector3(0.0f, transform.localEulerAngles.y, 0.0f);
+		    checkDistance(ref velocity);
+
+		    rb.MovePosition(transform.position + velocity);
+            transform.LookAt(transform.position + direction);
+            transform.localEulerAngles = new Vector3(0.0f, transform.localEulerAngles.y, 0.0f);
+        }
     }
 
 	void checkDistance(ref Vector3 velocity)
@@ -106,7 +117,7 @@ public class PlayerController : MonoBehaviour
         {
             Taunt();
             StartCoroutine(TauntCoolDown(tauntCooldown));
-            uiManager.TauntCooldownSystem(player1, tauntCooldown);
+			GameManager.gameManager.UIManager.TauntCooldownSystem(player1, tauntCooldown);
         }
 
     }
@@ -175,7 +186,7 @@ public class PlayerController : MonoBehaviour
 
 	public IEnumerator InvincibilityCoroutine()
 	{
-		MeshRenderer renderer = GetComponent<MeshRenderer>();
+		SkinnedMeshRenderer renderer = transform.GetChild(0).GetComponent<SkinnedMeshRenderer>();
 		float blinkTime = invicibilityDuration / blinkNb;
 
 		invincible = true;
@@ -189,5 +200,51 @@ public class PlayerController : MonoBehaviour
 		}
 
 		invincible = false;
+	}
+
+	public void RespawnReset()
+	{
+		StopAllCoroutines();
+		canTaunt = true;
+		invincible = false;
+	}
+
+    public void SlowSpeed(float slowAmount)
+    {
+        if (!isSlowed)
+        {
+            speed = initialSpeed * ((100 - slowAmount) / 100);
+            isSlowed = true;
+        }
+    }
+
+    public void RestoreSpeed()
+    {
+        if (isSlowed)
+        {
+            speed = initialSpeed;
+            isSlowed = false;
+        }
+    }
+    
+    public IEnumerator FreezeCoroutine(float freezeTimer)
+    {
+        isFrozen = true;
+        yield return new WaitForSeconds(freezeTimer);
+        isFrozen = false;
+    }
+
+	public void UpdateAnimatorParams(float speed)
+	{
+		animator.SetFloat("Speed", speed);
+
+		if(speed >= 0.01 && speed < 0.5)
+		{
+			animator.SetFloat("WalkSpeed", (speed / 0.5f) + 0.5f);
+		}
+		else if(speed >= 0.5f)
+		{
+			animator.SetFloat("RunSpeed", 1.0f);
+		}
 	}
 }
