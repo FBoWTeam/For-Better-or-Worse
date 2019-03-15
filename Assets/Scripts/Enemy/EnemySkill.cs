@@ -92,6 +92,8 @@ public class EnemySkill : MonoBehaviour
     public float castingTime;
     [DrawIf(new string[] { "skillOne" }, Skill.Root)]
     public float rootTime;
+    [DrawIf(new string[] { "skillOne" }, Skill.Root)]
+    public GameObject rootBranchPrefab;
     /*[DrawIf(new string[] { "skillOne" }, Skill.Root)]
     [DrawIf(new string[] { "skillOne" }, Skill.Root)]
     [DrawIf(new string[] { "skillOne" }, Skill.Root)]
@@ -328,7 +330,10 @@ public class EnemySkill : MonoBehaviour
         //the player takes the damage then doesn't move during the root time
         GameManager.gameManager.TakeDamage(targetPlayer, damage, transform.position, false);
         GameManager.gameManager.UIManager.QuoteOnDamage("enemy", targetPlayer);
-        targetPlayer.GetComponent<PlayerController>().isRoot = true;        
+        targetPlayer.GetComponent<PlayerController>().isRoot = true;
+        RootBranch branch = Instantiate(rootBranchPrefab).GetComponent<RootBranch>();
+        branch.targetPlayer = targetPlayer;
+        branch.rootTime = rootTime;
         yield return new WaitForSecondsRealtime(rootTime);
         targetPlayer.GetComponent<PlayerController>().isRoot = false;
 
