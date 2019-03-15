@@ -663,7 +663,6 @@ public class PowerController : MonoBehaviour
         switch (elementalPower)
         {
             case GameManager.PowerType.Ice:
-                Debug.Log("Slow down bitch");
                 StartCoroutine(Freeze(enemy, iceDuration));
                 damageTaken += iceDamage;
                 break;
