@@ -4,9 +4,6 @@ using UnityEngine;
 
 public class OrbController : MonoBehaviour
 {
-	public bool isActive;
-	public float timeToActivate;
-    
     [Header("[Orb speed Statistics]")]
     public float speed;
     public float minSpeed;
@@ -42,7 +39,6 @@ public class OrbController : MonoBehaviour
 	public bool isHealingOrb;
 	public int healAmount;
 
-
     public bool hasHitEnemy;
 
 	void Start()
@@ -52,48 +48,40 @@ public class OrbController : MonoBehaviour
 			toPlayer2 = true;
 			progression = 0.5f;
 			transform.position = BezierCurve.CalculateCubicBezierPoint(progression);
-			StartCoroutine(ActivateCoroutine());
-		}
-		else
-		{
-			isActive = true;
 		}
     }
 
     void FixedUpdate()
     {
-		if(!GameManager.gameManager.isPaused)
+		if (!amortized && !GameManager.gameManager.isPaused)
 		{
-			if (!amortized && isActive)
-			{
-				SetFixedSpeedCoefficient();
-				speed = Mathf.Clamp(speed, minSpeed, maxSpeed);
-				float fixedSpeed = speed * fixedSpeedCoefficient;
+			SetFixedSpeedCoefficient();
+			speed = Mathf.Clamp(speed, minSpeed, maxSpeed);
+			float fixedSpeed = speed * fixedSpeedCoefficient;
 
-				step = (fixedSpeed / BezierCurve.GetPlayersDistance()) * Time.fixedDeltaTime;
-				progression = toPlayer2 ? progression + step : progression - step;
-				progression = Mathf.Clamp01(progression);
-			}
-			transform.position = BezierCurve.CalculateCubicBezierPoint(progression);
+			step = (fixedSpeed / BezierCurve.GetPlayersDistance()) * Time.fixedDeltaTime;
+			progression = toPlayer2 ? progression + step : progression - step;
+			progression = Mathf.Clamp01(progression);
+		}
+		transform.position = BezierCurve.CalculateCubicBezierPoint(progression);
 
-			if (progression == 1.0f || progression == 0.0f)
+		if (progression == 1.0f || progression == 0.0f)
+		{
+			if (isHealingOrb)
 			{
-				if (isHealingOrb)
+				if (progression == 0.0f)
 				{
-					if (progression == 0.0f)
-					{
-						GameManager.gameManager.Heal(true, healAmount);
-					}
-					else
-					{
-						GameManager.gameManager.Heal(false, healAmount);
-					}
-					Destroy(this.gameObject);
+					GameManager.gameManager.Heal(true, healAmount);
 				}
 				else
 				{
-					toPlayer2 = !toPlayer2;
+					GameManager.gameManager.Heal(false, healAmount);
 				}
+				Destroy(this.gameObject);
+			}
+			else
+			{
+				toPlayer2 = !toPlayer2;
 			}
 		}
     }
@@ -179,7 +167,7 @@ public class OrbController : MonoBehaviour
         {
             if (canHitPlayer == true)
             {
-                GameManager.gameManager.TakeDamage(other.gameObject, gameObject.GetComponent<PowerController>().baseDamage, other.transform.position);
+                GameManager.gameManager.TakeDamage(other.gameObject, gameObject.GetComponent<PowerController>().baseDamage, other.transform.position, true);
                 GameManager.gameManager.UIManager.QuoteOnDamage("orb", other.gameObject);
             }
             combo = 0;
@@ -197,10 +185,13 @@ public class OrbController : MonoBehaviour
         }
     }
 
-	IEnumerator ActivateCoroutine()
+	public void RespawnReset()
 	{
-		isActive = false;
-		yield return new WaitForSeconds(timeToActivate);
-		isActive = true;
+		combo = 0;
+		GameManager.gameManager.UIManager.UpdateCombo(combo);
+		speed = minSpeed;
+		amortized = false;
+		hasHitEnemy = false;
+		progression = 0.5f;
 	}
 }

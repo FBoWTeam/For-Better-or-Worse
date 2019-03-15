@@ -7,6 +7,23 @@ public class Door : MonoBehaviour, IActivable
     //boolean indicating if the Door is activated/open or not
     public bool isActive { get; set; }
 
+    public enum DoorType
+    {
+        None,
+        Standard,
+        Electric
+    }
+
+    public DoorType doorType;
+
+    [DrawIf(new string[] { "doorType" }, DoorType.Electric)]
+    public int doorMaxCharge;
+    [DrawIf(new string[] { "doorType" }, DoorType.Electric)]
+    public int doorCurrentCharge;
+    [DrawIf(new string[] { "doorType" }, DoorType.Electric)]
+    public int chargingAmount;
+
+
     [Tooltip("list of activated objects needed to open the door")]
     public List<GameObject> objectsConditions;
 
@@ -14,6 +31,31 @@ public class Door : MonoBehaviour, IActivable
     /// opens the door
     /// </summary>
     public void Activate()
+    {
+        switch (doorType)
+        {
+            case DoorType.Standard:
+                ActivateStandardDoor();
+                break;
+            case DoorType.Electric:
+                ActivateElectricDoor();
+                break;
+            default:
+                break;
+        }
+
+    }
+
+    public void Deactivate()
+    {
+        if (isActive == true)
+        {
+            GetComponentInParent<Animation>().Play("DoorClose");
+        }
+        isActive = false;
+    }
+
+    void ActivateStandardDoor()
     {
         if (CheckValidObjects())
         {
@@ -33,14 +75,27 @@ public class Door : MonoBehaviour, IActivable
         }
     }
 
-
-    public void Deactivate()
+    void ActivateElectricDoor()
     {
-        if (isActive == true)
+        if (doorCurrentCharge < doorMaxCharge)
         {
-            GetComponentInParent<Animation>().Play("DoorClose");
+            doorCurrentCharge += chargingAmount;
+            if (doorCurrentCharge >= doorMaxCharge && isActive == false)
+            {
+                doorCurrentCharge = doorMaxCharge;
+                GetComponentInParent<Animation>().Play("DoorOpen");
+                isActive = true;
+            }
         }
-        isActive = false;
+    }
+
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Orb") && doorType == DoorType.Electric && other.gameObject.GetComponent<PowerController>().elementalPower == GameManager.PowerType.Electric)
+        {
+            this.Activate();
+        }
     }
 
     /// <summary>
