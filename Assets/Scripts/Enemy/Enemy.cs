@@ -105,7 +105,8 @@ public class Enemy : MonoBehaviour
                 enemySkill.DoAttack();
                 
                 enemyMovement.DoMovement();
-				UpdateAnimatorParams(enemyMovement.agent.velocity.magnitude / enemyMovement.initialSpeed);
+
+				animator.SetFloat("Speed", enemyMovement.agent.velocity.magnitude / enemyMovement.initialSpeed);
             }
 
             if (isFrozen)
@@ -228,18 +229,4 @@ public class Enemy : MonoBehaviour
         enemyMovement.agent.isStopped = false;
         isFrozen = false;
     }
-
-	public void UpdateAnimatorParams(float speed)
-	{
-		animator.SetFloat("Speed", speed);
-
-		if (speed >= 0.01 && speed < 0.5)
-		{
-			animator.SetFloat("WalkSpeed", (speed / 0.5f) + 0.5f);
-		}
-		else if (speed >= 0.5f)
-		{
-			animator.SetFloat("RunSpeed", 0.7f);
-		}
-	}
 }
