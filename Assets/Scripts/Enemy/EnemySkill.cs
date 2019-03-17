@@ -27,117 +27,70 @@ public class EnemySkill : MonoBehaviour
 		None,
 	};
 
-	public Skill skillOne;
-	public bool stopWhenAttacking;
-	[HideInInspector]
-	public bool isAttacking;
-
+	public Skill skill;
 
 	#region ImpactFields
-	[DrawIf(new string[] { "skillOne" }, Skill.Impact)]
+	[DrawIf(new string[] { "skill" }, Skill.Impact)]
 	public float impactCooldown = 3f;
-	[DrawIf(new string[] { "skillOne" }, Skill.Impact)]
+	[DrawIf(new string[] { "skill" }, Skill.Impact)]
 	public float impactSpeed = 1.5f;
-
-
 	//private float timeAnimation = 1f;
-
-
 	//[DrawIf(new string[] { "stopAfterHit" }, true)]
 	//public float timeImoAfterHit;
 	#endregion
 
 	#region AoeFields
-	[DrawIf(new string[] { "skillOne" }, Skill.AOE)]
+	[DrawIf(new string[] { "skill" }, Skill.AOE)]
 	public float aoeCooldown = 2f;
 	#endregion
 
 	#region RangedFields
-
-	[DrawIf(new string[] { "skillOne" }, Skill.Ranged)]
+	[DrawIf(new string[] { "skill" }, Skill.Ranged)]
 	public float fireRate = 1f;
-
 	//public float turnSpeed = 6.5f;// Servira a tourner le joueur en direction de la target plus tard 
 	//public Transform partToRotate;
-
-	[DrawIf(new string[] { "skillOne" }, Skill.Ranged)]
+	[DrawIf(new string[] { "skill" }, Skill.Ranged)]
 	public float bulletSpeed = 70f;
-	[DrawIf(new string[] { "skillOne" }, Skill.Ranged)]
+	[DrawIf(new string[] { "skill" }, Skill.Ranged)]
 	public GameObject bulletPrefab;
-	//[DrawIf(new string[] { "skillOne" }, Skill.Ranged)]
+	//[DrawIf(new string[] { "skill" }, Skill.Ranged)]
 	//public Transform firePoint; set to the transform postion for now , changed later
 	#endregion
 
 	#region RangedAOE
-	[DrawIf(new string[] { "skillOne" }, Skill.RangedAOE)]
+	[DrawIf(new string[] { "skill" }, Skill.RangedAOE)]
 	public GameObject aoeProjectilePrefab;
-	[DrawIf(new string[] { "skillOne" }, Skill.RangedAOE)]
+	[DrawIf(new string[] { "skill" }, Skill.RangedAOE)]
 	public float projectileAoeRadius = 5f;
-	[DrawIf(new string[] { "skillOne" }, Skill.RangedAOE)]
+	[DrawIf(new string[] { "skill" }, Skill.RangedAOE)]
 	public float projectileAoeDuration = 5f;
 	//like fire rate but the name is already used
-	[DrawIf(new string[] { "skillOne" }, Skill.RangedAOE)]
+	[DrawIf(new string[] { "skill" }, Skill.RangedAOE)]
 	public float throwRate = 1f;
-	[DrawIf(new string[] { "skillOne" }, Skill.RangedAOE)]
+	[DrawIf(new string[] { "skill" }, Skill.RangedAOE)]
 	public float maxHeight = 10;
-
 	#endregion
 
 	#region Root
-	[DrawIf(new string[] { "skillOne" }, Skill.Root)]
-	float nextRoot = 0f;
-	[DrawIf(new string[] { "skillOne" }, Skill.Root)]
+	[DrawIf(new string[] { "skill" }, Skill.Root)]
 	public float rootCooldown;
-	[DrawIf(new string[] { "skillOne" }, Skill.Root)]
+	[DrawIf(new string[] { "skill" }, Skill.Root)]
 	public float castingTime;
-	[DrawIf(new string[] { "skillOne" }, Skill.Root)]
+	[DrawIf(new string[] { "skill" }, Skill.Root)]
 	public float rootTime;
-	[DrawIf(new string[] { "skillOne" }, Skill.Root)]
+	[DrawIf(new string[] { "skill" }, Skill.Root)]
 	public GameObject rootBranchPrefab;
-	/*[DrawIf(new string[] { "skillOne" }, Skill.Root)]
-    [DrawIf(new string[] { "skillOne" }, Skill.Root)]
-    [DrawIf(new string[] { "skillOne" }, Skill.Root)]
-    [DrawIf(new string[] { "skillOne" }, Skill.Root)]*/
-
+	/*[DrawIf(new string[] { "skill" }, Skill.Root)]
+    [DrawIf(new string[] { "skill" }, Skill.Root)]
+    [DrawIf(new string[] { "skill" }, Skill.Root)]
+    [DrawIf(new string[] { "skill" }, Skill.Root)]*/
 	#endregion
-
 
 	public float range = 4f;
+	public bool isInRange;
 	public int damage = 5;
-
-	//evenement avec aucun type de retour mais 1 parametre 
-	public event Action<GameObject, Skill> inRangeEvent;
-
 	float nextAttack = 0f;
-	GameObject[] players;
 	#endregion
-
-	private void Start()
-	{
-		inRangeEvent += onPlayerinRange;
-		players = new GameObject[2] { GameManager.gameManager.player1, GameManager.gameManager.player2 };
-	}
-
-
-
-	/// <summary>
-	/// Trigger InrangeEvent when players are in range
-	/// </summary>
-	public void DoAttack()
-	{
-		foreach (GameObject item in players)
-		{
-			if (InRange(item.transform))
-			{
-				onPlayerinRange(item, skillOne);
-			}
-		}
-
-		if (!InRange(players[0].transform) && !InRange(players[1].transform))
-		{
-			isAttacking = false;
-		}
-	}
 
 	//Dammage player on collision
 	private void OnCollisionEnter(Collision collision)
@@ -154,45 +107,41 @@ public class EnemySkill : MonoBehaviour
 	/// </summary>
 	/// <param name="target"></param>
 	/// <returns></returns>
-	public bool InRange(Transform target)
+	public bool InRange(GameObject target)
 	{
-		float dist = Vector3.Distance(transform.position, target.position);
+		float dist = Vector3.Distance(transform.position, target.transform.position);
+		isInRange = false;
 		if (dist < range)
 		{
-			return true;
+			isInRange = true;
 		}
-		return false;
+		return isInRange;
 	}
 
-	void onPlayerinRange(GameObject target, Skill skill)
+	public void DoSkill(GameObject target)
 	{
 		//SET target = target
 		switch (skill)
 		{
 			case Skill.Impact:
-				isAttacking = true;
 				if (Time.time > nextAttack)
 				{
 					StartCoroutine("Impact", target.transform);
 					nextAttack = Time.time + impactCooldown;
 				}
-
 				break;
 			case Skill.AOE:
 				//DOT while in range
 				if (Time.time > nextAttack)
 				{
-					isAttacking = true;
 					GameManager.gameManager.TakeDamage(target, damage, transform.position, true);
 					GameManager.gameManager.UIManager.QuoteOnDamage("enemy", target);
 					nextAttack = Time.time + aoeCooldown;
 				}
 				break;
 			case Skill.Ranged:
-
 				if (Time.time > nextAttack && isVisible(transform.position, target.transform.position))
 				{
-					isAttacking = true;
 					Shoot(bulletPrefab, transform, target.transform, damage);
 					nextAttack = Time.time + fireRate;
 				}
@@ -201,16 +150,15 @@ public class EnemySkill : MonoBehaviour
 				if (Time.time > nextAttack)
 				{
 					//print("FIRE IN THE HOLE");
-					isAttacking = true;
 					Throw(aoeProjectilePrefab, transform, target.transform, damage);
 					nextAttack = Time.time + throwRate;
 				}
 				break;
 			case Skill.Root:
-				if (Time.time > nextRoot)
+				if (Time.time > nextAttack)
 				{
 					StartCoroutine("RootCoroutine", target);
-					nextRoot = Time.time + rootCooldown;
+					nextAttack = Time.time + rootCooldown;
 				}
 				break;
 			case Skill.None:
@@ -220,13 +168,11 @@ public class EnemySkill : MonoBehaviour
 		}
 	}
 
-
 	void Throw(GameObject aoeProjectile, Transform firePoint, Transform target, int damage)
 	{
 		GameObject projectile = Instantiate(aoeProjectile, firePoint.position, firePoint.rotation);
 		EnemyAOEShot enemyShot = projectile.GetComponent<EnemyAOEShot>();
-
-
+		
 		if (enemyShot != null)
 		{
 			enemyShot.Init(projectileAoeRadius, projectileAoeDuration, damage);
@@ -281,13 +227,10 @@ public class EnemySkill : MonoBehaviour
 	/// <returns></returns>
 	bool isVisible(Vector3 start, Vector3 end)
 	{
-
 		// This would cast rays only against colliders in Player layer .
 		// But instead we want to collide against everything except layer 8. The ~ operator does this, it inverts a bitmask.
-
-
 		int playerLayer = 1 << LayerMask.NameToLayer("Players");
-		end = new Vector3(end.x, end.y + 1.5f, end.z);// PIVOT DE ....
+		end = new Vector3(end.x, end.y, end.z);
 
 		if (!Physics.Linecast(start, end, ~playerLayer))
 		{
@@ -337,14 +280,11 @@ public class EnemySkill : MonoBehaviour
 		targetPlayer.GetComponent<PlayerController>().isRoot = false;
 
 	}
-
-
-
+	
 	private void OnDrawGizmos()
 	{
 		Gizmos.color = Color.red;
 		Gizmos.DrawWireSphere(transform.position, range);
 	}
-
-
+	
 }
