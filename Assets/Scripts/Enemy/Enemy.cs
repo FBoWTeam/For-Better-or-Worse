@@ -200,7 +200,8 @@ public class Enemy : MonoBehaviour
     #endregion
 
     public void TakeDamage(int damage)
-    { 
+    {
+		Debug.Log("oui");
         hp -= damage;
         GameManager.gameManager.orb.GetComponent<OrbController>().hasHitEnemy = true;
         //StartCoroutine("Stun");

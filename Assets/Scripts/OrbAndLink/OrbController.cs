@@ -163,6 +163,7 @@ public class OrbController : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+		Debug.Log("oui");
         if (other.CompareTag("Player") && amortized == false)
         {
             if (canHitPlayer == true)
@@ -181,7 +182,8 @@ public class OrbController : MonoBehaviour
         }
         else if (other.CompareTag("Enemy") && canHitEnemy == true && !amortized)
         {
-            GetComponent<PowerController>().onEnemyHit(other.gameObject);
+			Debug.Log("oui2");
+			GetComponent<PowerController>().onEnemyHit(other.gameObject);
         }
     }
 
