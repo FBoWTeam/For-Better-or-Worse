@@ -36,7 +36,6 @@ public class RoomSystem : MonoBehaviour, IActivable
         CleanNullInEnemyList();
         if (!roomCleared && enemies.Count == 0)
         {
-            Debug.Log("je me clear");
             this.Activate();
         }
         else if (numberPlayerPresent == 0 && !playerLeft && enemies.Count == 0)
@@ -74,7 +73,6 @@ public class RoomSystem : MonoBehaviour, IActivable
         }
         if (other.CompareTag("Enemy"))
         {
-            Debug.Log("j'ajoute un ennemi");
             enemies.Add(other.gameObject);
         }
     }
