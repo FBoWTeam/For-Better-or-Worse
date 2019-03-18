@@ -69,6 +69,10 @@ public class PlayerController : MonoBehaviour
             direction = player1 ? new Vector3(Input.GetAxis("HorizontalP1"), 0.0f, Input.GetAxis("VerticalP1")) : new Vector3(Input.GetAxis("HorizontalP2"), 0.0f, Input.GetAxis("VerticalP2"));
 
             direction = (direction.x * Camera.main.transform.right + direction.z * Camera.main.transform.forward);
+			if(direction.magnitude >= 0.01f && direction.magnitude <= 0.2f)
+			{
+				direction = direction.normalized * 0.2f;
+			}
 
 			UpdateAnimatorParams(direction.magnitude);
 

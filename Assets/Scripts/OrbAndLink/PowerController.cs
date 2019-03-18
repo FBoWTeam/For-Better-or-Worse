@@ -105,6 +105,8 @@ public class PowerController : MonoBehaviour
 	public float iceCooldown;
 	[DrawIf(new string[] { "editingPower" }, GameManager.PowerType.Ice)]
 	public int iceDamage;
+	[DrawIf(new string[] { "editingPower" }, GameManager.PowerType.Ice)]
+	public float freezeDuration;
 	#endregion
 
 	#region Fire Param
@@ -144,9 +146,11 @@ public class PowerController : MonoBehaviour
 	public GameObject lightningRodPrefab;
 	[DrawIf(new string[] { "editingPower" }, GameManager.PowerType.Electric)]
 	public float zapRange;
-	[DrawIf(new string[] { "editingPower" }, GameManager.PowerType.Electric)]
-	public int zapDamage;
-	[DrawIf(new string[] { "editingPower" }, GameManager.PowerType.Electric)]
+    [DrawIf(new string[] { "editingPower" }, GameManager.PowerType.Electric)]
+    public int zapDamageEnemy;
+    [DrawIf(new string[] { "editingPower" }, GameManager.PowerType.Electric)]
+    public int zapDamagePlayer;
+    [DrawIf(new string[] { "editingPower" }, GameManager.PowerType.Electric)]
 	public int maxZapNb;
 	[DrawIf(new string[] { "editingPower" }, GameManager.PowerType.Electric)]
 	public float timeBetweenZap;
@@ -449,12 +453,6 @@ public class PowerController : MonoBehaviour
         GetComponent<MeshRenderer>().material = normalMaterial;
     }
 
-    IEnumerator Freeze(Enemy target,float duration) {
-        target.isFrozen = true; 
-        yield return new WaitForSeconds(duration);
-        target.isFrozen = false;
-    }
-
     #endregion
 
     #region Fire
@@ -565,11 +563,11 @@ public class PowerController : MonoBehaviour
 				rod.target = nearestObject;
                 if (isEnemy)
                 {
-                    nearestObject.GetComponent<Enemy>().TakeDamage(zapDamage);
+                    nearestObject.GetComponent<Enemy>().TakeDamage(zapDamageEnemy);
                 }
                 else
                 {
-                    GameManager.gameManager.TakeDamage(nearestObject, zapDamage, Vector3.zero, false);
+                    GameManager.gameManager.TakeDamage(nearestObject, zapDamagePlayer, Vector3.zero, false);
                 }
 				actualPos = nearestObject.transform.position;
                 if (!isEnemy)
@@ -663,7 +661,7 @@ public class PowerController : MonoBehaviour
         switch (elementalPower)
         {
             case GameManager.PowerType.Ice:
-                StartCoroutine(Freeze(enemy, iceDuration));
+                enemy.actualFreezeCoroutine = enemy.StartCoroutine(enemy.FreezeCoroutine(freezeDuration));
                 damageTaken += iceDamage;
                 break;
             case GameManager.PowerType.Fire:
