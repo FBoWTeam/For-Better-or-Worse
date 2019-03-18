@@ -80,10 +80,6 @@ public class EnemySkill : MonoBehaviour
 	public float rootTime;
 	[DrawIf(new string[] { "skill" }, Skill.Root)]
 	public GameObject rootBranchPrefab;
-	/*[DrawIf(new string[] { "skill" }, Skill.Root)]
-    [DrawIf(new string[] { "skill" }, Skill.Root)]
-    [DrawIf(new string[] { "skill" }, Skill.Root)]
-    [DrawIf(new string[] { "skill" }, Skill.Root)]*/
 	#endregion
 
 	public float range = 4f;
@@ -157,8 +153,8 @@ public class EnemySkill : MonoBehaviour
 			case Skill.Root:
 				if (Time.time > nextAttack)
 				{
-					StartCoroutine("RootCoroutine", target);
-					nextAttack = Time.time + rootCooldown;
+                    target.GetComponent<PlayerController>().StartRoot(GetComponent<EnemyMovement>(), castingTime, target, damage, transform.position, rootTime, rootBranchPrefab);
+                    nextAttack = Time.time + rootCooldown;
 				}
 				break;
 			case Skill.None:
@@ -257,6 +253,7 @@ public class EnemySkill : MonoBehaviour
 		}
 	}
 
+/*
 	/// <summary>
 	/// Coroutine for the root skill of the enemy
 	/// </summary>
@@ -269,17 +266,8 @@ public class EnemySkill : MonoBehaviour
 		yield return new WaitForSecondsRealtime(castingTime);
 		GetComponent<EnemyMovement>().agent.isStopped = false;
 
-		//the player takes the damage then doesn't move during the root time
-		GameManager.gameManager.TakeDamage(targetPlayer, damage, transform.position, false);
-		GameManager.gameManager.UIManager.QuoteOnDamage("enemy", targetPlayer);
-		targetPlayer.GetComponent<PlayerController>().isRoot = true;
-		RootBranch branch = Instantiate(rootBranchPrefab).GetComponent<RootBranch>();
-		branch.targetPlayer = targetPlayer;
-		branch.rootTime = rootTime;
-		yield return new WaitForSecondsRealtime(rootTime);
-		targetPlayer.GetComponent<PlayerController>().isRoot = false;
-
-	}
+        StartCoroutine(targetPlayer.GetComponent<PlayerController>().RootCoroutine(GetComponent<EnemyMovement>(), castingTime, targetPlayer, damage, transform.position, rootTime, rootBranchPrefab));        
+	}*/
 	
 	private void OnDrawGizmos()
 	{
