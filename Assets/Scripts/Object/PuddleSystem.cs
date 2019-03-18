@@ -245,7 +245,8 @@ public class PuddleSystem : MonoBehaviour
                 {
                     if (objectsPresent[i].gameObject.CompareTag("Enemy"))
                     {
-                        objectsPresent[i].gameObject.GetComponent<Enemy>().StartCoroutine(objectsPresent[i].gameObject.GetComponent<Enemy>().FreezeCoroutine(freezeTime));
+						Enemy e = objectsPresent[i].gameObject.GetComponent<Enemy>();
+						e.actualFreezeCoroutine = e.StartCoroutine(e.FreezeCoroutine(freezeTime));
                     }
                     else if (objectsPresent[i].gameObject.CompareTag("Player"))
                     {
