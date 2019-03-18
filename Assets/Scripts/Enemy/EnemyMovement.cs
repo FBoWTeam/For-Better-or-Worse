@@ -11,7 +11,7 @@ public class EnemyMovement : MonoBehaviour
     public enum Movement
     {
         Static,
-        Basic,
+        Classic,
         Ranged,
         Fleeing,
         Dodging,
@@ -24,10 +24,10 @@ public class EnemyMovement : MonoBehaviour
 
     public Movement movement;
 
-    [DrawIf(new string[] { "movement" }, Movement.Basic)]
+    [DrawIf(new string[] { "movement" }, Movement.Classic)]
     public float initialSpeed = 2f;
 
-    [DrawIf(new string[] { "movement" }, Movement.Basic)]
+    [DrawIf(new string[] { "movement" }, Movement.Classic)]
     [Tooltip("represents the time of the attack animation")]
     public float stopTime = 2f;
 
@@ -35,7 +35,6 @@ public class EnemyMovement : MonoBehaviour
     //[Tooltip("represents the remaining distance between the enemy and the player")]
     //public float distanceBetweenPlayer = 5f;
 
-    private LineRenderer line;
     #endregion
 
     [HideInInspector]
@@ -55,7 +54,6 @@ public class EnemyMovement : MonoBehaviour
         agent = this.GetComponent<NavMeshAgent>();
         agent.speed = initialSpeed;
         agent.isStopped = false;
-        line = this.GetComponent<LineRenderer>();
     }
 
     #region Movement Methods
@@ -67,7 +65,7 @@ public class EnemyMovement : MonoBehaviour
             case Movement.Static:
                 StaticMovement();
                 break;
-            case Movement.Basic:
+            case Movement.Classic:
                 ClassicMovement();
                 break;
             case Movement.Ranged:
@@ -77,17 +75,6 @@ public class EnemyMovement : MonoBehaviour
                 Debug.LogWarning("Movement not implemented");
                 break;
         }
-
-        if (Enemy.sdrawPath)
-        {
-            line.enabled = true;
-            DrawPath(agent.path);
-        }
-        else
-        {
-            line.enabled = false;
-        }
-        
     }
 
     void StaticMovement()
@@ -100,7 +87,14 @@ public class EnemyMovement : MonoBehaviour
 
     void ClassicMovement()
     {
-        agent.destination = Enemy.aimPlayer.transform.position;
+		if (enemySkill.isInRange)
+		{
+			agent.destination = transform.position;
+		}
+		else
+		{
+			agent.destination = Enemy.aimPlayer.transform.position;
+		}
     }
 
     void RangedMovement()
@@ -176,8 +170,6 @@ public class EnemyMovement : MonoBehaviour
         return distanceP1 > distanceP2 ? Tuple.Create(GameManager.gameManager.player2, distanceP2) : Tuple.Create(GameManager.gameManager.player1,distanceP1);
     }
 
-
-
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.CompareTag("Player"))
@@ -193,16 +185,6 @@ public class EnemyMovement : MonoBehaviour
             agent.isStopped = false;
         }
     }
-
-    void DrawPath(NavMeshPath path)
-    {
-        if (path.corners.Length < 2) //if the path has 1 or no corners, there is no need
-        {
-            return;
-        }
-        line.SetPositions(path.corners); //set the array of positions to the amount of corners
-    }
-
 
     public void SlowSpeed(float slowAmount)
     {
