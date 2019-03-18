@@ -146,9 +146,11 @@ public class PowerController : MonoBehaviour
 	public GameObject lightningRodPrefab;
 	[DrawIf(new string[] { "editingPower" }, GameManager.PowerType.Electric)]
 	public float zapRange;
-	[DrawIf(new string[] { "editingPower" }, GameManager.PowerType.Electric)]
-	public int zapDamage;
-	[DrawIf(new string[] { "editingPower" }, GameManager.PowerType.Electric)]
+    [DrawIf(new string[] { "editingPower" }, GameManager.PowerType.Electric)]
+    public int zapDamageEnemy;
+    [DrawIf(new string[] { "editingPower" }, GameManager.PowerType.Electric)]
+    public int zapDamagePlayer;
+    [DrawIf(new string[] { "editingPower" }, GameManager.PowerType.Electric)]
 	public int maxZapNb;
 	[DrawIf(new string[] { "editingPower" }, GameManager.PowerType.Electric)]
 	public float timeBetweenZap;
@@ -561,11 +563,11 @@ public class PowerController : MonoBehaviour
 				rod.target = nearestObject;
                 if (isEnemy)
                 {
-                    nearestObject.GetComponent<Enemy>().TakeDamage(zapDamage);
+                    nearestObject.GetComponent<Enemy>().TakeDamage(zapDamageEnemy);
                 }
                 else
                 {
-                    GameManager.gameManager.TakeDamage(nearestObject, zapDamage, Vector3.zero, false);
+                    GameManager.gameManager.TakeDamage(nearestObject, zapDamagePlayer, Vector3.zero, false);
                 }
 				actualPos = nearestObject.transform.position;
                 if (!isEnemy)
