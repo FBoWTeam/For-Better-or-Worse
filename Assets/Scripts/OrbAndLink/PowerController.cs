@@ -146,9 +146,11 @@ public class PowerController : MonoBehaviour
 	public GameObject lightningRodPrefab;
 	[DrawIf(new string[] { "editingPower" }, GameManager.PowerType.Electric)]
 	public float zapRange;
-	[DrawIf(new string[] { "editingPower" }, GameManager.PowerType.Electric)]
-	public int zapDamage;
-	[DrawIf(new string[] { "editingPower" }, GameManager.PowerType.Electric)]
+    [DrawIf(new string[] { "editingPower" }, GameManager.PowerType.Electric)]
+    public int zapDamageEnemy;
+    [DrawIf(new string[] { "editingPower" }, GameManager.PowerType.Electric)]
+    public int zapDamagePlayer;
+    [DrawIf(new string[] { "editingPower" }, GameManager.PowerType.Electric)]
 	public int maxZapNb;
 	[DrawIf(new string[] { "editingPower" }, GameManager.PowerType.Electric)]
 	public float timeBetweenZap;
@@ -166,10 +168,14 @@ public class PowerController : MonoBehaviour
 	public float darknessDuration;
 	[DrawIf(new string[] { "editingPower" }, GameManager.PowerType.Darkness)]
 	public float darknessCooldown;
-	#endregion
+    [DrawIf(new string[] { "editingPower" }, GameManager.PowerType.Darkness)]
+    public float darknessTimer;//duration of the state weaken on the ennemi
+    [DrawIf(new string[] { "editingPower" }, GameManager.PowerType.Darkness)]
+    public int darknessDamage;//bonus damage when an weaken ennemi get hit bby the orb
+    #endregion
 
 
-	private void Start()
+    private void Start()
     {
 		canBeActivatedByPlayer1 = new List<bool> { true, true, true, true, true, true, true, true, true };
 		canBeActivatedByPlayer2 = new List<bool> { true, true, true, true, true, true, true, true, true };
@@ -561,11 +567,11 @@ public class PowerController : MonoBehaviour
 				rod.target = nearestObject;
                 if (isEnemy)
                 {
-                    nearestObject.GetComponent<Enemy>().TakeDamage(zapDamage);
+                    nearestObject.GetComponent<Enemy>().TakeDamage(zapDamageEnemy);
                 }
                 else
                 {
-                    GameManager.gameManager.TakeDamage(nearestObject, zapDamage, Vector3.zero, false);
+                    GameManager.gameManager.TakeDamage(nearestObject, zapDamagePlayer, Vector3.zero, false);
                 }
 				actualPos = nearestObject.transform.position;
                 if (!isEnemy)
@@ -671,6 +677,9 @@ public class PowerController : MonoBehaviour
 				StartCoroutine(ElectricZappingCoroutine(transform.position, target, true));
                 damageTaken += electricDamage;
 				DeactivatePower(elementalPower);
+                break;
+            case GameManager.PowerType.Darkness:
+                enemy.actualDarknessCoroutine = enemy.StartCoroutine(enemy.DarknessCoroutine(darknessTimer));
                 break;
         }
         
