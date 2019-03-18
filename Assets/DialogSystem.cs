@@ -2,7 +2,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 using TMPro;
 
 public class DialogSystem : MonoBehaviour
@@ -37,6 +36,13 @@ public class DialogSystem : MonoBehaviour
         sharedText = textGameobject.GetComponent<TextMeshProUGUI>();
     }
 
+    /// <summary>
+    /// Handle Full dialog between Fox and Raccoon
+    /// </summary>
+    /// <param name="foxDialogScenario">All fox replies</param>
+    /// <param name="racoonDialogScenario">All racoon replies</param>
+    /// <param name="foxFirst">is Fox talking first ?</param>
+    /// <returns></returns>
     public IEnumerator StartDialog(string[] foxDialogScenario, string[] racoonDialogScenario,bool foxFirst) {
         foxTalking = foxFirst;
         SetDialogs(foxDialogScenario,racoonDialogScenario);
@@ -45,33 +51,53 @@ public class DialogSystem : MonoBehaviour
         foreach (Tuple<bool, string> entry in textOrder) {           
             SetTalker(entry.Item1, entry.Item2);
             //wait for player input
-            yield return new WaitUntil(() => MoveNext());   
+            yield return new WaitUntil(() => CanMoveNext());   
         }
         yield return null;
     }
 
   
+    /// <summary>
+    /// Set dialog variables and Init dictionary afterwards
+    /// </summary>
+    /// <param name="foxDialogScenario"></param>
+    /// <param name="racoonDialogScenario"></param>
     private void SetDialogs(string[] foxDialogScenario, string[] racoonDialogScenario) {
         foxDialog = foxDialogScenario;
         racoonDialog = racoonDialogScenario;
         InitDictionary();
     }
 
-    private bool MoveNext() {
+    /// <summary>
+    /// return true if player can move to next dialog
+    /// </summary>
+    /// <returns></returns>
+    private bool CanMoveNext() {
         if ( Input.GetKeyUp(KeyCode.A) && canMoveToNext) {
 
-            StartCoroutine(InputCoolDown());
+            StartCoroutine(InputCoolDown(0.5f));
             return true;
         }
         return false;
     }
 
-    private IEnumerator InputCoolDown() {
+
+    /// <summary>
+    /// Restrain player from moving to next Dialog for delay
+    /// </summary>
+    /// <param name="delay"></param>
+    /// <returns></returns>
+    private IEnumerator InputCoolDown(float delay) {
         canMoveToNext = false;
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(delay);
         canMoveToNext = true;
     }
 
+    /// <summary>
+    /// Set UI element and text according to isFoxTalking
+    /// </summary>
+    /// <param name="isFoxTalking"></param>
+    /// <param name="text"></param>
     private void SetTalker(bool isFoxTalking, string text) {
         if (isFoxTalking) {
             setTexture(fox, foxTalkingTexture);
@@ -85,6 +111,11 @@ public class DialogSystem : MonoBehaviour
         StartCoroutine(setText(text));
     }
 
+    /// <summary>
+    /// Animate shared text element
+    /// </summary>
+    /// <param name="text"></param>
+    /// <returns></returns>
     IEnumerator setText(string text) {
         sharedText.text = "";
         canMoveToNext = false;
@@ -100,6 +131,9 @@ public class DialogSystem : MonoBehaviour
         foxOrRacoon.GetComponent<MeshRenderer>().material = toAply;
     }
 
+    /// <summary>
+    /// Initialize dictionary with both fox and raccon dialog
+    /// </summary>
     void InitDictionary() {
         int max = (foxDialog.Length > racoonDialog.Length) ? foxDialog.Length : racoonDialog.Length;
         for (int i = 0; i < max; i++) {

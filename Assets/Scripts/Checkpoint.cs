@@ -27,6 +27,7 @@ public class Checkpoint : MonoBehaviour
 		{
 			GameManager.gameManager.actualCheckpoint = this;
 			GameManager.gameManager.RecordPower();
+
 			checkpointActivated = true;
 		}
 	}
