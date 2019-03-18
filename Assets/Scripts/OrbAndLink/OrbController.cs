@@ -181,7 +181,7 @@ public class OrbController : MonoBehaviour
         }
         else if (other.CompareTag("Enemy") && canHitEnemy == true && !amortized)
         {
-            GetComponent<PowerController>().onEnemyHit(other.gameObject);
+			GetComponent<PowerController>().onEnemyHit(other.gameObject);
         }
     }
 

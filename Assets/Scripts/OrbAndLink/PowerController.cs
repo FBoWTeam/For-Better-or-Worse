@@ -105,6 +105,8 @@ public class PowerController : MonoBehaviour
 	public float iceCooldown;
 	[DrawIf(new string[] { "editingPower" }, GameManager.PowerType.Ice)]
 	public int iceDamage;
+	[DrawIf(new string[] { "editingPower" }, GameManager.PowerType.Ice)]
+	public float freezeDuration;
 	#endregion
 
 	#region Fire Param
@@ -657,7 +659,7 @@ public class PowerController : MonoBehaviour
         switch (elementalPower)
         {
             case GameManager.PowerType.Ice:
-                Debug.Log("Slow down bitch");
+                enemy.actualFreezeCoroutine = enemy.StartCoroutine(enemy.FreezeCoroutine(freezeDuration));
                 damageTaken += iceDamage;
                 break;
             case GameManager.PowerType.Fire:

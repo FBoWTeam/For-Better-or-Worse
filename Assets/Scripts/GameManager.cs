@@ -164,10 +164,13 @@ public class GameManager : MonoBehaviour
 
 	public void RecordPower()
 	{
-		respawnPowerRecord.player1ElementalPower = player1.GetComponent<PlayerController>().elementalPowerSlot;
-		respawnPowerRecord.player1BehaviouralPower = player1.GetComponent<PlayerController>().behaviouralPowerSlot;
-		respawnPowerRecord.player2ElementalPower = player2.GetComponent<PlayerController>().elementalPowerSlot;
-		respawnPowerRecord.player2BehaviouralPower = player2.GetComponent<PlayerController>().behaviouralPowerSlot;
+		respawnPowerRecord = new PowerRecord
+		{
+			player1ElementalPower = player1.GetComponent<PlayerController>().elementalPowerSlot,
+			player1BehaviouralPower = player1.GetComponent<PlayerController>().behaviouralPowerSlot,
+			player2ElementalPower = player2.GetComponent<PlayerController>().elementalPowerSlot,
+			player2BehaviouralPower = player2.GetComponent<PlayerController>().behaviouralPowerSlot
+		};
 	}
 
     public void Heal(bool player1, int healAmount)
