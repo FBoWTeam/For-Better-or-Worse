@@ -6,8 +6,6 @@ public class FlammableObjects : MonoBehaviour, IActivable
 {
     [Tooltip("time needed for the object to be destroyed when burning")]
     public float burnTime;
-    [Tooltip("the burn time is reduce by this amount if touched with the fire orb")]
-    public float burnAcceleration;
 
     private bool isBurning;
 
@@ -25,9 +23,9 @@ public class FlammableObjects : MonoBehaviour, IActivable
                     this.Activate();
                 }
             }
-            else if (orbPower.elementalPower == GameManager.PowerType.None)
+            else if (orbPower.elementalPower == GameManager.PowerType.None && isBurning)
             {
-                orbPower.elementalPower = GameManager.PowerType.Fire;
+                orbPower.ActivatePower(GameManager.PowerType.Fire, "forced");
             }
         }
     }
