@@ -31,6 +31,7 @@ public class PuddleSystem : MonoBehaviour
     [DrawIf(new string[] { "editingPuddleType" }, GameManager.PuddleType.Acid)]
     public Material acidMaterial;
 
+
     //===== WATER
     [DrawIf(new string[] { "editingPuddleType" }, GameManager.PuddleType.Water)]
     public int electrifiedWaterLifeTime;
@@ -75,17 +76,19 @@ public class PuddleSystem : MonoBehaviour
     public Material onFireFlammableMaterial;
 
 
+
+    private List<GameObject> objectsInPuddle;
+
+
     //===== TIMERS
     private float timeStamp;
     private float delayDOT;
-
-
+    
     #endregion
-
 
     private void Start()
     {
-        objectsPresent = new List<GameObject>();
+        objectsInPuddle = new List<GameObject>();
         delayDOT = 1f;
         switch (puddleType)
         {
@@ -108,6 +111,51 @@ public class PuddleSystem : MonoBehaviour
             case GameManager.PuddleType.Mud:
                 GetComponent<MeshRenderer>().material = mudMaterial;
                 break;
+        }
+    }
+
+
+    private void Update()
+    {
+        if (Time.time - timeStamp > delayDOT)
+        {
+            timeStamp = Time.time;
+            switch (puddleType)
+            {
+                case GameManager.PuddleType.Acid:
+                    if (objectsInPuddle.Count > 0)
+                    {
+                        for (int i = 0; i < objectsInPuddle.Count; i++)
+                        {
+                            if (objectsInPuddle[i].CompareTag("Enemy"))
+                            {
+                                objectsInPuddle[i].GetComponent<Enemy>().TakeDamage(acidDamage);
+                            }
+                            if (objectsInPuddle[i].CompareTag("Player"))
+                            {
+                                GameManager.gameManager.TakeDamage(objectsInPuddle[i], acidDamage, Vector3.zero, false);
+                            }
+                        }
+                    }
+                    break;
+
+                case GameManager.PuddleType.Flammable:
+                    if (objectsInPuddle.Count > 0)
+                    {
+                        for (int i = 0; i < objectsInPuddle.Count; i++)
+                        {
+                            if (objectsInPuddle[i].CompareTag("Enemy"))
+                            {
+                                objectsInPuddle[i].GetComponent<Enemy>().TakeDamage((int)burnTotalDamage / burnTime);
+                            }
+                            if (objectsInPuddle[i].CompareTag("Player"))
+                            {
+                                GameManager.gameManager.TakeDamage(objectsInPuddle[i], (int)burnTotalDamage / burnTime, Vector3.zero, false);
+                            }
+                        }
+                    }
+                    break;
+            }
         }
     }
 
@@ -156,26 +204,9 @@ public class PuddleSystem : MonoBehaviour
                 case GameManager.PuddleType.Flammable:
                     OnExitFlammable(other.gameObject);
                     break;
-            }
-        }
-    }
-
-    private void OnTriggerStay(Collider other)
-    {
-        if (other.CompareTag("Enemy") || other.CompareTag("Player"))
-        {
-            if (Time.time - timeStamp > delayDOT)
-            {
-                timeStamp = Time.time;
-                switch (puddleType)
-                {
-                    case GameManager.PuddleType.Acid:
-                        OnStayAcid(other.gameObject);
-                        break;
-                    case GameManager.PuddleType.Flammable:
-                        OnStayFlammable(other.gameObject);
-                        break;
-                }
+                case GameManager.PuddleType.Acid:
+                    OnExitAcid(other.gameObject);
+                    break;
             }
         }
     }
@@ -218,18 +249,15 @@ public class PuddleSystem : MonoBehaviour
         {
             target.GetComponent<PowerController>().DeactivatePower(GameManager.PowerType.Ice);
         }
+        if (target.CompareTag("Player") || target.CompareTag("Enemy"))
+        {
+            objectsInPuddle.Add(target);
+        }
     }
 
-    void OnStayAcid(GameObject target)
+    void OnExitAcid(GameObject target)
     {
-        if (target.CompareTag("Player"))
-        {
-            GameManager.gameManager.TakeDamage(target, acidDamage, Vector3.zero, false);
-        }
-        if (target.CompareTag("Enemy"))
-        {
-            target.GetComponent<Enemy>().TakeDamage(acidDamage);
-        }
+        objectsInPuddle.Remove(target);
     }
     #endregion
 
@@ -253,8 +281,8 @@ public class PuddleSystem : MonoBehaviour
                 {
                     if (objectsPresent[i].gameObject.CompareTag("Enemy"))
                     {
-						Enemy e = objectsPresent[i].gameObject.GetComponent<Enemy>();
-						e.actualFreezeCoroutine = e.StartCoroutine(e.FreezeCoroutine(freezeTime));
+                        Enemy e = objectsPresent[i].gameObject.GetComponent<Enemy>();
+                        e.actualFreezeCoroutine = e.StartCoroutine(e.FreezeCoroutine(freezeTime));
                     }
                     else if (objectsPresent[i].gameObject.CompareTag("Player"))
                     {
@@ -337,26 +365,29 @@ public class PuddleSystem : MonoBehaviour
                 target.GetComponent<PowerController>().DeactivatePower(GameManager.PowerType.Ice);
             }
         }
-    }
-    void OnStayFlammable(GameObject target)
-    {
-        if (onFire)
+        if (target.CompareTag("Player") || target.CompareTag("Enemy"))
         {
-            if (target.CompareTag("Player"))
-            {
-                GameManager.gameManager.TakeDamage(target, (int)burnTotalDamage / burnTime, Vector3.zero, false);
-            }
-            if (target.CompareTag("Enemy"))
-            {
-                target.GetComponent<Enemy>().TakeDamage((int)burnTotalDamage / burnTime);
-            }
+            objectsInPuddle.Add(target);
         }
     }
+    
     void OnExitFlammable(GameObject target)
     {
-        if (onFire)
+        if (target.CompareTag("Player") || target.CompareTag("Enemy"))
         {
-            StartCoroutine(Burn(target));
+            objectsInPuddle.Remove(target);
+            if (onFire)
+            {
+                if (target.CompareTag("Player"))
+                {
+                    //lance la coroutine sur le monobehavior de playercontroller
+                    target.GetComponent<PlayerController>().StartCoroutine(Burn(target));
+                }
+                if (target.CompareTag("Enemy"))
+                {
+                    target.GetComponent<EnemyMovement>().StartCoroutine(Burn(target));
+                }
+            }
         }
     }
 
