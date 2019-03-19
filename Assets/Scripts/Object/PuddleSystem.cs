@@ -34,15 +34,19 @@ public class PuddleSystem : MonoBehaviour
 
     //===== WATER
     [DrawIf(new string[] { "editingPuddleType" }, GameManager.PuddleType.Water)]
+    public bool electrified;
+    [DrawIf(new string[] { "editingPuddleType" }, GameManager.PuddleType.Water)]
     public int electrifiedWaterLifeTime;
+    [DrawIf(new string[] { "editingPuddleType" }, GameManager.PuddleType.Water)]
+    public int electricDamage;
+    [DrawIf(new string[] { "editingPuddleType" }, GameManager.PuddleType.Water)]
+    public bool frozen;
     [DrawIf(new string[] { "editingPuddleType" }, GameManager.PuddleType.Water)]
     public int frozenWaterLifeTime;
     [DrawIf(new string[] { "editingPuddleType" }, GameManager.PuddleType.Water)]
     public int freezeTime;
-    [DrawIf(new string[] { "editingPuddleType" }, GameManager.PuddleType.Water)]
-    public bool electrified;
-    [DrawIf(new string[] { "editingPuddleType" }, GameManager.PuddleType.Water)]
-    public bool frozen;
+
+
     [DrawIf(new string[] { "editingPuddleType" }, GameManager.PuddleType.Water)]
     public Material waterMaterial;
     [DrawIf(new string[] { "editingPuddleType" }, GameManager.PuddleType.Water)]
@@ -186,6 +190,29 @@ public class PuddleSystem : MonoBehaviour
         }
     }
 
+    private void OnTriggerStay(Collider other)
+    {
+        if (other.CompareTag("Enemy") || other.CompareTag("Player") || other.CompareTag("Orb"))
+        {
+            switch (puddleType)
+            {
+                case GameManager.PuddleType.Slug:
+                    break;
+                case GameManager.PuddleType.Acid:
+                    break;
+                case GameManager.PuddleType.Water:
+                    break;
+                case GameManager.PuddleType.Flammable:
+                    OnEnterFlammable(other.gameObject);
+                    break;
+                case GameManager.PuddleType.Mud:
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+
     private void OnTriggerExit(Collider other)
     {
         if (other.CompareTag("Enemy") || other.CompareTag("Player"))
@@ -312,13 +339,15 @@ public class PuddleSystem : MonoBehaviour
         }
         else if (electrified)
         {
-            if ((target.CompareTag("Enemy")))
+            if (target.CompareTag("Enemy"))
             {
-                StartCoroutine(GameManager.gameManager.orb.GetComponent<PowerController>().ElectricZappingCoroutine(transform.position + Vector3.up, null, true));
+                target.GetComponent<Enemy>().TakeDamage(electricDamage);
+                //StartCoroutine(GameManager.gameManager.orb.GetComponent<PowerController>().ElectricZappingCoroutine(transform.position + Vector3.up, null, true));
             }
             else if (target.CompareTag("Player"))
             {
-                StartCoroutine(GameManager.gameManager.orb.GetComponent<PowerController>().ElectricZappingCoroutine(transform.position + Vector3.up, null, false));
+                GameManager.gameManager.TakeDamage(target, electricDamage, Vector3.zero, false);
+                //StartCoroutine(GameManager.gameManager.orb.GetComponent<PowerController>().ElectricZappingCoroutine(transform.position + Vector3.up, null, false));
             }
         }
         else if (target.CompareTag("Enemy") || target.CompareTag("Player"))
@@ -352,24 +381,26 @@ public class PuddleSystem : MonoBehaviour
     #region Flammable Effect
     void OnEnterFlammable(GameObject target)
     {
-        if (target.CompareTag("Orb"))
-        {
-            if (target.GetComponent<PowerController>().elementalPower == GameManager.PowerType.Fire && !onFire)
-            {
-                onFire = true;
-                GetComponent<MeshRenderer>().material = onFireFlammableMaterial;
-                Destroy(gameObject, onFireFlammableLifeTime);
-            }
-            else if (target.GetComponent<PowerController>().elementalPower == GameManager.PowerType.Ice && onFire)
-            {
-                target.GetComponent<PowerController>().DeactivatePower(GameManager.PowerType.Ice);
-            }
-        }
         if (target.CompareTag("Player") || target.CompareTag("Enemy"))
         {
             objectsInPuddle.Add(target);
         }
     }
+
+    void OnStayFlammable(GameObject target)
+    {
+        if (!onFire && target.CompareTag("Orb") && target.GetComponent<PowerController>().elementalPower == GameManager.PowerType.Fire)
+        {
+            onFire = true;
+            GetComponent<MeshRenderer>().material = onFireFlammableMaterial;
+            Destroy(gameObject, onFireFlammableLifeTime);
+        }
+        if (onFire && target.CompareTag("Orb") && target.GetComponent<PowerController>().elementalPower == GameManager.PowerType.Ice)
+        {
+            target.GetComponent<PowerController>().DeactivatePower(GameManager.PowerType.Ice);
+        }
+    }
+
     
     void OnExitFlammable(GameObject target)
     {
@@ -380,7 +411,7 @@ public class PuddleSystem : MonoBehaviour
             {
                 if (target.CompareTag("Player"))
                 {
-                    //lance la coroutine sur le monobehavior de playercontroller
+                    //start the coroutine on the playercontroller monobehavior to keep the coroutine running even if the fire puddle is destroyed
                     target.GetComponent<PlayerController>().StartCoroutine(Burn(target));
                 }
                 if (target.CompareTag("Enemy"))

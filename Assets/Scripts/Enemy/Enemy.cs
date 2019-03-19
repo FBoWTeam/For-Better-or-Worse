@@ -61,6 +61,7 @@ public class Enemy : MonoBehaviour
     public float hitStunTime; //stun time when getting hit by the orb
 
     public bool isWeaken;
+    public bool isFrozen;
 
     [HideInInspector]
     public EnemyMovement enemyMovement;
@@ -101,13 +102,13 @@ public class Enemy : MonoBehaviour
 
             FocusManagement();
 
-            if (!enemyMovement.agent.isStopped)
+            if (!enemyMovement.agent.isStopped && !isFrozen)
             {
                 enemyMovement.DoMovement();
 				animator.SetFloat("Speed", enemyMovement.agent.velocity.magnitude / enemyMovement.initialSpeed);
             }
 
-			if(enemySkill.InRange(aimPlayer))
+			if(enemySkill.InRange(aimPlayer) && !isFrozen)
 			{
 				enemySkill.DoSkill(aimPlayer);
 			}
@@ -231,8 +232,10 @@ public class Enemy : MonoBehaviour
 			StopCoroutine(actualFreezeCoroutine);
 		}
 		enemyMovement.agent.isStopped = true;
-		yield return new WaitForSeconds(freezeTimer);
+        isFrozen = true;
+        yield return new WaitForSeconds(freezeTimer);
         enemyMovement.agent.isStopped = false;
+        isFrozen = false;
     }
 
 
