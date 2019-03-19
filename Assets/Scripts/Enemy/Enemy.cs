@@ -58,7 +58,10 @@ public class Enemy : MonoBehaviour
     public int baseHP;
     public int hp;
 
-    public float hitStunTime; //temps d'immobilisation quand un ennemi se fait toucher par l'orbe
+    public float hitStunTime; //stun time when getting hit by the orb
+
+    public bool isWeaken;
+    public bool isFrozen;
 
     [HideInInspector]
     public EnemyMovement enemyMovement;
@@ -71,8 +74,11 @@ public class Enemy : MonoBehaviour
 	//to stop when another freeze corout is launch
 	[HideInInspector]
 	public Coroutine actualFreezeCoroutine;
-	
-	Animator animator;
+
+    [HideInInspector]
+    public Coroutine actualDarknessCoroutine;
+
+    Animator animator;
 
 	#endregion
 
@@ -96,13 +102,13 @@ public class Enemy : MonoBehaviour
 
             FocusManagement();
 
-            if (!enemyMovement.agent.isStopped)
+            if (!enemyMovement.agent.isStopped && !isFrozen)
             {
                 enemyMovement.DoMovement();
 				animator.SetFloat("Speed", enemyMovement.agent.velocity.magnitude / enemyMovement.initialSpeed);
             }
 
-			if(enemySkill.InRange(aimPlayer))
+			if(enemySkill.InRange(aimPlayer) && !isFrozen)
 			{
 				enemySkill.DoSkill(aimPlayer);
 			}
@@ -194,9 +200,15 @@ public class Enemy : MonoBehaviour
 
     public void TakeDamage(int damage)
     {
-        hp -= damage;
+        if(isWeaken)
+        {
+            hp -= damage + GameManager.gameManager.orb.GetComponent<PowerController>().darknessDamage;
+        }
+        else
+        {
+            hp -= damage;
+        }
         GameManager.gameManager.orb.GetComponent<OrbController>().hasHitEnemy = true;
-        //StartCoroutine(HitStun());
 		if (hp <= 0)
 		{
 			GetComponent<LootTable>().LootEnemy();
@@ -220,7 +232,24 @@ public class Enemy : MonoBehaviour
 			StopCoroutine(actualFreezeCoroutine);
 		}
 		enemyMovement.agent.isStopped = true;
-		yield return new WaitForSeconds(freezeTimer);
+        isFrozen = true;
+        yield return new WaitForSeconds(freezeTimer);
         enemyMovement.agent.isStopped = false;
+        isFrozen = false;
+    }
+
+
+    public IEnumerator DarknessCoroutine(float darknessTimer)
+    {
+        if (actualFreezeCoroutine != null)
+        {
+            StopCoroutine(actualDarknessCoroutine);
+        }
+
+        yield return new WaitForEndOfFrame();
+
+        isWeaken = true;
+        yield return new WaitForSecondsRealtime(darknessTimer);
+        isWeaken = false;
     }
 }

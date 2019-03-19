@@ -9593,24 +9593,24 @@ MonoBehaviour:
   droppedPower: 0
   reflectedDrop: 0
   editingPower: 0
-  largeOrbDuration: 7
+  largeOrbDuration: 6
   largeOrbCooldown: 15
   minScale: 1
   maxScale: 2
-  largeOrbDamage: 3
+  largeOrbDamage: 2
   vortexMaterial: {fileID: 2100000, guid: 7595e36051d4c9b42bd858bf1f438410, type: 2}
   vortexDuration: 4
   vortexCooldown: 6
   vortexRangeOfEffect: 10
   vortexAttractionPower: 10
   leechLifeMaterial: {fileID: 2100000, guid: 92b138bf65fea4941b08f59441c6770f, type: 2}
-  leechLifeDuration: 30
-  leechLifeCooldown: 10
+  leechLifeDuration: 9
+  leechLifeCooldown: 25
   lifeSteel: 50
   slugMaterial: {fileID: 2100000, guid: 7468f8944ac1ed94490c837a13e8b672, type: 2}
   slugDuration: 4
   mitigatedDamageSlug: 0
-  slugCooldown: 10
+  slugCooldown: 16
   slug: {fileID: 1635892733598159781, guid: f1fb8f1469f8aab42bc8a4f47c49f15c, type: 3}
   shieldMaterial: {fileID: 2100000, guid: 075f406c77a9ee34db02bb28f18db12c, type: 2}
   shieldCooldown: 8
@@ -9618,33 +9618,39 @@ MonoBehaviour:
   shieldAmount: 10
   currentShieldStack: 2
   iceMaterial: {fileID: 2100000, guid: e1c894261949685488e6031af020a36f, type: 2}
-  iceDuration: 8
-  iceCooldown: 14
-  iceDamage: 2
+  iceDuration: 4
+  iceCooldown: 18
+  iceDamage: 0
+  freezeDuration: 3
   fireMaterial: {fileID: 2100000, guid: dbaea46d10d0aee4898f0b579c7a84fd, type: 2}
   fireDuration: 5
   fireDurationBrazier: 5
-  fireCooldown: 10
-  fireDamage: 2
-  fireTicksDamage: 3
-  fireTickDuration: 3
+  fireCooldown: 17
+  fireDamage: 0
+  fireTicksDamage: 8
+  fireTickDuration: 8
+  fireTicksDamageBrazier: 5
+  fireTickDurationBrazier: 5
   isActivatedByBrazier: 0
   electricMaterial: {fileID: 2100000, guid: c5714c959eba6964cb5543af1128b646, type: 2}
-  electricDuration: 3
-  electricCooldown: 10
-  electricDamage: 5
+  electricDuration: 4
+  electricCooldown: 16
+  electricDamage: 3
   lightningRodPrefab: {fileID: 472907574596040486, guid: 106b9d0f1a9c2aa4292f190aecb799dd,
     type: 3}
   zapRange: 10
-  zapDamage: 5
+  zapDamageEnemy: 5
+  zapDamagePlayer: 5
   maxZapNb: 5
-  timeBetweenZap: 0.1
+  timeBetweenZap: 0.2
   enemyLayerMask:
     serializedVersion: 2
     m_Bits: 16384
   playerLayerMask:
     serializedVersion: 2
     m_Bits: 1024
-  darknessMaterial: {fileID: 0}
-  darknessDuration: 0
-  darknessCooldown: 0
+  darknessMaterial: {fileID: 2100000, guid: 306a366e89de9e84dbc9e733941e50df, type: 2}
+  darknessDuration: 4
+  darknessCooldown: 20
+  darknessTimer: 8
+  darknessDamage: 5
