@@ -130,6 +130,7 @@ public class EnemySkill : MonoBehaviour
 				if (Time.time > nextAttack)
 				{
 					StartCoroutine("Impact", target.transform);
+					GetComponent<Animator>().SetTrigger("Attack");
 					nextAttack = Time.time + impactCooldown;
 				}
 				break;
@@ -139,6 +140,7 @@ public class EnemySkill : MonoBehaviour
 				{
 					GameManager.gameManager.TakeDamage(target, damage, transform.position, true);
 					GameManager.gameManager.UIManager.QuoteOnDamage("enemy", target);
+					GetComponent<Animator>().SetTrigger("Attack");
 					nextAttack = Time.time + aoeCooldown;
 				}
 				break;
@@ -147,6 +149,7 @@ public class EnemySkill : MonoBehaviour
 				{
                     print("TARGET :" + target.transform.position);
                     Shoot(bulletPrefab, transform, target.transform, damage);
+					GetComponent<Animator>().SetTrigger("Attack");
 					nextAttack = Time.time + fireRate;
 				}
 				break;
@@ -158,6 +161,7 @@ public class EnemySkill : MonoBehaviour
 				if (Time.time > nextAttack)
 				{				
 					Throw(aoeProjectilePrefab, transform, target.transform, damage,puddle);
+					GetComponent<Animator>().SetTrigger("Attack");
 					nextAttack = Time.time + throwRate;
 				}
 				break;
@@ -165,7 +169,8 @@ public class EnemySkill : MonoBehaviour
 				if (Time.time > nextAttack)
 				{
                     target.GetComponent<PlayerController>().StartRoot(GetComponent<EnemyMovement>(), castingTime, target, damage, transform.position, rootTime, rootBranchPrefab);
-                    nextAttack = Time.time + rootCooldown;
+					GetComponent<Animator>().SetTrigger("Attack");
+					nextAttack = Time.time + rootCooldown;
 				}
 				break;
 			case Skill.None:
