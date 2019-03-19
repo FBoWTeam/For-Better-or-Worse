@@ -191,6 +191,10 @@ public class PuddleSystem : MonoBehaviour
         {
             target.GetComponent<EnemyMovement>().SlowSpeed(slugSlowAmount);
         }
+        if (target.CompareTag("Player"))
+        {
+            target.GetComponent<PlayerController>().SlowSpeed(slugSlowAmount);
+        }
     }
 
     void OnExitSlug(GameObject target)
@@ -198,6 +202,10 @@ public class PuddleSystem : MonoBehaviour
         if (target.CompareTag("Enemy"))
         {
             target.GetComponent<EnemyMovement>().RestoreSpeed();
+        }
+        if (target.CompareTag("Player"))
+        {
+            target.GetComponent<PlayerController>().RestoreSpeed();
         }
     }
     #endregion
