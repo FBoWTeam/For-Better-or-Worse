@@ -127,14 +127,20 @@ public class PowerController : MonoBehaviour
 	[DrawIf(new string[] { "editingPower" }, GameManager.PowerType.Fire)]
 	public float fireTickDuration = 5;
 	[DrawIf(new string[] { "editingPower" }, GameManager.PowerType.Fire)]
+	public int fireTicksDamageBrazier = 5;
+	[DrawIf(new string[] { "editingPower" }, GameManager.PowerType.Fire)]
+	public float fireTickDurationBrazier = 5;
+	[DrawIf(new string[] { "editingPower" }, GameManager.PowerType.Fire)]
 	private float nextAttack = 0f;
 	[DrawIf(new string[] { "editingPower" }, GameManager.PowerType.Fire)]
 	public bool isActivatedByBrazier;
-    #endregion
+	[DrawIf(new string[] { "editingPower" }, GameManager.PowerType.Fire)]
+	Coroutine actualFireDOTCoroutine;
+	#endregion
 
-    #region Electric Param
-    //Electric
-    [DrawIf(new string[] { "editingPower" }, GameManager.PowerType.Electric)]
+	#region Electric Param
+	//Electric
+	[DrawIf(new string[] { "editingPower" }, GameManager.PowerType.Electric)]
 	public Material electricMaterial;
 	[DrawIf(new string[] { "editingPower" }, GameManager.PowerType.Electric)]
 	public float electricDuration;
@@ -244,7 +250,10 @@ public class PowerController : MonoBehaviour
 					break;
 				case GameManager.PowerType.Fire:
                     StartCoroutine(cooldownCoroutine(GameManager.PowerType.Fire, fireCooldown, mode));
-                    ActivateFire();
+					if (mode == "forced")
+						ActivateFire(true);
+					else
+						ActivateFire(false);
 					break;
 				case GameManager.PowerType.Electric:
 					StartCoroutine(cooldownCoroutine(GameManager.PowerType.Electric, electricCooldown, mode));
@@ -462,15 +471,15 @@ public class PowerController : MonoBehaviour
     #region Fire
     //==========FIRE==========
 
-    void ActivateFire()
+    void ActivateFire(bool forced)
     {
         elementalPower = GameManager.PowerType.Fire;
 		GetComponent<MeshRenderer>().material = fireMaterial;
 
-        if (isActivatedByBrazier)
+        if (forced)
 		{
 			elementalDurationCoroutine = StartCoroutine(DurationCoroutine(GameManager.PowerType.Fire, fireDurationBrazier));
-            isActivatedByBrazier = false;
+			isActivatedByBrazier = true;
         }
         else
 		{
@@ -482,7 +491,8 @@ public class PowerController : MonoBehaviour
     {
         elementalPower = GameManager.PowerType.None;
         GetComponent<MeshRenderer>().material = normalMaterial;
-    }
+		isActivatedByBrazier = false;
+	}
 
     IEnumerator FireDamage(Enemy enemy, int totalDamage, float duration)
     {
@@ -669,8 +679,12 @@ public class PowerController : MonoBehaviour
                 damageTaken += iceDamage;
                 break;
             case GameManager.PowerType.Fire:
-                StopCoroutine("FireDamage");
-                StartCoroutine(FireDamage(enemy, fireTicksDamage, fireTickDuration));
+				if(actualFireDOTCoroutine != null)
+					StopCoroutine(actualFireDOTCoroutine);
+				if(isActivatedByBrazier)
+					actualFireDOTCoroutine = StartCoroutine(FireDamage(enemy, fireTicksDamageBrazier, fireTickDurationBrazier));
+				else
+					actualFireDOTCoroutine = StartCoroutine(FireDamage(enemy, fireTicksDamage, fireTickDuration));
                 damageTaken += fireDamage;
                 break;
             case GameManager.PowerType.Electric:
