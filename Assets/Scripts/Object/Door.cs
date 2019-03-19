@@ -11,7 +11,8 @@ public class Door : MonoBehaviour, IActivable
     {
         None,
         Standard,
-        Electric
+        Electric,
+        ArenaDoor
     }
 
     public DoorType doorType;
@@ -40,6 +41,9 @@ public class Door : MonoBehaviour, IActivable
             case DoorType.Electric:
                 ActivateElectricDoor();
                 break;
+            case DoorType.ArenaDoor:
+                ActivateArenaDoor();
+                break;
             default:
                 break;
         }
@@ -53,6 +57,18 @@ public class Door : MonoBehaviour, IActivable
             GetComponentInParent<Animation>().Play("DoorClose");
         }
         isActive = false;
+    }
+
+    void ActivateArenaDoor()
+    {
+        if (CheckValidObjects())
+        {
+            if (isActive == false)
+            {
+                GetComponentInParent<Animation>().Play("DoorOpen");
+            }
+            isActive = true;
+        }
     }
 
     void ActivateStandardDoor()
