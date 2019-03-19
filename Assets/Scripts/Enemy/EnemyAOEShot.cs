@@ -13,7 +13,7 @@ public class EnemyAOEShot: MonoBehaviour {
     private float effectDuration;
     private GameObject[] Players;
     private Collider collider;
-
+    private GameObject puddle;
 
     private void Awake() {
         body = GetComponent<Rigidbody>();
@@ -31,39 +31,29 @@ public class EnemyAOEShot: MonoBehaviour {
    
     }
 
-    public void Init(float radius,float duration,int _damage) {
+    public void Init(float radius,float duration,int _damage, GameObject puddleprefab) {
         effectRadius = radius;
         effectDuration = duration;
         damagePerS = _damage;
+        puddle = puddleprefab;     
     }
 
     private void OnCollisionEnter(Collision collision) {
         if (collision.transform.CompareTag("Floor")) {
             // start aplying damge in the zone
-            isGrounded = true;
+            isGrounded = true;        
             body.constraints = RigidbodyConstraints.FreezeAll;
-            gameObject.GetComponent<Renderer>().material.color = Color.red;
-            StartCoroutine(Duration());
-            StartCoroutine(AOE());
+            GetComponent<MeshRenderer>().enabled = false;
 
+            GameObject pdle = Instantiate(puddle,transform.position,Quaternion.identity,transform);
+            pdle.transform.localScale = new Vector3(effectRadius*2, pdle.transform.localScale.y, 2*effectRadius);
+           
+            StartCoroutine(Duration());         
 
         }
     }
 
-    IEnumerator AOE() {
-        //Apply damage each seconds
-        while (true) {
-            foreach (GameObject item in Players) {
-                float distToPlayer = Vector3.Distance(transform.position, item.transform.position); //Optimisable               
-                if (distToPlayer < effectRadius) {
-                    
-                    GameManager.gameManager.TakeDamage(item, damagePerS, transform.position, true);
-                    GameManager.gameManager.UIManager.QuoteOnDamage("enemy", item);
-                }
-            }
-            yield return new WaitForSeconds(1f);
-        }
-    }
+    
 
     IEnumerator Duration() {
         yield return new WaitForSeconds(effectDuration);
@@ -71,12 +61,6 @@ public class EnemyAOEShot: MonoBehaviour {
         Destroy(gameObject);
     }
 
-    private void OnDrawGizmos() {
-        if (isGrounded) {
-            Gizmos.color = Color.red;
-            Gizmos.DrawWireSphere(transform.position, effectRadius);
-        }
-        
-    }
+    
 }
 
