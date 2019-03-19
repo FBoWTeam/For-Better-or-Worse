@@ -168,10 +168,14 @@ public class PowerController : MonoBehaviour
 	public float darknessDuration;
 	[DrawIf(new string[] { "editingPower" }, GameManager.PowerType.Darkness)]
 	public float darknessCooldown;
-	#endregion
+    [DrawIf(new string[] { "editingPower" }, GameManager.PowerType.Darkness)]
+    public float darknessTimer;//duration of the state weaken on the ennemi
+    [DrawIf(new string[] { "editingPower" }, GameManager.PowerType.Darkness)]
+    public int darknessDamage;//bonus damage when an weaken ennemi get hit bby the orb
+    #endregion
 
 
-	private void Start()
+    private void Start()
     {
 		canBeActivatedByPlayer1 = new List<bool> { true, true, true, true, true, true, true, true, true };
 		canBeActivatedByPlayer2 = new List<bool> { true, true, true, true, true, true, true, true, true };
@@ -673,6 +677,9 @@ public class PowerController : MonoBehaviour
 				StartCoroutine(ElectricZappingCoroutine(transform.position, target, true));
                 damageTaken += electricDamage;
 				DeactivatePower(elementalPower);
+                break;
+            case GameManager.PowerType.Darkness:
+                enemy.actualDarknessCoroutine = enemy.StartCoroutine(enemy.DarknessCoroutine(darknessTimer));
                 break;
         }
         

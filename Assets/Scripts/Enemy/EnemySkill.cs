@@ -53,11 +53,14 @@ public class EnemySkill : MonoBehaviour
 	public float bulletSpeed = 70f;
 	[DrawIf(new string[] { "skill" }, Skill.Ranged)]
 	public GameObject bulletPrefab;
-	//[DrawIf(new string[] { "skill" }, Skill.Ranged)]
-	//public Transform firePoint; set to the transform postion for now , changed later
-	#endregion
+    //[DrawIf(new string[] { "skill" }, Skill.Ranged)]
+    //public Transform firePoint; set to the transform postion for now , changed later
+    #endregion
 
-	#region RangedAOE
+    #region RangedAOE
+    //damage = damage/S
+    [DrawIf(new string[] { "skill" }, Skill.RangedAOE)]
+    public bool drawPath = false;
 	[DrawIf(new string[] { "skill" }, Skill.RangedAOE)]
 	public GameObject aoeProjectilePrefab;
 	[DrawIf(new string[] { "skill" }, Skill.RangedAOE)]
@@ -67,12 +70,16 @@ public class EnemySkill : MonoBehaviour
 	//like fire rate but the name is already used
 	[DrawIf(new string[] { "skill" }, Skill.RangedAOE)]
 	public float throwRate = 1f;
+    
 	[DrawIf(new string[] { "skill" }, Skill.RangedAOE)]
-	public float maxHeight = 10;
-	#endregion
+    public float maxHeight = 10; //[Range(0.1f,100f)]
+    [DrawIf(new string[] { "skill" }, Skill.RangedAOE)]
+    public GameObject puddle;
 
-	#region Root
-	[DrawIf(new string[] { "skill" }, Skill.Root)]
+    #endregion
+
+    #region Root
+    [DrawIf(new string[] { "skill" }, Skill.Root)]
 	public float rootCooldown;
 	[DrawIf(new string[] { "skill" }, Skill.Root)]
 	public float castingTime;
@@ -80,10 +87,6 @@ public class EnemySkill : MonoBehaviour
 	public float rootTime;
 	[DrawIf(new string[] { "skill" }, Skill.Root)]
 	public GameObject rootBranchPrefab;
-	/*[DrawIf(new string[] { "skill" }, Skill.Root)]
-    [DrawIf(new string[] { "skill" }, Skill.Root)]
-    [DrawIf(new string[] { "skill" }, Skill.Root)]
-    [DrawIf(new string[] { "skill" }, Skill.Root)]*/
 	#endregion
 
 	public float range = 4f;
@@ -127,6 +130,7 @@ public class EnemySkill : MonoBehaviour
 				if (Time.time > nextAttack)
 				{
 					StartCoroutine("Impact", target.transform);
+					GetComponent<Animator>().SetTrigger("Attack");
 					nextAttack = Time.time + impactCooldown;
 				}
 				break;
@@ -136,28 +140,36 @@ public class EnemySkill : MonoBehaviour
 				{
 					GameManager.gameManager.TakeDamage(target, damage, transform.position, true);
 					GameManager.gameManager.UIManager.QuoteOnDamage("enemy", target);
+					GetComponent<Animator>().SetTrigger("Attack");
 					nextAttack = Time.time + aoeCooldown;
 				}
 				break;
 			case Skill.Ranged:
 				if (Time.time > nextAttack && isVisible(transform.position, target.transform.position))
 				{
-					Shoot(bulletPrefab, transform, target.transform, damage);
+                    print("TARGET :" + target.transform.position);
+                    Shoot(bulletPrefab, transform, target.transform, damage);
+					GetComponent<Animator>().SetTrigger("Attack");
 					nextAttack = Time.time + fireRate;
 				}
 				break;
 			case Skill.RangedAOE:
+
+                if (drawPath) {
+                    DrawThrowPath(ComputeThrowVelocity(target.transform.position));
+                }
 				if (Time.time > nextAttack)
-				{
-					//print("FIRE IN THE HOLE");
-					Throw(aoeProjectilePrefab, transform, target.transform, damage);
+				{				
+					Throw(aoeProjectilePrefab, transform, target.transform, damage,puddle);
+					GetComponent<Animator>().SetTrigger("Attack");
 					nextAttack = Time.time + throwRate;
 				}
 				break;
 			case Skill.Root:
 				if (Time.time > nextAttack)
 				{
-					StartCoroutine("RootCoroutine", target);
+                    target.GetComponent<PlayerController>().StartRoot(GetComponent<EnemyMovement>(), castingTime, target, damage, transform.position, rootTime, rootBranchPrefab);
+					GetComponent<Animator>().SetTrigger("Attack");
 					nextAttack = Time.time + rootCooldown;
 				}
 				break;
@@ -168,15 +180,17 @@ public class EnemySkill : MonoBehaviour
 		}
 	}
 
-	void Throw(GameObject aoeProjectile, Transform firePoint, Transform target, int damage)
+	void Throw(GameObject aoeProjectile, Transform firePoint, Transform target, int damage, GameObject puddleprefab)
 	{
-		GameObject projectile = Instantiate(aoeProjectile, firePoint.position, firePoint.rotation);
+        Vector3 pos = new Vector3(firePoint.position.x, firePoint.position.y + 1, firePoint.position.z); // fix pivot
+		GameObject projectile = Instantiate(aoeProjectile, pos, firePoint.rotation);
 		EnemyAOEShot enemyShot = projectile.GetComponent<EnemyAOEShot>();
 		
 		if (enemyShot != null)
 		{
-			enemyShot.Init(projectileAoeRadius, projectileAoeDuration, damage);
-			enemyShot.Launch(ComputeThrowVelocity(target.position));
+			enemyShot.Init(projectileAoeRadius, projectileAoeDuration, damage,puddleprefab);
+            
+			enemyShot.Launch(ComputeThrowVelocity(target.position).Item1);
 		}
 	}
 
@@ -186,18 +200,38 @@ public class EnemySkill : MonoBehaviour
 	/// </summary>
 	/// <param name="target"></param>
 	/// <returns></returns>
-	Vector3 ComputeThrowVelocity(Vector3 target)
+	Tuple<Vector3,float> ComputeThrowVelocity(Vector3 target)
 	{
+        
 		float dirY = target.y - transform.position.y;
-		Vector3 dirXZ = new Vector3(target.x - transform.position.x, 0, target.z - transform.position.z);
+
+        Vector3 dirXZ = new Vector3(target.x - transform.position.x, 0, target.z - transform.position.z);
 		float time = Mathf.Sqrt(-2 * maxHeight / Physics.gravity.y) + Mathf.Sqrt(2 * (dirY - maxHeight) / Physics.gravity.y);
 		Vector3 velocityY = Vector3.up * Mathf.Sqrt(-2 * Physics.gravity.y * maxHeight);
 		Vector3 velocityXZ = dirXZ / time;
 
-		return velocityXZ + velocityY * -Mathf.Sign(Physics.gravity.y);
+        Vector3 velocity = velocityXZ + velocityY * -Mathf.Sign(Physics.gravity.y);       
+		return new Tuple<Vector3, float>( velocity,time);
 	}
 
-	IEnumerator Impact(Transform target)
+    /// <summary>
+    /// Draw throw path on scene View
+    /// </summary>
+    /// <param name="info"></param>
+    void DrawThrowPath(Tuple<Vector3, float> info) {
+        int res = 30;
+        Vector3 prev = transform.position;
+        for (int i = 0; i < res; i++) {
+            float s = i / (float)res * info.Item2;
+            Vector3 disp = (info.Item1 * s) + Vector3.up * (Physics.gravity.y * s * s / 2f);
+            Vector3 drawp = transform.position + disp;
+            Debug.DrawLine(prev, drawp, Color.green);
+            prev = drawp;
+        }
+    }
+
+
+    IEnumerator Impact(Transform target)
 	{
 
 		Vector3 originalPosition = transform.position;
@@ -257,6 +291,7 @@ public class EnemySkill : MonoBehaviour
 		}
 	}
 
+/*
 	/// <summary>
 	/// Coroutine for the root skill of the enemy
 	/// </summary>
@@ -269,17 +304,8 @@ public class EnemySkill : MonoBehaviour
 		yield return new WaitForSecondsRealtime(castingTime);
 		GetComponent<EnemyMovement>().agent.isStopped = false;
 
-		//the player takes the damage then doesn't move during the root time
-		GameManager.gameManager.TakeDamage(targetPlayer, damage, transform.position, false);
-		GameManager.gameManager.UIManager.QuoteOnDamage("enemy", targetPlayer);
-		targetPlayer.GetComponent<PlayerController>().isRoot = true;
-		RootBranch branch = Instantiate(rootBranchPrefab).GetComponent<RootBranch>();
-		branch.targetPlayer = targetPlayer;
-		branch.rootTime = rootTime;
-		yield return new WaitForSecondsRealtime(rootTime);
-		targetPlayer.GetComponent<PlayerController>().isRoot = false;
-
-	}
+        StartCoroutine(targetPlayer.GetComponent<PlayerController>().RootCoroutine(GetComponent<EnemyMovement>(), castingTime, targetPlayer, damage, transform.position, rootTime, rootBranchPrefab));        
+	}*/
 	
 	private void OnDrawGizmos()
 	{
