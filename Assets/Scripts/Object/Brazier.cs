@@ -9,6 +9,17 @@ public class Brazier : MonoBehaviour, IActivable
 
     public bool onFire;
 
+    public enum BrazierType
+    {
+        Classic,
+        ArenaBrazier
+    }
+
+    public BrazierType type;
+
+    [DrawIf(new string[] { "type" }, BrazierType.ArenaBrazier)]
+    public float reActivationTime;
+
     [Tooltip("indicates if the brazier can be activated by the fire orb")]
     public bool activatedByOrb;
 
@@ -42,6 +53,11 @@ public class Brazier : MonoBehaviour, IActivable
             {
                 powerController.ActivatePower(GameManager.PowerType.Fire, "forced");
                 powerController.isActivatedByBrazier = true;
+                if (type == BrazierType.ArenaBrazier)
+                {
+                    Deactivate();
+                    //start coroutine to set up the fire after x seconds
+                }
             }
         }
     }
