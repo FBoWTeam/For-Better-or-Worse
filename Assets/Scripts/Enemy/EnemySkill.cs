@@ -31,9 +31,11 @@ public class EnemySkill : MonoBehaviour
 
 	#region ImpactFields
 	[DrawIf(new string[] { "skill" }, Skill.Impact)]
-	public float impactCooldown = 3f;
+	public float impactCooldown;
 	[DrawIf(new string[] { "skill" }, Skill.Impact)]
-	public float impactSpeed = 1.5f;
+	public GameObject hitter;
+	[DrawIf(new string[] { "skill" }, Skill.Impact)]
+	public GameObject SwordEffect;
 	//private float timeAnimation = 1f;
 	//[DrawIf(new string[] { "stopAfterHit" }, true)]
 	//public float timeImoAfterHit;
@@ -124,59 +126,46 @@ public class EnemySkill : MonoBehaviour
 	public void DoSkill(GameObject target)
 	{
 		//SET target = target
-		switch (skill)
+		if (Time.time > nextAttack)
 		{
-			case Skill.Impact:
-				if (Time.time > nextAttack)
-				{
-					StartCoroutine("Impact", target.transform);
-					GetComponent<Animator>().SetTrigger("Attack");
+			switch (skill)
+			{
+				case Skill.Impact:
+					StartCoroutine(Impact());
 					nextAttack = Time.time + impactCooldown;
-				}
-				break;
-			case Skill.AOE:
-				//DOT while in range
-				if (Time.time > nextAttack)
-				{
+					break;
+				case Skill.AOE:
+					//DOT while in range
 					GameManager.gameManager.TakeDamage(target, damage, transform.position, true);
 					GameManager.gameManager.UIManager.QuoteOnDamage("enemy", target);
-					GetComponent<Animator>().SetTrigger("Attack");
 					nextAttack = Time.time + aoeCooldown;
-				}
-				break;
-			case Skill.Ranged:
-				if (Time.time > nextAttack && isVisible(transform.position, target.transform.position))
-				{
-                    print("TARGET :" + target.transform.position);
-                    Shoot(bulletPrefab, transform, target.transform, damage);
-					GetComponent<Animator>().SetTrigger("Attack");
-					nextAttack = Time.time + fireRate;
-				}
-				break;
-			case Skill.RangedAOE:
-
-                if (drawPath) {
-                    DrawThrowPath(ComputeThrowVelocity(target.transform.position));
-                }
-				if (Time.time > nextAttack)
-				{				
-					Throw(aoeProjectilePrefab, transform, target.transform, damage,puddle);
-					GetComponent<Animator>().SetTrigger("Attack");
+					break;
+				case Skill.Ranged:
+					if (isVisible(transform.position, target.transform.position))
+					{
+						print("TARGET :" + target.transform.position);
+						Shoot(bulletPrefab, transform, target.transform, damage);
+						nextAttack = Time.time + fireRate;
+					}
+					break;
+				case Skill.RangedAOE:
+					if (drawPath)
+					{
+						DrawThrowPath(ComputeThrowVelocity(target.transform.position));
+					}
+					Throw(aoeProjectilePrefab, transform, target.transform, damage, puddle);
 					nextAttack = Time.time + throwRate;
-				}
-				break;
-			case Skill.Root:
-				if (Time.time > nextAttack)
-				{
-                    target.GetComponent<PlayerController>().StartRoot(GetComponent<EnemyMovement>(), castingTime, target, damage, transform.position, rootTime, rootBranchPrefab);
-					GetComponent<Animator>().SetTrigger("Attack");
+					break;
+				case Skill.Root:
+					target.GetComponent<PlayerController>().StartRoot(GetComponent<EnemyMovement>(), castingTime, target, damage, transform.position, rootTime, rootBranchPrefab);
 					nextAttack = Time.time + rootCooldown;
-				}
-				break;
-			case Skill.None:
-				break;
-			default:
-				break;
+					break;
+				case Skill.None:
+					break;
+				default:
+					break;
+			}
+			GetComponent<Animator>().SetTrigger("Attack");
 		}
 	}
 
@@ -230,26 +219,15 @@ public class EnemySkill : MonoBehaviour
         }
     }
 
-
-    IEnumerator Impact(Transform target)
+    IEnumerator Impact()
 	{
-
-		Vector3 originalPosition = transform.position;
-		Vector3 targetPos = new Vector3(target.position.x, target.position.y, target.position.z);// PIVOT DE ....
-		Vector3 dirToTarget = (targetPos - transform.position).normalized;
-		Vector3 attackPosition = targetPos + dirToTarget;
-		//Debug.Log(attackPosition);
-		float percent = 0;
-
-		while (percent <= 1)
-		{
-
-			percent += Time.deltaTime * impactSpeed;
-			float interpolation = (-Mathf.Pow(percent, 2) + percent) * 4;
-			//Debug.Log(interpolation);
-			transform.position = Vector3.Lerp(originalPosition, attackPosition, interpolation);
-			yield return null;
-		}
+		GetComponent<EnemyMovement>().agent.isStopped = true;
+		hitter.SetActive(true);
+		SwordEffect.SetActive(true);
+		yield return new WaitForSeconds(GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).length);
+		hitter.SetActive(false);
+		SwordEffect.SetActive(false);
+		GetComponent<EnemyMovement>().agent.isStopped = false;
 	}
 
 	/// <summary>
