@@ -43,7 +43,7 @@ public class ArenaSystem : MonoBehaviour
     //timer used to spawn enemies which requires a delay between 2 instanciations of enemies
     private float timer;
 
-    
+    public GameObject sceneLoader;
 
     private List<GameObject> remainingEnemiesList;
 
@@ -54,7 +54,7 @@ public class ArenaSystem : MonoBehaviour
         timer = 0f;
         remainingEnemiesList = new List<GameObject>();
         StartCoroutine(WaveSystem());
-        increaseChanceValue = 100f / ((waveList.Count - threshold) + 1);
+        increaseChanceValue = 100f / ((waveList.Count - threshold));
     }
 
 
@@ -86,7 +86,6 @@ public class ArenaSystem : MonoBehaviour
                         yield return new WaitForEndOfFrame();
                     }
                     timer = 0;
-                    Debug.Log("Next SUBWAVE !");
                     subWaveIndex++;
                 }
 
@@ -94,7 +93,6 @@ public class ArenaSystem : MonoBehaviour
 
                 if (waveCleared())
                 {
-                    Debug.Log("Next WAVE !");
                     waveIndex++;
                     subWaveIndex = 0;
                     bonusChance = 0;
@@ -109,24 +107,34 @@ public class ArenaSystem : MonoBehaviour
 
         //go to next arena
         Debug.Log("Go to da next awina");
+        sceneLoader.SetActive(true);
     }
 
-    IEnumerator SpawnBoss()
+    void SpawnBoss()
     {
-        if (!bonusWaveAlreadySpawned && subWaveIndex >= threshold && (Random.Range(0f, 100f) - bonusChance) < increaseChanceValue)
+        if (!bonusWaveAlreadySpawned && subWaveIndex >= threshold && (Random.Range(0f, 100f) - bonusChance) <= increaseChanceValue)
         {
-            GameObject boss = Instantiate(bonusWave, spawnList[0].position, Quaternion.identity).gameObject;
-            while (boss != null)
+            while (timer < timeBetweenSubWave)
             {
-                yield return new WaitForEndOfFrame();
+                timer += Time.deltaTime;
+            }
+            timer = 0;
+
+            GameObject boss = Instantiate(bonusWave, spawnList[0].position, Quaternion.identity).gameObject;
+            foreach (Enemy enemy in boss.GetComponentsInChildren<Enemy>())
+            {
+                remainingEnemiesList.Add(enemy.gameObject);
             }
             bonusWaveAlreadySpawned = true;
         }
-        else
+        else if (!bonusWaveAlreadySpawned)
         {
             bonusChance += increaseChanceValue;
         }
     }
+
+
+
 
     //check if the wave given in parameter is cleared by checking if the list in empty
     private bool waveCleared()
