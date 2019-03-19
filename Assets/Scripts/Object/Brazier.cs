@@ -43,24 +43,38 @@ public class Brazier : MonoBehaviour, IActivable
         if (other.CompareTag("Orb"))
         {
             PowerController powerController = other.GetComponent<PowerController>();
-            //if the brazier is not active and the orb is on fire, set the brazier on and activates the object if not null
-            if (!isActive && powerController.elementalPower == GameManager.PowerType.Fire && activatedByOrb)
+            if (type == BrazierType.Classic)
             {
-                this.Activate();
+                //if the brazier is not active and the orb is on fire, set the brazier on and activates the object if not null
+                if (!isActive && powerController.elementalPower == GameManager.PowerType.Fire && activatedByOrb)
+                {
+                    this.Activate();
+                }
+                //if the brazier is active and the orb isn't, set the orb on fire
+                else if (isActive && powerController.elementalPower != GameManager.PowerType.Fire && activatedByOrb)
+                {
+                    powerController.ActivatePower(GameManager.PowerType.Fire, "forced");
+                    powerController.isActivatedByBrazier = true;
+                }
             }
-            //if the brazier is active and the orb isn't, set the orb on fire
-            else if (isActive && powerController.elementalPower != GameManager.PowerType.Fire && activatedByOrb)
+
+            if (type == BrazierType.ArenaBrazier)
             {
                 powerController.ActivatePower(GameManager.PowerType.Fire, "forced");
                 powerController.isActivatedByBrazier = true;
-                if (type == BrazierType.ArenaBrazier)
-                {
-                    Deactivate();
-                    //start coroutine to set up the fire after x seconds
-                }
+                Deactivate();
+                //play the animation down
             }
         }
     }
+
+    IEnumerator ReActivateArenaBrazier()
+    {
+        yield return new WaitForSeconds(reActivationTime);
+        this.Activate();
+        //play the animation up
+    }
+
 
     public void Activate()
     {
