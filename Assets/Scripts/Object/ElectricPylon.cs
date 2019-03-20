@@ -2,29 +2,23 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Brazier : MonoBehaviour, IActivable
+public class ElectricPylon : MonoBehaviour, IActivable
 {
-    //boolean indicating if the brazier is activated or not
     public bool isActive { get; set; }
 
-    public bool onFire;
+    public bool electrified;
 
-    public enum BrazierType
+    public enum ElectricPylonType
     {
         Classic,
-        ArenaBrazier
+        ArenaElectricPylon
     }
 
-    public BrazierType type;
+    public ElectricPylonType type;
 
-    [DrawIf(new string[] { "type" }, BrazierType.ArenaBrazier)]
+    [DrawIf(new string[] { "type" }, ElectricPylonType.ArenaElectricPylon)]
     public float reActivationTime;
 
-    [Tooltip("indicates if the brazier can be activated by the fire orb")]
-    [DrawIf(new string[] { "type" }, BrazierType.Classic)]
-    public bool activatedByOrb;
-
-    //the brazier activates an other object
     [Tooltip("list of objects to activate to activate the brazier")]
     public List<GameObject> objectToActivate;
 
@@ -32,13 +26,15 @@ public class Brazier : MonoBehaviour, IActivable
     public List<GameObject> objectsConditions;
 
     private Animator anim;
+    
 
-    private void Start()
+    // Start is called before the first frame update
+    void Start()
     {
-        anim = GetComponentInParent<Animator>();
-        if (onFire)
+        //anim = GetComponentInParent<Animator>();
+        if (electrified)
         {
-            anim.SetBool("isActive", true);
+            //anim.SetBool("isActive", true);
             this.Activate();
         }
     }
@@ -49,32 +45,32 @@ public class Brazier : MonoBehaviour, IActivable
         {
             PowerController powerController = other.GetComponent<PowerController>();
 
-            if (type == BrazierType.Classic)
+            if (type == ElectricPylonType.Classic)
             {
                 //if the brazier is not active and the orb is on fire, set the brazier on and activates the object if not null
-                if (!isActive && powerController.elementalPower == GameManager.PowerType.Fire && activatedByOrb)
+                if (!isActive && powerController.elementalPower == GameManager.PowerType.Electric)
                 {
                     this.Activate();
                 }
                 //if the brazier is active and the orb isn't, set the orb on fire
-                else if (isActive && powerController.elementalPower != GameManager.PowerType.Fire && activatedByOrb)
+                else if (isActive && powerController.elementalPower != GameManager.PowerType.Electric)
                 {
-                    powerController.ActivatePower(GameManager.PowerType.Fire, "forced");
-                    powerController.isActivatedByBrazier = true;
+                    powerController.ActivatePower(GameManager.PowerType.Electric, "forced");
+                    //powerController.isActivatedByElectricPylon = true;
                 }
             }
 
-            if (type == BrazierType.ArenaBrazier)
+            if (type == ElectricPylonType.ArenaElectricPylon)
             {
-                powerController.ActivatePower(GameManager.PowerType.Fire, "forced");
-                powerController.isActivatedByBrazier = true;
+                powerController.ActivatePower(GameManager.PowerType.Electric, "forced");
+                //powerController.isActivatedByElectricPylon = true;
                 Deactivate();
-                StartCoroutine(ReActivateArenaBrazier());
+                StartCoroutine(ReActivateArenaElectricPylon());
             }
         }
     }
 
-    IEnumerator ReActivateArenaBrazier()
+    IEnumerator ReActivateArenaElectricPylon()
     {
         yield return new WaitForSeconds(reActivationTime);
         this.Activate();
@@ -85,13 +81,13 @@ public class Brazier : MonoBehaviour, IActivable
     {
         if (CheckValidObjects())
         {
-            gameObject.GetComponent<Renderer>().material.color = Color.red;
+            gameObject.GetComponent<Renderer>().material.color = Color.yellow;
             isActive = true;
-            if (type == BrazierType.ArenaBrazier)
+            if (type == ElectricPylonType.ArenaElectricPylon)
             {
-                anim.SetBool("isActive", true);
+                //anim.SetBool("isActive", true);
             }
-            onFire = true;
+            electrified = true;
             if (objectToActivate.Count != 0)
             {
                 for (int i = 0; i < objectToActivate.Count; i++)
@@ -104,19 +100,15 @@ public class Brazier : MonoBehaviour, IActivable
 
     public void Deactivate()
     {
-        if (type == BrazierType.ArenaBrazier)
+        if (type == ElectricPylonType.ArenaElectricPylon)
         {
-            anim.SetBool("isActive", false);
+            //anim.SetBool("isActive", false);
         }
         gameObject.GetComponent<Renderer>().material.color = Color.grey;
         isActive = false;
-        onFire = false;
+        electrified = false;
     }
 
-    /// <summary>
-    /// check if all the necesary objects are activated to activate the brazier
-    /// </summary>
-    /// <returns></returns>
     bool CheckValidObjects()
     {
         for (int i = 0; i < objectsConditions.Count; i++)
@@ -128,5 +120,4 @@ public class Brazier : MonoBehaviour, IActivable
         }
         return true;
     }
-
 }
