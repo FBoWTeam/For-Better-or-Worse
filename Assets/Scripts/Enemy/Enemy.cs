@@ -15,11 +15,11 @@ public class Enemy : MonoBehaviour
     #region Debug Variables
     public bool debug;
     [DrawIf(new string[] { "debug" }, true)]
-    public bool drawPath = false;
+    public bool drawPath;
     [DrawIf(new string[] { "debug" }, true)]
-    public bool drawView = false;
+    public bool drawView;
     [DrawIf(new string[] { "drawView" }, true)]
-    public float lengthView = 2f;
+    public float lengthView;
 
 
     public static bool sdrawPath;
@@ -55,12 +55,12 @@ public class Enemy : MonoBehaviour
 
     #endregion
 
-    public int baseHP = 100;
+    public int baseHP;
     public int hp;
 
+    public float hitStunTime; //stun time when getting hit by the orb
 
-    public float timeImoIfHit; //temps d'immobilisation quand un ennemi se fait toucher par l'orbe
-    public bool isFrozen;
+    public bool isWeaken;
 
     [HideInInspector]
     public EnemyMovement enemyMovement;
@@ -70,12 +70,19 @@ public class Enemy : MonoBehaviour
     GameObject[] players;
     public static GameObject aimPlayer;
 
-    
+	//to stop when another freeze corout is launch
+	[HideInInspector]
+	public Coroutine actualFreezeCoroutine;
 
-    #endregion
+    [HideInInspector]
+    public Coroutine actualDarknessCoroutine;
 
-    // Start is called before the first frame update
-    void Start()
+    Animator animator;
+
+	#endregion
+
+	// Start is called before the first frame update
+	void Start()
     {
         hp = baseHP;
         players = new GameObject[] { GameManager.gameManager.player1, GameManager.gameManager.player2 };
@@ -83,34 +90,27 @@ public class Enemy : MonoBehaviour
         enemySkill = GetComponent<EnemySkill>();
         sdrawPath = drawPath;
         tauntCanvas = transform.GetChild(1).gameObject;
-
-    }
+		animator = GetComponent<Animator>();
+	}
 
     // Update is called once per frame
     void Update()
     {
-        
         if (!GameManager.gameManager.isPaused)
         {
-            FocusManagement();
 
-            if (enemySkill.isAttacking && enemySkill.stopWhenAttacking && enemyMovement.movement == EnemyMovement.Movement.Basic) 
-            {
-                enemyMovement.agent.isStopped = true;
-            }
-            else { enemyMovement.agent.isStopped = false; }
+            FocusManagement();
 
             if (!enemyMovement.agent.isStopped)
             {
-                enemySkill.DoAttack();
-                
                 enemyMovement.DoMovement();
+				animator.SetFloat("Speed", enemyMovement.agent.velocity.magnitude / enemyMovement.initialSpeed);
             }
 
-            if (isFrozen)
-            {
-                enemyMovement.agent.isStopped = true;
-            }
+			if(enemySkill.InRange(aimPlayer))
+			{
+				enemySkill.DoSkill(aimPlayer);
+			}
 
             if (drawView)
             {
@@ -198,10 +198,16 @@ public class Enemy : MonoBehaviour
     #endregion
 
     public void TakeDamage(int damage)
-    { 
-        hp -= damage;
+    {
+        if(isWeaken)
+        {
+            hp -= damage + GameManager.gameManager.orb.GetComponent<PowerController>().darknessDamage;
+        }
+        else
+        {
+            hp -= damage;
+        }
         GameManager.gameManager.orb.GetComponent<OrbController>().hasHitEnemy = true;
-        //StartCoroutine("Stun");
 		if (hp <= 0)
 		{
 			GetComponent<LootTable>().LootEnemy();
@@ -211,22 +217,36 @@ public class Enemy : MonoBehaviour
 		}
     }
 
-
-    IEnumerator Stun()
+    IEnumerator HitStun()
     {
         enemyMovement.agent.isStopped = true;
-
-        yield return new WaitForSecondsRealtime(timeImoIfHit);
+        yield return new WaitForSecondsRealtime(hitStunTime);
         enemyMovement.agent.isStopped = false;
     }
 
     public IEnumerator FreezeCoroutine(float freezeTimer)
     {
-        isFrozen = true;
-        yield return new WaitForSeconds(freezeTimer);
+		if(actualFreezeCoroutine != null)
+		{
+			StopCoroutine(actualFreezeCoroutine);
+		}
+		enemyMovement.agent.isStopped = true;
+		yield return new WaitForSeconds(freezeTimer);
         enemyMovement.agent.isStopped = false;
-        isFrozen = false;
     }
 
 
+    public IEnumerator DarknessCoroutine(float darknessTimer)
+    {
+        if (actualFreezeCoroutine != null)
+        {
+            StopCoroutine(actualDarknessCoroutine);
+        }
+
+        yield return new WaitForEndOfFrame();
+
+        isWeaken = true;
+        yield return new WaitForSecondsRealtime(darknessTimer);
+        isWeaken = false;
+    }
 }

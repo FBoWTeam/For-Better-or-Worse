@@ -7,9 +7,20 @@ public class PressurePlate : MonoBehaviour, IActivable
     //boolean indicating if the pressure plate is pressed or not
     public bool isActive { get; set; }
 
+    public enum PressurePlateType
+    {
+        Classic,
+        PowerGiver
+    }
+
+    public PressurePlateType type;
+
     //the pressure plate activates an other object
     [Tooltip("the object to activate id the current lever is active")]
     public GameObject objectToActivate;
+
+    [DrawIf(new string[] { "type" }, PressurePlateType.PowerGiver)]
+    public GameManager.PowerType powerToGive;
 
     private Animator anim;
 
@@ -27,6 +38,7 @@ public class PressurePlate : MonoBehaviour, IActivable
     {
         if (other.CompareTag("Player") && !isActive)
         {
+            GivePower(other.gameObject);
             this.Activate();
         }
     }
@@ -39,11 +51,20 @@ public class PressurePlate : MonoBehaviour, IActivable
         }
     }
 
+    private void GivePower(GameObject other)
+    {
+        other.gameObject.GetComponent<PlayerController>().AttributePower(powerToGive);
+    }
+
     public void Activate()
     {
         isActive = !isActive;
         //activates the other object
-        objectToActivate.GetComponent<IActivable>().Activate();
+        if (objectToActivate != null)
+        {
+            objectToActivate.GetComponent<IActivable>().Activate();
+        }
+        
         if (isActive)
         {
             anim.SetBool("isActivated", true);
