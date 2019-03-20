@@ -23,7 +23,7 @@ public class PressurePlate : MonoBehaviour, IActivable
     public GameManager.PowerType powerToGive;
 
     private Animator anim;
-
+    private bool powerGiven;
 
     private void Start()
     {
@@ -53,7 +53,11 @@ public class PressurePlate : MonoBehaviour, IActivable
 
     private void GivePower(GameObject other)
     {
-        other.gameObject.GetComponent<PlayerController>().AttributePower(powerToGive);
+        if (!powerGiven)
+        {
+            other.gameObject.GetComponent<PlayerController>().AttributePower(powerToGive);
+            powerGiven = true;
+        }
     }
 
     public void Activate()
