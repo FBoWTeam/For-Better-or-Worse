@@ -3387,7 +3387,7 @@ PrefabInstance:
     - target: {fileID: 1963540010838136426, guid: 6c9d85762baf8aa408ebfbe35bfcea49,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1963540010838136424, guid: 6c9d85762baf8aa408ebfbe35bfcea49,
         type: 3}
@@ -3903,19 +3903,37 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   waveList:
-  - spawnNumber: 0
-    subWaveList:
-    - {fileID: 9193597293470881315, guid: 1012b571cc258f44eb57d3003b1df89b, type: 3}
-    - {fileID: 9193597293470881315, guid: 1012b571cc258f44eb57d3003b1df89b, type: 3}
-  - spawnNumber: 1
-    subWaveList:
-    - {fileID: 9193597293470881315, guid: 1012b571cc258f44eb57d3003b1df89b, type: 3}
-    - {fileID: 9193597293470881315, guid: 1012b571cc258f44eb57d3003b1df89b, type: 3}
+  - subWaveList:
+    - spawnNumber: 0
+      timeBeforeNextWave: 10
+      subWavePrefab: {fileID: 9193597293470881315, guid: 1012b571cc258f44eb57d3003b1df89b,
+        type: 3}
+    - spawnNumber: 1
+      timeBeforeNextWave: 0
+      subWavePrefab: {fileID: 9193597293470881315, guid: 1012b571cc258f44eb57d3003b1df89b,
+        type: 3}
+    - spawnNumber: 0
+      timeBeforeNextWave: 30
+      subWavePrefab: {fileID: 9193597293470881315, guid: 1012b571cc258f44eb57d3003b1df89b,
+        type: 3}
+  - subWaveList:
+    - spawnNumber: 0
+      timeBeforeNextWave: 0
+      subWavePrefab: {fileID: 9193597293470881315, guid: 1012b571cc258f44eb57d3003b1df89b,
+        type: 3}
+    - spawnNumber: 1
+      timeBeforeNextWave: 30
+      subWavePrefab: {fileID: 9193597293470881315, guid: 1012b571cc258f44eb57d3003b1df89b,
+        type: 3}
+    - spawnNumber: 0
+      timeBeforeNextWave: 10
+      subWavePrefab: {fileID: 6970929828074265096, guid: 77c5544cf9804e048b133fc57470a41c,
+        type: 3}
   bonusWave: {fileID: 6970929828074265096, guid: 77c5544cf9804e048b133fc57470a41c,
     type: 3}
+  spawnNumer: 1
   threshold: 1
   arenaCleared: 0
-  timeBetweenSubWave: 10
   spawnList:
   - {fileID: 1478451249}
   - {fileID: 1246213952}
