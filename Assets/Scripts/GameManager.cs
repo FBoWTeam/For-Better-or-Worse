@@ -144,7 +144,7 @@ public class GameManager : MonoBehaviour
             if (applyKnockback)
             {
                 hitPosition = new Vector3(hitPosition.x, 0.0f, hitPosition.z);
-                targetPlayer.GetComponent<Rigidbody>().AddForce((targetPlayer.transform.position - hitPosition) * knockBackForce);
+                targetPlayer.GetComponent<Rigidbody>().AddForce((targetPlayer.transform.position - hitPosition).normalized * knockBackForce);
             }
             
             StartCoroutine(targetPlayer.GetComponent<PlayerController>().InvincibilityCoroutine());
