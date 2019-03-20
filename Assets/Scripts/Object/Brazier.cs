@@ -73,6 +73,10 @@ public class Brazier : MonoBehaviour, IActivable
                     Deactivate();
                     StartCoroutine(ReActivateArenaBrazier());
                 }
+                if (!isActive && powerController.elementalPower == GameManager.PowerType.Fire)
+                {
+                    this.Activate();
+                }
             }
         }
     }
