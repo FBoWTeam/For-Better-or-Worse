@@ -335,7 +335,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 354827495141626826}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fdc032083e4d8d649840d27397245384, type: 3}
   m_Name: 
@@ -388,7 +388,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skill: 0
   impactCooldown: 3
-  impactSpeed: 1
+  hitter: {fileID: 0}
+  SwordEffect: {fileID: 0}
   aoeCooldown: 2
   fireRate: 1
   bulletSpeed: 70
@@ -952,7 +953,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 788062451989511206}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 2.5, y: 0, z: 0}
+  m_LocalPosition: {x: 3, y: 0, z: 0}
   m_LocalScale: {x: 1.17, y: 1.17, z: 1.17}
   m_Children:
   - {fileID: 8763065068290979272}
@@ -1041,7 +1042,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 788062451989511206}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fdc032083e4d8d649840d27397245384, type: 3}
   m_Name: 
@@ -1094,7 +1095,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skill: 0
   impactCooldown: 3
-  impactSpeed: 1
+  hitter: {fileID: 0}
+  SwordEffect: {fileID: 0}
   aoeCooldown: 2
   fireRate: 1
   bulletSpeed: 70
@@ -5469,7 +5471,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5136062904949568339}
   m_Layer: 0
-  m_Name: Wave1.3
+  m_Name: WaveP1.3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -10537,7 +10539,12 @@ PrefabInstance:
     - target: {fileID: 4205728391272827219, guid: 45e9dc3e264d72b43a000770c6a8f38f,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -2.5
+      value: -3
+      objectReference: {fileID: 0}
+    - target: {fileID: 4205728391272827218, guid: 45e9dc3e264d72b43a000770c6a8f38f,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2965500077302480868, guid: 45e9dc3e264d72b43a000770c6a8f38f,
         type: 3}
