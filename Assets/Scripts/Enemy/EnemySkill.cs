@@ -223,6 +223,8 @@ public class EnemySkill : MonoBehaviour
 	{
 		GetComponent<EnemyMovement>().agent.isStopped = true;
 		hitter.SetActive(true);
+		hitter.GetComponent<BoxCollider>().size = new Vector3(range, 0.1f, 0.1f);
+		hitter.GetComponent<BoxCollider>().center = new Vector3((-range)/2.0f, 0.0f, 0.0f);
 		SwordEffect.SetActive(true);
 		yield return new WaitForSeconds(GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).length);
 		hitter.SetActive(false);
