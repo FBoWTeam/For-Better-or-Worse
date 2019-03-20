@@ -21,6 +21,7 @@ public class Brazier : MonoBehaviour, IActivable
     public float reActivationTime;
 
     [Tooltip("indicates if the brazier can be activated by the fire orb")]
+    [DrawIf(new string[] { "type" }, BrazierType.Classic)]
     public bool activatedByOrb;
 
     //the brazier activates an other object
@@ -30,10 +31,14 @@ public class Brazier : MonoBehaviour, IActivable
     [Tooltip("list of activated objects needed to activate the brazier")]
     public List<GameObject> objectsConditions;
 
+    private Animator anim;
+
     private void Start()
     {
+        anim = GetComponentInParent<Animator>();
         if (onFire)
         {
+            anim.SetBool("isActive", true);
             this.Activate();
         }
     }
@@ -43,6 +48,7 @@ public class Brazier : MonoBehaviour, IActivable
         if (other.CompareTag("Orb"))
         {
             PowerController powerController = other.GetComponent<PowerController>();
+
             if (type == BrazierType.Classic)
             {
                 //if the brazier is not active and the orb is on fire, set the brazier on and activates the object if not null
@@ -63,7 +69,7 @@ public class Brazier : MonoBehaviour, IActivable
                 powerController.ActivatePower(GameManager.PowerType.Fire, "forced");
                 powerController.isActivatedByBrazier = true;
                 Deactivate();
-                //play the animation down
+                StartCoroutine(ReActivateArenaBrazier());
             }
         }
     }
@@ -72,7 +78,6 @@ public class Brazier : MonoBehaviour, IActivable
     {
         yield return new WaitForSeconds(reActivationTime);
         this.Activate();
-        //play the animation up
     }
 
 
@@ -82,6 +87,10 @@ public class Brazier : MonoBehaviour, IActivable
         {
             gameObject.GetComponent<Renderer>().material.color = Color.red;
             isActive = true;
+            if (type == BrazierType.ArenaBrazier)
+            {
+                anim.SetBool("isActive", true);
+            }
             onFire = true;
             if (objectToActivate.Count != 0)
             {
@@ -95,6 +104,10 @@ public class Brazier : MonoBehaviour, IActivable
 
     public void Deactivate()
     {
+        if (type == BrazierType.ArenaBrazier)
+        {
+            anim.SetBool("isActive", false);
+        }
         gameObject.GetComponent<Renderer>().material.color = Color.grey;
         isActive = false;
         onFire = false;
