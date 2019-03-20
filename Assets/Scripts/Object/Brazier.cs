@@ -66,7 +66,7 @@ public class Brazier : MonoBehaviour, IActivable
 
             if (type == BrazierType.ArenaBrazier)
             {
-                if (!isActive && powerController.elementalPower == GameManager.PowerType.Fire && activatedByOrb)
+                if (!isActive && powerController.elementalPower == GameManager.PowerType.Fire)
                 {
                     powerController.ActivatePower(GameManager.PowerType.Fire, "forced");
                     powerController.isActivatedByBrazier = true;
