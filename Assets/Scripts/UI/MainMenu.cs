@@ -7,10 +7,16 @@ using UnityEngine.UI;
 public class MainMenu : MonoBehaviour
 { 
     Text percentageText;
+    Text resText;
+    int indexResText;
+    //int nbRes = 4;
+
+    Text[] listResText = new Text[4];
 
     private void Start()
     {
         percentageText = GetComponent<Text>();
+        listResText = { "640x480", "720x480", "1366x768", "1920x1080"};
     }
 
     public void PlayGame ()
@@ -30,6 +36,11 @@ public class MainMenu : MonoBehaviour
         percentageText.text = Mathf.RoundToInt(100 * value) + "%";
     }
 
+
+    public void NextRes()
+    {
+        resText = 
+    }
 
 
 }
