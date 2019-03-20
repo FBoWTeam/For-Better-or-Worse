@@ -4969,9 +4969,11 @@ MonoBehaviour:
   taunter: 0
   isTaunted: 0
   tauntDuration: 10
-  baseHP: 100
-  hp: 100
+  baseHP: 20
+  hp: 20
   hitStunTime: 0
+  isWeaken: 0
+  isFrozen: 0
   enemyMovement: {fileID: 0}
   enemySkill: {fileID: 0}
 --- !u!114 &9164865582948619922
@@ -4986,8 +4988,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 69c82c46ed261b54380cc90c3c91eff2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  movement: 0
-  initialSpeed: 2
+  movement: 1
+  initialSpeed: 4
   stopTime: 2
   agent: {fileID: 0}
   isSlowed: 0
@@ -5012,11 +5014,13 @@ MonoBehaviour:
   bulletSpeed: 70
   bulletPrefab: {fileID: 1327039134590348602, guid: a16ccfb362e58ec4588b618092d0c27c,
     type: 3}
+  drawPath: 0
   aoeProjectilePrefab: {fileID: 0}
   projectileAoeRadius: 5
   projectileAoeDuration: 5
   throwRate: 1
   maxHeight: 10
+  puddle: {fileID: 0}
   rootCooldown: 10
   castingTime: 2
   rootTime: 2
@@ -5037,7 +5041,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aca25467439971a41ab83f480ca208db, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bonus: 2
+  bonus: 0
   mirrorPrefab: {fileID: 1063182528218081510, guid: 50144c16dc4d225468cf8adca1eb1871,
     type: 3}
   deactivationDuration: 0.3
