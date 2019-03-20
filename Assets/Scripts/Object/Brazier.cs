@@ -36,9 +36,9 @@ public class Brazier : MonoBehaviour, IActivable
     private void Start()
     {
         anim = GetComponentInParent<Animator>();
+        anim.SetBool("isUp", true);
         if (onFire)
         {
-            anim.SetBool("isActive", true);
             this.Activate();
         }
     }
@@ -85,11 +85,11 @@ public class Brazier : MonoBehaviour, IActivable
     {
         if (CheckValidObjects())
         {
-            gameObject.GetComponent<Renderer>().material.color = Color.red;
+            ActivateFireParticles();
             isActive = true;
             if (type == BrazierType.ArenaBrazier)
             {
-                anim.SetBool("isActive", true);
+                anim.SetBool("isUp", true);
             }
             onFire = true;
             if (objectToActivate.Count != 0)
@@ -106,9 +106,9 @@ public class Brazier : MonoBehaviour, IActivable
     {
         if (type == BrazierType.ArenaBrazier)
         {
-            anim.SetBool("isActive", false);
+            anim.SetBool("isUp", false);
         }
-        gameObject.GetComponent<Renderer>().material.color = Color.grey;
+        DeactivateFireParticles();
         isActive = false;
         onFire = false;
     }
@@ -127,6 +127,23 @@ public class Brazier : MonoBehaviour, IActivable
             }
         }
         return true;
+    }
+
+    //function used to activate the fire particles
+    void ActivateFireParticles()
+    {
+        for (int i = 0; i < transform.childCount; i++)
+        {
+            transform.GetChild(i).gameObject.SetActive(true);
+        }
+    }
+
+    void DeactivateFireParticles()
+    {
+        for (int i = 0; i < transform.childCount; i++)
+        {
+            transform.GetChild(i).gameObject.SetActive(false);
+        }
     }
 
 }
