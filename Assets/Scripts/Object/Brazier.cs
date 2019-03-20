@@ -21,6 +21,7 @@ public class Brazier : MonoBehaviour, IActivable
     public float reActivationTime;
 
     [Tooltip("indicates if the brazier can be activated by the fire orb")]
+    [DrawIf(new string[] { "type" }, BrazierType.Classic)]
     public bool activatedByOrb;
 
     //the brazier activates an other object
@@ -30,8 +31,12 @@ public class Brazier : MonoBehaviour, IActivable
     [Tooltip("list of activated objects needed to activate the brazier")]
     public List<GameObject> objectsConditions;
 
+    private Animator anim;
+
     private void Start()
     {
+        anim = GetComponentInParent<Animator>();
+        anim.SetBool("isUp", true);
         if (onFire)
         {
             this.Activate();
@@ -43,6 +48,7 @@ public class Brazier : MonoBehaviour, IActivable
         if (other.CompareTag("Orb"))
         {
             PowerController powerController = other.GetComponent<PowerController>();
+
             if (type == BrazierType.Classic)
             {
                 //if the brazier is not active and the orb is on fire, set the brazier on and activates the object if not null
@@ -63,7 +69,7 @@ public class Brazier : MonoBehaviour, IActivable
                 powerController.ActivatePower(GameManager.PowerType.Fire, "forced");
                 powerController.isActivatedByBrazier = true;
                 Deactivate();
-                //play the animation down
+                StartCoroutine(ReActivateArenaBrazier());
             }
         }
     }
@@ -72,7 +78,6 @@ public class Brazier : MonoBehaviour, IActivable
     {
         yield return new WaitForSeconds(reActivationTime);
         this.Activate();
-        //play the animation up
     }
 
 
@@ -80,8 +85,12 @@ public class Brazier : MonoBehaviour, IActivable
     {
         if (CheckValidObjects())
         {
-            gameObject.GetComponent<Renderer>().material.color = Color.red;
+            ActivateFireParticles();
             isActive = true;
+            if (type == BrazierType.ArenaBrazier)
+            {
+                anim.SetBool("isUp", true);
+            }
             onFire = true;
             if (objectToActivate.Count != 0)
             {
@@ -95,7 +104,11 @@ public class Brazier : MonoBehaviour, IActivable
 
     public void Deactivate()
     {
-        gameObject.GetComponent<Renderer>().material.color = Color.grey;
+        if (type == BrazierType.ArenaBrazier)
+        {
+            anim.SetBool("isUp", false);
+        }
+        DeactivateFireParticles();
         isActive = false;
         onFire = false;
     }
@@ -114,6 +127,23 @@ public class Brazier : MonoBehaviour, IActivable
             }
         }
         return true;
+    }
+
+    //function used to activate the fire particles
+    void ActivateFireParticles()
+    {
+        for (int i = 0; i < transform.childCount; i++)
+        {
+            transform.GetChild(i).gameObject.SetActive(true);
+        }
+    }
+
+    void DeactivateFireParticles()
+    {
+        for (int i = 0; i < transform.childCount; i++)
+        {
+            transform.GetChild(i).gameObject.SetActive(false);
+        }
     }
 
 }
