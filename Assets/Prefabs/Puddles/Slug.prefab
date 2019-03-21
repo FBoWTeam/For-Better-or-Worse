@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 8465427327951984233}
   - component: {fileID: 2895295157395959456}
   - component: {fileID: 4378458398394856536}
-  - component: {fileID: 5038783304955062027}
   - component: {fileID: 550201580726470068}
   m_Layer: 0
   m_Name: Slug
@@ -30,7 +29,8 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0.05, z: 0}
   m_LocalScale: {x: 1, y: 0.05, z: 1}
-  m_Children: []
+  m_Children:
+  - {fileID: 6588602205954400885}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -79,20 +79,6 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!136 &5038783304955062027
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4985460314402858058}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  m_Radius: 0.5
-  m_Height: 100
-  m_Direction: 1
-  m_Center: {x: 0, y: 15, z: 0}
 --- !u!114 &550201580726470068
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -106,28 +92,74 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   puddleType: 1
-  size: 5
   standardMaterial: {fileID: 2100000, guid: b7c406cb993429e468071efef172b41a, type: 2}
   editingPuddleType: 0
-  slugLifeTime: 5
+  slugLifeTime: 10
   slugSlowAmount: 50
   slugMaterial: {fileID: 2100000, guid: 9092a9d2c0638004b95d09e9eab67239, type: 2}
-  acidDamage: 2
+  acidDamage: 3
   acidMaterial: {fileID: 2100000, guid: 4c0ef73f886ed914d81bce5bf74652b1, type: 2}
-  electrifiedWaterLifeTime: 10
-  frozenWaterLifeTime: 5
   electrified: 0
+  electrifiedWaterLifeTime: 10
+  electricDamage: 0
   frozen: 0
+  frozenWaterLifeTime: 5
+  freezeTime: 0
   waterMaterial: {fileID: 2100000, guid: 7796623e30955b748be2266eba43dde2, type: 2}
   ElectrifiedWaterMaterial: {fileID: 2100000, guid: 2e7420f733012f147acb693bac2c0eef,
     type: 2}
   frozenWaterMaterial: {fileID: 2100000, guid: 607a6d7fb9ffe174d83b3cd0139b05d7, type: 2}
-  mudSlowAmount: 50
+  mudSlowAmount: 40
   mudMaterial: {fileID: 2100000, guid: 944851ffc1a941d4b8d3d9fb904203f1, type: 2}
   onFireFlammableLifeTime: 10
   onFire: 0
-  burnTotalDamage: 10
-  burnTime: 5
+  burnTotalDamage: 8
+  burnTime: 8
   flammableMaterial: {fileID: 2100000, guid: 08c582060b53a164b82c13ad81a3e098, type: 2}
   onFireFlammableMaterial: {fileID: 2100000, guid: e50c46c42775cfa439aaa4d1a890ebf1,
     type: 2}
+--- !u!1 &8835139579228052015
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6588602205954400885}
+  - component: {fileID: 4745362196854123232}
+  m_Layer: 0
+  m_Name: collider
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6588602205954400885
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8835139579228052015}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 15, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 8465427327951984233}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!64 &4745362196854123232
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8835139579228052015}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Convex: 1
+  m_CookingOptions: 14
+  m_Mesh: {fileID: 10206, guid: 0000000000000000e000000000000000, type: 0}

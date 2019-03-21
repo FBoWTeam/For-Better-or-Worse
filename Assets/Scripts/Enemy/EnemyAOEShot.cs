@@ -19,6 +19,7 @@ public class EnemyAOEShot: MonoBehaviour {
         body = GetComponent<Rigidbody>();
         body.useGravity = false;
         collider = GetComponent<SphereCollider>();
+        collider.isTrigger = true;
         Players = new GameObject[2] {GameManager.gameManager.player1,GameManager.gameManager.player2 };
        
     }
@@ -27,8 +28,13 @@ public class EnemyAOEShot: MonoBehaviour {
     public void Launch(Vector3 velocity) {
         body.useGravity = true;
         body.velocity = velocity;
-        collider.isTrigger = false;
+        StartCoroutine(Cheating());
    
+    }
+
+    IEnumerator Cheating() {
+        yield return new WaitForSeconds(1f);
+        collider.isTrigger = false;
     }
 
     public void Init(float radius,float duration,int _damage, GameObject puddleprefab) {

@@ -31,9 +31,11 @@ public class EnemySkill : MonoBehaviour
 
 	#region ImpactFields
 	[DrawIf(new string[] { "skill" }, Skill.Impact)]
-	public float impactCooldown = 3f;
+	public float impactCooldown;
 	[DrawIf(new string[] { "skill" }, Skill.Impact)]
-	public float impactSpeed = 1.5f;
+	public GameObject hitter;
+	[DrawIf(new string[] { "skill" }, Skill.Impact)]
+	public GameObject SwordEffect;
 	//private float timeAnimation = 1f;
 	//[DrawIf(new string[] { "stopAfterHit" }, true)]
 	//public float timeImoAfterHit;
@@ -58,19 +60,21 @@ public class EnemySkill : MonoBehaviour
     #endregion
 
     #region RangedAOE
-    //damage = damage/S
     [DrawIf(new string[] { "skill" }, Skill.RangedAOE)]
     public bool drawPath = false;
-	[DrawIf(new string[] { "skill" }, Skill.RangedAOE)]
+    [DrawIf(new string[] { "skill" }, Skill.RangedAOE)]
+    public bool anticipateTarget = false;
+    [DrawIf(new string[] { "anticipateTarget" },true)]
+    public float anticpationValue = 5f; // (>0 = l'ennemy visera DEVANT || < 0 l'enemy visera DERRIERE) ,  la target avec une anticpation de "anticpationValue" unit 
+    [DrawIf(new string[] { "skill" }, Skill.RangedAOE)]
 	public GameObject aoeProjectilePrefab;
 	[DrawIf(new string[] { "skill" }, Skill.RangedAOE)]
 	public float projectileAoeRadius = 5f;
 	[DrawIf(new string[] { "skill" }, Skill.RangedAOE)]
 	public float projectileAoeDuration = 5f;
-	//like fire rate but the name is already used
-	[DrawIf(new string[] { "skill" }, Skill.RangedAOE)]
+    //like fire rate but the name is already used
+    [DrawIf(new string[] { "skill" }, Skill.RangedAOE)]
 	public float throwRate = 1f;
-    
 	[DrawIf(new string[] { "skill" }, Skill.RangedAOE)]
     public float maxHeight = 10; //[Range(0.1f,100f)]
     [DrawIf(new string[] { "skill" }, Skill.RangedAOE)]
@@ -93,10 +97,12 @@ public class EnemySkill : MonoBehaviour
 	public bool isInRange;
 	public int damage = 5;
 	float nextAttack = 0f;
-	#endregion
+    float gravity = -9.81f;
+    #endregion
 
-	//Dammage player on collision
-	private void OnCollisionEnter(Collision collision)
+
+    //Dammage player on collision
+    private void OnCollisionEnter(Collision collision)
 	{
 		if (collision.gameObject.CompareTag("Player"))
 		{
@@ -123,128 +129,112 @@ public class EnemySkill : MonoBehaviour
 
 	public void DoSkill(GameObject target)
 	{
-		//SET target = target
-		switch (skill)
+        //SET target = target
+        if (Time.time > nextAttack)
 		{
-			case Skill.Impact:
-				if (Time.time > nextAttack)
-				{
-					StartCoroutine("Impact", target.transform);
+			switch (skill)
+			{
+				case Skill.Impact:
+					StartCoroutine(Impact());
 					nextAttack = Time.time + impactCooldown;
-				}
-				break;
-			case Skill.AOE:
-				//DOT while in range
-				if (Time.time > nextAttack)
-				{
+					break;
+				case Skill.AOE:
+					//DOT while in range
 					GameManager.gameManager.TakeDamage(target, damage, transform.position, true);
 					GameManager.gameManager.UIManager.QuoteOnDamage("enemy", target);
 					nextAttack = Time.time + aoeCooldown;
-				}
 				break;
-			case Skill.Ranged:
-				if (Time.time > nextAttack && isVisible(transform.position, target.transform.position))
-				{
-                    print("TARGET :" + target.transform.position);
-                    Shoot(bulletPrefab, transform, target.transform, damage);
-					nextAttack = Time.time + fireRate;
-				}
-				break;
-			case Skill.RangedAOE:
+			    case Skill.Ranged:
+				    if (isVisible(transform.position, target.transform.position))
+				    {
+                        Shoot(bulletPrefab, transform, target.transform, damage);
+					    nextAttack = Time.time + fireRate;
+				    }
+				    break;
+			    case Skill.RangedAOE:
+                    Vector3 pos = new Vector3(transform.position.x, transform.position.y + 1, transform.position.z); // fix pivot
+                    Vector3 newTarget = target.transform.position;
+                    if (anticipateTarget) {
+                        newTarget = newTarget + (target.transform.forward * anticpationValue);
+                    }
+                    if (drawPath) {
+                        DrawThrowPath(ComputeThrowVelocity(newTarget, pos), pos, Color.green);
+                    }
 
-                if (drawPath) {
-                    DrawThrowPath(ComputeThrowVelocity(target.transform.position));
-                }
-				if (Time.time > nextAttack)
-				{				
-					Throw(aoeProjectilePrefab, transform, target.transform, damage,puddle);
-					nextAttack = Time.time + throwRate;
-				}
-				break;
-			case Skill.Root:
-				if (Time.time > nextAttack)
-				{
-                    target.GetComponent<PlayerController>().StartRoot(GetComponent<EnemyMovement>(), castingTime, target, damage, transform.position, rootTime, rootBranchPrefab);
-                    nextAttack = Time.time + rootCooldown;
-				}
-				break;
-			case Skill.None:
-				break;
-			default:
-				break;
+                    Throw(aoeProjectilePrefab, pos, newTarget, damage, puddle);
+                    nextAttack = Time.time + throwRate;
+                    break;
+				case Skill.Root:
+					target.GetComponent<PlayerController>().StartRoot(GetComponent<EnemyMovement>(), castingTime, target, damage, transform.position, rootTime, rootBranchPrefab);
+					nextAttack = Time.time + rootCooldown;
+					break;
+				case Skill.None:
+					break;
+				default:
+					break;
+			}
+			GetComponent<Animator>().SetTrigger("Attack");
 		}
 	}
 
-	void Throw(GameObject aoeProjectile, Transform firePoint, Transform target, int damage, GameObject puddleprefab)
+	void Throw(GameObject aoeProjectile, Vector3 firePoint, Vector3 target, int damage, GameObject puddleprefab)
 	{
-        Vector3 pos = new Vector3(firePoint.position.x, firePoint.position.y + 1, firePoint.position.z); // fix pivot
-		GameObject projectile = Instantiate(aoeProjectile, pos, firePoint.rotation);
+       
+		GameObject projectile = Instantiate(aoeProjectile, firePoint, Quaternion.identity);
 		EnemyAOEShot enemyShot = projectile.GetComponent<EnemyAOEShot>();
 		
 		if (enemyShot != null)
 		{
 			enemyShot.Init(projectileAoeRadius, projectileAoeDuration, damage,puddleprefab);
-            
-			enemyShot.Launch(ComputeThrowVelocity(target.position).Item1);
+            // !! si les LD veulent changer la vitesse passer la variable gravity a public 
+            Physics.gravity = Vector3.up * gravity;
+			enemyShot.Launch(ComputeThrowVelocity(target,firePoint).Item1);
 		}
 	}
-
-	/// <summary>
-	/// Compute at wich velocity a gameobjet should go , in order to hit a target using Kinematic equation
-	/// MaxHeight should always be > dirY
-	/// </summary>
-	/// <param name="target"></param>
-	/// <returns></returns>
-	Tuple<Vector3,float> ComputeThrowVelocity(Vector3 target)
-	{
-        
-		float dirY = target.y - transform.position.y;
-
-        Vector3 dirXZ = new Vector3(target.x - transform.position.x, 0, target.z - transform.position.z);
-		float time = Mathf.Sqrt(-2 * maxHeight / Physics.gravity.y) + Mathf.Sqrt(2 * (dirY - maxHeight) / Physics.gravity.y);
-		Vector3 velocityY = Vector3.up * Mathf.Sqrt(-2 * Physics.gravity.y * maxHeight);
-		Vector3 velocityXZ = dirXZ / time;
-
-        Vector3 velocity = velocityXZ + velocityY * -Mathf.Sign(Physics.gravity.y);       
-		return new Tuple<Vector3, float>( velocity,time);
+    
+    /// <summary>
+    /// Compute at wich velocity a gameobjet should go , in order to hit a target using Kinematic equation
+    /// MaxHeight should always be > dirY
+    /// </summary>
+    /// <param name="target"></param>
+    /// <returns></returns>
+    Tuple<Vector3,float> ComputeThrowVelocity(Vector3 target, Vector3 initialPos)	{
+		float dirY = target.y - initialPos.y;
+        Vector3 dirXZ = new Vector3(target.x - initialPos.x, 0, target.z - initialPos.z);
+		float time = Mathf.Sqrt(-2 * maxHeight / gravity) + Mathf.Sqrt(2 * (dirY - maxHeight) / gravity);
+		Vector3 velocityY = Vector3.up * Mathf.Sqrt(-2 * gravity * maxHeight);
+		Vector3 velocityXZ = dirXZ / time ;
+        Vector3 velocity = velocityXZ + velocityY * -Mathf.Sign(gravity);
+        return new Tuple<Vector3, float>( velocity,time);
 	}
 
     /// <summary>
     /// Draw throw path on scene View
     /// </summary>
     /// <param name="info"></param>
-    void DrawThrowPath(Tuple<Vector3, float> info) {
-        int res = 30;
-        Vector3 prev = transform.position;
+    void DrawThrowPath(Tuple<Vector3, float> info,Vector3 init,Color color) {
+        int res = 60;
+        Vector3 prev = init;
         for (int i = 0; i < res; i++) {
             float s = i / (float)res * info.Item2;
-            Vector3 disp = (info.Item1 * s) + Vector3.up * (Physics.gravity.y * s * s / 2f);
-            Vector3 drawp = transform.position + disp;
-            Debug.DrawLine(prev, drawp, Color.green);
+            Vector3 disp = (info.Item1 * s) + Vector3.up * (gravity * s * s / 2f);
+            Vector3 drawp = init + disp;
+            Debug.DrawLine(prev, drawp, color,throwRate);
             prev = drawp;
         }
     }
 
-
-    IEnumerator Impact(Transform target)
+    IEnumerator Impact()
 	{
-
-		Vector3 originalPosition = transform.position;
-		Vector3 targetPos = new Vector3(target.position.x, target.position.y, target.position.z);// PIVOT DE ....
-		Vector3 dirToTarget = (targetPos - transform.position).normalized;
-		Vector3 attackPosition = targetPos + dirToTarget;
-		//Debug.Log(attackPosition);
-		float percent = 0;
-
-		while (percent <= 1)
-		{
-
-			percent += Time.deltaTime * impactSpeed;
-			float interpolation = (-Mathf.Pow(percent, 2) + percent) * 4;
-			//Debug.Log(interpolation);
-			transform.position = Vector3.Lerp(originalPosition, attackPosition, interpolation);
-			yield return null;
-		}
+		GetComponent<EnemyMovement>().agent.isStopped = true;
+		hitter.SetActive(true);
+		hitter.GetComponent<BoxCollider>().size = new Vector3(range, 0.1f, 0.1f);
+		hitter.GetComponent<BoxCollider>().center = new Vector3((-range)/2.0f, 0.0f, 0.0f);
+		SwordEffect.SetActive(true);
+		yield return new WaitForSeconds(GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).length);
+		hitter.SetActive(false);
+		SwordEffect.SetActive(false);
+		GetComponent<EnemyMovement>().agent.isStopped = false;
 	}
 
 	/// <summary>
