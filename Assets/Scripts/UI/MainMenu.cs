@@ -4,14 +4,15 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using UnityEngine.Audio;
+using TMPro;
+
 
 public class MainMenu : MonoBehaviour
 {
-    Text currentText;
+    TextMeshProUGUI currentTextPro;
 
     #region Resolution variable
     int currentIndexRes;
-    //public string[] listResText = new string[4];
     List<string> resOptions = new List<string>();
     Resolution[] resolutions;
 
@@ -24,7 +25,7 @@ public class MainMenu : MonoBehaviour
 
     private void Start()
     {
-        currentText = GetComponent<Text>();
+        currentTextPro = GetComponent<TextMeshProUGUI>();
 
         resolutions = Screen.resolutions;
 
@@ -41,7 +42,9 @@ public class MainMenu : MonoBehaviour
         }
 
         if(this.name == "ValueRes")
-            currentText.text = resOptions[currentIndexRes];
+        {
+            currentTextPro.SetText(resOptions[currentIndexRes]);
+        }
     }
 
     public void PlayGame ()
@@ -58,7 +61,7 @@ public class MainMenu : MonoBehaviour
 
     public void UpdateTextSlider(float value)
     {
-        currentText.text = Mathf.RoundToInt(100 * value) + "%";
+        currentTextPro.SetText(Mathf.RoundToInt(100 * value) + "%");
     }
 
     #region Resolution
@@ -68,7 +71,7 @@ public class MainMenu : MonoBehaviour
         if (currentIndexRes < resOptions.Capacity - 1)
         {
             currentIndexRes++;
-            currentText.text = resOptions[currentIndexRes];
+            currentTextPro.SetText(resOptions[currentIndexRes]);
             SetResolution(currentIndexRes);
         }
     }
@@ -78,7 +81,7 @@ public class MainMenu : MonoBehaviour
         if (currentIndexRes > 0)
         {
             currentIndexRes--;
-            currentText.text = resOptions[currentIndexRes];
+            currentTextPro.SetText(resOptions[currentIndexRes]);
             SetResolution(currentIndexRes);
         }
     }
