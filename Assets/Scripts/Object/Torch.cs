@@ -27,7 +27,7 @@ public class Torch : MonoBehaviour, IActivable
     {
         if (CheckValidObjects())
         {
-            ActivateFireParticles();
+            //activate fire particles
             gameObject.transform.GetChild(0).gameObject.SetActive(true);
             isActive = true;
             if (objectToActivate.Count != 0)
@@ -42,7 +42,7 @@ public class Torch : MonoBehaviour, IActivable
 
     public void Deactivate()
     {
-        DeactivateFireParticles();
+        //deactivate fire particles
         gameObject.transform.GetChild(0).gameObject.SetActive(false);
         isActive = false;
     }
@@ -59,22 +59,4 @@ public class Torch : MonoBehaviour, IActivable
         }
         return true;
     }
-
-    void ActivateFireParticles()
-    {
-        for (int i = 0; i < transform.childCount; i++)
-        {
-            transform.GetChild(i).gameObject.SetActive(true);
-        }
-    }
-
-    void DeactivateFireParticles()
-    {
-        for (int i = 0; i < transform.childCount; i++)
-        {
-            transform.GetChild(i).gameObject.SetActive(false);
-        }
-    }
-
-
 }
