@@ -3,26 +3,45 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using UnityEngine.Audio;
 
 public class MainMenu : MonoBehaviour
 {
     Text currentText;
 
     #region Resolution variable
-    int indexResText;
-    //int nbRes = 4;
-    public string[] listResText = new string[4];
+    int currentIndexRes;
+    //public string[] listResText = new string[4];
+    List<string> resOptions = new List<string>();
+    Resolution[] resolutions;
+
+    #endregion
+
+    #region Volume Variable
+    AudioMixer mixer;
 
     #endregion
 
     private void Start()
     {
         currentText = GetComponent<Text>();
-        indexResText = 3;
-        listResText[0] = "640x480";
-        listResText[1] = "720x480";
-        listResText[2] = "1366x768";
-        listResText[3] = "1920x1080";
+
+        resolutions = Screen.resolutions;
+
+        for (int i = 0; i<resolutions.Length; i++)
+        {
+            string option = resolutions[i].width + " x " + resolutions[i].height;
+            resOptions.Add(option);
+
+            if(resolutions[i].width == Screen.currentResolution.width &&
+               resolutions[i].height == Screen.currentResolution.height)
+            {
+                currentIndexRes = i;
+            }
+        }
+
+        if(this.name == "ValueRes")
+            currentText.text = resOptions[currentIndexRes];
     }
 
     public void PlayGame ()
@@ -42,24 +61,39 @@ public class MainMenu : MonoBehaviour
         currentText.text = Mathf.RoundToInt(100 * value) + "%";
     }
 
+    #region Resolution
 
     public void NextRes()
     {
-        if (indexResText < 3)
+        if (currentIndexRes < resOptions.Capacity - 1)
         {
-            indexResText++;
-            currentText.text = listResText[indexResText];
+            currentIndexRes++;
+            currentText.text = resOptions[currentIndexRes];
+            SetResolution(currentIndexRes);
         }
     }
 
     public void PreviousRes()
     {
-        if (indexResText > 0)
-        { 
-            indexResText--;
-            currentText.text = listResText[indexResText];
+        if (currentIndexRes > 0)
+        {
+            currentIndexRes--;
+            currentText.text = resOptions[currentIndexRes];
+            SetResolution(currentIndexRes);
         }
     }
 
+    public void SetResolution(int resolutionindex)
+    {
+        Resolution resolution = resolutions[resolutionindex];
+        Screen.SetResolution(resolution.width, resolution.height, Screen.fullScreen);
+    }
+
+    #endregion
+
+    public void SetFullscreen(bool isFullscreen)
+    {
+        Screen.fullScreen = isFullscreen;
+    }
 
 }
