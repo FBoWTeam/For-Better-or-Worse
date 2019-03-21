@@ -38,7 +38,10 @@ public class PressurePlate : MonoBehaviour, IActivable
     {
         if (other.CompareTag("Player") && !isActive)
         {
-            GivePower(other.gameObject);
+            if (type == PressurePlateType.PowerGiver)
+            {
+                GivePower(other.gameObject);
+            }
             this.Activate();
         }
     }
