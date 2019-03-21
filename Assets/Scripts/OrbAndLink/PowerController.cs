@@ -375,7 +375,7 @@ public class PowerController : MonoBehaviour
             {
                 GameObject currentEnemy = enemiesInRange[i].transform.gameObject;
                 //currentEnemy.GetComponent<EnemyMovement>().agent.velocity = (transform.position - currentEnemy.transform.position) * vortexAttractionPower;
-                StartCoroutine(Attraction(60, currentEnemy));
+                StartCoroutine(Attraction(30, currentEnemy));
             }
         }
     }
