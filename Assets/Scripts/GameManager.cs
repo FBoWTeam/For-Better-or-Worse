@@ -16,7 +16,7 @@ public class GameManager : MonoBehaviour
 	[HideInInspector]
 	public UIManager UIManager;
     [HideInInspector]
-    public DialogSystem DialogSystem;
+    public DialogSystem dialogSystem;
 
 
     public bool isPaused;
@@ -91,10 +91,11 @@ public class GameManager : MonoBehaviour
         player1 = GameObject.Find("Player1");
         player2 = GameObject.Find("Player2");
         orb = GameObject.Find("Orb");
-        UIManager = GameObject.FindGameObjectWithTag("UI").GetComponent<UIManager>();
-        DialogSystem = GameObject.FindGameObjectWithTag("Dialog").GetComponent<DialogSystem>();
+        UIManager = GameObject.Find("UI").GetComponent<UIManager>();
+        dialogSystem = GameObject.Find("DialogSystem").GetComponent<DialogSystem>();
+		dialogSystem.gameObject.SetActive(false);
 
-        damageTakenP1 = 0;
+		damageTakenP1 = 0;
         damageTakenP2 = 0;
 
         StartCoroutine(UIManager.FadeCoroutine("FadeIn"));

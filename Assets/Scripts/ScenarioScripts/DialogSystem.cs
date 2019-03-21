@@ -4,87 +4,96 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
-public class DialogSystem : MonoBehaviour
+[CreateAssetMenu]
+public class Dialog : ScriptableObject
 {
+	public enum BonusCharacter
+	{
+		None,
+		Entity,
+		Alan
+	};
 
 	public enum Character
 	{
-		mia,
-		raka,
-		entity,
-		alan
+		Mia,
+		Raka,
+		Entity,
+		Alan
 	};
 
+	[Serializable]
+	public struct DialogElement
+	{
+		public Character characterTalking;
+		public string replica;
+	}
 
-    public GameObject fox;
-    public Material foxTalkingTexture;
-    public Material foxNotTalkingTexture;
+	public BonusCharacter bonusCharacter;
+	public List<DialogElement> dialogElementList;
+}
 
-    public GameObject racoon;
-    public Material racoonTalking;
-    public Material racoonNotTalking;
+public class DialogSystem : MonoBehaviour
+{
+	private Dialog dialog;
 
-    public GameObject textGameobject;
+	public GameObject mia;
+    public Material miaTalkingMat;
+    public Material miaNotTalkingMat;
+
+    public GameObject raka;
+    public Material rakaTalkingMat;
+    public Material rakaNotTalkingMat;
+
+	public GameObject entity;
+	public Material entityTalkingMat;
+	public Material entityNotTalkingMat;
+
+	public GameObject alan;
+	public Material alanTalkingMat;
+	public Material alanNotTalkingMat;
+
+	public GameObject textGameobject;
     public float writeDelay = 0.1f;
-    private TextMeshProUGUI sharedText;
-   
-
-    public bool foxTalking = true;
-
-    private string[] foxDialog;
-    private string[] racoonDialog;
-
-	public Tuple<bool, string> oui;
+    public TextMeshProUGUI displayedText;
 
     private bool canMoveToNext = true;
-
-
-    //Dictionaire <bool,String> true = fox , false = racoon string = text to print
-    private List<Tuple<bool, string>> textOrder = new List<Tuple<bool, string>>();
 
     // Start is called before the first frame update
     void Start()
     {
-        sharedText = textGameobject.GetComponent<TextMeshProUGUI>();
+		displayedText = textGameobject.GetComponent<TextMeshProUGUI>();
     }
 
     /// <summary>
-    /// Handle Full dialog between Fox and Raccoon
+    /// Handle Full dialog between Characters
     /// </summary>
-    /// <param name="foxDialogScenario">All fox replies</param>
-    /// <param name="racoonDialogScenario">All racoon replies</param>
-    /// <param name="foxFirst">is Fox talking first ?</param>
     /// <returns></returns>
-    public IEnumerator StartDialog(string[] foxDialogScenario, string[] racoonDialogScenario,bool foxFirst) {
-        foxTalking = foxFirst;
-        SetDialogs(foxDialogScenario,racoonDialogScenario);
-        //Afficher l'ui
-        fox.transform.parent.GetComponent<RectTransform>().localScale = Vector3.one;
-        foreach (Tuple<bool, string> entry in textOrder) {           
-            SetTalker(entry.Item1, entry.Item2);
-            //wait for player input
-            yield return new WaitUntil(() => CanMoveNext());   
-        }
-        yield return null;
-    }
+    public IEnumerator StartDialog(Dialog dialogToDisplay)
+	{
+		dialog = dialogToDisplay;
 
-  
-    /// <summary>
-    /// Set dialog variables and Init dictionary afterwards
-    /// </summary>
-    /// <param name="foxDialogScenario"></param>
-    /// <param name="racoonDialogScenario"></param>
-    private void SetDialogs(string[] foxDialogScenario, string[] racoonDialogScenario) {
-        foxDialog = foxDialogScenario;
-        racoonDialog = racoonDialogScenario;
-        InitDictionary();
+		DisplayBonusCharacter(dialog.bonusCharacter);
+
+		GetComponent<RectTransform>().localScale = Vector3.one;
+
+        foreach (Dialog.DialogElement element in dialogToDisplay.dialogElementList)
+		{
+			DisplayTalker(element.characterTalking);
+			StartCoroutine(DisplayReplica(element.replica));
+			//wait for player input
+			yield return new WaitUntil(() => MoveToNextReplica());   
+        }
+
+		GetComponent<RectTransform>().localScale = Vector3.zero;
+		yield return null;
     }
 
     /// <summary>
     /// return true if player can move to next dialog
     /// </summary>
     /// <returns></returns>
-    private bool CanMoveNext() {
+    private bool MoveToNextReplica() {
         if ( Input.GetKeyUp(KeyCode.A) && canMoveToNext) {
 
             StartCoroutine(InputCoolDown(0.5f));
@@ -92,7 +101,6 @@ public class DialogSystem : MonoBehaviour
         }
         return false;
     }
-
 
     /// <summary>
     /// Restrain player from moving to next Dialog for delay
@@ -105,22 +113,60 @@ public class DialogSystem : MonoBehaviour
         canMoveToNext = true;
     }
 
-    /// <summary>
-    /// Set UI element and text according to isFoxTalking
-    /// </summary>
-    /// <param name="isFoxTalking"></param>
-    /// <param name="text"></param>
-    private void SetTalker(bool isFoxTalking, string text) {
-        if (isFoxTalking) {
-            setTexture(fox, foxTalkingTexture);
-            setTexture(racoon, racoonNotTalking);
-            //foxTalking = false;
-        } else {
-            setTexture(racoon, racoonTalking);
-            setTexture(fox, foxNotTalkingTexture);
-            //foxTalking = true;
-        }
-        StartCoroutine(setText(text));
+	private void DisplayBonusCharacter(Dialog.BonusCharacter bonusCharacter)
+	{
+		switch(bonusCharacter)
+		{
+			case Dialog.BonusCharacter.None:
+				entity.SetActive(false);
+				alan.SetActive(false);
+				break;
+			case Dialog.BonusCharacter.Entity:
+				entity.SetActive(true);
+				setTexture(entity, entityNotTalkingMat);
+				alan.SetActive(false);
+				break;
+			case Dialog.BonusCharacter.Alan:
+				entity.SetActive(false);
+				alan.SetActive(true);
+				setTexture(alan, alanNotTalkingMat);
+				break;
+		}
+	}
+
+	/// <summary>
+	/// Set UI element and text according to isFoxTalking
+	/// </summary>
+	/// <param name="isFoxTalking"></param>
+	/// <param name="text"></param>
+	private void DisplayTalker(Dialog.Character characterTalking) {
+		switch(characterTalking)
+		{
+			case Dialog.Character.Mia:
+				setTexture(mia, miaTalkingMat);
+				setTexture(raka, rakaNotTalkingMat);
+				setTexture(entity, entityNotTalkingMat);
+				setTexture(alan, alanNotTalkingMat);
+				break;
+			case Dialog.Character.Raka:
+				setTexture(mia, miaNotTalkingMat);
+				setTexture(raka, rakaTalkingMat);
+				setTexture(entity, entityNotTalkingMat);
+				setTexture(alan, alanNotTalkingMat);
+				break;
+			case Dialog.Character.Entity:
+				setTexture(mia, miaNotTalkingMat);
+				setTexture(raka, rakaNotTalkingMat);
+				setTexture(entity, entityTalkingMat);
+				setTexture(alan, alanNotTalkingMat);
+				break;
+			case Dialog.Character.Alan:
+				setTexture(mia, miaNotTalkingMat);
+				setTexture(raka, rakaNotTalkingMat);
+				setTexture(entity, entityNotTalkingMat);
+				setTexture(alan, alanTalkingMat);
+				break;
+		}
     }
 
     /// <summary>
@@ -128,11 +174,11 @@ public class DialogSystem : MonoBehaviour
     /// </summary>
     /// <param name="text"></param>
     /// <returns></returns>
-    IEnumerator setText(string text) {
-        sharedText.text = "";
+    IEnumerator DisplayReplica(string replica) {
+		displayedText.text = "";
         canMoveToNext = false;
-        foreach (char c in text) {            
-            sharedText.text += c;
+        foreach (char c in replica) {
+			displayedText.text += c;
             yield return new WaitForSeconds(writeDelay);
         }
         canMoveToNext = true;
@@ -141,32 +187,5 @@ public class DialogSystem : MonoBehaviour
 
     private void setTexture(GameObject foxOrRacoon,Material toAply) {
         foxOrRacoon.GetComponent<MeshRenderer>().material = toAply;
-    }
-
-    /// <summary>
-    /// Initialize dictionary with both fox and raccon dialog
-    /// </summary>
-    void InitDictionary() {
-        int max = (foxDialog.Length > racoonDialog.Length) ? foxDialog.Length : racoonDialog.Length;
-        for (int i = 0; i < max; i++) {
-            if (foxTalking) {
-                if (i< foxDialog.Length) {
-                    textOrder.Add(new Tuple<bool, string>(true, foxDialog[i]));
-                }
-                if (i < racoonDialog.Length) {
-                    textOrder.Add(new Tuple<bool, string>(false, racoonDialog[i]));
-                }
-               
-            } else {
-                if (i < racoonDialog.Length) {
-                    textOrder.Add(new Tuple<bool, string>(false, racoonDialog[i]));
-                }
-                if (i < foxDialog.Length) {
-                    textOrder.Add(new Tuple<bool, string>(true, foxDialog[i]));
-                }
-                    
-                
-            }
-        }
     }
 }
