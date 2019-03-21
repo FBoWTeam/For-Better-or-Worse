@@ -374,9 +374,20 @@ public class PowerController : MonoBehaviour
             if (enemiesInRange[i].transform.gameObject.CompareTag("Enemy"))
             {
                 GameObject currentEnemy = enemiesInRange[i].transform.gameObject;
-                currentEnemy.GetComponent<EnemyMovement>().agent.velocity = (transform.position - currentEnemy.transform.position) * vortexAttractionPower;
+                //currentEnemy.GetComponent<EnemyMovement>().agent.velocity = (transform.position - currentEnemy.transform.position) * vortexAttractionPower;
+                StartCoroutine(Attraction(60, currentEnemy));
             }
         }
+    }
+
+    IEnumerator Attraction(float tick, GameObject currentEnemy)
+    {
+        for (int i = 0; i < tick; i++)
+        {
+            currentEnemy.GetComponent<EnemyMovement>().agent.velocity = ((transform.position - currentEnemy.transform.position) * vortexAttractionPower)/ tick;
+            yield return new WaitForEndOfFrame();
+        }
+        
     }
 
     #endregion
