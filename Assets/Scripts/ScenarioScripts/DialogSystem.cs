@@ -6,6 +6,16 @@ using TMPro;
 
 public class DialogSystem : MonoBehaviour
 {
+
+	public enum Character
+	{
+		mia,
+		raka,
+		entity,
+		alan
+	};
+
+
     public GameObject fox;
     public Material foxTalkingTexture;
     public Material foxNotTalkingTexture;
@@ -23,6 +33,8 @@ public class DialogSystem : MonoBehaviour
 
     private string[] foxDialog;
     private string[] racoonDialog;
+
+	public Tuple<bool, string> oui;
 
     private bool canMoveToNext = true;
 
