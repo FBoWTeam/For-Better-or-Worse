@@ -195,7 +195,6 @@ public class PuddleSystem : MonoBehaviour
     {
         if (other.CompareTag("Enemy") || other.CompareTag("Player") || other.CompareTag("Orb"))
         {
-            Debug.Log("dans flaque");
             switch (puddleType)
             {
                 case GameManager.PuddleType.Acid:
@@ -348,8 +347,8 @@ public class PuddleSystem : MonoBehaviour
             else if (target.GetComponent<PowerController>().elementalPower == GameManager.PowerType.Electric && !electrified && !frozen)
             {
                 electrified = true;
-                GetComponent<Collider>().enabled = false;
-                GetComponent<Collider>().enabled = true;
+                transform.GetChild(0).GetComponent<Collider>().enabled = false;
+                transform.GetChild(0).GetComponent<Collider>().enabled = true;
                 GetComponent<MeshRenderer>().material = ElectrifiedWaterMaterial;
                 electrifiedWaterCoroutine = StartCoroutine(ReturnToWater(electrifiedWaterLifeTime));
             }
@@ -402,7 +401,6 @@ public class PuddleSystem : MonoBehaviour
     {
         if (!onFire && target.CompareTag("Orb") && target.GetComponent<PowerController>().elementalPower == GameManager.PowerType.Fire)
         {
-            Debug.Log("feu");
             onFire = true;
             GetComponent<MeshRenderer>().material = onFireFlammableMaterial;
             Destroy(gameObject, onFireFlammableLifeTime);
