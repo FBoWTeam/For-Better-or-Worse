@@ -53,17 +53,10 @@ public class DialogSystem : MonoBehaviour
 	public Material alanTalkingMat;
 	public Material alanNotTalkingMat;
 
-	public GameObject textGameobject;
-    public float writeDelay = 0.1f;
-    public TextMeshProUGUI displayedText;
+	public TextMeshProUGUI displayedText;
+	public float writeDelay = 0.1f;
 
     private bool canMoveToNext = true;
-
-    // Start is called before the first frame update
-    void Start()
-    {
-		displayedText = textGameobject.GetComponent<TextMeshProUGUI>();
-    }
 
     /// <summary>
     /// Handle Full dialog between Characters
@@ -75,8 +68,6 @@ public class DialogSystem : MonoBehaviour
 
 		DisplayBonusCharacter(dialog.bonusCharacter);
 
-		GetComponent<RectTransform>().localScale = Vector3.one;
-
         foreach (Dialog.DialogElement element in dialogToDisplay.dialogElementList)
 		{
 			DisplayTalker(element.characterTalking);
@@ -85,7 +76,8 @@ public class DialogSystem : MonoBehaviour
 			yield return new WaitUntil(() => MoveToNextReplica());   
         }
 
-		GetComponent<RectTransform>().localScale = Vector3.zero;
+		gameObject.SetActive(false);
+
 		yield return null;
     }
 
@@ -172,7 +164,7 @@ public class DialogSystem : MonoBehaviour
     /// <summary>
     /// Animate shared text element
     /// </summary>
-    /// <param name="text"></param>
+    /// <param name="replica"></param>
     /// <returns></returns>
     IEnumerator DisplayReplica(string replica) {
 		displayedText.text = "";
