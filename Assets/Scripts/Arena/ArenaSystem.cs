@@ -7,9 +7,16 @@ public class ArenaSystem : MonoBehaviour
     [System.Serializable]
     public class Wave
     {
+        public List<SubWave> subWaveList;
+    }
+
+    [System.Serializable]
+    public class SubWave
+    {
         //index used in the spawList to know where to instanciate the enemies
         public int spawnNumber;
-        public List<GameObject> subWaveList;
+        public int timeBeforeNextWave;
+        public GameObject subWavePrefab;
     }
 
     [Header("Wave List")]
@@ -17,6 +24,7 @@ public class ArenaSystem : MonoBehaviour
 
     [Header("Boss")]
     public GameObject bonusWave;
+    public int spawnNumer;
     //the wave index from which we will begin to have a chance to encounter the boss
     public int threshold;
     //the bonus chance that will increase the chance to encounter the boss
@@ -30,21 +38,22 @@ public class ArenaSystem : MonoBehaviour
 
     [Header("Wave Param")]
     public bool arenaCleared;
-    public float timeBetweenSubWave;
 
     [Header("Wave Param")]
     //list of transform containing all the spawn position
     //enemies will be instanciated in funtion of an integer coresponding to the position in the list at the index of the integer
     public List<Transform> spawnList;
     
-    //usefull to keep track of the current position in our lists and the right wave to instanciate
+    //used to keep track of the current position in our lists and the right wave to instanciate
     private int waveIndex;
     private int subWaveIndex;
     //timer used to spawn enemies which requires a delay between 2 instanciations of enemies
     private float timer;
 
+    //to go to the next scene once the arena is cleared
     public GameObject sceneLoader;
 
+    //enemies currently alive in the arena
     private List<GameObject> remainingEnemiesList;
 
     private void Start()
@@ -73,19 +82,20 @@ public class ArenaSystem : MonoBehaviour
                 // ==== SUBWAVE
                 while (subWaveIndex < waveList[waveIndex].subWaveList.Count)
                 {
-                    GameObject subwave = Instantiate(waveList[waveIndex].subWaveList[subWaveIndex], spawnList[waveList[waveIndex].spawnNumber].position, Quaternion.identity);
+                    GameObject subwave = Instantiate(waveList[waveIndex].subWaveList[subWaveIndex].subWavePrefab, spawnList[waveList[waveIndex].subWaveList[subWaveIndex].spawnNumber].position, Quaternion.identity);
 
                     foreach (Enemy enemy in subwave.GetComponentsInChildren<Enemy>())
                     {
                         remainingEnemiesList.Add(enemy.gameObject);
                     }
 
-                    while (timer < timeBetweenSubWave)
+                    while (timer < waveList[waveIndex].subWaveList[subWaveIndex].timeBeforeNextWave)
                     {
                         timer += Time.deltaTime;
                         yield return new WaitForEndOfFrame();
                     }
                     timer = 0;
+                    Debug.Log("Next Subwave");
                     subWaveIndex++;
                 }
 
@@ -93,6 +103,7 @@ public class ArenaSystem : MonoBehaviour
 
                 if (waveCleared())
                 {
+                    Debug.Log("Next Wave");
                     waveIndex++;
                     subWaveIndex = 0;
                     bonusChance = 0;
@@ -104,8 +115,7 @@ public class ArenaSystem : MonoBehaviour
                 arenaCleared = true;
             }
         }
-
-        //go to next arena
+        
         Debug.Log("Go to da next awina");
         sceneLoader.SetActive(true);
     }
@@ -114,13 +124,13 @@ public class ArenaSystem : MonoBehaviour
     {
         if (!bonusWaveAlreadySpawned && subWaveIndex >= threshold && (Random.Range(0f, 100f) - bonusChance) <= increaseChanceValue)
         {
-            while (timer < timeBetweenSubWave)
+            while (timer < 10.0f)
             {
                 timer += Time.deltaTime;
             }
             timer = 0;
-
-            GameObject boss = Instantiate(bonusWave, spawnList[0].position, Quaternion.identity).gameObject;
+            Debug.Log("Boss has spawned");
+            GameObject boss = Instantiate(bonusWave, spawnList[spawnNumer].position, Quaternion.identity).gameObject;
             foreach (Enemy enemy in boss.GetComponentsInChildren<Enemy>())
             {
                 remainingEnemiesList.Add(enemy.gameObject);
