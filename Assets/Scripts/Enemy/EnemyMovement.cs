@@ -159,10 +159,7 @@ public class EnemyMovement : MonoBehaviour
     void EnemyEscape(GameObject target, float enemyRange)
     {
         float timeStamp = Time.time;
-        while(Time.time - timeStamp < timeBeforeFleeing)
-        {
 
-        }
         Vector3 dir = (this.transform.position - target.transform.position).normalized * enemyRange/2;
         agent.destination = this.transform.position + dir;
     }
