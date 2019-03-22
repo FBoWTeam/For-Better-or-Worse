@@ -18,8 +18,13 @@ public class MainMenu : MonoBehaviour
 
     #endregion
 
-    #region Volume Variable
+    #region Volume variable
     AudioMixer mixer;
+
+    #endregion
+
+    #region Scene variable
+    public string sceneToLoad;
 
     #endregion
 
@@ -49,12 +54,12 @@ public class MainMenu : MonoBehaviour
 
     public void PlayGame ()
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+        SceneManager.LoadScene(sceneToLoad);
     }
 
     public void QuitGame ()
     {
-        print("QUIT");
+        Debug.Log("QUIT");
         Application.Quit();
     }
 
@@ -96,6 +101,7 @@ public class MainMenu : MonoBehaviour
 
     public void SetFullscreen(bool isFullscreen)
     {
+        Debug.Log(isFullscreen);
         Screen.fullScreen = isFullscreen;
     }
 
