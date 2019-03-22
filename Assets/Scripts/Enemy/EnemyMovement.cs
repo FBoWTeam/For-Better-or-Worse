@@ -47,6 +47,8 @@ public class EnemyMovement : MonoBehaviour
 
     EnemySkill enemySkill;
 
+    Coroutine strafing;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -102,17 +104,17 @@ public class EnemyMovement : MonoBehaviour
         Tuple<GameObject, float> nearestPlayer = ClosestPlayer();
         if (nearestPlayer.Item2 < enemySkill.range/2)
         {
-            StopCoroutine("Strafing");
+            StopCoroutine(strafing);
             isStrafing = false;
             EnemyEscape(nearestPlayer.Item1, enemySkill.range);
         }
         else if (nearestPlayer.Item2 < enemySkill.range - 2 && !isStrafing)
         {
-            StartCoroutine(Strafing(nearestPlayer.Item1, enemySkill.range));
+            strafing = StartCoroutine(Strafing(nearestPlayer.Item1, enemySkill.range));
         }
         else if (nearestPlayer.Item2 > enemySkill.range)
         {
-            StopCoroutine("Strafing");
+            StopCoroutine(strafing);
             isStrafing = false;
             MoveToPlayer(nearestPlayer.Item1, nearestPlayer.Item2);
         }
