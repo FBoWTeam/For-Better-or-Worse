@@ -23,7 +23,21 @@ public class Mirror : MonoBehaviour
 				OrbController controller = GameManager.gameManager.orb.GetComponent<OrbController>();
 				controller.toPlayer2 = !controller.toPlayer2;
 			}
-			GetComponentInParent<NavMeshAgent>().velocity = -GetComponentInParent<NavMeshAgent>().velocity * knockbackForce;
+			//GetComponentInParent<NavMeshAgent>().velocity = -GetComponentInParent<NavMeshAgent>().velocity * knockbackForce;
+            StartCoroutine(ShieldKnockback(15f));
 		}
 	}
+
+
+    private IEnumerator ShieldKnockback(float tick)
+    {
+        Vector3 dir = -GetComponentInParent<NavMeshAgent>().velocity.normalized;
+        for (int i = 0; i < tick; i++)
+        {
+            GetComponentInParent<NavMeshAgent>().velocity = (dir * knockbackForce) / tick;
+            yield return new WaitForEndOfFrame();
+        }
+    }
+
+
 }
