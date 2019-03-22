@@ -195,6 +195,7 @@ public class PuddleSystem : MonoBehaviour
     {
         if (other.CompareTag("Enemy") || other.CompareTag("Player") || other.CompareTag("Orb"))
         {
+            Debug.Log("dans flaque");
             switch (puddleType)
             {
                 case GameManager.PuddleType.Acid:
@@ -401,6 +402,7 @@ public class PuddleSystem : MonoBehaviour
     {
         if (!onFire && target.CompareTag("Orb") && target.GetComponent<PowerController>().elementalPower == GameManager.PowerType.Fire)
         {
+            Debug.Log("feu");
             onFire = true;
             GetComponent<MeshRenderer>().material = onFireFlammableMaterial;
             Destroy(gameObject, onFireFlammableLifeTime);
