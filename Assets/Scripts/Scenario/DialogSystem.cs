@@ -3,35 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
-
-[CreateAssetMenu]
-public class Dialog : ScriptableObject
-{
-	public enum BonusCharacter
-	{
-		None,
-		Entity,
-		Alan
-	};
-
-	public enum Character
-	{
-		Mia,
-		Raka,
-		Entity,
-		Alan
-	};
-
-	[Serializable]
-	public struct DialogElement
-	{
-		public Character characterTalking;
-		public string replica;
-	}
-
-	public BonusCharacter bonusCharacter;
-	public List<DialogElement> dialogElementList;
-}
+using UnityEngine.Playables;
+using UnityEngine.UI;
 
 public class DialogSystem : MonoBehaviour
 {
@@ -53,16 +26,21 @@ public class DialogSystem : MonoBehaviour
 	public Material alanTalkingMat;
 	public Material alanNotTalkingMat;
 
+	public Image arrowButton;
+	public Sprite arrowButtonNormal;
+	public Sprite arrowButtonPressed;
+
 	public TextMeshProUGUI displayedText;
 	public float writeDelay = 0.1f;
 
-    private bool canMoveToNext = true;
+	private bool speededUp = false;
+    private bool canMoveToNext = false;
 
     /// <summary>
     /// Handle Full dialog between Characters
     /// </summary>
     /// <returns></returns>
-    public IEnumerator StartDialog(Dialog dialogToDisplay)
+    public IEnumerator StartDialog(Dialog dialogToDisplay, PlayableDirector director)
 	{
 		dialog = dialogToDisplay;
 
@@ -73,10 +51,11 @@ public class DialogSystem : MonoBehaviour
 			DisplayTalker(element.characterTalking);
 			StartCoroutine(DisplayReplica(element.replica));
 			//wait for player input
-			yield return new WaitUntil(() => MoveToNextReplica());   
+			yield return new WaitUntil(() => MoveToNextReplica() && canMoveToNext);   
         }
 
 		gameObject.SetActive(false);
+		director.Resume();
 
 		yield return null;
     }
@@ -85,25 +64,40 @@ public class DialogSystem : MonoBehaviour
     /// return true if player can move to next dialog
     /// </summary>
     /// <returns></returns>
-    private bool MoveToNextReplica() {
-        if ( Input.GetKeyUp(KeyCode.A) && canMoveToNext) {
-
-            StartCoroutine(InputCoolDown(0.5f));
-            return true;
-        }
+    private bool MoveToNextReplica()
+	{
+		if (Input.GetKey(KeyCode.A) && !speededUp)
+		{
+			writeDelay /= 10.0f;
+			speededUp = true;
+			arrowButton.sprite = arrowButtonPressed;
+		}
+		if(Input.GetKey(KeyCode.A) && canMoveToNext)
+		{
+			writeDelay *= 10.0f;
+			speededUp = false;
+			arrowButton.sprite = arrowButtonNormal;
+			return true;
+		}
+		if (Input.GetKeyUp(KeyCode.A) && speededUp)
+		{
+			writeDelay *= 10.0f;
+			speededUp = false;
+			arrowButton.sprite = arrowButtonNormal;
+		}
         return false;
     }
 
-    /// <summary>
+   /* /// <summary>
     /// Restrain player from moving to next Dialog for delay
     /// </summary>
     /// <param name="delay"></param>
     /// <returns></returns>
     private IEnumerator InputCoolDown(float delay) {
-        canMoveToNext = false;
+        canPassReplica = false;
         yield return new WaitForSeconds(delay);
-        canMoveToNext = true;
-    }
+		canPassReplica = true;
+    }*/
 
 	private void DisplayBonusCharacter(Dialog.BonusCharacter bonusCharacter)
 	{
@@ -170,7 +164,14 @@ public class DialogSystem : MonoBehaviour
 		displayedText.text = "";
         canMoveToNext = false;
         foreach (char c in replica) {
-			displayedText.text += c;
+			if(c == '\\')
+			{
+				displayedText.text += '\n';
+			}
+			else
+			{
+				displayedText.text += c;
+			}
             yield return new WaitForSeconds(writeDelay);
         }
         canMoveToNext = true;

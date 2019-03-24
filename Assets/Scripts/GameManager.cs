@@ -15,9 +15,6 @@ public class GameManager : MonoBehaviour
 	public GameObject orb;
 	[HideInInspector]
 	public UIManager UIManager;
-    [HideInInspector]
-    public DialogSystem dialogSystem;
-
 
     public bool isPaused;
 
@@ -86,20 +83,26 @@ public class GameManager : MonoBehaviour
         {
             Destroy(this);
         }
-        //DontDestroyOnLoad(gameManager);
 
         player1 = GameObject.Find("Player1");
         player2 = GameObject.Find("Player2");
         orb = GameObject.Find("Orb");
         UIManager = GameObject.Find("UI").GetComponent<UIManager>();
-        dialogSystem = GameObject.Find("DialogSystem").GetComponent<DialogSystem>();
-		dialogSystem.gameObject.SetActive(false);
+		UIManager.InitDictionary();
+		if(GameObject.Find("IntroScenario") != null)
+		{
+			UIManager.gameObject.SetActive(false);
+			GameObject.Find("IntroScenario").GetComponent<ScenarioHandler>().Initialize();
+		}
+		else
+		{
+			GameObject.Find("DialogSystem").SetActive(false);
+			StartCoroutine(UIManager.FadeCoroutine("FadeIn"));
+		}
 
 		damageTakenP1 = 0;
-        damageTakenP2 = 0;
-
-        StartCoroutine(UIManager.FadeCoroutine("FadeIn"));
-    }
+		damageTakenP2 = 0;
+	}
 
     /// <summary>
     /// Handle taking damage from an Ennemy or other things

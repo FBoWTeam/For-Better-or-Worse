@@ -65,10 +65,9 @@ public class UIManager : MonoBehaviour
 
     public List<string> player2TextsOrbHit;//quotes of the player 2 when hit by an enemy
     public List<string> player2TextsOtherOrbHit;//quotes of the player 2 when player 1 is hit by the orb
-
-
+	
     [HideInInspector]
-    Dictionary<int, GameManager.PowerType> busySlot = new Dictionary<int, GameManager.PowerType>(2);
+    Dictionary<int, GameManager.PowerType> busySlot;
 
     #endregion
 
@@ -76,17 +75,11 @@ public class UIManager : MonoBehaviour
 
     #region All Methods
 
-    private void Awake()
+    public void InitDictionary()
     {
-        //init dico
-        busySlot.Add(1, GameManager.PowerType.None);
+		busySlot = new Dictionary<int, GameManager.PowerType>(2);
+		busySlot.Add(1, GameManager.PowerType.None);
         busySlot.Add(2, GameManager.PowerType.None);
-
-    }
-
-    private void Update()
-    {
-
     }
 
     public void TauntCooldownSystem(bool player1, float tauntCooldown)

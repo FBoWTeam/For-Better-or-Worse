@@ -18,8 +18,6 @@ public class test : MonoBehaviour
         if(!launched)
 		{
 			launched = true;
-			GameManager.gameManager.dialogSystem.gameObject.SetActive(true);
-			StartCoroutine(GameManager.gameManager.dialogSystem.StartDialog(d));
 		}
     }
 }
