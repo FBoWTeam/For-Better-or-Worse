@@ -25,7 +25,7 @@ public class Dialog : ScriptableObject
 	public struct DialogElement
 	{
 		public Character characterTalking;
-		public string replica;
+		public string replicaKey;
 	}
 
 	public BonusCharacter bonusCharacter;

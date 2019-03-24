@@ -15,11 +15,11 @@ public class ScenarioHandler : MonoBehaviour
 
 	public void Initialize()
 	{
-		Debug.Log("oui");
 		director = GetComponent<PlayableDirector>();
 		dialogSystem = GameObject.Find("DialogSystem").GetComponent<DialogSystem>();
 		dialogSystem.gameObject.SetActive(false);
 		actualDialog = 0;
+
 		director.Play();
 	}
 

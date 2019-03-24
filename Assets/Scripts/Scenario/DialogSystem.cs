@@ -49,7 +49,7 @@ public class DialogSystem : MonoBehaviour
         foreach (Dialog.DialogElement element in dialogToDisplay.dialogElementList)
 		{
 			DisplayTalker(element.characterTalking);
-			StartCoroutine(DisplayReplica(element.replica));
+			StartCoroutine(DisplayReplica(I18n.Translate(element.replicaKey)));
 			//wait for player input
 			yield return new WaitUntil(() => MoveToNextReplica() && canMoveToNext);   
         }

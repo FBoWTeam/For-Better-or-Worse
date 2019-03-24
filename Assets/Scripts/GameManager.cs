@@ -15,8 +15,10 @@ public class GameManager : MonoBehaviour
 	public GameObject orb;
 	[HideInInspector]
 	public UIManager UIManager;
+	[HideInInspector]
+	public GameObject fader;
 
-    public bool isPaused;
+	public bool isPaused;
 
 	[Header("[Distance Limits]")]
 	public float minDistance;
@@ -84,12 +86,14 @@ public class GameManager : MonoBehaviour
             Destroy(this);
         }
 
-        player1 = GameObject.Find("Player1");
+		I18n.LoadLang("fr_FR");
+		player1 = GameObject.Find("Player1");
         player2 = GameObject.Find("Player2");
         orb = GameObject.Find("Orb");
         UIManager = GameObject.Find("UI").GetComponent<UIManager>();
 		UIManager.InitDictionary();
-		if(GameObject.Find("IntroScenario") != null)
+		fader = GameObject.Find("Fader");
+		if (GameObject.Find("IntroScenario") != null)
 		{
 			UIManager.gameObject.SetActive(false);
 			GameObject.Find("IntroScenario").GetComponent<ScenarioHandler>().Initialize();
@@ -97,8 +101,9 @@ public class GameManager : MonoBehaviour
 		else
 		{
 			GameObject.Find("DialogSystem").SetActive(false);
-			StartCoroutine(UIManager.FadeCoroutine("FadeIn"));
+			StartCoroutine(FadeCoroutine("FadeIn"));
 		}
+
 
 		damageTakenP1 = 0;
 		damageTakenP2 = 0;
@@ -241,10 +246,17 @@ public class GameManager : MonoBehaviour
         return false;
     }
 
+	public IEnumerator FadeCoroutine(string fadeName)
+	{
+		GameManager.gameManager.isPaused = true;
+		fader.GetComponent<Animator>().SetTrigger(fadeName);
+		yield return new WaitForSeconds(fader.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).length);
+		GameManager.gameManager.isPaused = false;
+	}
 
-    IEnumerator deathCoroutine()
+	IEnumerator deathCoroutine()
     {
-        StartCoroutine(UIManager.FadeCoroutine("FadeOut"));
+        StartCoroutine(FadeCoroutine("FadeOut"));
         yield return new WaitUntil(() => isPaused == false);
 
 		isPaused = true;
@@ -277,7 +289,7 @@ public class GameManager : MonoBehaviour
 
 		actualCheckpoint.RespawnContent();
 
-		StartCoroutine(UIManager.FadeCoroutine("FadeIn"));
+		StartCoroutine(FadeCoroutine("FadeIn"));
 	}
 
     
