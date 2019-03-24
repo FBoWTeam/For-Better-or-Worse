@@ -17,7 +17,7 @@ public class PressurePlate : MonoBehaviour, IActivable
 
     //the pressure plate activates an other object
     [Tooltip("the object to activate id the current lever is active")]
-    public GameObject objectToActivate;
+    public GameObject[] objectToActivate;
 
     [DrawIf(new string[] { "type" }, PressurePlateType.PowerGiver)]
     public GameManager.PowerType powerToGive;
@@ -67,9 +67,12 @@ public class PressurePlate : MonoBehaviour, IActivable
     {
         isActive = !isActive;
         //activates the other object
-        if (objectToActivate != null)
+        if (objectToActivate.Length > 0)
         {
-            objectToActivate.GetComponent<IActivable>().Activate();
+            for (int i = 0; i < objectToActivate.Length; i++)
+            {
+                objectToActivate[i].GetComponent<IActivable>().Activate();
+            }
         }
         
         if (isActive)

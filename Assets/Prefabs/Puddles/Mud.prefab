@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 2895295157395959456}
   - component: {fileID: 4378458398394856536}
   - component: {fileID: 550201580726470068}
-  - component: {fileID: 2997002370764148800}
+  - component: {fileID: 2753379343391578458}
   m_Layer: 0
   m_Name: Mud
   m_TagString: Puddle
@@ -30,7 +30,8 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0.05, z: 0}
   m_LocalScale: {x: 1, y: 0.05, z: 1}
-  m_Children: []
+  m_Children:
+  - {fileID: 6913227062686554996}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -99,9 +100,6 @@ MonoBehaviour:
   slugMaterial: {fileID: 2100000, guid: 9092a9d2c0638004b95d09e9eab67239, type: 2}
   acidDamage: 3
   acidMaterial: {fileID: 2100000, guid: 4c0ef73f886ed914d81bce5bf74652b1, type: 2}
-  electrifiedWaterLifeTime: 2
-  frozenWaterLifeTime: 5
-  freezeTime: 5
   electrified: 0
   electrifiedWaterLifeTime: 10
   electricDamage: 0
@@ -121,13 +119,60 @@ MonoBehaviour:
   flammableMaterial: {fileID: 2100000, guid: 08c582060b53a164b82c13ad81a3e098, type: 2}
   onFireFlammableMaterial: {fileID: 2100000, guid: e50c46c42775cfa439aaa4d1a890ebf1,
     type: 2}
---- !u!64 &2997002370764148800
-MeshCollider:
+--- !u!54 &2753379343391578458
+Rigidbody:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4985460314402858058}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
+--- !u!1 &8922177295768442526
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6913227062686554996}
+  - component: {fileID: 636240403051000113}
+  m_Layer: 0
+  m_Name: collider
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6913227062686554996
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8922177295768442526}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 15, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 8465427327951984233}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!64 &636240403051000113
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8922177295768442526}
   m_Material: {fileID: 0}
   m_IsTrigger: 1
   m_Enabled: 1

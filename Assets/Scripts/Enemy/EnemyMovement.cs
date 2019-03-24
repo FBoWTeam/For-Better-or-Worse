@@ -31,6 +31,8 @@ public class EnemyMovement : MonoBehaviour
     [Tooltip("represents the time of the attack animation")]
     public float stopTime = 2f;
 
+    [DrawIf(new string[] { "movement" }, Movement.Ranged)]
+    public float timeBeforeFleeing;
     //[DrawIf(new string[] { "movement" }, Movement.Basic)]
     //[Tooltip("represents the remaining distance between the enemy and the player")]
     //public float distanceBetweenPlayer = 5f;
@@ -40,12 +42,18 @@ public class EnemyMovement : MonoBehaviour
     [HideInInspector]
     public NavMeshAgent agent;
 
+
+
     //private
     public bool isSlowed;
-
     public bool isStrafing;
+    public bool isFleeing;
+    Coroutine strafingCoroutine;
+    Coroutine fleeingCoroutine;
 
     EnemySkill enemySkill;
+
+    
 
     // Start is called before the first frame update
     void Start()
@@ -102,17 +110,23 @@ public class EnemyMovement : MonoBehaviour
         Tuple<GameObject, float> nearestPlayer = ClosestPlayer();
         if (nearestPlayer.Item2 < enemySkill.range/2)
         {
-            StopCoroutine("Strafing");
+            if (strafingCoroutine != null)
+            {
+                StopCoroutine(strafingCoroutine);
+            }
             isStrafing = false;
             EnemyEscape(nearestPlayer.Item1, enemySkill.range);
         }
         else if (nearestPlayer.Item2 < enemySkill.range - 2 && !isStrafing)
         {
-            StartCoroutine(Strafing(nearestPlayer.Item1, enemySkill.range));
+            strafingCoroutine = StartCoroutine(Strafing(nearestPlayer.Item1, enemySkill.range));
         }
         else if (nearestPlayer.Item2 > enemySkill.range)
         {
-            StopCoroutine("Strafing");
+            if (strafingCoroutine != null)
+            {
+                StopCoroutine(strafingCoroutine);
+            }
             isStrafing = false;
             MoveToPlayer(nearestPlayer.Item1, nearestPlayer.Item2);
         }
@@ -150,7 +164,9 @@ public class EnemyMovement : MonoBehaviour
     /// </summary>
     void EnemyEscape(GameObject target, float enemyRange)
     {
-        Vector3 dir = (this.transform.position - target.transform.position).normalized * enemyRange;
+        float timeStamp = Time.time;
+        //wait x seconds
+        Vector3 dir = (this.transform.position - target.transform.position).normalized * enemyRange/2;
         agent.destination = this.transform.position + dir;
     }
 

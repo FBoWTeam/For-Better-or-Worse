@@ -64,19 +64,17 @@ public class EnemySkill : MonoBehaviour
     public bool drawPath = false;
     [DrawIf(new string[] { "skill" }, Skill.RangedAOE)]
     public bool anticipateTarget = false;
+    [DrawIf(new string[] { "anticipateTarget" },true)]
+    public float anticpationValue = 5f; // (>0 = l'ennemy visera DEVANT || < 0 l'enemy visera DERRIERE) ,  la target avec une anticpation de "anticpationValue" unit 
     [DrawIf(new string[] { "skill" }, Skill.RangedAOE)]
 	public GameObject aoeProjectilePrefab;
 	[DrawIf(new string[] { "skill" }, Skill.RangedAOE)]
 	public float projectileAoeRadius = 5f;
 	[DrawIf(new string[] { "skill" }, Skill.RangedAOE)]
 	public float projectileAoeDuration = 5f;
-
-   
-
     //like fire rate but the name is already used
     [DrawIf(new string[] { "skill" }, Skill.RangedAOE)]
 	public float throwRate = 1f;
-    
 	[DrawIf(new string[] { "skill" }, Skill.RangedAOE)]
     public float maxHeight = 10; //[Range(0.1f,100f)]
     [DrawIf(new string[] { "skill" }, Skill.RangedAOE)]
@@ -131,8 +129,8 @@ public class EnemySkill : MonoBehaviour
 
 	public void DoSkill(GameObject target)
 	{
-		//SET target = target
-		if (Time.time > nextAttack)
+        //SET target = target
+        if (Time.time > nextAttack)
 		{
 			switch (skill)
 			{
@@ -147,35 +145,25 @@ public class EnemySkill : MonoBehaviour
 					nextAttack = Time.time + aoeCooldown;
 				break;
 			    case Skill.Ranged:
-				    if (Time.time > nextAttack && isVisible(transform.position, target.transform.position))
+				    if (isVisible(transform.position, target.transform.position))
 				    {
                         Shoot(bulletPrefab, transform, target.transform, damage);
 					    nextAttack = Time.time + fireRate;
 				    }
 				    break;
 			    case Skill.RangedAOE:
-
-                    Vector3 leadDir = target.transform.position + target.transform.forward;
-                    Tuple<Vector3, float> throwInfo = ComputeThrowVelocity(target.transform.position);
-
+                    Vector3 pos = new Vector3(transform.position.x, transform.position.y + 1, transform.position.z); // fix pivot
+                    Vector3 newTarget = target.transform.position;
                     if (anticipateTarget) {
-                        leadDir += leadDir.magnitude * target.transform.position.normalized * target.transform.position.magnitude / throwInfo.Item1.magnitude;
-                        DrawThrowPath(ComputeThrowVelocity(leadDir), Color.blue);
+                        newTarget = newTarget + (target.transform.forward * anticpationValue);
                     }
                     if (drawPath) {
-                        DrawThrowPath(throwInfo,Color.green);
+                        DrawThrowPath(ComputeThrowVelocity(newTarget, pos), pos, Color.green);
                     }
 
-                    if (Time.time > nextAttack) {
-                        if (anticipateTarget) {
-                            Throw(aoeProjectilePrefab, transform, leadDir, damage, puddle);
-                        } else {
-                            Throw(aoeProjectilePrefab, transform, target.transform.position, damage, puddle);
-                        }
-
-                        nextAttack = Time.time + throwRate;
-                    }
-					break;
+                    Throw(aoeProjectilePrefab, pos, newTarget, damage, puddle);
+                    nextAttack = Time.time + throwRate;
+                    break;
 				case Skill.Root:
 					target.GetComponent<PlayerController>().StartRoot(GetComponent<EnemyMovement>(), castingTime, target, damage, transform.position, rootTime, rootBranchPrefab);
 					nextAttack = Time.time + rootCooldown;
@@ -189,18 +177,18 @@ public class EnemySkill : MonoBehaviour
 		}
 	}
 
-	void Throw(GameObject aoeProjectile, Transform firePoint, Vector3 target, int damage, GameObject puddleprefab)
+	void Throw(GameObject aoeProjectile, Vector3 firePoint, Vector3 target, int damage, GameObject puddleprefab)
 	{
-        Vector3 pos = new Vector3(firePoint.position.x, firePoint.position.y + 1, firePoint.position.z); // fix pivot
-		GameObject projectile = Instantiate(aoeProjectile, pos, firePoint.rotation);
+       
+		GameObject projectile = Instantiate(aoeProjectile, firePoint, Quaternion.identity);
 		EnemyAOEShot enemyShot = projectile.GetComponent<EnemyAOEShot>();
 		
 		if (enemyShot != null)
 		{
 			enemyShot.Init(projectileAoeRadius, projectileAoeDuration, damage,puddleprefab);
-            // !! si les LD veulent changer la vitesse 
-            //Physics.gravity = Vector3.up * gravity;
-			enemyShot.Launch(ComputeThrowVelocity(target).Item1);
+            // !! si les LD veulent changer la vitesse passer la variable gravity a public 
+            Physics.gravity = Vector3.up * gravity;
+			enemyShot.Launch(ComputeThrowVelocity(target,firePoint).Item1);
 		}
 	}
     
@@ -210,11 +198,9 @@ public class EnemySkill : MonoBehaviour
     /// </summary>
     /// <param name="target"></param>
     /// <returns></returns>
-    Tuple<Vector3,float> ComputeThrowVelocity(Vector3 target)
-	{
-        
-		float dirY = target.y - transform.position.y;
-        Vector3 dirXZ = new Vector3(target.x - transform.position.x, 0, target.z - transform.position.z);
+    Tuple<Vector3,float> ComputeThrowVelocity(Vector3 target, Vector3 initialPos)	{
+		float dirY = target.y - initialPos.y;
+        Vector3 dirXZ = new Vector3(target.x - initialPos.x, 0, target.z - initialPos.z);
 		float time = Mathf.Sqrt(-2 * maxHeight / gravity) + Mathf.Sqrt(2 * (dirY - maxHeight) / gravity);
 		Vector3 velocityY = Vector3.up * Mathf.Sqrt(-2 * gravity * maxHeight);
 		Vector3 velocityXZ = dirXZ / time ;
@@ -226,14 +212,14 @@ public class EnemySkill : MonoBehaviour
     /// Draw throw path on scene View
     /// </summary>
     /// <param name="info"></param>
-    void DrawThrowPath(Tuple<Vector3, float> info,Color color) {
-        int res = 30;
-        Vector3 prev = transform.position;
+    void DrawThrowPath(Tuple<Vector3, float> info,Vector3 init,Color color) {
+        int res = 60;
+        Vector3 prev = init;
         for (int i = 0; i < res; i++) {
             float s = i / (float)res * info.Item2;
             Vector3 disp = (info.Item1 * s) + Vector3.up * (gravity * s * s / 2f);
-            Vector3 drawp = transform.position + disp;
-            Debug.DrawLine(prev, drawp, color);
+            Vector3 drawp = init + disp;
+            Debug.DrawLine(prev, drawp, color,throwRate);
             prev = drawp;
         }
     }

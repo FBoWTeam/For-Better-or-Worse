@@ -347,8 +347,8 @@ public class PuddleSystem : MonoBehaviour
             else if (target.GetComponent<PowerController>().elementalPower == GameManager.PowerType.Electric && !electrified && !frozen)
             {
                 electrified = true;
-                GetComponent<Collider>().enabled = false;
-                GetComponent<Collider>().enabled = true;
+                transform.GetChild(0).GetComponent<Collider>().enabled = false;
+                transform.GetChild(0).GetComponent<Collider>().enabled = true;
                 GetComponent<MeshRenderer>().material = ElectrifiedWaterMaterial;
                 electrifiedWaterCoroutine = StartCoroutine(ReturnToWater(electrifiedWaterLifeTime));
             }
