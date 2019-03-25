@@ -24,7 +24,7 @@ public class OrbHitter : MonoBehaviour
 	public bool amortizing;
 	public float amortizeDuration;
 
-    void Awake()
+    void Start()
     {
         orbController = GameManager.gameManager.orb.GetComponent<OrbController>();
         inRange = false;

@@ -11,7 +11,7 @@ public class TriggerSystem : MonoBehaviour
     public enum TriggerActivation { Enter, Exit, Stay };
     public TriggerActivation triggerActivation;
 
-    public enum TriggerMode { Enemy, Dialog, EnemyAndDialog, ScenarioDialog };
+    public enum TriggerMode { Enemy, Dialog, EnemyAndDialog, ScenarioDialog, ObjectTrigger };
     public TriggerMode triggerMode;
 
     public GameObject[] enemies;
@@ -23,10 +23,13 @@ public class TriggerSystem : MonoBehaviour
     [TextArea]
     public string player2Text;
 
-    [Header("Dialog scénarisé")]  
+    [Header("Dialog scénarisé")]
     public bool foxFirst = true;
     public string[] foxDialogScenario; 
     public string[] racoonDialogScenario;
+
+    [Header("Object To Activate")]
+    public GameObject[] objectToActivate;
 
     #endregion
 
@@ -92,6 +95,14 @@ public class TriggerSystem : MonoBehaviour
         }
     }
 
+    private void TriggerObjects()
+    {
+        for (int i = 0; i < objectToActivate.Length; i++)
+        {
+            objectToActivate[i].GetComponent<IActivable>().Activate();
+        }
+    }
+
     private void TriggerManager(Collider other)
     {
         if (other.gameObject.tag == "Player")
@@ -107,6 +118,9 @@ public class TriggerSystem : MonoBehaviour
                 case TriggerMode.EnemyAndDialog:
                     TriggerEnemy();
                     TriggerDialog();
+                    break;
+                case TriggerMode.ObjectTrigger:
+                    TriggerObjects();
                     break;
                 default:
                     break;
