@@ -6,6 +6,9 @@ using System;
 [RequireComponent(typeof(Rigidbody))]
 public class PlayerController : MonoBehaviour
 {
+	[HideInInspector]
+	public bool active = true;
+
 	[Header("[Main Params]")]
     public bool player1;
     public float initialSpeed;
@@ -50,7 +53,7 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-		if (!GameManager.gameManager.isPaused)
+		if (!GameManager.gameManager.isPaused && active)
 		{
 			Move();
 			CheckTaunt();

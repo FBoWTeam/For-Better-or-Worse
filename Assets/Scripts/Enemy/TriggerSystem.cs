@@ -11,7 +11,7 @@ public class TriggerSystem : MonoBehaviour
     public enum TriggerActivation { Enter, Exit, Stay };
     public TriggerActivation triggerActivation;
 
-    public enum TriggerMode { Enemy, Dialog, EnemyAndDialog, ScenarioDialog };
+    public enum TriggerMode { Enemy, Dialog, EnemyAndDialog };
     public TriggerMode triggerMode;
 
     public GameObject[] enemies;
@@ -108,24 +108,11 @@ public class TriggerSystem : MonoBehaviour
                     TriggerEnemy();
                     TriggerDialog();
                     break;
-                case TriggerMode.ScenarioDialog:
-                    TriggerScenarioDialog();
-                    break;
                 default:
                     break;
             }
             Destroy(this.gameObject);
         }
-    }
-
-    private void TriggerScenarioDialog() {
-        if (foxDialogScenario.Length>0 || racoonDialogScenario.Length>0) {
-            GameManager.gameManager.DialogSystem.StartCoroutine(GameManager.gameManager.DialogSystem.StartDialog(foxDialogScenario, racoonDialogScenario, foxFirst));
-            //StartCoroutine(GameManager.gameManager.DialogSystem.StartDialog(foxDialogScenario,racoonDialogScenario,foxFirst));
-        }
-        if (foxDialogScenario.Length == 0 && racoonDialogScenario.Length == 0) {
-            Debug.LogError("Where are the fucking dialogs!", this);
-        } 
     }
 
     void OnDrawGizmosSelected()
