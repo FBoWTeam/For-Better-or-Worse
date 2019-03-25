@@ -15,11 +15,10 @@ public class GameManager : MonoBehaviour
 	public GameObject orb;
 	[HideInInspector]
 	public UIManager UIManager;
-    [HideInInspector]
-    public DialogSystem DialogSystem;
+	[HideInInspector]
+	public GameObject fader;
 
-
-    public bool isPaused;
+	public bool isPaused;
 
 	[Header("[Distance Limits]")]
 	public float minDistance;
@@ -86,19 +85,37 @@ public class GameManager : MonoBehaviour
         {
             Destroy(this);
         }
-        //DontDestroyOnLoad(gameManager);
 
-        player1 = GameObject.Find("Player1");
+		I18n.LoadLang("fr_FR");
+		player1 = GameObject.Find("Player1");
         player2 = GameObject.Find("Player2");
         orb = GameObject.Find("Orb");
-        UIManager = GameObject.FindGameObjectWithTag("UI").GetComponent<UIManager>();
-        DialogSystem = GameObject.FindGameObjectWithTag("Dialog").GetComponent<DialogSystem>();
+        UIManager = GameObject.Find("UI").GetComponent<UIManager>();
+		UIManager.InitDictionary();
+		fader = GameObject.Find("Fader");
+		if (GameObject.Find("IntroScenario") != null)
+		{
+			UIManager.gameObject.SetActive(false);
+			player1.GetComponent<PlayerController>().active = false;
+			player2.GetComponent<PlayerController>().active = false;
+			player1.GetComponent<OrbHitter>().active = false;
+			player2.GetComponent<OrbHitter>().active = false;
+			GameObject.Find("IntroScenario").GetComponent<ScenarioHandler>().Initialize();
+		}
+		else
+		{
+			GameObject.Find("DialogSystem").SetActive(false);
+			GameObject.Find("BlackBands").SetActive(false);
+			player1.GetComponent<PlayerController>().active = true;
+			player2.GetComponent<PlayerController>().active = true;
+			player1.GetComponent<OrbHitter>().active = true;
+			player2.GetComponent<OrbHitter>().active = true;
+			StartCoroutine(FadeCoroutine("FadeIn"));
+		}
 
-        damageTakenP1 = 0;
-        damageTakenP2 = 0;
-
-        StartCoroutine(UIManager.FadeCoroutine("FadeIn"));
-    }
+		damageTakenP1 = 0;
+		damageTakenP2 = 0;
+	}
 
     /// <summary>
     /// Handle taking damage from an Ennemy or other things
@@ -237,10 +254,17 @@ public class GameManager : MonoBehaviour
         return false;
     }
 
+	public IEnumerator FadeCoroutine(string fadeName)
+	{
+		GameManager.gameManager.isPaused = true;
+		fader.GetComponent<Animator>().SetTrigger(fadeName);
+		yield return new WaitForSeconds(fader.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).length);
+		GameManager.gameManager.isPaused = false;
+	}
 
-    IEnumerator deathCoroutine()
+	IEnumerator deathCoroutine()
     {
-        StartCoroutine(UIManager.FadeCoroutine("FadeOut"));
+        StartCoroutine(FadeCoroutine("FadeOut"));
         yield return new WaitUntil(() => isPaused == false);
 
 		isPaused = true;
@@ -273,7 +297,7 @@ public class GameManager : MonoBehaviour
 
 		actualCheckpoint.RespawnContent();
 
-		StartCoroutine(UIManager.FadeCoroutine("FadeIn"));
+		StartCoroutine(FadeCoroutine("FadeIn"));
 	}
 
     
