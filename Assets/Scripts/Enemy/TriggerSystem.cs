@@ -11,7 +11,7 @@ public class TriggerSystem : MonoBehaviour
     public enum TriggerActivation { Enter, Exit, Stay };
     public TriggerActivation triggerActivation;
 
-    public enum TriggerMode { Enemy, Dialog, EnemyAndDialog, ScenarioDialog };
+    public enum TriggerMode { Enemy, Dialog, EnemyAndDialog };
     public TriggerMode triggerMode;
 
     public GameObject[] enemies;
