@@ -34,11 +34,11 @@ public class ScenarioHandler : MonoBehaviour
 
 	private void WhenEnded(PlayableDirector obj)
 	{
-		GameManager.gameManager.isInCinematic = false;
-		GameManager.gameManager.UIManager.gameObject.SetActive(true);
 		GameObject.Find("BlackBands").SetActive(false);
 		GameManager.gameManager.damageTakenP1 = 0;
 		GameManager.gameManager.damageTakenP2 = 0;
+		GameManager.gameManager.UIManager.gameObject.SetActive(true);
+		GameManager.gameManager.UIManager.UpdateHealthBar();
 		Destroy(this.gameObject);
 	}
 }
