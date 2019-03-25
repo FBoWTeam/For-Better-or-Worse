@@ -74,7 +74,7 @@ public class SceneLoader : MonoBehaviour
 	{
 		loading = true;
 		yield return new WaitForSeconds(0.25f);
-		StartCoroutine(GameManager.gameManager.UIManager.FadeCoroutine("FadeOut"));
+		StartCoroutine(GameManager.gameManager.FadeCoroutine("FadeOut"));
 		yield return new WaitUntil(() => GameManager.gameManager.isPaused == false);
 		SceneManager.LoadScene(sceneToLoad);
 	}

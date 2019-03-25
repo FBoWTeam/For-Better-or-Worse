@@ -41,15 +41,22 @@ public class OrbController : MonoBehaviour
 
     public bool hasHitEnemy;
 
-	void Start()
-    {
+	private void OnEnable()
+	{
 		if (!isHealingOrb)
 		{
 			toPlayer2 = true;
 			progression = 0.5f;
+		}
+	}
+
+	private void Start()
+	{
+		if (!isHealingOrb)
+		{
 			transform.position = BezierCurve.CalculateCubicBezierPoint(progression);
 		}
-    }
+	}
 
     void FixedUpdate()
     {

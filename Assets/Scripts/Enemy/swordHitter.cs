@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class swordHitter : MonoBehaviour
+public class SwordHitter : MonoBehaviour
 {
 	EnemySkill enemy;
 
