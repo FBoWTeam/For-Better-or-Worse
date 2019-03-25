@@ -19,6 +19,7 @@ public class GameManager : MonoBehaviour
 	public GameObject fader;
 
 	public bool isPaused;
+	public bool isInCinematic;
 
 	[Header("[Distance Limits]")]
 	public float minDistance;
@@ -97,13 +98,13 @@ public class GameManager : MonoBehaviour
 		{
 			UIManager.gameObject.SetActive(false);
 			GameObject.Find("IntroScenario").GetComponent<ScenarioHandler>().Initialize();
+			isInCinematic = true;
 		}
 		else
 		{
 			GameObject.Find("DialogSystem").SetActive(false);
 			StartCoroutine(FadeCoroutine("FadeIn"));
 		}
-
 
 		damageTakenP1 = 0;
 		damageTakenP2 = 0;

@@ -42,6 +42,7 @@ public class DialogSystem : MonoBehaviour
     /// <returns></returns>
     public IEnumerator StartDialog(Dialog dialogToDisplay, PlayableDirector director)
 	{
+		GameManager.gameManager.isPaused = true;
 		dialog = dialogToDisplay;
 
 		DisplayBonusCharacter(dialog.bonusCharacter);
@@ -56,6 +57,7 @@ public class DialogSystem : MonoBehaviour
 
 		gameObject.SetActive(false);
 		director.Resume();
+		GameManager.gameManager.isPaused = false;
 
 		yield return null;
     }
@@ -66,20 +68,20 @@ public class DialogSystem : MonoBehaviour
     /// <returns></returns>
     private bool MoveToNextReplica()
 	{
-		if (Input.GetKey(KeyCode.A) && !speededUp)
+		if ((Input.GetKey(KeyCode.Space) || Input.GetKey(KeyCode.Keypad0) || Input.GetKey(KeyCode.Joystick1Button0) || Input.GetKey(KeyCode.Joystick2Button0)) && !speededUp)
 		{
 			writeDelay /= 10.0f;
 			speededUp = true;
 			arrowButton.sprite = arrowButtonPressed;
 		}
-		if(Input.GetKey(KeyCode.A) && canMoveToNext)
+		if((Input.GetKey(KeyCode.Space) || Input.GetKey(KeyCode.Keypad0) || Input.GetKey(KeyCode.Joystick1Button0) || Input.GetKey(KeyCode.Joystick2Button0)) && canMoveToNext)
 		{
 			writeDelay *= 10.0f;
 			speededUp = false;
 			arrowButton.sprite = arrowButtonNormal;
 			return true;
 		}
-		if (Input.GetKeyUp(KeyCode.A) && speededUp)
+		if ((Input.GetKeyUp(KeyCode.Space) || Input.GetKeyUp(KeyCode.Keypad0) || Input.GetKeyUp(KeyCode.Joystick1Button0) || Input.GetKeyUp(KeyCode.Joystick2Button0)) && speededUp)
 		{
 			writeDelay *= 10.0f;
 			speededUp = false;

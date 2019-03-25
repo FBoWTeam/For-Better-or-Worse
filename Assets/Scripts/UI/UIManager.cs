@@ -96,16 +96,6 @@ public class UIManager : MonoBehaviour
 
     #region Other Methods
 
-    public IEnumerator FadeCoroutine(string fadeName)
-    {
-		GameManager.gameManager.isPaused = true;
-		Animation anim = fader.GetComponent<Animation>();
-        anim.clip = anim.GetClip(fadeName);
-        anim.Play();
-        yield return new WaitForSeconds(1.2f);
-        GameManager.gameManager.isPaused = false;
-    }
-
     /// <summary>
     /// Update Health Bar 
     /// </summary>

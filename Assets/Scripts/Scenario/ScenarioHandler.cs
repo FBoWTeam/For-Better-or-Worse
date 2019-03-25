@@ -21,6 +21,8 @@ public class ScenarioHandler : MonoBehaviour
 		actualDialog = 0;
 
 		director.Play();
+		director.stopped += WhenEnded;
+;
 	}
 
 	public void LaunchNextDialog()
@@ -28,5 +30,15 @@ public class ScenarioHandler : MonoBehaviour
 		dialogSystem.gameObject.SetActive(true);
 		director.Pause();
 		StartCoroutine(dialogSystem.StartDialog(dialogs[actualDialog++], director));
+	}
+
+	private void WhenEnded(PlayableDirector obj)
+	{
+		GameManager.gameManager.isInCinematic = false;
+		GameManager.gameManager.UIManager.gameObject.SetActive(true);
+		GameObject.Find("BlackBands").SetActive(false);
+		GameManager.gameManager.damageTakenP1 = 0;
+		GameManager.gameManager.damageTakenP2 = 0;
+		Destroy(this.gameObject);
 	}
 }

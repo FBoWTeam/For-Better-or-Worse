@@ -25,7 +25,6 @@ public class Checkpoint : MonoBehaviour
 	{
 		if(other.CompareTag("Player") && !checkpointActivated)
 		{
-            Debug.Log("oui");
 			GameManager.gameManager.actualCheckpoint = this;
 			GameManager.gameManager.RecordPower();
 
