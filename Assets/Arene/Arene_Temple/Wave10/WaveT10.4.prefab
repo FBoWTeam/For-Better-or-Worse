@@ -41,6 +41,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 4441984158128911616}
     m_Modifications:
+    - target: {fileID: 4205728391272827244, guid: 45e9dc3e264d72b43a000770c6a8f38f,
+        type: 3}
+      propertyPath: m_Name
+      value: EnemyImpact Variant
+      objectReference: {fileID: 0}
     - target: {fileID: 4205728391272827219, guid: 45e9dc3e264d72b43a000770c6a8f38f,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -96,10 +101,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 4205728391272827244, guid: 45e9dc3e264d72b43a000770c6a8f38f,
+    - target: {fileID: 4205728391272827218, guid: 45e9dc3e264d72b43a000770c6a8f38f,
         type: 3}
-      propertyPath: m_Name
-      value: EnemyImpact Variant
+      propertyPath: m_Enabled
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 45e9dc3e264d72b43a000770c6a8f38f, type: 3}
@@ -116,10 +121,20 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 4441984158128911616}
     m_Modifications:
-    - target: {fileID: 6905369562583176954, guid: 04a2059bdc08fac4997e3760f5627477,
+    - target: {fileID: 66409540600963275, guid: 04a2059bdc08fac4997e3760f5627477,
         type: 3}
-      propertyPath: m_Name
-      value: EnemyMovingSniper Variant
+      propertyPath: droppedPower
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 66409540600963275, guid: 04a2059bdc08fac4997e3760f5627477,
+        type: 3}
+      propertyPath: chanceOfPowerDrop
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6905369562583176900, guid: 04a2059bdc08fac4997e3760f5627477,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6905369562583176901, guid: 04a2059bdc08fac4997e3760f5627477,
         type: 3}
@@ -176,20 +191,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 6905369562583176900, guid: 04a2059bdc08fac4997e3760f5627477,
+    - target: {fileID: 6905369562583176954, guid: 04a2059bdc08fac4997e3760f5627477,
         type: 3}
-      propertyPath: m_Enabled
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 66409540600963275, guid: 04a2059bdc08fac4997e3760f5627477,
-        type: 3}
-      propertyPath: droppedPower
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 66409540600963275, guid: 04a2059bdc08fac4997e3760f5627477,
-        type: 3}
-      propertyPath: chanceOfPowerDrop
-      value: 0.5
+      propertyPath: m_Name
+      value: EnemyMovingSniper Variant
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 04a2059bdc08fac4997e3760f5627477, type: 3}
@@ -206,10 +211,21 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 4441984158128911616}
     m_Modifications:
-    - target: {fileID: 6905369562583176954, guid: 5b170156301a80648a8a4e23154d8e52,
+    - target: {fileID: 1098575007328418268, guid: 5b170156301a80648a8a4e23154d8e52,
         type: 3}
-      propertyPath: m_Name
-      value: EnemyMovingRangedAOE
+      propertyPath: puddle
+      value: 
+      objectReference: {fileID: 4985460314402858058, guid: d6299b2aadfaef94181f3a6492d09c37,
+        type: 3}
+    - target: {fileID: 5935649193357009477, guid: 5b170156301a80648a8a4e23154d8e52,
+        type: 3}
+      propertyPath: bonus
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6905369562583176900, guid: 5b170156301a80648a8a4e23154d8e52,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6905369562583176901, guid: 5b170156301a80648a8a4e23154d8e52,
         type: 3}
@@ -219,7 +235,7 @@ PrefabInstance:
     - target: {fileID: 6905369562583176901, guid: 5b170156301a80648a8a4e23154d8e52,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6905369562583176901, guid: 5b170156301a80648a8a4e23154d8e52,
         type: 3}
@@ -266,21 +282,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 6905369562583176900, guid: 5b170156301a80648a8a4e23154d8e52,
+    - target: {fileID: 6905369562583176954, guid: 5b170156301a80648a8a4e23154d8e52,
         type: 3}
-      propertyPath: m_Enabled
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1098575007328418268, guid: 5b170156301a80648a8a4e23154d8e52,
-        type: 3}
-      propertyPath: puddle
-      value: 
-      objectReference: {fileID: 4985460314402858058, guid: d6299b2aadfaef94181f3a6492d09c37,
-        type: 3}
-    - target: {fileID: 5935649193357009477, guid: 5b170156301a80648a8a4e23154d8e52,
-        type: 3}
-      propertyPath: bonus
-      value: 2
+      propertyPath: m_Name
+      value: EnemyMovingRangedAOE
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5b170156301a80648a8a4e23154d8e52, type: 3}
@@ -297,6 +302,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 4441984158128911616}
     m_Modifications:
+    - target: {fileID: 4205728391272827244, guid: 45e9dc3e264d72b43a000770c6a8f38f,
+        type: 3}
+      propertyPath: m_Name
+      value: EnemyImpact Variant (1)
+      objectReference: {fileID: 0}
     - target: {fileID: 4205728391272827219, guid: 45e9dc3e264d72b43a000770c6a8f38f,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -352,10 +362,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 4205728391272827244, guid: 45e9dc3e264d72b43a000770c6a8f38f,
+    - target: {fileID: 4205728391272827218, guid: 45e9dc3e264d72b43a000770c6a8f38f,
         type: 3}
-      propertyPath: m_Name
-      value: EnemyImpact Variant (1)
+      propertyPath: m_Enabled
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 45e9dc3e264d72b43a000770c6a8f38f, type: 3}
