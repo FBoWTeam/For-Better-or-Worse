@@ -110,7 +110,10 @@ public class EnemyMovement : MonoBehaviour
         Tuple<GameObject, float> nearestPlayer = ClosestPlayer();
         if (nearestPlayer.Item2 < enemySkill.range/2)
         {
-            StopCoroutine(strafingCoroutine);
+            if (strafingCoroutine != null)
+            {
+                StopCoroutine(strafingCoroutine);
+            }
             isStrafing = false;
             EnemyEscape(nearestPlayer.Item1, enemySkill.range);
         }
@@ -120,7 +123,10 @@ public class EnemyMovement : MonoBehaviour
         }
         else if (nearestPlayer.Item2 > enemySkill.range)
         {
-            StopCoroutine(strafingCoroutine);
+            if (strafingCoroutine != null)
+            {
+                StopCoroutine(strafingCoroutine);
+            }
             isStrafing = false;
             MoveToPlayer(nearestPlayer.Item1, nearestPlayer.Item2);
         }
@@ -159,7 +165,7 @@ public class EnemyMovement : MonoBehaviour
     void EnemyEscape(GameObject target, float enemyRange)
     {
         float timeStamp = Time.time;
-
+        //wait x seconds
         Vector3 dir = (this.transform.position - target.transform.position).normalized * enemyRange/2;
         agent.destination = this.transform.position + dir;
     }
