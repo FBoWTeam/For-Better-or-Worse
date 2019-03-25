@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class CameraFollow : MonoBehaviour
 {
-
 	public Vector3 angle;
 	public float smoothTime;
 	Vector3 velocity;
@@ -43,7 +42,7 @@ public class CameraFollow : MonoBehaviour
 	{
 		float distancePlayer = Vector3.Distance(GameManager.gameManager.player1.transform.position, GameManager.gameManager.player2.transform.position);
 		float newZoom = (((distancePlayer - GameManager.gameManager.minDistance) * (maxDist - minDist)) / (GameManager.gameManager.maxDistance - GameManager.gameManager.minDistance)) + minDist;
-		cam.transform.position = Vector3.SmoothDamp(cam.transform.position, transform.position - cam.transform.forward * newZoom, ref velocity, smoothTime);
+		transform.position = Vector3.SmoothDamp(cam.transform.position, transform.position - cam.transform.forward * newZoom, ref velocity, smoothTime);
 	}
 
 	/// <summary>
