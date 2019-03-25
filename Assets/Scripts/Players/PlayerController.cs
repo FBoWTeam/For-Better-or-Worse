@@ -7,7 +7,7 @@ using System;
 public class PlayerController : MonoBehaviour
 {
 	[HideInInspector]
-	public bool active;
+	public bool active = true;
 
 	[Header("[Main Params]")]
     public bool player1;
@@ -41,7 +41,6 @@ public class PlayerController : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         orbHitter = GetComponent<OrbHitter>();
 		animator = GetComponent<Animator>();
-		active = false;
     }
 
     private void Start()
