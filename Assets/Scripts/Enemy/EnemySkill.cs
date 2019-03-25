@@ -91,13 +91,19 @@ public class EnemySkill : MonoBehaviour
 	public float rootTime;
 	[DrawIf(new string[] { "skill" }, Skill.Root)]
 	public GameObject rootBranchPrefab;
-	#endregion
+    [DrawIf(new string[] { "skill" }, Skill.Root)]
+    public Coroutine rootCoroutine;
+    [DrawIf(new string[] { "skill" }, Skill.Root)]
+    public bool isCasting;
+    #endregion
 
-	public float range = 4f;
+    public float range = 4f;
 	public bool isInRange;
 	public int damage = 5;
 	float nextAttack = 0f;
     float gravity = -9.81f;
+
+
     #endregion
 
 
@@ -165,8 +171,8 @@ public class EnemySkill : MonoBehaviour
                     nextAttack = Time.time + throwRate;
                     break;
 				case Skill.Root:
-					target.GetComponent<PlayerController>().StartRoot(GetComponent<EnemyMovement>(), castingTime, target, damage, transform.position, rootTime, rootBranchPrefab);
-					nextAttack = Time.time + rootCooldown;
+                    rootCoroutine = target.GetComponent<PlayerController>().StartCoroutine(target.GetComponent<PlayerController>().RootCoroutine(GetComponent<EnemySkill>(), GetComponent<EnemyMovement>(), castingTime, target, damage, transform.position, rootTime, rootBranchPrefab));
+                    nextAttack = Time.time + rootCooldown;
 					break;
 				case Skill.None:
 					break;

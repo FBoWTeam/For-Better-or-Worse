@@ -5,7 +5,7 @@ using UnityEngine;
 public class OrbHitter : MonoBehaviour
 {
 	[HideInInspector]
-	public bool active;
+	public bool active = true;
     OrbController orbController;
 
     [Tooltip("represents the orb hitting range")]
@@ -24,11 +24,10 @@ public class OrbHitter : MonoBehaviour
 	public bool amortizing;
 	public float amortizeDuration;
 
-    void Awake()
+    void Start()
     {
         orbController = GameManager.gameManager.orb.GetComponent<OrbController>();
         inRange = false;
-		active = false;
 	}
 
     // Update is called once per frame

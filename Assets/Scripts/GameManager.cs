@@ -96,11 +96,20 @@ public class GameManager : MonoBehaviour
 		if (GameObject.Find("IntroScenario") != null)
 		{
 			UIManager.gameObject.SetActive(false);
+			player1.GetComponent<PlayerController>().active = false;
+			player2.GetComponent<PlayerController>().active = false;
+			player1.GetComponent<OrbHitter>().active = false;
+			player2.GetComponent<OrbHitter>().active = false;
 			GameObject.Find("IntroScenario").GetComponent<ScenarioHandler>().Initialize();
 		}
 		else
 		{
 			GameObject.Find("DialogSystem").SetActive(false);
+			GameObject.Find("BlackBands").SetActive(false);
+			player1.GetComponent<PlayerController>().active = true;
+			player2.GetComponent<PlayerController>().active = true;
+			player1.GetComponent<OrbHitter>().active = true;
+			player2.GetComponent<OrbHitter>().active = true;
 			StartCoroutine(FadeCoroutine("FadeIn"));
 		}
 

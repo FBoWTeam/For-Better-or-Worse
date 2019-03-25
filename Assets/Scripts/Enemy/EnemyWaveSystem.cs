@@ -15,6 +15,11 @@ public class EnemyWaveSystem : MonoBehaviour,IActivable
 
     public bool isActive { get; set; }
 
+    //object to deactivate when the waves spawn
+    public GameObject[] objectToDectivate;
+    //object to activate when the enemies are beated
+    public GameObject[] objectToActivate;
+    
 
     /// <summary>
     /// coroutine that handles the wave system
@@ -28,7 +33,13 @@ public class EnemyWaveSystem : MonoBehaviour,IActivable
         //if no waves to instanciate, exit the coroutine
         if (enemyWaves.Length == 0)
         {
+            ActivateObjects();
             yield break;
+        }
+
+        if (objectToDectivate.Length > 0)
+        {
+            DeactivateObjects();
         }
 
         //while the list of enemies to instanciate is not empty
@@ -36,7 +47,6 @@ public class EnemyWaveSystem : MonoBehaviour,IActivable
         {
             //instanciate the wave at the index currentWave 
             GameObject wave = Instantiate(enemyWaves[currentWave], transform.position, Quaternion.identity);
-
 
             //if the enemies of the current wave is not defeated or if the timer is still under the limit timeBetweenWaves => doesn't instanciate the next wave
             while (wave.transform.childCount != 0 && timer < timeBetweenWaves)
@@ -54,11 +64,34 @@ public class EnemyWaveSystem : MonoBehaviour,IActivable
             if (enemyWaves.Length <= currentWave)
             {
                 enemiesDefeated = true;
+                if (objectToActivate != null)
+                {
+                    ActivateObjects();
+                }
                 yield break;
             }
 
         }
 
+    }
+
+    private void ActivateObjects()
+    {
+        for (int i = 0; i < objectToActivate.Length; i++)
+        {
+            objectToActivate[i].GetComponent<IActivable>().Activate();
+        }
+    }
+
+    private void DeactivateObjects()
+    {
+        for (int i = 0; i < objectToActivate.Length; i++)
+        {
+            if (objectToActivate[i].GetComponent<Door>() != null)
+            {
+                objectToActivate[i].GetComponent<Door>().Deactivate();
+            }
+        }
     }
 
     public void Activate()
