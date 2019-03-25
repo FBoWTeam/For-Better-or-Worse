@@ -108,7 +108,7 @@ public class EnemyMovement : MonoBehaviour
     void RangedMovement()
     {
         Tuple<GameObject, float> nearestPlayer = ClosestPlayer();
-        if (nearestPlayer.Item2 < enemySkill.range/2)
+        if (nearestPlayer.Item2 < enemySkill.range/6)
         {
             if (strafingCoroutine != null)
             {
@@ -119,7 +119,7 @@ public class EnemyMovement : MonoBehaviour
         }
         else if (nearestPlayer.Item2 < enemySkill.range - 2 && !isStrafing)
         {
-            strafingCoroutine = StartCoroutine(Strafing(nearestPlayer.Item1, enemySkill.range));
+            agent.destination = transform.position;
         }
         else if (nearestPlayer.Item2 > enemySkill.range)
         {
@@ -155,7 +155,6 @@ public class EnemyMovement : MonoBehaviour
             yield return new WaitForEndOfFrame();
         }
         isStrafing = false;
-        //Debug.Log("oui");
     }
     
 
@@ -166,7 +165,7 @@ public class EnemyMovement : MonoBehaviour
     {
         float timeStamp = Time.time;
         //wait x seconds
-        Vector3 dir = (this.transform.position - target.transform.position).normalized * enemyRange/2;
+        Vector3 dir = (this.transform.position - target.transform.position).normalized * enemyRange/6;
         agent.destination = this.transform.position + dir;
     }
 

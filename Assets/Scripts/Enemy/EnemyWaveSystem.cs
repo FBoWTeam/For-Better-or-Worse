@@ -63,7 +63,6 @@ public class EnemyWaveSystem : MonoBehaviour,IActivable
             //if all the waves are not defeated, instanciate the next wave
             if (enemyWaves.Length <= currentWave)
             {
-                Debug.Log("oui");
                 enemiesDefeated = true;
                 if (objectToActivate != null)
                 {
