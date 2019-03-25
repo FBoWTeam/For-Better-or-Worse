@@ -241,17 +241,20 @@ public class PlayerController : MonoBehaviour
         isFrozen = false;
     }
 
-    
+    /*
     public void StartRoot(EnemyMovement eM, float castingTime, GameObject targetPlayer, int damage, Vector3 pos, float rootTime, GameObject rootBranchPrefab)
     {
         StartCoroutine(RootCoroutine(eM, castingTime, targetPlayer, damage, pos, rootTime, rootBranchPrefab));
     }
+    */
 
-    IEnumerator RootCoroutine(EnemyMovement eM, float castingTime, GameObject targetPlayer, int damage, Vector3 pos, float rootTime, GameObject rootBranchPrefab)
+    public IEnumerator RootCoroutine(EnemySkill eK, EnemyMovement eM, float castingTime, GameObject targetPlayer, int damage, Vector3 pos, float rootTime, GameObject rootBranchPrefab)
     {
         eM.agent.isStopped = true;
+        eK.isCasting = true;
         yield return new WaitForSecondsRealtime(castingTime);
         eM.agent.isStopped = false;
+        eK.isCasting = false;
 
         GameManager.gameManager.TakeDamage(targetPlayer, damage, pos, false);
         GameManager.gameManager.UIManager.QuoteOnDamage("enemy", targetPlayer);
