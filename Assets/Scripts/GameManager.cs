@@ -204,10 +204,14 @@ public class GameManager : MonoBehaviour
         {
             if (damageTakenP1 > healAmount)
             {
+                //update score manager
+                ScoreManager.scoreManager.healPointReceivedP1 += healAmount;
                 damageTakenP1 -= healAmount;
             }
             else
             {
+                //update score manager
+                ScoreManager.scoreManager.healPointReceivedP1 += healAmount - damageTakenP1;
                 damageTakenP1 = 0;
             }
         }
@@ -215,10 +219,14 @@ public class GameManager : MonoBehaviour
         {
             if (damageTakenP2 > healAmount)
             {
+                //update score manager
+                ScoreManager.scoreManager.healPointReceivedP2 += healAmount;
                 damageTakenP2 -= healAmount;
             }
             else
             {
+                //update score manager
+                ScoreManager.scoreManager.healPointReceivedP2 += healAmount - damageTakenP2;
                 damageTakenP2 = 0;
             }
         }
