@@ -28,7 +28,6 @@ public class EnemyAOEShot: MonoBehaviour {
 
     private void CheckGround() {
         if (transform.position.y < YThreshold && !isGrounded) {
-            print("alors");
             // start aplying damge in the zone
             isGrounded = true;
             body.constraints = RigidbodyConstraints.FreezeAll;
