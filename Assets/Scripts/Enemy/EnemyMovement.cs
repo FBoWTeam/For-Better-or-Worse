@@ -108,7 +108,7 @@ public class EnemyMovement : MonoBehaviour
     void RangedMovement()
     {
         Tuple<GameObject, float> nearestPlayer = ClosestPlayer();
-        if (nearestPlayer.Item2 < enemySkill.range/4)
+        if (nearestPlayer.Item2 < enemySkill.range/1.5f)
         {
             if (strafingCoroutine != null)
             {
@@ -165,7 +165,7 @@ public class EnemyMovement : MonoBehaviour
     {
         float timeStamp = Time.time;
         //wait x seconds
-        Vector3 dir = (this.transform.position - target.transform.position).normalized * enemyRange/4;
+        Vector3 dir = (this.transform.position - target.transform.position).normalized * enemyRange/1.5f;
         agent.destination = this.transform.position + dir*2;
     }
 
