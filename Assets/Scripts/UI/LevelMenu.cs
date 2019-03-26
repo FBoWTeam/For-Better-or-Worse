@@ -1,16 +1,18 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+
 
 public class LevelMenu : MonoBehaviour
 {
 
     List<Vector3> pos = new List<Vector3>();
     List<int> indexPI = new List<int>();
-    int curentPosIndex;
-    int curentPIIndex;
-    int destPosIndex;
-    int destPIIndex;
+    public int curentPosIndex;
+    public int curentPIIndex;
+    public int destPosIndex;
+    public int destPIIndex;
 
     public bool isMoving;
 
@@ -92,27 +94,49 @@ public class LevelMenu : MonoBehaviour
     {
         if (!isMoving)
         {
-            if ( (Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.DownArrow)) && destPIIndex < indexPI.Capacity)
+            if (curentPosIndex == destPosIndex)
             {
-                destPIIndex++;
-                destPosIndex = indexPI[destPIIndex];
+                if ((Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.DownArrow)
+                     || Input.GetAxis("DeformP1X") > Input.GetAxis("DeformP1Z")
+                     || Input.GetAxis("HorizontalP1") > Input.GetAxis("VerticalP1"))
+                    && destPIIndex < indexPI.Count - 1)
+                {
+                    destPIIndex++;
+                    destPosIndex = indexPI[destPIIndex];
+                }
+                
+                if ((Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.UpArrow)
+                     || Input.GetAxis("DeformP1X") < Input.GetAxis("DeformP1Z")
+                     || Input.GetAxis("HorizontalP1") < Input.GetAxis("VerticalP1"))
+                    && destPIIndex > 0)
+                {
+                    destPIIndex--;
+                    destPosIndex = indexPI[destPIIndex];
+                }
+
+                if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.Joystick1Button0))
+                {
+                    if (curentPIIndex == 0)
+                        SceneManager.LoadScene("Prologue");
+                    if (curentPIIndex == 1)
+                        SceneManager.LoadScene("Jungle");
+                    if (curentPIIndex == 2)
+                        SceneManager.LoadScene("Boss");
+                }
             }
 
             if (curentPosIndex < destPosIndex)
             {
                 StartCoroutine(GoToNextPos());
-            }
-
-            if ( (Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.UpArrow)) && destPIIndex > 0)
-            {
-                destPIIndex--;
-                destPosIndex = indexPI[destPIIndex];
+                curentPIIndex = destPIIndex;
             }
 
             if (curentPosIndex > destPosIndex)
             {
                 StartCoroutine(GoToPreviousPos());
+                curentPIIndex = destPIIndex;
             }
+                        
         }
     }
 
