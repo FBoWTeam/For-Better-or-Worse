@@ -13,7 +13,6 @@ GameObject:
   - component: {fileID: 4378458398394856536}
   - component: {fileID: 550201580726470068}
   - component: {fileID: 1932008526136322624}
-  - component: {fileID: 1939272557459997607}
   m_Layer: 0
   m_Name: Acid
   m_TagString: Puddle
@@ -136,20 +135,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!64 &1939272557459997607
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4985460314402858058}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Convex: 1
-  m_CookingOptions: 14
-  m_Mesh: {fileID: 10206, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!1 &5974402454596096907
 GameObject:
   m_ObjectHideFlags: 0
@@ -159,6 +144,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5149374111628986443}
+  - component: {fileID: 1864448220980648593}
   m_Layer: 0
   m_Name: collider
   m_TagString: Untagged
@@ -180,3 +166,17 @@ Transform:
   m_Father: {fileID: 8465427327951984233}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!64 &1864448220980648593
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5974402454596096907}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Convex: 1
+  m_CookingOptions: 14
+  m_Mesh: {fileID: 10206, guid: 0000000000000000e000000000000000, type: 0}
