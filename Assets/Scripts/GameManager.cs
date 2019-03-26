@@ -127,6 +127,10 @@ public class GameManager : MonoBehaviour
         {
             if (targetPlayer == player1)
             {
+                //update in score mamager
+                ScoreManager.scoreManager.damageTakenP1 += damage;
+
+
                 if (damage >= shieldP1)
                 {
                     damage -= shieldP1;
@@ -141,6 +145,10 @@ public class GameManager : MonoBehaviour
             }
             if (targetPlayer == player2)
             {
+                //update in score mamager
+                ScoreManager.scoreManager.damageTakenP2 += damage;
+
+                
                 if (damage >= shieldP2)
                 {
                     damage -= shieldP2;
@@ -264,6 +272,9 @@ public class GameManager : MonoBehaviour
 
 	IEnumerator deathCoroutine()
     {
+        //update in score manager
+        ScoreManager.scoreManager.numberOfDeaths++;
+
         StartCoroutine(FadeCoroutine("FadeOut"));
         yield return new WaitUntil(() => isPaused == false);
 

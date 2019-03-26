@@ -177,6 +177,22 @@ public class OrbController : MonoBehaviour
                 GameManager.gameManager.TakeDamage(other.gameObject, gameObject.GetComponent<PowerController>().baseDamage, other.transform.position, true);
                 GameManager.gameManager.UIManager.QuoteOnDamage("orb", other.gameObject);
             }
+
+            //update in score manager
+            if (other.GetComponent<PlayerController>().player1)
+            {
+                ScoreManager.scoreManager.orbHitMissedP1++;
+            }
+            else
+            {
+                ScoreManager.scoreManager.orbHitMissedP2++;
+            }
+            if (combo > 0)
+            {
+                ScoreManager.scoreManager.KeepMaxCombo(combo);
+            }
+
+
             combo = 0;
             GameManager.gameManager.UIManager.UpdateCombo(combo);
             speed = minSpeed;
@@ -194,7 +210,13 @@ public class OrbController : MonoBehaviour
 
 	public void RespawnReset()
 	{
-		combo = 0;
+        //update in score manager
+        if (combo > 0)
+        {
+            ScoreManager.scoreManager.KeepMaxCombo(combo);
+        }
+
+        combo = 0;
 		GameManager.gameManager.UIManager.UpdateCombo(combo);
 		speed = minSpeed;
 		amortized = false;
