@@ -110,6 +110,10 @@ public class PuddleSystem : MonoBehaviour
                 break;
             case GameManager.PuddleType.Flammable:
                 GetComponent<MeshRenderer>().material = flammableMaterial;
+                if (onFire)
+                {
+                    ActivateFlammable();
+                }
                 break;
             case GameManager.PuddleType.Mud:
                 GetComponent<MeshRenderer>().material = mudMaterial;
@@ -418,9 +422,7 @@ public class PuddleSystem : MonoBehaviour
     {
         if (!onFire && target.CompareTag("Orb") && target.GetComponent<PowerController>().elementalPower == GameManager.PowerType.Fire)
         {
-            onFire = true;
-            GetComponent<MeshRenderer>().material = onFireFlammableMaterial;
-            Destroy(gameObject, onFireFlammableLifeTime);
+            ActivateFlammable();
         }
         if (onFire && target.CompareTag("Orb") && target.GetComponent<PowerController>().elementalPower == GameManager.PowerType.Ice)
         {
@@ -448,6 +450,14 @@ public class PuddleSystem : MonoBehaviour
             }
         }
     }
+
+    void ActivateFlammable()
+    {
+        onFire = true;
+        GetComponent<MeshRenderer>().material = onFireFlammableMaterial;
+        Destroy(gameObject, onFireFlammableLifeTime);
+    }
+
 
     IEnumerator Burn(GameObject target)
     {
