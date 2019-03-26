@@ -185,7 +185,7 @@ public class OrbController : MonoBehaviour
             }
             else
             {
-                ScoreManager.scoreManager.orbHitMissedP1++;
+                ScoreManager.scoreManager.orbHitMissedP2++;
             }
             if (combo > 0)
             {
