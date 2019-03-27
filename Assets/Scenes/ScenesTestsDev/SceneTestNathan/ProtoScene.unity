@@ -1255,6 +1255,31 @@ PrefabInstance:
       propertyPath: m_Material
       value: 
       objectReference: {fileID: 2100000, guid: 59929ee5ea42e1f418426997b848d850, type: 2}
+    - target: {fileID: 96018563529824241, guid: 88ac0b2d964b153488a65f115a787617,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2585431467963684345, guid: 88ac0b2d964b153488a65f115a787617,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 884471238386350022, guid: 88ac0b2d964b153488a65f115a787617,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8528671159777117748, guid: 88ac0b2d964b153488a65f115a787617,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8528671160663973963, guid: 88ac0b2d964b153488a65f115a787617,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 88ac0b2d964b153488a65f115a787617, type: 3}
 --- !u!1001 &308188602
@@ -6838,17 +6863,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b6c701f8079d00340a8ae5293ecdf603, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  baseHP: 0
-  actualPhase: 1
-  phase2Treshold: 0
-  phase3Treshold: 0.4
-  phase4Treshold: 0
-  phase1: []
-  phase2: []
-  phase3: []
-  phase4: []
-  minWaitTime: 0
-  maxWaitTime: 0
+  baseHP: 1000
+  actualPhase: 0
+  phase2Treshold: 0.8
+  phase3Treshold: 0.6
+  phase4Treshold: 0.4
+  phase1:
+  - pattern: 0
+    probability: 0.33
+  - pattern: 1
+    probability: 0.33
+  - pattern: 2
+    probability: 0.33
+  phase2:
+  - pattern: 3
+    probability: 0.5
+  - pattern: 4
+    probability: 0.5
+  phase3:
+  - pattern: 4
+    probability: 1
+  phase4:
+  - pattern: 5
+    probability: 0.5
+  - pattern: 6
+    probability: 0.5
+  minWaitTime: 2
+  maxWaitTime: 10
 --- !u!4 &1672156497
 Transform:
   m_ObjectHideFlags: 0

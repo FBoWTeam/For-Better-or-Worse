@@ -68,7 +68,7 @@ public class BossSystem : MonoBehaviour
 
 			if (Time.time == nextAttack)
 			{
-				DoPattern();
+				LaunchPattern(RandomPattern());
 			}
 
 
@@ -125,8 +125,29 @@ public class BossSystem : MonoBehaviour
 		}
 	}
 
-	public void DoPattern()
+	public void LaunchPattern(BossPattern pattern)
 	{
+		switch(pattern)
+		{
+			case BossPattern.MysticLine:
+				break;
+			case BossPattern.FireBall:
+				break;
+			case BossPattern.ElectricZone:
+				break;
+			case BossPattern.ShrinkMysticLines:
+				break;
+			case BossPattern.ElectricCone:
+				break;
+			case BossPattern.Charge:
+				break;
+			case BossPattern.ElectricAOE:
+				break;
+		}
+	}
 
+	public BossPattern RandomPattern()
+	{
+		return BossPattern.MysticLine;
 	}
 }
