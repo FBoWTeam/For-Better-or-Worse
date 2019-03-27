@@ -719,8 +719,6 @@ public class PowerController : MonoBehaviour
                 enemy.actualDarknessCoroutine = enemy.StartCoroutine(enemy.DarknessCoroutine(darknessTimer));
                 break;
         }
-        
-		enemy.TakeDamage(damageTaken);
 
         //update in score manager (to keep track of who's given the last hit)
         if (GameManager.gameManager.orb.GetComponent<OrbController>().toPlayer2)
@@ -733,6 +731,10 @@ public class PowerController : MonoBehaviour
             enemy.lastHitByP1 = false;
             enemy.lastHitByP2 = true;
         }
+
+        enemy.TakeDamage(damageTaken);
+
+
         
 
         if (behaviouralPower == GameManager.PowerType.LeechLife)
