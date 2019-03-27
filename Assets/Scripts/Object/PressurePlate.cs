@@ -21,9 +21,13 @@ public class PressurePlate : MonoBehaviour, IActivable
 
     [DrawIf(new string[] { "type" }, PressurePlateType.PowerGiver)]
     public GameManager.PowerType powerToGive;
+    [DrawIf(new string[] { "type" }, PressurePlateType.PowerGiver)]
+    public GameObject otherPowerGiver;
+
+    private GameObject playerWhoTookPower;
 
     private Animator anim;
-    private bool powerGiven;
+    public bool powerGiven;
 
     private void Start()
     {
@@ -56,10 +60,17 @@ public class PressurePlate : MonoBehaviour, IActivable
 
     private void GivePower(GameObject other)
     {
-        if (!powerGiven)
+        if (otherPowerGiver.GetComponent<PressurePlate>().powerGiven && !powerGiven && (other.gameObject != otherPowerGiver.GetComponent<PressurePlate>().playerWhoTookPower))
         {
             other.gameObject.GetComponent<PlayerController>().AttributePower(powerToGive);
             powerGiven = true;
+            playerWhoTookPower = other.gameObject;
+        }
+        else if (!powerGiven && !otherPowerGiver.GetComponent<PressurePlate>().powerGiven)
+        {
+            other.gameObject.GetComponent<PlayerController>().AttributePower(powerToGive);
+            powerGiven = true;
+            playerWhoTookPower = other.gameObject;
         }
     }
 
