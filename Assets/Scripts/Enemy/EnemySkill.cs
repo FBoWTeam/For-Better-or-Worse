@@ -79,7 +79,6 @@ public class EnemySkill : MonoBehaviour
     public float maxHeight = 10; //[Range(0.1f,100f)]
     [DrawIf(new string[] { "skill" }, Skill.RangedAOE)]
     public GameObject puddle;
-
     #endregion
 
     #region Root
@@ -102,7 +101,7 @@ public class EnemySkill : MonoBehaviour
 	public int damage = 5;
 	float nextAttack = 0f;
     float gravity = -9.81f;
-
+    public Transform shotPosition;
 
     #endregion
 
@@ -153,8 +152,9 @@ public class EnemySkill : MonoBehaviour
 			    case Skill.Ranged:
 				    if (isVisible(transform.position, target.transform.position))
 				    {
-                        Shoot(bulletPrefab, transform, target.transform, damage);
-					    nextAttack = Time.time + fireRate;
+                        StartCoroutine(Shoot(bulletPrefab, shotPosition, target.transform, damage));
+
+                        nextAttack = Time.time + fireRate;
 				    }
 				    break;
 			    case Skill.RangedAOE:
@@ -271,14 +271,16 @@ public class EnemySkill : MonoBehaviour
 	/// <param name="firePoint"></param>
 	/// <param name="target"></param>
 	/// <param name="damage"></param>
-	void Shoot(GameObject projectilePrefab, Transform firePoint, Transform target, int damage)
+	IEnumerator Shoot(GameObject projectilePrefab, Transform firePoint, Transform target, int damage)
 	{
-		GameObject projectile = (GameObject)Instantiate(projectilePrefab, firePoint.position, firePoint.rotation);
+        yield return new WaitForSeconds(GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).length/4);
+
+        GameObject projectile = (GameObject)Instantiate(projectilePrefab, firePoint.position, firePoint.rotation);
 		EnemyShot enemyShot = projectile.GetComponent<EnemyShot>();
 
 		if (enemyShot != null)
 		{
-			enemyShot.Initialise(target, damage, bulletSpeed);
+			enemyShot.Initialise(target.position, damage, bulletSpeed);
 		}
 	}
 

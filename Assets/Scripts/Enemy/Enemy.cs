@@ -90,7 +90,7 @@ public class Enemy : MonoBehaviour
         enemyMovement = GetComponent<EnemyMovement>();
         enemySkill = GetComponent<EnemySkill>();
         sdrawPath = drawPath;
-        tauntCanvas = transform.GetChild(4).gameObject;
+        tauntCanvas = transform.GetChild(0).gameObject;
 		animator = GetComponent<Animator>();
 	}
 
