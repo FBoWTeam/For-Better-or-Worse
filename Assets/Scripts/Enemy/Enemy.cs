@@ -80,10 +80,15 @@ public class Enemy : MonoBehaviour
 
     Animator animator;
 
-	#endregion
 
-	// Start is called before the first frame update
-	void Start()
+    public bool lastHitByP1;
+    public bool lastHitByP2;
+
+
+    #endregion
+
+    // Start is called before the first frame update
+    void Start()
     {
         hp = baseHP;
         players = new GameObject[] { GameManager.gameManager.player1, GameManager.gameManager.player2 };
@@ -211,6 +216,20 @@ public class Enemy : MonoBehaviour
         GameManager.gameManager.orb.GetComponent<OrbController>().hasHitEnemy = true;
 		if (hp <= 0)
 		{
+            //update in score manager
+            if (lastHitByP1 && !lastHitByP2)
+            {
+                ScoreManager.scoreManager.killsP1++;
+            }
+            else if (!lastHitByP1 && lastHitByP2)
+            {
+                ScoreManager.scoreManager.killsP2++;
+            }
+            else if (!lastHitByP1 && !lastHitByP2)
+            {
+                ScoreManager.scoreManager.killsEnvironment++;
+            }
+
 			GetComponent<LootTable>().LootEnemy();
 			enemyMovement.agent.isStopped = true;
 			StopAllCoroutines();
