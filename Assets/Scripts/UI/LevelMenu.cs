@@ -71,7 +71,7 @@ public class LevelMenu : MonoBehaviour
         //indexPI.Add(4);
         //indexPI.Add(5);
         indexPI.Add(7);
-        //indexPI.Add(8);
+        indexPI.Add(8);
         indexPI.Add(9);
         /*indexPI.Add(12);
         indexPI.Add(14);
