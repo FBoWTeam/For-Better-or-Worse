@@ -34,11 +34,11 @@ public class BossSystem : MonoBehaviour
 
 	public int actualPhase;
 	[Range(0.0f, 1.0f)]
-	public float phase2Treshold;
+	public float phase2Threshold;
 	[Range(0.0f, 1.0f)]
-	public float phase3Treshold;
+	public float phase3Threshold;
 	[Range(0.0f, 1.0f)]
-	public float phase4Treshold;
+	public float phase4Threshold;
 
 	[Header("[Probability Tables]")]
 	public List<PatternProbability> phase1;
@@ -117,7 +117,7 @@ public class BossSystem : MonoBehaviour
 				//scenaristic start
 				break;
 			case 1:
-				if(hp <= phase2Treshold * baseHP)
+				if(hp <= phase2Threshold * baseHP)
 				{
 					actualPhase++;
 					Debug.Log("Passage phase 2");
@@ -127,7 +127,7 @@ public class BossSystem : MonoBehaviour
 				}
 				break;
 			case 2:
-				if (hp <= phase3Treshold * baseHP)
+				if (hp <= phase3Threshold * baseHP)
 				{
 					actualPhase++;
 					Debug.Log("Passage phase 3");
@@ -137,7 +137,7 @@ public class BossSystem : MonoBehaviour
 				}
 				break;
 			case 3:
-				if (hp <= phase4Treshold * baseHP)
+				if (hp <= phase4Threshold * baseHP)
 				{
 					actualPhase++;
 					Debug.Log("Passage phase 4");
