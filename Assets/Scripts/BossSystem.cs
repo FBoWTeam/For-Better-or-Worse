@@ -50,44 +50,83 @@ public class BossSystem : MonoBehaviour
 	public float maxWaitTime;
 	float nextAttack;
 	bool isAttacking;
-
-	// Start is called before the first frame update
+	
 	void Awake()
     {
 		hp = baseHP;
 		isAttacking = false;
 		actualPhase = 0;
-		PhaseTransition();
-		nextAttack = Random.Range(minWaitTime, maxWaitTime);
+		checkPhaseTransition();
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+		if(!GameManager.gameManager.isPaused)
+		{
+			checkPhaseTransition();
+
+			if (Time.time == nextAttack)
+			{
+				DoPattern();
+			}
+
+
+		}
     }
 
-	public void PhaseTransition()
+	public void checkPhaseTransition()
 	{
-		actualPhase++;
 		switch (actualPhase)
 		{
-			case 1:
+			case 0:
+				actualPhase++;
+				Debug.Log("Passage phase 1");
 				probabilityTable = phase1;
+				nextAttack = Time.time + Random.Range(minWaitTime, maxWaitTime);
 				//scenaristic start
 				break;
+			case 1:
+				if(hp <= phase2Treshold)
+				{
+					actualPhase++;
+					Debug.Log("Passage phase 2");
+					probabilityTable = phase2;
+					nextAttack = Time.time + Random.Range(minWaitTime, maxWaitTime);
+					//infinite mystic line same side / level shrink
+				}
+				break;
 			case 2:
-				probabilityTable = phase2;
-				//infinite mystic line same side / level shrink
+				if (hp <= phase3Treshold)
+				{
+					actualPhase++;
+					Debug.Log("Passage phase 3");
+					probabilityTable = phase3;
+					nextAttack = Time.time + Random.Range(minWaitTime, maxWaitTime);
+					//infinite mystic line separation / etc
+				}
 				break;
 			case 3:
-				probabilityTable = phase3;
-				//infinite mystic line separation / etc
+				if (hp <= phase4Treshold)
+				{
+					actualPhase++;
+					Debug.Log("Passage phase 4");
+					probabilityTable = phase4;
+					nextAttack = Time.time + Random.Range(minWaitTime, maxWaitTime);
+					//fall to ground / level shrink
+				}
 				break;
 			case 4:
-				probabilityTable = phase4;
-				//fall to ground / level shrink
+				if (hp <= 0.0f)
+				{
+					Debug.Log("DED");
+				}
 				break;
 		}
+	}
+
+	public void DoPattern()
+	{
+
 	}
 }
