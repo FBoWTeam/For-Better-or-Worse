@@ -216,6 +216,14 @@ public class Enemy : MonoBehaviour
 			StopAllCoroutines();
 			Destroy(this.gameObject);
 		}
+
+        if (GetComponent<EnemySkill>().isCasting)
+        {
+            StopCoroutine(GetComponent<EnemySkill>().rootCoroutine);
+            GetComponent<EnemyMovement>().agent.isStopped = false;
+            GetComponent<EnemySkill>().isCasting = false;
+        }
+
     }
 
     IEnumerator HitStun()
