@@ -26,6 +26,9 @@ public class UIManager : MonoBehaviour
     [Header("Combo")]
     public GameObject combo;
 
+    [Header("Wave")]
+    public GameObject wave;
+
     [Header("Fox Powers")]
     public GameObject elementalPowerFox;
 	public GameObject behaviouralPowerFox;
@@ -317,6 +320,16 @@ public class UIManager : MonoBehaviour
     }
 
     #endregion
+
+    #region
+    public void UpdateWave(int nb)
+    {
+        wave.transform.GetChild(1).GetComponent<TextMeshProUGUI>().text = nb.ToString();
+    }
+
+
+    #endregion
+
 
     #region Getters
 
