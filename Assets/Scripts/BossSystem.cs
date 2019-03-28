@@ -53,13 +53,28 @@ public class BossSystem : MonoBehaviour
     public float maxWaitTime;
     float nextAttack;
     bool isAttacking;
+    public LayerMask targetMask;
+
 
     [Header("[Electric Cone Params]")]
     public float electricConeAngle;
     public int electricConeDamage;
-    public float electricConetimeBetweenFeedbackAndCast;
+    public float electricConeTimeBetweenFeedbackAndCast;
     public float electricConeChannelingTime;
     public GameObject electricConeFeedBack;
+
+    [Header("[Electric Zone Params]")]
+    public float electricZoneRadius;
+    public float electricZoneChannelingTime;
+    public float electricZoneTimeBetweenFeedbackAndCast;
+    public int electricZoneDamage;
+
+
+    [Header("[Electric AOE Params]")]
+    public float electricAoeRadius;
+    public float electricAoeChannelingTime;
+    public float electricAoeTimeBetweenFeedbackAndCast;
+    public int electricAoeDamage;
 
 
 
@@ -269,11 +284,30 @@ public class BossSystem : MonoBehaviour
     {
         isAttacking = true;
 
-        Debug.Log("Electric Zone");
+        //start chaneling anim
+        Debug.Log("channeling electric zone");
+        yield return new WaitForSeconds(electricZoneChannelingTime);
 
-        //canalisation + feedbacks
+        Vector3 electricZoneLocation = aimedPlayer.transform.position;
+
+
+        //show feedback=============
+
+
+        Debug.Log("casting electric zone");
+        yield return new WaitForSeconds(electricZoneTimeBetweenFeedbackAndCast);
+
+        //check if the players are in the area of effect
+        Collider[] playersInRange = Physics.OverlapSphere(electricZoneLocation, electricZoneRadius, targetMask);
+
+        //apply damage to the players in the area of effect
+        for (int i = 0; i < playersInRange.Length; i++)
+        {
+            GameManager.gameManager.TakeDamage(playersInRange[i].gameObject, electricZoneDamage, electricZoneLocation, true);
+        }
+
+        
         yield return new WaitForSeconds(1.0f);
-        //boom
 
         isAttacking = false;
     }
@@ -298,9 +332,13 @@ public class BossSystem : MonoBehaviour
     public IEnumerator ElectricConeCoroutine()
     {
         isAttacking = true;
+
         //start chaneling anim
-        Debug.Log("channeling");
+        Debug.Log("channeling electric cone");
         yield return new WaitForSeconds(electricConeChannelingTime);
+
+
+        //determining the area where to cast the spell
         Vector3 bossPos = transform.position;
         bossPos.y = 0;
 
@@ -310,15 +348,18 @@ public class BossSystem : MonoBehaviour
         Vector3 minRange = leftRotation * targetVector;
         Vector3 maxRange = rightRotation * targetVector;
 
-        //afficher feedback
 
-        
+
+        //show feedback
         electricConeFeedBack.SetActive(true);
         electricConeFeedBack.transform.LookAt(aimedPlayer.transform);
         
-        Debug.Log("casting");
-        yield return new WaitForSeconds(electricConetimeBetweenFeedbackAndCast);
+        Debug.Log("casting electric cone");
+        yield return new WaitForSeconds(electricConeTimeBetweenFeedbackAndCast);
 
+
+
+        //check if players are in the area of effect to apply damages
         Vector3 dirToTarget;
         dirToTarget = (player1.transform.position - bossPos).normalized;
         dirToTarget.y = 0;
@@ -335,7 +376,7 @@ public class BossSystem : MonoBehaviour
 
         electricConeFeedBack.SetActive(false);
         
-        yield return new WaitForSeconds(5.0f);
+        yield return new WaitForSeconds(1.0f);
 
 
         isAttacking = false;
@@ -362,11 +403,29 @@ public class BossSystem : MonoBehaviour
     {
         isAttacking = true;
 
-        Debug.Log("Electric AOE");
+        //start chaneling anim
+        Debug.Log("channeling AOE zone");
+        yield return new WaitForSeconds(electricAoeChannelingTime);
 
-        //canalisation + feedbacks
+
+        DrawAOE(transform.position, electricAoeRadius);
+        //show feedback==========
+
+
+        Debug.Log("casting electric AOE");
+        yield return new WaitForSeconds(electricAoeTimeBetweenFeedbackAndCast);
+
+        //check if the players are in the area of effect
+        Collider[] playersInRange = Physics.OverlapSphere(transform.position, electricAoeRadius, targetMask);
+
+        //apply damage to the players in the area of effect
+        for (int i = 0; i < playersInRange.Length; i++)
+        {
+            GameManager.gameManager.TakeDamage(playersInRange[i].gameObject, electricZoneDamage, transform.position, true);
+        }
+
+
         yield return new WaitForSeconds(1.0f);
-        //boom
 
         isAttacking = false;
     }
@@ -375,6 +434,16 @@ public class BossSystem : MonoBehaviour
 
 
 
-
+    void DrawAOE(Vector3 position, float radius)
+    {
+        position.y = 0;
+        for (int i = 0; i < 16; i++)
+        {
+            float angle = i * Mathf.PI * 2 / 16f;
+            Vector3 destination = new Vector3(Mathf.Cos(angle), 0, Mathf.Sin(angle));
+            
+            Debug.DrawLine(position, destination * radius, Color.red, 10f);
+        }
+    }
 
 }
