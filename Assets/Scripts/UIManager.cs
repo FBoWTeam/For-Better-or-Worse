@@ -6,11 +6,7 @@ using UnityEngine;
 
 public class UIManager : MonoBehaviour
 {
-
     #region All Variables
-
-    [Header("Fader")]
-    public Canvas fader;
 
     [Header("Health Bar")]
     public Image damageTakenP1;
@@ -73,9 +69,7 @@ public class UIManager : MonoBehaviour
     Dictionary<int, GameManager.PowerType> busySlot;
 
     #endregion
-
-
-
+	
     #region All Methods
 
     public void InitDictionary()

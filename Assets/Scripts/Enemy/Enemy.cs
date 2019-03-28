@@ -104,7 +104,6 @@ public class Enemy : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        print(Enemy.isAttacking);
         if (!GameManager.gameManager.isPaused && !Enemy.isAttacking)
         {
             FocusManagement();

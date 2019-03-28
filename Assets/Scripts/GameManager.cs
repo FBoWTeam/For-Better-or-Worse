@@ -17,6 +17,8 @@ public class GameManager : MonoBehaviour
 	public UIManager UIManager;
 	[HideInInspector]
 	public GameObject fader;
+	[HideInInspector]
+	public GameObject tutorials;
 
 	public bool isPaused;
 
@@ -93,6 +95,8 @@ public class GameManager : MonoBehaviour
         UIManager = GameObject.Find("UI").GetComponent<UIManager>();
 		UIManager.InitDictionary();
 		fader = GameObject.Find("Fader");
+		tutorials = GameObject.Find("Tutorials");
+		tutorials.SetActive(false);
 		if (GameObject.Find("IntroScenario") != null)
 		{
 			UIManager.gameObject.SetActive(false);
