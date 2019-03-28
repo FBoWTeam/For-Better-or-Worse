@@ -52,6 +52,8 @@ public class Enemy : MonoBehaviour
     Color player1ColorTaunt = new Color(255, 96, 0);
     Color player2ColorTaunt = new Color(82, 82, 82);
 
+    [HideInInspector]
+    public Coroutine actualTauntCoroutine;
 
     #endregion
 
