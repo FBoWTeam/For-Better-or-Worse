@@ -126,6 +126,7 @@ public class EnemyMovement : MonoBehaviour
             if (strafingCoroutine != null)
             {
                 StopCoroutine(strafingCoroutine);
+                StartCoroutine("Strafing");
             }
             isStrafing = false;
             MoveToPlayer(nearestPlayer.Item1, nearestPlayer.Item2);

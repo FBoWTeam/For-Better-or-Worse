@@ -5,7 +5,7 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody))]
 public class EnemyShot : MonoBehaviour
 {
-    private Transform target;
+    private Vector3 target;
     private float speed;
     private Vector3 shootDirection;
     private int damage;
@@ -21,13 +21,12 @@ public class EnemyShot : MonoBehaviour
         this.GetComponent<Rigidbody>().velocity = shootDirection * speed;
     }
 
-    public void Initialise(Transform _target, int _damage, float _speed)
+    public void Initialise(Vector3 _target, int _damage, float _speed)
     {
-        target = _target;
+        target = _target + Vector3.up;
         damage = _damage;
         speed = _speed;
-        shootDirection = (target.position - transform.position).normalized;
-		transform.position += Vector3.up;
+        shootDirection = (target - transform.position).normalized;
     }
 
     private void OnTriggerEnter(Collider other)
