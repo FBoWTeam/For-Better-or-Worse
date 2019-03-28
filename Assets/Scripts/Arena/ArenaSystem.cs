@@ -8,6 +8,7 @@ public class ArenaSystem : MonoBehaviour
     public class Wave
     {
         public List<SubWave> subWaveList;
+        public int timeBeforeNextWave;
     }
 
     [System.Serializable]
@@ -15,7 +16,7 @@ public class ArenaSystem : MonoBehaviour
     {
         //index used in the spawList to know where to instanciate the enemies
         public int spawnNumber;
-        public int timeBeforeNextWave;
+        public int timeBeforeNextSubWave;
         public GameObject subWavePrefab;
     }
 
@@ -64,6 +65,7 @@ public class ArenaSystem : MonoBehaviour
         remainingEnemiesList = new List<GameObject>();
         StartCoroutine(WaveSystem());
         increaseChanceValue = 100f / ((waveList.Count - threshold));
+        GameManager.gameManager.UIManager.UpdateWave(waveIndex + 1);
     }
 
 
@@ -89,7 +91,7 @@ public class ArenaSystem : MonoBehaviour
                         remainingEnemiesList.Add(enemy.gameObject);
                     }
 
-                    while (timer < waveList[waveIndex].subWaveList[subWaveIndex].timeBeforeNextWave)
+                    while (timer < waveList[waveIndex].subWaveList[subWaveIndex].timeBeforeNextSubWave)
                     {
                         timer += Time.deltaTime;
                         yield return new WaitForEndOfFrame();
@@ -104,7 +106,16 @@ public class ArenaSystem : MonoBehaviour
                 if (waveCleared())
                 {
                     Debug.Log("Next Wave");
+                    while (timer < waveList[waveIndex].timeBeforeNextWave)
+                    {
+                        timer += Time.deltaTime;
+                        yield return new WaitForEndOfFrame();
+                    }
                     waveIndex++;
+                    if (waveIndex < waveList.Count)
+                    {
+                        GameManager.gameManager.UIManager.UpdateWave(waveIndex + 1);
+                    }
                     subWaveIndex = 0;
                     bonusChance = 0;
                 }
