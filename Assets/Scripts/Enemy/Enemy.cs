@@ -108,7 +108,6 @@ public class Enemy : MonoBehaviour
         if (!GameManager.gameManager.isPaused && !Enemy.isAttacking)
         {
             FocusManagement();
-            transform.LookAt(aimPlayer.transform);
 
             if (!enemyMovement.agent.isStopped && !isFrozen)
             {
