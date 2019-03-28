@@ -24,25 +24,10 @@ public class EnemyMovement : MonoBehaviour
 
     public Movement movement;
 
-    [DrawIf(new string[] { "movement" }, Movement.Classic)]
-    public float initialSpeed = 2f;
-
-    [DrawIf(new string[] { "movement" }, Movement.Classic)]
-    [Tooltip("represents the time of the attack animation")]
-    public float stopTime = 2f;
-
-    //[DrawIf(new string[] { "movement" }, Movement.Ranged)]
-    //public float timeBeforeFleeing;
-
+    public float initialSpeed;
 
     [DrawIf(new string[] { "movement" }, Movement.Ranged)]
     public float distanceBeforeFleeing;
-
-
-
-    //[DrawIf(new string[] { "movement" }, Movement.Basic)]
-    //[Tooltip("represents the remaining distance between the enemy and the player")]
-    //public float distanceBetweenPlayer = 5f;
 
     #endregion
 

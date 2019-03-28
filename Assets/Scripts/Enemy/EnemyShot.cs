@@ -26,7 +26,7 @@ public class EnemyShot : MonoBehaviour
         target = _target + Vector3.up;
         damage = _damage;
         speed = _speed;
-        shootDirection = (target - transform.position).normalized;
+        shootDirection = (new Vector3(target.x, transform.position.y, target.z) - transform.position).normalized;
     }
 
     private void OnTriggerEnter(Collider other)
