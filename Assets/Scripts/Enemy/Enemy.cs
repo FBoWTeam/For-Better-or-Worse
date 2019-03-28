@@ -104,7 +104,6 @@ public class Enemy : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        print(Enemy.isAttacking);
         if (!GameManager.gameManager.isPaused && !Enemy.isAttacking)
         {
             FocusManagement();
@@ -117,7 +116,7 @@ public class Enemy : MonoBehaviour
 
             if (enemySkill.InRange(aimPlayer) && !isFrozen)
             {
-               enemySkill.DoSkill(aimPlayer);
+                enemySkill.DoSkill(aimPlayer);
             }
 
             if (drawView)
