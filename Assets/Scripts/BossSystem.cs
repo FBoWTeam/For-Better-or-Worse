@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
+using Random = UnityEngine.Random;
 
 public class BossSystem : MonoBehaviour
 {
@@ -52,7 +54,15 @@ public class BossSystem : MonoBehaviour
 	public float minWaitTime;
 	public float maxWaitTime;
 	float nextAttack;
-	bool isAttacking;
+	public bool isAttacking;
+
+
+    public GameObject fireBallPrefab;
+    public float castingTimeFireBall;
+    public int fireBallDamage;
+    public int fireBallHeight = 5;
+    public float rangeExplosion;
+    float gravity = -9.81f;
 
 	//======================================================================================== AWAKE AND UPDATE
 
@@ -235,18 +245,52 @@ public class BossSystem : MonoBehaviour
 	{
 		isAttacking = true;
 
-		Debug.Log("Fire Ball");
+        yield return new WaitForSeconds(castingTimeFireBall);
 
-		//canalisation + feedbacks
-		yield return new WaitForSeconds(1.0f);
-		//boom
+        Vector3 target = aimedPlayer.transform.position;
+        Vector3 dir = target - transform.position;//direction of the aimed player when the Fireball is creating
+        dir = dir.normalized;
+        dir.y = 0;
 
+        Vector3 fireBallStartingPoint = transform.position + 2.8f * dir;
+
+        GameObject projectileFireBall = Instantiate(fireBallPrefab, fireBallStartingPoint, Quaternion.identity);
+        FireBall fireBall = projectileFireBall.GetComponent<FireBall>();
+
+        Physics.gravity = Vector3.up * gravity;
+
+        if(fireBall != null)
+        {
+            fireBall.Launch(target, fireBallStartingPoint);
+        }
+
+        yield return new WaitUntil(() => fireBall.isDestroyed);
+        
 		isAttacking = false;
 	}
 
-	//======================================================================================== ELECTRIC ZONE
+    /// <summary>
+    /// Compute at wich velocity a gameobjet should go , in order to hit a target using Kinematic equation
+    /// MaxHeight should always be > dirY
+    /// </summary>
+    /// <param name="target"></param>
+    /// <returns></returns>
+    Tuple<Vector3, float> ComputeThrowVelocity(Vector3 target, Vector3 initialPos)
+    {
+        float dirY = target.y - initialPos.y;
+        Vector3 dirXZ = new Vector3(target.x - initialPos.x, 0, target.z - initialPos.z);
+        float time = Mathf.Sqrt(-2 * fireBallHeight / gravity) + Mathf.Sqrt(2 * (dirY - fireBallHeight) / gravity);
+        Vector3 velocityY = Vector3.up * Mathf.Sqrt(-2 * gravity * fireBallHeight);
+        Vector3 velocityXZ = dirXZ / time;
+        Vector3 velocity = velocityXZ + velocityY * -Mathf.Sign(gravity);
+        return new Tuple<Vector3, float>(velocity, time);
+    }
 
-	public IEnumerator ElectricZoneCoroutine()
+
+
+    //======================================================================================== ELECTRIC ZONE
+
+    public IEnumerator ElectricZoneCoroutine()
 	{
 		isAttacking = true;
 
