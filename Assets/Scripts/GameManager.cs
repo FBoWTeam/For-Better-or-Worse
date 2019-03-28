@@ -127,6 +127,10 @@ public class GameManager : MonoBehaviour
         {
             if (targetPlayer == player1)
             {
+                //update in score mamager
+                ScoreManager.scoreManager.damageTakenP1 += damage;
+
+
                 if (damage >= shieldP1)
                 {
                     damage -= shieldP1;
@@ -141,6 +145,10 @@ public class GameManager : MonoBehaviour
             }
             if (targetPlayer == player2)
             {
+                //update in score mamager
+                ScoreManager.scoreManager.damageTakenP2 += damage;
+
+                
                 if (damage >= shieldP2)
                 {
                     damage -= shieldP2;
@@ -196,10 +204,14 @@ public class GameManager : MonoBehaviour
         {
             if (damageTakenP1 > healAmount)
             {
+                //update score manager
+                ScoreManager.scoreManager.healPointReceivedP1 += healAmount;
                 damageTakenP1 -= healAmount;
             }
             else
             {
+                //update score manager
+                ScoreManager.scoreManager.healPointReceivedP1 += healAmount - damageTakenP1;
                 damageTakenP1 = 0;
             }
         }
@@ -207,10 +219,14 @@ public class GameManager : MonoBehaviour
         {
             if (damageTakenP2 > healAmount)
             {
+                //update score manager
+                ScoreManager.scoreManager.healPointReceivedP2 += healAmount;
                 damageTakenP2 -= healAmount;
             }
             else
             {
+                //update score manager
+                ScoreManager.scoreManager.healPointReceivedP2 += healAmount - damageTakenP2;
                 damageTakenP2 = 0;
             }
         }
@@ -264,6 +280,9 @@ public class GameManager : MonoBehaviour
 
 	IEnumerator deathCoroutine()
     {
+        //update in score manager
+        ScoreManager.scoreManager.numberOfDeaths++;
+
         StartCoroutine(FadeCoroutine("FadeOut"));
         yield return new WaitUntil(() => isPaused == false);
 
