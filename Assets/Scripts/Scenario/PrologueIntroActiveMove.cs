@@ -38,10 +38,10 @@ public class PrologueIntroActiveMove : Tutorial
 			yield return new WaitForEndOfFrame();
 		}
 
-		StartCoroutine(GetsOut());
-		yield return new WaitForSeconds(3.0f);
+		Coroutine end = StartCoroutine(GetsOut());
+		yield return 
 
-		director.Resume();
 		Destroy(gameObject);
+		director.Resume();
 	}
 }
