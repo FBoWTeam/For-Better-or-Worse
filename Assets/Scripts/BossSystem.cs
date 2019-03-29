@@ -353,31 +353,6 @@ public class BossSystem : MonoBehaviour
         isAttacking = false;
     }
 
-	
-
-	
-	
-
-	#region pattern coroutines
-
-	//======================================================================================== MYSTIC LINE
-
-	public IEnumerator MysticLineCoroutine()
-	{
-		isAttacking = true;
-		Debug.Log("Mystic Line");
-
-		//canalisation + feedbacks
-		yield return new WaitForSeconds(1.0f);
-		//boom
-
-		isAttacking = false;
-	}
-
-	
-
-
-
     //======================================================================================== ELECTRIC CONE
 
     public IEnumerator ElectricConeCoroutine()
