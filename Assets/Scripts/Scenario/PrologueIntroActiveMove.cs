@@ -39,9 +39,9 @@ public class PrologueIntroActiveMove : Tutorial
 		}
 
 		Coroutine end = StartCoroutine(GetsOut());
-		yield return 
+		yield return new WaitForSeconds(1.0f);
 
-		Destroy(gameObject);
 		director.Resume();
+		Destroy(gameObject);
 	}
 }
