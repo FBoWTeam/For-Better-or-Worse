@@ -292,6 +292,7 @@ public class BossSystem : MonoBehaviour
 
 
         //show feedback=============
+        DrawAOE(electricZoneLocation, electricZoneRadius);
 
 
         Debug.Log("casting electric zone");
@@ -306,7 +307,7 @@ public class BossSystem : MonoBehaviour
             GameManager.gameManager.TakeDamage(playersInRange[i].gameObject, electricZoneDamage, electricZoneLocation, true);
         }
 
-        
+
         yield return new WaitForSeconds(1.0f);
 
         isAttacking = false;
@@ -353,7 +354,7 @@ public class BossSystem : MonoBehaviour
         //show feedback
         electricConeFeedBack.SetActive(true);
         electricConeFeedBack.transform.LookAt(aimedPlayer.transform);
-        
+
         Debug.Log("casting electric cone");
         yield return new WaitForSeconds(electricConeTimeBetweenFeedbackAndCast);
 
@@ -363,7 +364,7 @@ public class BossSystem : MonoBehaviour
         Vector3 dirToTarget;
         dirToTarget = (player1.transform.position - bossPos).normalized;
         dirToTarget.y = 0;
-        if (Vector3.Angle(targetVector, dirToTarget) < electricConeAngle/2 && Vector3.Angle(targetVector, dirToTarget) > -electricConeAngle / 2)
+        if (Vector3.Angle(targetVector, dirToTarget) < electricConeAngle / 2 && Vector3.Angle(targetVector, dirToTarget) > -electricConeAngle / 2)
         {
             GameManager.gameManager.TakeDamage(player1, electricConeDamage, Vector3.zero, false);
         }
@@ -375,7 +376,7 @@ public class BossSystem : MonoBehaviour
         }
 
         electricConeFeedBack.SetActive(false);
-        
+
         yield return new WaitForSeconds(1.0f);
 
 
@@ -406,11 +407,10 @@ public class BossSystem : MonoBehaviour
         //start chaneling anim
         Debug.Log("channeling AOE zone");
         yield return new WaitForSeconds(electricAoeChannelingTime);
+        
 
-
-        DrawAOE(transform.position, electricAoeRadius);
         //show feedback==========
-
+        DrawAOE(transform.position, electricAoeRadius);
 
         Debug.Log("casting electric AOE");
         yield return new WaitForSeconds(electricAoeTimeBetweenFeedbackAndCast);
@@ -433,16 +433,15 @@ public class BossSystem : MonoBehaviour
     #endregion
 
 
-
+    //function to visualize the effect zone of an AOE
     void DrawAOE(Vector3 position, float radius)
     {
         position.y = 0;
         for (int i = 0; i < 16; i++)
         {
             float angle = i * Mathf.PI * 2 / 16f;
-            Vector3 destination = new Vector3(Mathf.Cos(angle), 0, Mathf.Sin(angle));
-            
-            Debug.DrawLine(position, destination * radius, Color.red, 10f);
+            Vector3 destination = new Vector3(Mathf.Cos(angle) * radius, 0, Mathf.Sin(angle) * radius);
+            Debug.DrawLine(position, destination + position, Color.red, 10f);
         }
     }
 
