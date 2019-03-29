@@ -52,6 +52,8 @@ public class Enemy : MonoBehaviour
     Color player1ColorTaunt = new Color(255, 96, 0);
     Color player2ColorTaunt = new Color(82, 82, 82);
 
+    [HideInInspector]
+    public Coroutine actualTauntCoroutine;
 
     #endregion
 
@@ -71,18 +73,20 @@ public class Enemy : MonoBehaviour
     GameObject[] players;
     public static GameObject aimPlayer;
 
-	//to stop when another freeze corout is launch
-	[HideInInspector]
-	public Coroutine actualFreezeCoroutine;
+    //to stop when another freeze corout is launch
+    [HideInInspector]
+    public Coroutine actualFreezeCoroutine;
 
     [HideInInspector]
     public Coroutine actualDarknessCoroutine;
 
     Animator animator;
 
-
     public bool lastHitByP1;
     public bool lastHitByP2;
+    [HideInInspector]
+    public static bool isAttacking;
+
 
 
     #endregion
@@ -95,28 +99,27 @@ public class Enemy : MonoBehaviour
         enemyMovement = GetComponent<EnemyMovement>();
         enemySkill = GetComponent<EnemySkill>();
         sdrawPath = drawPath;
-        tauntCanvas = transform.GetChild(4).gameObject;
-		animator = GetComponent<Animator>();
-	}
+        tauntCanvas = transform.GetChild(0).gameObject;
+        animator = GetComponent<Animator>();
+    }
 
     // Update is called once per frame
     void Update()
     {
-        if (!GameManager.gameManager.isPaused)
+        if (!GameManager.gameManager.isPaused && !Enemy.isAttacking)
         {
-
             FocusManagement();
 
             if (!enemyMovement.agent.isStopped && !isFrozen)
             {
                 enemyMovement.DoMovement();
-				animator.SetFloat("Speed", enemyMovement.agent.velocity.magnitude / enemyMovement.initialSpeed);
+                animator.SetFloat("Speed", enemyMovement.agent.velocity.magnitude / enemyMovement.initialSpeed);
             }
 
-			if(enemySkill.InRange(aimPlayer) && !isFrozen)
-			{
-				enemySkill.DoSkill(aimPlayer);
-			}
+            if (enemySkill.InRange(aimPlayer) && !isFrozen)
+            {
+                enemySkill.DoSkill(aimPlayer);
+            }
 
             if (drawView)
             {
@@ -189,7 +192,7 @@ public class Enemy : MonoBehaviour
 
 
     private void TauntFeedback()
-    { 
+    {
         if (isTaunted)
         {
             tauntCanvas.SetActive(true);
@@ -205,7 +208,7 @@ public class Enemy : MonoBehaviour
 
     public void TakeDamage(int damage)
     {
-        if(isWeaken)
+        if (isWeaken)
         {
             hp -= damage + GameManager.gameManager.orb.GetComponent<PowerController>().darknessDamage;
         }
@@ -214,8 +217,8 @@ public class Enemy : MonoBehaviour
             hp -= damage;
         }
         GameManager.gameManager.orb.GetComponent<OrbController>().hasHitEnemy = true;
-		if (hp <= 0)
-		{
+        if (hp <= 0)
+        {
             //update in score manager
             if (lastHitByP1 && !lastHitByP2)
             {
@@ -230,11 +233,11 @@ public class Enemy : MonoBehaviour
                 ScoreManager.scoreManager.killsEnvironment++;
             }
 
-			GetComponent<LootTable>().LootEnemy();
-			enemyMovement.agent.isStopped = true;
-			StopAllCoroutines();
-			Destroy(this.gameObject);
-		}
+            GetComponent<LootTable>().LootEnemy();
+            enemyMovement.agent.isStopped = true;
+            StopAllCoroutines();
+            Destroy(this.gameObject);
+        }
 
         if (GetComponent<EnemySkill>().isCasting)
         {
@@ -254,11 +257,11 @@ public class Enemy : MonoBehaviour
 
     public IEnumerator FreezeCoroutine(float freezeTimer)
     {
-		if(actualFreezeCoroutine != null)
-		{
-			StopCoroutine(actualFreezeCoroutine);
-		}
-		enemyMovement.agent.isStopped = true;
+        if (actualFreezeCoroutine != null)
+        {
+            StopCoroutine(actualFreezeCoroutine);
+        }
+        enemyMovement.agent.isStopped = true;
         isFrozen = true;
         yield return new WaitForSeconds(freezeTimer);
         enemyMovement.agent.isStopped = false;

@@ -5,6 +5,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using UnityEngine.Audio;
 using TMPro;
+using UnityEngine.EventSystems;
 
 
 public class MainMenu : MonoBehaviour
@@ -28,10 +29,13 @@ public class MainMenu : MonoBehaviour
 
     #endregion
 
+    EventSystem eS;
 
     private void Start()
     {
         currentTextPro = GetComponent<TextMeshProUGUI>();
+
+        eS = EventSystem.current;
 
         resolutions = Screen.resolutions;
 
@@ -53,9 +57,10 @@ public class MainMenu : MonoBehaviour
         }
     }
 
-    public void PlayGame ()
+    public void LoadScene ()
     {
         SceneManager.LoadScene(sceneToLoad);
+        //eS.firstSelectedGameObject = ;
     }
 
     public void QuitGame ()

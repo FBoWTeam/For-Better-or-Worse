@@ -396,7 +396,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &3784518718995517038
 RectTransform:
   m_ObjectHideFlags: 0
@@ -740,14 +740,13 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2585431467800721575}
-  m_LocalRotation: {x: 0, y: 0, z: -0.7071068, w: 0.7071068}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 200, y: 200, z: 0}
-  m_Children:
-  - {fileID: 1621596408298848793}
+  m_Children: []
   m_Father: {fileID: 2585431468239056450}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: -90}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: -139}
@@ -781,7 +780,7 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 21300000, guid: 4ab643660f8ba484fb557be6501feaba, type: 3}
+  m_Sprite: {fileID: 21300000, guid: e136945eed6fcf946bb333fc147a6028, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -856,7 +855,7 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 21300000, guid: e6b8a1782fafa8c45b0dd6902c026e29, type: 3}
+  m_Sprite: {fileID: 21300000, guid: d64842ecf9579e547b8dd3ba65893597, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -884,7 +883,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &2585431467963684350
 RectTransform:
   m_ObjectHideFlags: 0
@@ -994,7 +993,7 @@ MonoBehaviour:
   alan: {fileID: 8983418077960620725}
   alanTalkingMat: {fileID: 2100000, guid: 1ee4fca8eaf118549ba7c2ddbf296918, type: 2}
   alanNotTalkingMat: {fileID: 2100000, guid: ea33ceef19af0144f9249424b62bdefa, type: 2}
-  arrowButton: {fileID: 611095751891176968}
+  arrowButton: {fileID: 0}
   arrowButtonNormal: {fileID: 21300000, guid: a2a2aa4dd541e67439090ac5a2137b4e, type: 3}
   arrowButtonPressed: {fileID: 21300000, guid: 376c75a771517cc40a7d914bff97f840, type: 3}
   displayedText: {fileID: 2585431467028815301}
@@ -1009,7 +1008,6 @@ GameObject:
   m_Component:
   - component: {fileID: 2585431468239056450}
   - component: {fileID: 2585431468239056448}
-  - component: {fileID: 2585431468239056451}
   m_Layer: 5
   m_Name: Frontgrounds
   m_TagString: Untagged
@@ -1045,36 +1043,7 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2585431468239056477}
   m_CullTransparentMesh: 0
---- !u!114 &2585431468239056451
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2585431468239056477}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -765806418, guid: f70555f144d8491a825f0804e09c671c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
-  m_Color: {r: 0.18867922, g: 0.16777876, b: 0.15574935, a: 1}
-  m_RaycastTarget: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-    m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
-      Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 21300000, guid: 8cce6eca1d003894a9522b57f4b35344, type: 3}
-  m_Type: 0
-  m_PreserveAspect: 0
-  m_FillCenter: 1
-  m_FillMethod: 4
-  m_FillAmount: 1
-  m_FillClockwise: 1
-  m_FillOrigin: 0
-  m_UseSpriteMesh: 0
---- !u!1 &2585431468342745726
+--- !u!1 &4882377346843729327
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1082,72 +1051,77 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 1621596408298848793}
-  - component: {fileID: 9113554203002713389}
-  - component: {fileID: 611095751891176968}
+  - component: {fileID: 4500462142690490078}
+  - component: {fileID: 2460557624114736209}
   m_Layer: 0
-  m_Name: Arrow
+  m_Name: UI vie sans ronds
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!224 &1621596408298848793
-RectTransform:
+--- !u!4 &4500462142690490078
+Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2585431468342745726}
+  m_GameObject: {fileID: 4882377346843729327}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 0, y: -12.148086, z: 0}
+  m_LocalScale: {x: 25, y: 25, z: 25}
   m_Children: []
-  m_Father: {fileID: 7004133767170677705}
+  m_Father: {fileID: 8528671159806907789}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0.005, y: 0.014}
-  m_SizeDelta: {x: 0.22, y: 0.21}
-  m_Pivot: {x: 0.5, y: 0.5}
---- !u!222 &9113554203002713389
-CanvasRenderer:
+--- !u!212 &2460557624114736209
+SpriteRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2585431468342745726}
-  m_CullTransparentMesh: 0
---- !u!114 &611095751891176968
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2585431468342745726}
+  m_GameObject: {fileID: 4882377346843729327}
   m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -765806418, guid: f70555f144d8491a825f0804e09c671c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
+  m_CastShadows: 0
+  m_ReceiveShadows: 0
+  m_DynamicOccludee: 1
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 0
+  m_SelectedEditorRenderState: 0
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_Sprite: {fileID: 21300000, guid: c110a04bb8bad40488e80efd411f4b51, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-    m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
-      Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 21300000, guid: a2a2aa4dd541e67439090ac5a2137b4e, type: 3}
-  m_Type: 0
-  m_PreserveAspect: 0
-  m_FillCenter: 1
-  m_FillMethod: 4
-  m_FillAmount: 1
-  m_FillClockwise: 1
-  m_FillOrigin: 0
-  m_UseSpriteMesh: 0
+  m_FlipX: 0
+  m_FlipY: 0
+  m_DrawMode: 0
+  m_Size: {x: 0.51460004, y: 0.086500004}
+  m_AdaptiveModeThreshold: 0.5
+  m_SpriteTileMode: 0
+  m_WasSpriteAssigned: 1
+  m_MaskInteraction: 0
+  m_SpriteSortPoint: 0
 --- !u!1 &5299652463423314669
 GameObject:
   m_ObjectHideFlags: 0
@@ -2441,6 +2415,7 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: -0}
   m_LocalScale: {x: 0.8, y: 0.65, z: 1}
   m_Children:
+  - {fileID: 4500462142690490078}
   - {fileID: 8528671159821783992}
   m_Father: {fileID: 8528671159777117749}
   m_RootOrder: 1
@@ -2462,7 +2437,7 @@ GameObject:
   - component: {fileID: 8528671159821783998}
   - component: {fileID: 8528671159821783993}
   m_Layer: 5
-  m_Name: BackGroundHealthBar
+  m_Name: ForGroundHealthBar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2482,7 +2457,7 @@ RectTransform:
   - {fileID: 8528671161085074295}
   - {fileID: 8528671160947432906}
   m_Father: {fileID: 8528671159806907789}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -4329,15 +4304,15 @@ MonoBehaviour:
   behaviouralPowerRaccoon: {fileID: 8528671161245754593}
   tauntCooldownFox: {fileID: 8528671160120503105}
   tauntCooldownRaccoon: {fileID: 8528671159958752978}
-  largeOrb: {fileID: 21300000, guid: 05937b47ce89a264ea1e439f8bc195ab, type: 3}
-  vortex: {fileID: 21300000, guid: 97b594575f0af314baed85ce04adc295, type: 3}
-  leechLife: {fileID: 21300000, guid: d28e6fb4b5b98124689ef04e5fb6b4f9, type: 3}
-  slug: {fileID: 21300000, guid: 4efdc505cd2970049a23833f91c0d747, type: 3}
+  largeOrb: {fileID: 21300000, guid: 0e58c258513bc7b46936368992a87d22, type: 3}
+  vortex: {fileID: 21300000, guid: a0defa0984fa0204b964c8f0e4d67517, type: 3}
+  leechLife: {fileID: 21300000, guid: 1e230f7eba276344abeb4aaf67a847ec, type: 3}
+  slug: {fileID: 21300000, guid: c658b47ec3114dc4696631ebfad26ed8, type: 3}
   shield: {fileID: 21300000, guid: 2e8df68f42c99934b927ec8ee6f3c6fc, type: 3}
-  ice: {fileID: 21300000, guid: f5cd1a9bb25cfb3428c5b4e46b4c43d1, type: 3}
-  fire: {fileID: 21300000, guid: c8847a5a3a25e1f44ac001d7ddc849a7, type: 3}
-  electric: {fileID: 21300000, guid: ab3e8faf9b518aa4b87046151091ff97, type: 3}
-  darkness: {fileID: 21300000, guid: 4637468ea05a0af4cbefaaa696660749, type: 3}
+  ice: {fileID: 21300000, guid: bd83a6dc526c2fc4db546779760f5a36, type: 3}
+  fire: {fileID: 21300000, guid: 3d962e2552529874fae51f739214973e, type: 3}
+  electric: {fileID: 21300000, guid: 80584aded0f8a2d4cbad46014a59c02a, type: 3}
+  darkness: {fileID: 21300000, guid: b2a3cb7e7a166de429ca691da264f2e9, type: 3}
   none: {fileID: 21300000, guid: 63db1044b595bee499bbc5fd040f636c, type: 3}
   displayTime: 3
   pourcentageQuote: 20
