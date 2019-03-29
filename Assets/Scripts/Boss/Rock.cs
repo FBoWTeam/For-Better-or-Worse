@@ -15,16 +15,6 @@ public class Rock : MonoBehaviour
     }
 
 
-    private void OnCollisionEnter(Collision collision)
-    {
-        if (collision.gameObject.CompareTag("Boss"))
-        {
-            collision.gameObject.GetComponent<BossSystem>().StartCoroutine(collision.gameObject.GetComponent<BossSystem>().Stun());
-            Destroy(gameObject);
-        }
-    }
-
-
     IEnumerator Fall()
     {
         while (transform.position.y > 1)
@@ -32,7 +22,7 @@ public class Rock : MonoBehaviour
             transform.Translate(Vector3.down * fallSpeed * Time.deltaTime);
             yield return new WaitForEndOfFrame();
         }
-        yield return new WaitForSeconds(1.0f);
+        Destroy(gameObject);
     }
 
 }
