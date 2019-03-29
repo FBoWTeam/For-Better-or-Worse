@@ -280,11 +280,25 @@ public class BossSystem : MonoBehaviour
     {
         isAttacking = true;
 
-        Debug.Log("Fire Ball");
+        yield return new WaitForSeconds(castingTimeFireBall);
 
-        //canalisation + feedbacks
-        yield return new WaitForSeconds(1.0f);
-        //boom
+        Vector3 target = aimedPlayer.transform.position;
+        Vector3 dir = target - transform.position;//direction of the aimed player when the Fireball is creating
+        dir = dir.normalized;
+        dir.y = 0;
+
+        Vector3 fireBallStartingPoint = transform.position + 2.8f * dir;
+
+        GameObject projectileFireBall = Instantiate(fireBallPrefab, fireBallStartingPoint, Quaternion.identity);
+        FireBall fireBall = projectileFireBall.GetComponent<FireBall>();
+
+        if (fireBall != null)
+        {
+            fireBall.Init(fireBallDamage, fireBallDamageExplosion, fireBallRangeExplosion, velocity);
+            fireBall.Launch(target + new Vector3(0f, 1.5f, 0f), fireBallStartingPoint);//offset so the fireball aims for the body of the player and not his/her feet
+        }
+
+        yield return new WaitUntil(() => fireBall.isDestroyed);
 
         isAttacking = false;
     }
@@ -339,138 +353,10 @@ public class BossSystem : MonoBehaviour
         isAttacking = false;
     }
 
-	//======================================================================================== SET FOCUS
+	
 
-	/// <summary>
-	/// set the focus on one of the player at random
-	/// </summary>
-	public void SetFocus()
-	{
-		int rand = Random.Range(0, 2);
-		if(rand == 0)
-		{
-			Debug.Log("Aim Player 1");
-			aimedPlayer = GameManager.gameManager.player1;
-		}
-		else
-		{
-			Debug.Log("Aim Player 2");
-			aimedPlayer = GameManager.gameManager.player2;
-		}
-	}
-
-	//======================================================================================== CHECK PHASE TRANSITION
-
-	/// <summary>
-	/// check the health based on the actual phase to see if we need to change to the next one
-	/// </summary>
-	public void checkPhaseTransition()
-	{
-		switch (actualPhase)
-		{
-			case 0:
-				actualPhase++;
-				Debug.Log("Passage phase 1");
-				probabilityTable = phase1;
-				nextAttack = Time.time + Random.Range(minWaitTime, maxWaitTime);
-				//scenaristic start
-				break;
-			case 1:
-				if(hp <= phase2Threshold * baseHP)
-				{
-					actualPhase++;
-					Debug.Log("Passage phase 2");
-					probabilityTable = phase2;
-					nextAttack = Time.time + Random.Range(minWaitTime, maxWaitTime);
-					//infinite mystic line same side / level shrink
-				}
-				break;
-			case 2:
-				if (hp <= phase3Threshold * baseHP)
-				{
-					actualPhase++;
-					Debug.Log("Passage phase 3");
-					probabilityTable = phase3;
-					nextAttack = Time.time + Random.Range(minWaitTime, maxWaitTime);
-					//infinite mystic line separation / etc
-				}
-				break;
-			case 3:
-				if (hp <= phase4Threshold * baseHP)
-				{
-					actualPhase++;
-					Debug.Log("Passage phase 4");
-					probabilityTable = phase4;
-					nextAttack = Time.time + Random.Range(minWaitTime, maxWaitTime);
-					//fall to ground / level shrink / rock fall activation
-				}
-				break;
-			case 4:
-				if (hp <= 0.0f)
-				{
-					Debug.Log("DED");
-					//ded
-				}
-				break;
-		}
-	}
-
-	//======================================================================================== RANDOM PATTERN
-
-	/// <summary>
-	/// pick a pattern at random based on the actual probability table
-	/// </summary>
-	/// <returns></returns>
-	public BossPattern RandomPattern()
-	{
-		float randomPick = Random.Range(0.0f, 1.0f);
-		float actualProb = 0.0f;
-
-		foreach(PatternProbability patternProb in probabilityTable)
-		{
-			actualProb += patternProb.probability;
-			if(randomPick <= actualProb)
-			{
-				return patternProb.pattern;
-			}
-		}
-
-		return BossPattern.MysticLine;
-	}
-
-	//======================================================================================== LAUNCH PATTERN
-
-	/// <summary>
-	/// launch the selected pattern
-	/// </summary>
-	/// <param name="pattern"></param>
-	public void LaunchPattern(BossPattern pattern)
-	{
-		switch(pattern)
-		{
-			case BossPattern.MysticLine:
-				StartCoroutine(MysticLineCoroutine());
-				break;
-			case BossPattern.FireBall:
-				StartCoroutine(FireBallCoroutine());
-				break;
-			case BossPattern.ElectricZone:
-				StartCoroutine(ElectricZoneCoroutine());
-				break;
-			case BossPattern.ShrinkMysticLines:
-				StartCoroutine(ShrinkMysticLinesCoroutine());
-				break;
-			case BossPattern.ElectricCone:
-				StartCoroutine(ElectricConeCoroutine());
-				break;
-			case BossPattern.Charge:
-				StartCoroutine(ChargeCoroutine());
-				break;
-			case BossPattern.ElectricAOE:
-				StartCoroutine(ElectricAOECoroutine());
-				break;
-		}
-	}
+	
+	
 
 	#region pattern coroutines
 
@@ -488,34 +374,7 @@ public class BossSystem : MonoBehaviour
 		isAttacking = false;
 	}
 
-	//======================================================================================== FIREBALL
-
-	public IEnumerator FireBallCoroutine()
-	{
-		isAttacking = true;
-
-        yield return new WaitForSeconds(castingTimeFireBall);
-
-        Vector3 target = aimedPlayer.transform.position;
-        Vector3 dir = target - transform.position;//direction of the aimed player when the Fireball is creating
-        dir = dir.normalized;
-        dir.y = 0;
-
-        Vector3 fireBallStartingPoint = transform.position + 2.8f * dir;
-
-        GameObject projectileFireBall = Instantiate(fireBallPrefab, fireBallStartingPoint, Quaternion.identity);
-        FireBall fireBall = projectileFireBall.GetComponent<FireBall>();
-
-        if(fireBall != null)
-        {
-            fireBall.Init(fireBallDamage, fireBallDamageExplosion, fireBallRangeExplosion, velocity);
-            fireBall.Launch(target + new Vector3(0f,1.5f,0f), fireBallStartingPoint);//offset so the fireball aims for the body of the player and not his/her feet
-        }
-
-        yield return new WaitUntil(() => fireBall.isDestroyed);
-        
-		isAttacking = false;
-	}
+	
 
 
 
