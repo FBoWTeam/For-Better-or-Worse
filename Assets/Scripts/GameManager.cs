@@ -15,11 +15,10 @@ public class GameManager : MonoBehaviour
 	public GameObject orb;
 	[HideInInspector]
 	public UIManager UIManager;
-    [HideInInspector]
-    public DialogSystem DialogSystem;
+	[HideInInspector]
+	public GameObject fader;
 
-
-    public bool isPaused;
+	public bool isPaused;
 
 	[Header("[Distance Limits]")]
 	public float minDistance;
@@ -84,21 +83,39 @@ public class GameManager : MonoBehaviour
         }
         else if (gameManager != this)
         {
-            Destroy(this);
+            Destroy(this.gameObject);
         }
-        //DontDestroyOnLoad(gameManager);
 
-        player1 = GameObject.Find("Player1");
+		I18n.LoadLang("fr_FR");
+		player1 = GameObject.Find("Player1");
         player2 = GameObject.Find("Player2");
         orb = GameObject.Find("Orb");
-        UIManager = GameObject.FindGameObjectWithTag("UI").GetComponent<UIManager>();
-        DialogSystem = GameObject.FindGameObjectWithTag("Dialog").GetComponent<DialogSystem>();
+        UIManager = GameObject.Find("UI").GetComponent<UIManager>();
+		UIManager.InitDictionary();
+		fader = GameObject.Find("Fader");
+		if (GameObject.Find("IntroScenario") != null)
+		{
+			UIManager.gameObject.SetActive(false);
+			player1.GetComponent<PlayerController>().active = false;
+			player2.GetComponent<PlayerController>().active = false;
+			player1.GetComponent<OrbHitter>().active = false;
+			player2.GetComponent<OrbHitter>().active = false;
+			GameObject.Find("IntroScenario").GetComponent<ScenarioHandler>().Initialize();
+		}
+		else
+		{
+			GameObject.Find("DialogSystem").SetActive(false);
+			GameObject.Find("BlackBands").SetActive(false);
+			player1.GetComponent<PlayerController>().active = true;
+			player2.GetComponent<PlayerController>().active = true;
+			player1.GetComponent<OrbHitter>().active = true;
+			player2.GetComponent<OrbHitter>().active = true;
+			StartCoroutine(FadeCoroutine("FadeIn"));
+		}
 
-        damageTakenP1 = 0;
-        damageTakenP2 = 0;
-
-        StartCoroutine(UIManager.FadeCoroutine("FadeIn"));
-    }
+		damageTakenP1 = 0;
+		damageTakenP2 = 0;
+	}
 
     /// <summary>
     /// Handle taking damage from an Ennemy or other things
@@ -110,6 +127,10 @@ public class GameManager : MonoBehaviour
         {
             if (targetPlayer == player1)
             {
+                //update in score mamager
+                ScoreManager.scoreManager.damageTakenP1 += damage;
+
+
                 if (damage >= shieldP1)
                 {
                     damage -= shieldP1;
@@ -124,6 +145,10 @@ public class GameManager : MonoBehaviour
             }
             if (targetPlayer == player2)
             {
+                //update in score mamager
+                ScoreManager.scoreManager.damageTakenP2 += damage;
+
+                
                 if (damage >= shieldP2)
                 {
                     damage -= shieldP2;
@@ -179,10 +204,14 @@ public class GameManager : MonoBehaviour
         {
             if (damageTakenP1 > healAmount)
             {
+                //update score manager
+                ScoreManager.scoreManager.healPointReceivedP1 += healAmount;
                 damageTakenP1 -= healAmount;
             }
             else
             {
+                //update score manager
+                ScoreManager.scoreManager.healPointReceivedP1 += healAmount - damageTakenP1;
                 damageTakenP1 = 0;
             }
         }
@@ -190,10 +219,14 @@ public class GameManager : MonoBehaviour
         {
             if (damageTakenP2 > healAmount)
             {
+                //update score manager
+                ScoreManager.scoreManager.healPointReceivedP2 += healAmount;
                 damageTakenP2 -= healAmount;
             }
             else
             {
+                //update score manager
+                ScoreManager.scoreManager.healPointReceivedP2 += healAmount - damageTakenP2;
                 damageTakenP2 = 0;
             }
         }
@@ -237,10 +270,20 @@ public class GameManager : MonoBehaviour
         return false;
     }
 
+	public IEnumerator FadeCoroutine(string fadeName)
+	{
+		GameManager.gameManager.isPaused = true;
+		fader.GetComponent<Animator>().SetTrigger(fadeName);
+		yield return new WaitForSeconds(fader.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).length);
+		GameManager.gameManager.isPaused = false;
+	}
 
-    IEnumerator deathCoroutine()
+	IEnumerator deathCoroutine()
     {
-        StartCoroutine(UIManager.FadeCoroutine("FadeOut"));
+        //update in score manager
+        ScoreManager.scoreManager.numberOfDeaths++;
+
+        StartCoroutine(FadeCoroutine("FadeOut"));
         yield return new WaitUntil(() => isPaused == false);
 
 		isPaused = true;
@@ -273,7 +316,7 @@ public class GameManager : MonoBehaviour
 
 		actualCheckpoint.RespawnContent();
 
-		StartCoroutine(UIManager.FadeCoroutine("FadeIn"));
+		StartCoroutine(FadeCoroutine("FadeIn"));
 	}
 
     

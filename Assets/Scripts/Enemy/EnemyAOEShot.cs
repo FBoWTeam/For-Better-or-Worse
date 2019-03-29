@@ -27,8 +27,8 @@ public class EnemyAOEShot: MonoBehaviour {
     }
 
     private void CheckGround() {
-        if (transform.position.y < YThreshold) {
-            // start aplying damge in the zone
+        if (transform.position.y < YThreshold && !isGrounded) {
+            // start applying damage in the zone
             isGrounded = true;
             body.constraints = RigidbodyConstraints.FreezeAll;
             GetComponent<MeshRenderer>().enabled = false;

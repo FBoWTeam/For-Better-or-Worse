@@ -17,13 +17,17 @@ public class PressurePlate : MonoBehaviour, IActivable
 
     //the pressure plate activates an other object
     [Tooltip("the object to activate id the current lever is active")]
-    public GameObject objectToActivate;
+    public GameObject[] objectToActivate;
 
     [DrawIf(new string[] { "type" }, PressurePlateType.PowerGiver)]
     public GameManager.PowerType powerToGive;
+    [DrawIf(new string[] { "type" }, PressurePlateType.PowerGiver)]
+    public GameObject otherPowerGiver;
+
+    private GameObject playerWhoTookPower;
 
     private Animator anim;
-    private bool powerGiven;
+    public bool powerGiven;
 
     private void Start()
     {
@@ -38,7 +42,10 @@ public class PressurePlate : MonoBehaviour, IActivable
     {
         if (other.CompareTag("Player") && !isActive)
         {
-            GivePower(other.gameObject);
+            if (type == PressurePlateType.PowerGiver)
+            {
+                GivePower(other.gameObject);
+            }
             this.Activate();
         }
     }
@@ -53,10 +60,17 @@ public class PressurePlate : MonoBehaviour, IActivable
 
     private void GivePower(GameObject other)
     {
-        if (!powerGiven)
+        if (otherPowerGiver.GetComponent<PressurePlate>().powerGiven && !powerGiven && (other.gameObject != otherPowerGiver.GetComponent<PressurePlate>().playerWhoTookPower))
         {
             other.gameObject.GetComponent<PlayerController>().AttributePower(powerToGive);
             powerGiven = true;
+            playerWhoTookPower = other.gameObject;
+        }
+        else if (!powerGiven && !otherPowerGiver.GetComponent<PressurePlate>().powerGiven)
+        {
+            other.gameObject.GetComponent<PlayerController>().AttributePower(powerToGive);
+            powerGiven = true;
+            playerWhoTookPower = other.gameObject;
         }
     }
 
@@ -64,9 +78,12 @@ public class PressurePlate : MonoBehaviour, IActivable
     {
         isActive = !isActive;
         //activates the other object
-        if (objectToActivate != null)
+        if (objectToActivate.Length > 0)
         {
-            objectToActivate.GetComponent<IActivable>().Activate();
+            for (int i = 0; i < objectToActivate.Length; i++)
+            {
+                objectToActivate[i].GetComponent<IActivable>().Activate();
+            }
         }
         
         if (isActive)

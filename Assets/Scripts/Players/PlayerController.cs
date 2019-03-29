@@ -6,6 +6,9 @@ using System;
 [RequireComponent(typeof(Rigidbody))]
 public class PlayerController : MonoBehaviour
 {
+	[HideInInspector]
+	public bool active = true;
+
 	[Header("[Main Params]")]
     public bool player1;
     public float initialSpeed;
@@ -33,6 +36,9 @@ public class PlayerController : MonoBehaviour
 
 	Animator animator;
 
+    [HideInInspector]
+    public Coroutine actualTauntCoroutine;
+
     void Awake()
     {
         rb = GetComponent<Rigidbody>();
@@ -50,7 +56,7 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-		if (!GameManager.gameManager.isPaused)
+		if (!GameManager.gameManager.isPaused && active)
 		{
 			Move();
 			CheckTaunt();
@@ -139,7 +145,12 @@ public class PlayerController : MonoBehaviour
         {
             if (hitColliders[i].CompareTag("Enemy"))
             {
-                hitColliders[i].GetComponent<Enemy>().StartCoroutine(hitColliders[i].GetComponent<Enemy>().TauntCoroutine(player1));
+                if (hitColliders[i].GetComponent<Enemy>().actualTauntCoroutine != null)
+                {
+                    hitColliders[i].GetComponent<Enemy>().StopCoroutine(hitColliders[i].GetComponent<Enemy>().actualTauntCoroutine);
+                }
+
+                hitColliders[i].GetComponent<Enemy>().actualTauntCoroutine = hitColliders[i].GetComponent<Enemy>().StartCoroutine(hitColliders[i].GetComponent<Enemy>().TauntCoroutine(player1));
             }
         }
     }
@@ -238,17 +249,20 @@ public class PlayerController : MonoBehaviour
         isFrozen = false;
     }
 
-    
+    /*
     public void StartRoot(EnemyMovement eM, float castingTime, GameObject targetPlayer, int damage, Vector3 pos, float rootTime, GameObject rootBranchPrefab)
     {
         StartCoroutine(RootCoroutine(eM, castingTime, targetPlayer, damage, pos, rootTime, rootBranchPrefab));
     }
+    */
 
-    IEnumerator RootCoroutine(EnemyMovement eM, float castingTime, GameObject targetPlayer, int damage, Vector3 pos, float rootTime, GameObject rootBranchPrefab)
+    public IEnumerator RootCoroutine(EnemySkill eK, EnemyMovement eM, float castingTime, GameObject targetPlayer, int damage, Vector3 pos, float rootTime, GameObject rootBranchPrefab)
     {
         eM.agent.isStopped = true;
+        eK.isCasting = true;
         yield return new WaitForSecondsRealtime(castingTime);
         eM.agent.isStopped = false;
+        eK.isCasting = false;
 
         GameManager.gameManager.TakeDamage(targetPlayer, damage, pos, false);
         GameManager.gameManager.UIManager.QuoteOnDamage("enemy", targetPlayer);

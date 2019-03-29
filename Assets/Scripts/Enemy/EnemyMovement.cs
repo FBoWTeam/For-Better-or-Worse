@@ -24,28 +24,28 @@ public class EnemyMovement : MonoBehaviour
 
     public Movement movement;
 
-    [DrawIf(new string[] { "movement" }, Movement.Classic)]
-    public float initialSpeed = 2f;
+    public float initialSpeed;
 
-    [DrawIf(new string[] { "movement" }, Movement.Classic)]
-    [Tooltip("represents the time of the attack animation")]
-    public float stopTime = 2f;
-
-    //[DrawIf(new string[] { "movement" }, Movement.Basic)]
-    //[Tooltip("represents the remaining distance between the enemy and the player")]
-    //public float distanceBetweenPlayer = 5f;
+    [DrawIf(new string[] { "movement" }, Movement.Ranged)]
+    public float distanceBeforeFleeing;
 
     #endregion
 
     [HideInInspector]
     public NavMeshAgent agent;
 
+
+
     //private
     public bool isSlowed;
-
     public bool isStrafing;
+    public bool isFleeing;
+    Coroutine strafingCoroutine;
+    Coroutine fleeingCoroutine;
 
     EnemySkill enemySkill;
+
+
 
     // Start is called before the first frame update
     void Start()
@@ -87,36 +87,60 @@ public class EnemyMovement : MonoBehaviour
 
     void ClassicMovement()
     {
-		if (enemySkill.isInRange)
-		{
-			agent.destination = transform.position;
-		}
-		else
-		{
-			agent.destination = Enemy.aimPlayer.transform.position;
-		}
+        if (enemySkill.isInRange)
+        {
+            agent.destination = transform.position;
+        }
+        else
+        {
+            agent.destination = Enemy.aimPlayer.transform.position;
+        }
     }
+
+    //void RangedMovement()
+    //{
+    //    Tuple<GameObject, float> nearestPlayer = ClosestPlayer();
+    //    if (nearestPlayer.Item2 < enemySkill.range/4)
+    //    {
+    //        if (strafingCoroutine != null)
+    //        {
+    //            StopCoroutine(strafingCoroutine);
+    //        }
+    //        isStrafing = false;
+    //        EnemyEscape(nearestPlayer.Item1, enemySkill.range);
+    //    }
+    //    else if (nearestPlayer.Item2 < enemySkill.range - 2 && !isStrafing)
+    //    {
+    //        agent.destination = transform.position;
+    //    }
+    //    else if (nearestPlayer.Item2 > enemySkill.range)
+    //    {
+    //        if (strafingCoroutine != null)
+    //        {
+    //            StopCoroutine(strafingCoroutine);
+    //            StartCoroutine("Strafing");
+    //        }
+    //        isStrafing = false;
+    //        MoveToPlayer(nearestPlayer.Item1, nearestPlayer.Item2);
+    //    }
 
     void RangedMovement()
     {
-        Tuple<GameObject, float> nearestPlayer = ClosestPlayer();
-        if (nearestPlayer.Item2 < enemySkill.range/2)
-        {
-            StopCoroutine("Strafing");
-            isStrafing = false;
-            EnemyEscape(nearestPlayer.Item1, enemySkill.range);
-        }
-        else if (nearestPlayer.Item2 < enemySkill.range - 2 && !isStrafing)
-        {
-            StartCoroutine(Strafing(nearestPlayer.Item1, enemySkill.range));
-        }
-        else if (nearestPlayer.Item2 > enemySkill.range)
-        {
-            StopCoroutine("Strafing");
-            isStrafing = false;
-            MoveToPlayer(nearestPlayer.Item1, nearestPlayer.Item2);
-        }
 
+        if (!enemySkill.isInRange)
+        {
+            agent.destination = Enemy.aimPlayer.transform.position;
+        }
+        else if (Vector3.Distance(Enemy.aimPlayer.transform.position, transform.position) <= distanceBeforeFleeing)
+        {
+            print("run");
+            //EnemyEscape(nearestPlayer.Item1, enemySkill.range);
+        }
+        else
+        {
+            transform.LookAt(Enemy.aimPlayer.transform);
+            agent.destination = transform.position;
+        }
     }
 
     /// <summary>
@@ -141,22 +165,19 @@ public class EnemyMovement : MonoBehaviour
             yield return new WaitForEndOfFrame();
         }
         isStrafing = false;
-        //Debug.Log("oui");
     }
-    
+
 
     /// <summary>
     /// run away from the orb (because why not)
     /// </summary>
     void EnemyEscape(GameObject target, float enemyRange)
     {
-        Vector3 dir = (this.transform.position - target.transform.position).normalized * enemyRange;
-        agent.destination = this.transform.position + dir;
-    }
-
-    void MoveToPlayer(GameObject target,float enemyRange)
-    {
-        agent.destination = Enemy.aimPlayer.transform.position;
+        float timeStamp = Time.time;
+        //wait x seconds
+        //Vector3 dir = (this.transform.position - target.transform.position).normalized * enemyRange / 4;
+        Vector3 dir = (this.transform.position - target.transform.position).normalized * distanceBeforeFleeing;
+        agent.destination = this.transform.position + dir * 2;
     }
 
     /// <summary>
@@ -167,7 +188,7 @@ public class EnemyMovement : MonoBehaviour
     {
         float distanceP1 = Vector3.Distance(this.transform.position, GameManager.gameManager.player1.transform.position);
         float distanceP2 = Vector3.Distance(this.transform.position, GameManager.gameManager.player2.transform.position);
-        return distanceP1 > distanceP2 ? Tuple.Create(GameManager.gameManager.player2, distanceP2) : Tuple.Create(GameManager.gameManager.player1,distanceP1);
+        return distanceP1 > distanceP2 ? Tuple.Create(GameManager.gameManager.player2, distanceP2) : Tuple.Create(GameManager.gameManager.player1, distanceP1);
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -190,7 +211,7 @@ public class EnemyMovement : MonoBehaviour
     {
         if (!isSlowed)
         {
-            agent.speed = agent.speed * ((100 - slowAmount)/100);
+            agent.speed = agent.speed * ((100 - slowAmount) / 100);
             isSlowed = true;
         }
     }

@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class OrbHitter : MonoBehaviour
 {
+	[HideInInspector]
+	public bool active = true;
     OrbController orbController;
 
     [Tooltip("represents the orb hitting range")]
@@ -26,12 +28,12 @@ public class OrbHitter : MonoBehaviour
     {
         orbController = GameManager.gameManager.orb.GetComponent<OrbController>();
         inRange = false;
-    }
+	}
 
     // Update is called once per frame
     void Update()
     {
-		if(!GameManager.gameManager.isPaused)
+		if(!GameManager.gameManager.isPaused && active)
 		{
 			OrbHit();
 		}
@@ -66,7 +68,8 @@ public class OrbHitter : MonoBehaviour
                     orbController.hasHitEnemy = false;
                 }
                 //Update combo UI
-                GameManager.gameManager.UIManager.UpdateCombo(orbController.combo);               
+                GameManager.gameManager.UIManager.UpdateCombo(orbController.combo);
+
                 CheckPowerActivation();
                 GameManager.gameManager.orb.GetComponent<PowerController>().CheckPowerAttribution("hit", player1);
             }
@@ -176,6 +179,13 @@ public class OrbHitter : MonoBehaviour
         orbController.speed = 0.0f;
         orbController.amortized = true;
         orbController.speed = orbController.minSpeed;
+
+        //update in score manager
+        if (orbController.combo > 0)
+        {
+            ScoreManager.scoreManager.KeepMaxCombo(orbController.combo);
+        }
+
         orbController.combo = 0;
         //reset combo ui
         GameManager.gameManager.UIManager.UpdateCombo(orbController.combo);

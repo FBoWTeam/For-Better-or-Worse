@@ -686,11 +686,17 @@ public class PowerController : MonoBehaviour
         switch (elementalPower)
         {
             case GameManager.PowerType.Ice:
+                //update in score manager
+                ScoreManager.scoreManager.statusAilmentApplied++;
+
                 enemy.actualFreezeCoroutine = enemy.StartCoroutine(enemy.FreezeCoroutine(freezeDuration));
                 damageTaken += iceDamage;
                 break;
             case GameManager.PowerType.Fire:
-				if(actualFireDOTCoroutine != null)
+                //update in score manager
+                ScoreManager.scoreManager.statusAilmentApplied++;
+
+                if (actualFireDOTCoroutine != null)
 					StopCoroutine(actualFireDOTCoroutine);
 				if(isActivatedByBrazier)
 					actualFireDOTCoroutine = StartCoroutine(FireDamage(enemy, fireTicksDamageBrazier, fireTickDurationBrazier));
@@ -699,16 +705,37 @@ public class PowerController : MonoBehaviour
                 damageTaken += fireDamage;
                 break;
             case GameManager.PowerType.Electric:
-				StartCoroutine(ElectricZappingCoroutine(transform.position, target, true));
+                //update in score manager
+                ScoreManager.scoreManager.statusAilmentApplied++;
+
+                StartCoroutine(ElectricZappingCoroutine(transform.position, target, true));
                 damageTaken += electricDamage;
 				DeactivatePower(elementalPower);
                 break;
             case GameManager.PowerType.Darkness:
+                //update in score manager
+                ScoreManager.scoreManager.statusAilmentApplied++;
+
                 enemy.actualDarknessCoroutine = enemy.StartCoroutine(enemy.DarknessCoroutine(darknessTimer));
                 break;
         }
+
+        //update in score manager (to keep track of who's given the last hit)
+        if (GameManager.gameManager.orb.GetComponent<OrbController>().toPlayer2)
+        {
+            enemy.lastHitByP1 = true;
+            enemy.lastHitByP2 = false;
+        }
+        else
+        {
+            enemy.lastHitByP1 = false;
+            enemy.lastHitByP2 = true;
+        }
+
+        enemy.TakeDamage(damageTaken);
+
+
         
-		enemy.TakeDamage(damageTaken);
 
         if (behaviouralPower == GameManager.PowerType.LeechLife)
         {
