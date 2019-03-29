@@ -81,12 +81,20 @@ public class BossSystem : MonoBehaviour
 
     [Header("[FireBall Params]")]
     public GameObject fireBallPrefab;
-    public float castingTimeFireBall;
+    public float fireBallCastingTime;
     public int fireBallDamage;
     public int fireBallDamageExplosion;
     public float fireBallRangeExplosion;
-    public float velocity;
+    public float fireBallSpeed;
 
+
+    [Header("[Charge Params]")]
+    public float chargeCastingTime;
+    public float chargeSpeed;
+    public float chargeOffset;
+    public float chargeStunTime;
+    bool willBeStun = false;
+    public bool isStun;
 
 
     GameObject player1;
@@ -99,8 +107,13 @@ public class BossSystem : MonoBehaviour
 
         hp = baseHP;
         isAttacking = false;
-        actualPhase = 0;
+        //actualPhase = 0;
         checkPhaseTransition();
+
+
+
+
+        probabilityTable = phase4;
     }
 
     private void Start()
@@ -280,7 +293,7 @@ public class BossSystem : MonoBehaviour
     {
         isAttacking = true;
 
-        yield return new WaitForSeconds(castingTimeFireBall);
+        yield return new WaitForSeconds(fireBallCastingTime);
 
         Vector3 target = aimedPlayer.transform.position;
         Vector3 dir = target - transform.position;//direction of the aimed player when the Fireball is creating
@@ -294,7 +307,7 @@ public class BossSystem : MonoBehaviour
 
         if (fireBall != null)
         {
-            fireBall.Init(fireBallDamage, fireBallDamageExplosion, fireBallRangeExplosion, velocity);
+            fireBall.Init(fireBallDamage, fireBallDamageExplosion, fireBallRangeExplosion, fireBallSpeed);
             fireBall.Launch(target + new Vector3(0f, 1.5f, 0f), fireBallStartingPoint);//offset so the fireball aims for the body of the player and not his/her feet
         }
 
@@ -412,11 +425,43 @@ public class BossSystem : MonoBehaviour
     {
         isAttacking = true;
 
-        Debug.Log("Charge");
+        Vector3 target = aimedPlayer.transform.position;
+        target.y = 2f;
+        Vector3 posStart = transform.position;
+        posStart.y = 2f;
 
-        //canalisation + feedbacks
-        yield return new WaitForSeconds(1.0f);
-        //boom
+        Vector3 vectCharge = target - posStart;
+        Vector3 newTarget = target + chargeOffset * vectCharge.normalized;//aiming for behind the target player by an offset
+        
+        RaycastHit hit;
+        int layerMask = 1 << 11;//to only hit the walls
+
+        if(Physics.Raycast(posStart, vectCharge, out hit, vectCharge.magnitude + chargeOffset, layerMask))
+        {
+            willBeStun = true;
+            newTarget = hit.point - 2f * vectCharge.normalized;
+        }         
+        
+        float distCharge = vectCharge.magnitude;
+        float chargeTime = distCharge / chargeSpeed;
+
+        yield return new WaitForSeconds(chargeCastingTime);
+
+        float t = 0f;
+        while (t < 1)
+        {
+            transform.position = Vector3.Lerp(posStart, newTarget, t);
+            t += 1f / (100f * chargeTime);
+            yield return new WaitForSeconds(0.001f);
+        }
+
+        if(willBeStun)
+        {
+            willBeStun = false;
+            isStun = true;
+            yield return new WaitForSeconds(chargeStunTime);
+            isStun = false;
+        }
 
         isAttacking = false;
     }
@@ -467,5 +512,6 @@ public class BossSystem : MonoBehaviour
             Debug.DrawLine(position, destination + position, Color.red, 10f);
         }
     }
+    
 
 }
