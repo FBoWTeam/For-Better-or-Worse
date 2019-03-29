@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
+using Random = UnityEngine.Random;
 
 public class BossSystem : MonoBehaviour
 {
@@ -75,6 +77,15 @@ public class BossSystem : MonoBehaviour
     public float electricAoeChannelingTime;
     public float electricAoeTimeBetweenFeedbackAndCast;
     public int electricAoeDamage;
+
+
+    [Header("[FireBall Params]")]
+    public GameObject fireBallPrefab;
+    public float castingTimeFireBall;
+    public int fireBallDamage;
+    public int fireBallDamageExplosion;
+    public float fireBallRangeExplosion;
+    public float velocity;
 
 
 
@@ -269,11 +280,25 @@ public class BossSystem : MonoBehaviour
     {
         isAttacking = true;
 
-        Debug.Log("Fire Ball");
+        yield return new WaitForSeconds(castingTimeFireBall);
 
-        //canalisation + feedbacks
-        yield return new WaitForSeconds(1.0f);
-        //boom
+        Vector3 target = aimedPlayer.transform.position;
+        Vector3 dir = target - transform.position;//direction of the aimed player when the Fireball is creating
+        dir = dir.normalized;
+        dir.y = 0;
+
+        Vector3 fireBallStartingPoint = transform.position + 2.8f * dir;
+
+        GameObject projectileFireBall = Instantiate(fireBallPrefab, fireBallStartingPoint, Quaternion.identity);
+        FireBall fireBall = projectileFireBall.GetComponent<FireBall>();
+
+        if (fireBall != null)
+        {
+            fireBall.Init(fireBallDamage, fireBallDamageExplosion, fireBallRangeExplosion, velocity);
+            fireBall.Launch(target + new Vector3(0f, 1.5f, 0f), fireBallStartingPoint);//offset so the fireball aims for the body of the player and not his/her feet
+        }
+
+        yield return new WaitUntil(() => fireBall.isDestroyed);
 
         isAttacking = false;
     }
@@ -348,8 +373,6 @@ public class BossSystem : MonoBehaviour
         Quaternion rightRotation = Quaternion.Euler(0, electricConeAngle / 2, 0);
         Vector3 minRange = leftRotation * targetVector;
         Vector3 maxRange = rightRotation * targetVector;
-
-
 
         //show feedback
         electricConeFeedBack.SetActive(true);
