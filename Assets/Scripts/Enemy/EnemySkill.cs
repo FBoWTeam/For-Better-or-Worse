@@ -280,6 +280,8 @@ public class EnemySkill : MonoBehaviour
     {
         GetComponent<EnemyMovement>().agent.isStopped = true;
         Enemy.isAttacking = true;
+        transform.LookAt(target.position);
+
 
         yield return new WaitForSeconds(GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).length / 4);
 
@@ -291,7 +293,7 @@ public class EnemySkill : MonoBehaviour
             enemyShot.Initialise(target.position, damage, bulletSpeed);
         }
 
-        yield return new WaitForSeconds((GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).length * 3)/ 4);
+        yield return new WaitForSeconds((GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).length * 3) / 4);
         GetComponent<EnemyMovement>().agent.isStopped = false;
         Enemy.isAttacking = false;
     }

@@ -52,6 +52,8 @@ public class Enemy : MonoBehaviour
     Color player1ColorTaunt = new Color(255, 96, 0);
     Color player2ColorTaunt = new Color(82, 82, 82);
 
+    [HideInInspector]
+    public Coroutine actualTauntCoroutine;
 
     #endregion
 
@@ -104,11 +106,9 @@ public class Enemy : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        print(Enemy.isAttacking);
         if (!GameManager.gameManager.isPaused && !Enemy.isAttacking)
         {
             FocusManagement();
-            transform.LookAt(aimPlayer.transform);
 
             if (!enemyMovement.agent.isStopped && !isFrozen)
             {
@@ -118,7 +118,7 @@ public class Enemy : MonoBehaviour
 
             if (enemySkill.InRange(aimPlayer) && !isFrozen)
             {
-               enemySkill.DoSkill(aimPlayer);
+                enemySkill.DoSkill(aimPlayer);
             }
 
             if (drawView)
