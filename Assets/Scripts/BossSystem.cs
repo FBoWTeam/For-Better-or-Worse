@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
+using Random = UnityEngine.Random;
 
 public class BossSystem : MonoBehaviour
 {
@@ -31,6 +33,8 @@ public class BossSystem : MonoBehaviour
     [Header("[Base Params]")]
     public int baseHP;
     public int hp;
+    public float stunTime;
+    private bool isStuned;
 
     public int actualPhase;
     [Range(0.0f, 1.0f)]
@@ -53,13 +57,37 @@ public class BossSystem : MonoBehaviour
     public float maxWaitTime;
     float nextAttack;
     bool isAttacking;
+    public LayerMask targetMask;
+
 
     [Header("[Electric Cone Params]")]
     public float electricConeAngle;
     public int electricConeDamage;
-    public float electricConetimeBetweenFeedbackAndCast;
+    public float electricConeTimeBetweenFeedbackAndCast;
     public float electricConeChannelingTime;
     public GameObject electricConeFeedBack;
+
+    [Header("[Electric Zone Params]")]
+    public float electricZoneRadius;
+    public float electricZoneChannelingTime;
+    public float electricZoneTimeBetweenFeedbackAndCast;
+    public int electricZoneDamage;
+
+
+    [Header("[Electric AOE Params]")]
+    public float electricAoeRadius;
+    public float electricAoeChannelingTime;
+    public float electricAoeTimeBetweenFeedbackAndCast;
+    public int electricAoeDamage;
+
+
+    [Header("[FireBall Params]")]
+    public GameObject fireBallPrefab;
+    public float castingTimeFireBall;
+    public int fireBallDamage;
+    public int fireBallDamageExplosion;
+    public float fireBallRangeExplosion;
+    public float velocity;
 
 
 
@@ -90,7 +118,7 @@ public class BossSystem : MonoBehaviour
         {
             checkPhaseTransition();
 
-            if (Time.time >= nextAttack)
+            if (Time.time >= nextAttack && !isStuned)
             {
                 SetFocus();
                 LaunchPattern(RandomPattern());
@@ -254,11 +282,25 @@ public class BossSystem : MonoBehaviour
     {
         isAttacking = true;
 
-        Debug.Log("Fire Ball");
+        yield return new WaitForSeconds(castingTimeFireBall);
 
-        //canalisation + feedbacks
-        yield return new WaitForSeconds(1.0f);
-        //boom
+        Vector3 target = aimedPlayer.transform.position;
+        Vector3 dir = target - transform.position;//direction of the aimed player when the Fireball is creating
+        dir = dir.normalized;
+        dir.y = 0;
+
+        Vector3 fireBallStartingPoint = transform.position + 2.8f * dir;
+
+        GameObject projectileFireBall = Instantiate(fireBallPrefab, fireBallStartingPoint, Quaternion.identity);
+        FireBall fireBall = projectileFireBall.GetComponent<FireBall>();
+
+        if (fireBall != null)
+        {
+            fireBall.Init(fireBallDamage, fireBallDamageExplosion, fireBallRangeExplosion, velocity);
+            fireBall.Launch(target + new Vector3(0f, 1.5f, 0f), fireBallStartingPoint);//offset so the fireball aims for the body of the player and not his/her feet
+        }
+
+        yield return new WaitUntil(() => fireBall.isDestroyed);
 
         isAttacking = false;
     }
@@ -269,11 +311,31 @@ public class BossSystem : MonoBehaviour
     {
         isAttacking = true;
 
-        Debug.Log("Electric Zone");
+        //start chaneling anim
+        Debug.Log("channeling electric zone");
+        yield return new WaitForSeconds(electricZoneChannelingTime);
 
-        //canalisation + feedbacks
+        Vector3 electricZoneLocation = aimedPlayer.transform.position;
+
+
+        //show feedback=============
+        DrawAOE(electricZoneLocation, electricZoneRadius);
+
+
+        Debug.Log("casting electric zone");
+        yield return new WaitForSeconds(electricZoneTimeBetweenFeedbackAndCast);
+
+        //check if the players are in the area of effect
+        Collider[] playersInRange = Physics.OverlapSphere(electricZoneLocation, electricZoneRadius, targetMask);
+
+        //apply damage to the players in the area of effect
+        for (int i = 0; i < playersInRange.Length; i++)
+        {
+            GameManager.gameManager.TakeDamage(playersInRange[i].gameObject, electricZoneDamage, electricZoneLocation, true);
+        }
+
+
         yield return new WaitForSeconds(1.0f);
-        //boom
 
         isAttacking = false;
     }
@@ -298,9 +360,13 @@ public class BossSystem : MonoBehaviour
     public IEnumerator ElectricConeCoroutine()
     {
         isAttacking = true;
+
         //start chaneling anim
-        Debug.Log("channeling");
+        Debug.Log("channeling electric cone");
         yield return new WaitForSeconds(electricConeChannelingTime);
+
+
+        //determining the area where to cast the spell
         Vector3 bossPos = transform.position;
         bossPos.y = 0;
 
@@ -310,19 +376,20 @@ public class BossSystem : MonoBehaviour
         Vector3 minRange = leftRotation * targetVector;
         Vector3 maxRange = rightRotation * targetVector;
 
-        //afficher feedback
-
-        
+        //show feedback
         electricConeFeedBack.SetActive(true);
         electricConeFeedBack.transform.LookAt(aimedPlayer.transform);
-        
-        Debug.Log("casting");
-        yield return new WaitForSeconds(electricConetimeBetweenFeedbackAndCast);
 
+        Debug.Log("casting electric cone");
+        yield return new WaitForSeconds(electricConeTimeBetweenFeedbackAndCast);
+
+
+
+        //check if players are in the area of effect to apply damages
         Vector3 dirToTarget;
         dirToTarget = (player1.transform.position - bossPos).normalized;
         dirToTarget.y = 0;
-        if (Vector3.Angle(targetVector, dirToTarget) < electricConeAngle/2 && Vector3.Angle(targetVector, dirToTarget) > -electricConeAngle / 2)
+        if (Vector3.Angle(targetVector, dirToTarget) < electricConeAngle / 2 && Vector3.Angle(targetVector, dirToTarget) > -electricConeAngle / 2)
         {
             GameManager.gameManager.TakeDamage(player1, electricConeDamage, Vector3.zero, false);
         }
@@ -334,8 +401,8 @@ public class BossSystem : MonoBehaviour
         }
 
         electricConeFeedBack.SetActive(false);
-        
-        yield return new WaitForSeconds(5.0f);
+
+        yield return new WaitForSeconds(1.0f);
 
 
         isAttacking = false;
@@ -362,11 +429,28 @@ public class BossSystem : MonoBehaviour
     {
         isAttacking = true;
 
-        Debug.Log("Electric AOE");
+        //start chaneling anim
+        Debug.Log("channeling AOE zone");
+        yield return new WaitForSeconds(electricAoeChannelingTime);
+        
 
-        //canalisation + feedbacks
+        //show feedback==========
+        DrawAOE(transform.position, electricAoeRadius);
+
+        Debug.Log("casting electric AOE");
+        yield return new WaitForSeconds(electricAoeTimeBetweenFeedbackAndCast);
+
+        //check if the players are in the area of effect
+        Collider[] playersInRange = Physics.OverlapSphere(transform.position, electricAoeRadius, targetMask);
+
+        //apply damage to the players in the area of effect
+        for (int i = 0; i < playersInRange.Length; i++)
+        {
+            GameManager.gameManager.TakeDamage(playersInRange[i].gameObject, electricZoneDamage, transform.position, true);
+        }
+
+
         yield return new WaitForSeconds(1.0f);
-        //boom
 
         isAttacking = false;
     }
@@ -375,6 +459,24 @@ public class BossSystem : MonoBehaviour
 
 
 
+    public IEnumerator Stun()
+    {
+        isStuned = true;
+        yield return new WaitForSeconds(stunTime);
+        isStuned = false;
+    }
 
+
+    //function to visualize the effect zone of an AOE
+    void DrawAOE(Vector3 position, float radius)
+    {
+        position.y = 0;
+        for (int i = 0; i < 16; i++)
+        {
+            float angle = i * Mathf.PI * 2 / 16f;
+            Vector3 destination = new Vector3(Mathf.Cos(angle) * radius, 0, Mathf.Sin(angle) * radius);
+            Debug.DrawLine(position, destination + position, Color.red, 10f);
+        }
+    }
 
 }
