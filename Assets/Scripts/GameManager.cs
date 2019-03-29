@@ -83,7 +83,7 @@ public class GameManager : MonoBehaviour
         }
         else if (gameManager != this)
         {
-            Destroy(this);
+            Destroy(this.gameObject);
         }
 
 		I18n.LoadLang("fr_FR");
