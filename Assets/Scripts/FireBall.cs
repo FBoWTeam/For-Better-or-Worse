@@ -6,13 +6,14 @@ using System;
 public class FireBall : MonoBehaviour
 {
     private Rigidbody body;
-    public int damage;
-    public float rangeExplosion;
+    int damage;
+    int damageExplosion;
+    float rangeExplosion;
     public int fireBallHeight;
 
     public bool isDestroyed;
 
-    float gravity = -9.81f;
+    float gravity = 35f;//-9.81f;
 
 
 
@@ -32,15 +33,36 @@ public class FireBall : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        if(transform.position.y <= 0)
+        {
+            if ((transform.position - GameManager.gameManager.player1.transform.position).magnitude < rangeExplosion)
+            {
+                GameManager.gameManager.TakeDamage(GameManager.gameManager.player1, damageExplosion, transform.position, true);
+            }
+
+            if ((transform.position - GameManager.gameManager.player2.transform.position).magnitude < rangeExplosion)
+            {
+                GameManager.gameManager.TakeDamage(GameManager.gameManager.player2, damageExplosion, transform.position, true);
+            }
+
+            isDestroyed = true;
+            Destroy(gameObject);
+        }
     }
 
+    public void Init(int damageParam, int damageExplosionParam, float rangeExplosionParam, float velocityParam)
+    {
+        damage = damageParam;
+        damageExplosion = damageExplosionParam;
+        rangeExplosion = rangeExplosionParam;
+        gravity = velocityParam;
+    }
 
     public void Launch(Vector3 target, Vector3 fireBallStartingPoint)
     {
+        Physics.gravity = Vector3.up * -gravity;
         body.useGravity = true;
-        body.velocity = ComputeThrowVelocity(target, fireBallStartingPoint).Item1;
-        StartCoroutine(TravelTimeCoroutine(ComputeThrowVelocity(target, fireBallStartingPoint).Item2));
+        body.velocity = ComputeThrowVelocity(target, fireBallStartingPoint);
     }
 
     /// <summary>
@@ -49,33 +71,15 @@ public class FireBall : MonoBehaviour
     /// </summary>
     /// <param name="target"></param>
     /// <returns></returns>
-    Tuple<Vector3, float> ComputeThrowVelocity(Vector3 target, Vector3 initialPos)
+    Vector3 ComputeThrowVelocity(Vector3 target, Vector3 initialPos)
     {
         float dirY = target.y - initialPos.y;
         Vector3 dirXZ = new Vector3(target.x - initialPos.x, 0, target.z - initialPos.z);
-        float time = Mathf.Sqrt(-2 * fireBallHeight / gravity) + Mathf.Sqrt(2 * (dirY - fireBallHeight) / gravity);
-        Vector3 velocityY = Vector3.up * Mathf.Sqrt(-2 * gravity * fireBallHeight);
+        float time = Mathf.Sqrt(2 * fireBallHeight / gravity) + Mathf.Sqrt(-2 * (dirY - fireBallHeight) / gravity);
+        Vector3 velocityY = Vector3.up * Mathf.Sqrt(2 * gravity * fireBallHeight);
         Vector3 velocityXZ = dirXZ / time;
-        Vector3 velocity = velocityXZ + velocityY * -Mathf.Sign(gravity);
-        return new Tuple<Vector3, float>(velocity, time);
-    }
-
-    IEnumerator TravelTimeCoroutine(float travelTime)
-    {
-        yield return new WaitForSeconds(travelTime);
-
-        if ((transform.position - GameManager.gameManager.player1.transform.position).magnitude < rangeExplosion)
-        {
-            GameManager.gameManager.TakeDamage(GameManager.gameManager.player1, damage, transform.position, true);
-        }
-
-        if ((transform.position - GameManager.gameManager.player2.transform.position).magnitude < rangeExplosion)
-        {
-            GameManager.gameManager.TakeDamage(GameManager.gameManager.player2, damage, transform.position, true);
-        }
-
-        isDestroyed = true;
-        Destroy(gameObject);
+        Vector3 velocity = velocityXZ + velocityY * Mathf.Sign(gravity);
+        return velocity;
     }
     
     private void OnTriggerEnter(Collider other)

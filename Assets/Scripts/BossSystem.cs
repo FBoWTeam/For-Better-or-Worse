@@ -56,13 +56,13 @@ public class BossSystem : MonoBehaviour
 	float nextAttack;
 	public bool isAttacking;
 
-
+    [Header("[FireBall Params]")]
     public GameObject fireBallPrefab;
     public float castingTimeFireBall;
     public int fireBallDamage;
-    public int fireBallHeight = 5;
-    public float rangeExplosion;
-    float gravity = -9.81f;
+    public int fireBallDamageExplosion;
+    public float fireBallRangeExplosion;
+    public float velocity;
 
 	//======================================================================================== AWAKE AND UPDATE
 
@@ -257,34 +257,16 @@ public class BossSystem : MonoBehaviour
         GameObject projectileFireBall = Instantiate(fireBallPrefab, fireBallStartingPoint, Quaternion.identity);
         FireBall fireBall = projectileFireBall.GetComponent<FireBall>();
 
-        Physics.gravity = Vector3.up * gravity;
-
         if(fireBall != null)
         {
-            fireBall.Launch(target, fireBallStartingPoint);
+            fireBall.Init(fireBallDamage, fireBallDamageExplosion, fireBallRangeExplosion, velocity);
+            fireBall.Launch(target + new Vector3(0f,1.5f,0f), fireBallStartingPoint);//offset so the fireball aims for the body of the player and not his/her feet
         }
 
         yield return new WaitUntil(() => fireBall.isDestroyed);
         
 		isAttacking = false;
 	}
-
-    /// <summary>
-    /// Compute at wich velocity a gameobjet should go , in order to hit a target using Kinematic equation
-    /// MaxHeight should always be > dirY
-    /// </summary>
-    /// <param name="target"></param>
-    /// <returns></returns>
-    Tuple<Vector3, float> ComputeThrowVelocity(Vector3 target, Vector3 initialPos)
-    {
-        float dirY = target.y - initialPos.y;
-        Vector3 dirXZ = new Vector3(target.x - initialPos.x, 0, target.z - initialPos.z);
-        float time = Mathf.Sqrt(-2 * fireBallHeight / gravity) + Mathf.Sqrt(2 * (dirY - fireBallHeight) / gravity);
-        Vector3 velocityY = Vector3.up * Mathf.Sqrt(-2 * gravity * fireBallHeight);
-        Vector3 velocityXZ = dirXZ / time;
-        Vector3 velocity = velocityXZ + velocityY * -Mathf.Sign(gravity);
-        return new Tuple<Vector3, float>(velocity, time);
-    }
 
 
 
