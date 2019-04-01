@@ -33,6 +33,8 @@ public class BossSystem : MonoBehaviour
     [Header("[Base Params]")]
     public int baseHP;
     public int hp;
+    public float stunTime;
+    private bool isStuned;
 
     public int actualPhase;
     [Range(0.0f, 1.0f)]
@@ -124,7 +126,7 @@ public class BossSystem : MonoBehaviour
         {
             checkPhaseTransition();
 
-            if (Time.time >= nextAttack)
+            if (Time.time >= nextAttack && !isStuned)
             {
                 SetFocus();
                 LaunchPattern(RandomPattern());
@@ -494,6 +496,15 @@ public class BossSystem : MonoBehaviour
     }
 
     #endregion
+
+
+
+    public IEnumerator Stun()
+    {
+        isStuned = true;
+        yield return new WaitForSeconds(stunTime);
+        isStuned = false;
+    }
 
 
     //function to visualize the effect zone of an AOE
