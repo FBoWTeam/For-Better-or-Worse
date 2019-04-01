@@ -107,13 +107,8 @@ public class BossSystem : MonoBehaviour
 
         hp = baseHP;
         isAttacking = false;
-        //actualPhase = 0;
+        actualPhase = 0;
         checkPhaseTransition();
-
-
-
-
-        probabilityTable = phase4;
     }
 
     private void Start()
