@@ -81,7 +81,7 @@ public class Enemy : MonoBehaviour
     public bool lastHitByP1;
     public bool lastHitByP2;
     [HideInInspector]
-    public static bool isAttacking;
+    public bool isAttacking;
 
     #endregion
 
@@ -99,7 +99,7 @@ public class Enemy : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (!GameManager.gameManager.isPaused && !Enemy.isAttacking)
+        if (!GameManager.gameManager.isPaused && !isAttacking)
         {
             FocusManagement();
 
