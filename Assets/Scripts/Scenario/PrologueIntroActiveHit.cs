@@ -39,21 +39,29 @@ public class PrologueIntroActiveHit : Tutorial
 	{
 		MeshRenderer renderer = transform.parent.GetComponentInChildren<MeshRenderer>();
 		renderer.enabled = false;
-		yield return new WaitForSeconds(0.2f);
+		yield return new WaitForSeconds(0.1f);
 		renderer.enabled = true;
-		yield return new WaitForSeconds(0.2f);
+		yield return new WaitForSeconds(0.1f);
 		renderer.enabled = false;
-		yield return new WaitForSeconds(0.2f);
+		yield return new WaitForSeconds(0.1f);
 		renderer.enabled = true;
-		yield return new WaitForSeconds(0.2f);
+		yield return new WaitForSeconds(0.1f);
 		renderer.enabled = false;
-		yield return new WaitForSeconds(0.2f);
+		yield return new WaitForSeconds(0.1f);
+		renderer.enabled = true;
+		yield return new WaitForSeconds(0.1f);
+		renderer.enabled = false;
+		yield return new WaitForSeconds(0.1f);
+		renderer.enabled = true;
+		yield return new WaitForSeconds(0.1f);
+		renderer.enabled = false;
+		yield return new WaitForSeconds(0.1f);
 		renderer.enabled = true;
 	}
 
 	public void OnTriggerEnter(Collider other)
 	{
-		if(other.CompareTag("Orb"))
+		if(other.CompareTag("Orb") && !entityHasBeenHit)
 		{
 			entityHasBeenHit = true;
 			StartCoroutine(EntityHit());
