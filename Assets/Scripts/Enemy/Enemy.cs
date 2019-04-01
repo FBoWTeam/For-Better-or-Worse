@@ -48,10 +48,8 @@ public class Enemy : MonoBehaviour
 
     public float tauntDuration;
 
-    GameObject tauntCanvas;
-    Color player1ColorTaunt = new Color(255, 96, 0);
-    Color player2ColorTaunt = new Color(82, 82, 82);
-
+    [HideInInspector]
+    public Coroutine actualTauntCoroutine;
 
     #endregion
 
@@ -85,8 +83,6 @@ public class Enemy : MonoBehaviour
     [HideInInspector]
     public static bool isAttacking;
 
-
-
     #endregion
 
     // Start is called before the first frame update
@@ -97,18 +93,15 @@ public class Enemy : MonoBehaviour
         enemyMovement = GetComponent<EnemyMovement>();
         enemySkill = GetComponent<EnemySkill>();
         sdrawPath = drawPath;
-        tauntCanvas = transform.GetChild(0).gameObject;
         animator = GetComponent<Animator>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        print(Enemy.isAttacking);
         if (!GameManager.gameManager.isPaused && !Enemy.isAttacking)
         {
             FocusManagement();
-            transform.LookAt(aimPlayer.transform);
 
             if (!enemyMovement.agent.isStopped && !isFrozen)
             {
@@ -118,7 +111,7 @@ public class Enemy : MonoBehaviour
 
             if (enemySkill.InRange(aimPlayer) && !isFrozen)
             {
-               enemySkill.DoSkill(aimPlayer);
+                enemySkill.DoSkill(aimPlayer);
             }
 
             if (drawView)
@@ -165,46 +158,17 @@ public class Enemy : MonoBehaviour
                     break;
             }
         }
-
-        TauntFeedback();
     }
 
     #endregion
-
-    #region Taunt Methods
 
     public IEnumerator TauntCoroutine(bool player1)
     {
         isTaunted = true;
         taunter = player1;
-        if (player1)
-        {
-            tauntCanvas.GetComponentInChildren<Text>().color = player1ColorTaunt;
-        }
-        else
-        {
-            tauntCanvas.GetComponentInChildren<Text>().color = player2ColorTaunt;
-        }
         yield return new WaitForSeconds(tauntDuration);
         isTaunted = false;
     }
-
-
-
-    private void TauntFeedback()
-    {
-        if (isTaunted)
-        {
-            tauntCanvas.SetActive(true);
-            tauntCanvas.transform.LookAt(Camera.main.transform.position);
-        }
-        else
-        {
-            tauntCanvas.SetActive(false);
-        }
-    }
-
-    #endregion
 
     public void TakeDamage(int damage)
     {
