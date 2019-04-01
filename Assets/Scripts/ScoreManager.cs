@@ -55,7 +55,7 @@ public class ScoreManager : MonoBehaviour
         }
         else if (scoreManager != this)
         {
-            Destroy(this);
+            Destroy(this.gameObject);
         }
         
         completionTime = 0;
