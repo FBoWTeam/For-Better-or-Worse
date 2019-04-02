@@ -28,25 +28,42 @@ public class RoomSystem : MonoBehaviour, IActivable
     public GameObject[] objectsToActivate;
 
     public bool isActive { get; set; }
-    
+
+    bool initialisation;
+
     public GameObject nextRoom;
 
+    private void Start()
+    {
+        initialisation = false;
+        StartCoroutine(Initialisation());
+    }
     void Update()
     {
-        CleanNullInEnemyList();
-        if (!roomCleared && enemies.Count == 0)
+        if (initialisation)
         {
-            this.Activate();
-        }
-        else if (numberPlayerPresent == 0 && !playerLeft && enemies.Count == 0)
-        {
-            if (nextRoom != null && nextRoom.GetComponent<RoomSystem>().numberPlayerPresent == 2)
+            print("Init");
+            CleanNullInEnemyList();
+            if (!roomCleared && enemies.Count == 0)
             {
-                this.Deactivate();
+                this.Activate();
             }
+            else if (numberPlayerPresent == 0 && !playerLeft && enemies.Count == 0)
+            {
+                if (nextRoom != null && nextRoom.GetComponent<RoomSystem>().numberPlayerPresent == 2)
+                {
+                    this.Deactivate();
+                }
+            }
+
         }
     }
 
+    IEnumerator Initialisation()
+    {
+        yield return new WaitForSeconds(1);
+        initialisation = true;
+    }
 
     public void Activate()
     {
@@ -100,5 +117,5 @@ public class RoomSystem : MonoBehaviour, IActivable
             enemies.RemoveAll(x => x.Equals(null));
         }
     }
-    
+
 }
