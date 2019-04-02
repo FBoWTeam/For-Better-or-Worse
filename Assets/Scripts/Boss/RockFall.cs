@@ -11,6 +11,8 @@ public class RockFall : MonoBehaviour
     public float roomLength;
     public Vector3 roomCenter;
 
+    public float instanciationHeight;
+
     private void Start()
     {
         StartCoroutine(RockFallCoroutine());
@@ -24,9 +26,10 @@ public class RockFall : MonoBehaviour
             float abscissaLocation = Random.Range(roomCenter.x - (roomWidth / 2), roomCenter.x + (roomWidth / 2));
             float ordinateLocation = Random.Range(roomCenter.z - (roomLength / 2), roomCenter.z + (roomLength / 2));
 
-            Instantiate(rockPrefab, new Vector3(abscissaLocation, 10f, ordinateLocation), Quaternion.identity);
 
-            yield return new WaitForSeconds(1.0f);
+            Instantiate(rockPrefab, new Vector3(abscissaLocation, instanciationHeight, ordinateLocation), Quaternion.identity);
+            
+            yield return new WaitForSeconds(0.3f);
         }
     }
 

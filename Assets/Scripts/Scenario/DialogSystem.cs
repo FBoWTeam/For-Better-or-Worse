@@ -70,20 +70,17 @@ public class DialogSystem : MonoBehaviour
 	{
 		if ((Input.GetKey(KeyCode.Space) || Input.GetKey(KeyCode.Keypad0) || Input.GetKey(KeyCode.Joystick1Button0) || Input.GetKey(KeyCode.Joystick2Button0)) && !speededUp)
 		{
-			writeDelay /= 10.0f;
 			speededUp = true;
 			arrowButton.sprite = arrowButtonPressed;
 		}
 		if((Input.GetKey(KeyCode.Space) || Input.GetKey(KeyCode.Keypad0) || Input.GetKey(KeyCode.Joystick1Button0) || Input.GetKey(KeyCode.Joystick2Button0)) && canMoveToNext)
 		{
-			writeDelay *= 10.0f;
 			speededUp = false;
 			arrowButton.sprite = arrowButtonNormal;
 			return true;
 		}
 		if ((Input.GetKeyUp(KeyCode.Space) || Input.GetKeyUp(KeyCode.Keypad0) || Input.GetKeyUp(KeyCode.Joystick1Button0) || Input.GetKeyUp(KeyCode.Joystick2Button0)) && speededUp)
 		{
-			writeDelay *= 10.0f;
 			speededUp = false;
 			arrowButton.sprite = arrowButtonNormal;
 		}
@@ -162,19 +159,25 @@ public class DialogSystem : MonoBehaviour
     /// </summary>
     /// <param name="replica"></param>
     /// <returns></returns>
-    IEnumerator DisplayReplica(string replica) {
+    IEnumerator DisplayReplica(string replica)
+	{
+		bool pass = false;
 		displayedText.text = "";
         canMoveToNext = false;
-        foreach (char c in replica) {
+        foreach (char c in replica)
+		{
 			if(c == '\\')
-			{
 				displayedText.text += '\n';
-			}
 			else
-			{
 				displayedText.text += c;
-			}
-            yield return new WaitForSeconds(writeDelay);
+
+			if (speededUp)
+				pass = !pass;
+			else
+				pass = false;
+
+			if (!pass)
+				yield return new WaitForSeconds(writeDelay);
         }
         canMoveToNext = true;
         yield return null;
