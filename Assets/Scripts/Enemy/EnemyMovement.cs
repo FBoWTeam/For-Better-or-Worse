@@ -199,6 +199,7 @@ public class EnemyMovement : MonoBehaviour
         }
     }
 
+    
     private void OnCollisionExit(Collision collision)
     {
         if (collision.gameObject.CompareTag("Player"))
@@ -206,6 +207,7 @@ public class EnemyMovement : MonoBehaviour
             agent.isStopped = false;
         }
     }
+    
 
     public void SlowSpeed(float slowAmount)
     {
