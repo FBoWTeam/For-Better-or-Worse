@@ -89,6 +89,11 @@ public class BossSystem : MonoBehaviour
     public float fireBallRangeExplosion;
     public float velocity;
 
+    [Header("[Mystic Line Params]")]
+    public GameObject mysticLinePrefab;
+    public float mysticLineHeight;
+    public float mysticLineWidth;
+    public float lifeTime;
 
 
     GameObject player1;
@@ -273,7 +278,32 @@ public class BossSystem : MonoBehaviour
         yield return new WaitForSeconds(1.0f);
         //boom
 
+        RaycastHit hit;
+        Vector3 raycastPosition = transform.position - new Vector3(0, 3, 0);
+
+        if (Physics.Raycast(raycastPosition, transform.TransformDirection(Vector3.forward), out hit, 50, LayerMask.NameToLayer("Wall")))
+        {
+            //print("Distance : " + hit.distance);
+            //Debug.DrawRay(raycastPosition, transform.TransformDirection(Vector3.forward) * hit.distance, Color.blue, 10);
+
+            Vector3 center = (transform.position + hit.transform.position) / 2;
+
+            StartCoroutine(CreateMysticLine(center, hit.distance));
+ 
+        }
+
         isAttacking = false;
+    }
+
+    public IEnumerator CreateMysticLine(Vector3 position, float length)
+    {
+        GameObject mysticLine = Instantiate(mysticLinePrefab, position, transform.rotation);
+        mysticLine.transform.localScale = new Vector3(mysticLineWidth, mysticLineHeight, length);
+
+        yield return new WaitForSeconds(lifeTime);
+
+        Destroy(mysticLine);
+
     }
 
     //======================================================================================== FIREBALL
@@ -432,7 +462,7 @@ public class BossSystem : MonoBehaviour
         //start chaneling anim
         Debug.Log("channeling AOE zone");
         yield return new WaitForSeconds(electricAoeChannelingTime);
-        
+
 
         //show feedback==========
         DrawAOE(transform.position, electricAoeRadius);
