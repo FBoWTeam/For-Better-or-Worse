@@ -12139,6 +12139,16 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8708506531089382189, guid: e0c803f7f12a09b4cb87b0f68746c41b,
+        type: 3}
+      propertyPath: canHitPlayer
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4573906761269645459, guid: e0c803f7f12a09b4cb87b0f68746c41b,
+        type: 3}
+      propertyPath: elementalPowerSlot
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2970527385879693205, guid: e0c803f7f12a09b4cb87b0f68746c41b,
         type: 3}
       propertyPath: droppedPower
@@ -12158,16 +12168,6 @@ PrefabInstance:
         type: 3}
       propertyPath: baseDamage
       value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 8708506531089382189, guid: e0c803f7f12a09b4cb87b0f68746c41b,
-        type: 3}
-      propertyPath: canHitPlayer
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4573906761269645459, guid: e0c803f7f12a09b4cb87b0f68746c41b,
-        type: 3}
-      propertyPath: elementalPowerSlot
-      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e0c803f7f12a09b4cb87b0f68746c41b, type: 3}
@@ -13658,11 +13658,11 @@ MonoBehaviour:
   waveList:
   - subWaveList:
     - spawnNumber: 1
-      timeBeforeNextSubWave: 0
+      timeBeforeNextSubWave: 10
       subWavePrefab: {fileID: 7843408499695042051, guid: 0116a078679a2cb499fe65a8255f2273,
         type: 3}
     - spawnNumber: 1
-      timeBeforeNextSubWave: 0
+      timeBeforeNextSubWave: 20
       subWavePrefab: {fileID: 6290839770900673494, guid: 1f2cfb086c32e814b867e04bb7a037ea,
         type: 3}
     - spawnNumber: 1
@@ -13672,15 +13672,15 @@ MonoBehaviour:
     timeBeforeNextWave: 0
   - subWaveList:
     - spawnNumber: 1
-      timeBeforeNextSubWave: 0
+      timeBeforeNextSubWave: 20
       subWavePrefab: {fileID: 6290839770900673494, guid: 8e25deecb573a1f45b80464634cd0ea9,
         type: 3}
     - spawnNumber: 0
-      timeBeforeNextSubWave: 0
+      timeBeforeNextSubWave: 20
       subWavePrefab: {fileID: 5603178164967001304, guid: 2741e8fc2546fd346b268f4509495256,
         type: 3}
     - spawnNumber: 2
-      timeBeforeNextSubWave: 0
+      timeBeforeNextSubWave: 20
       subWavePrefab: {fileID: 9010213671209902744, guid: 8c6150f3998bb9c4e89309a41a680319,
         type: 3}
     - spawnNumber: 1
@@ -13690,15 +13690,15 @@ MonoBehaviour:
     timeBeforeNextWave: 0
   - subWaveList:
     - spawnNumber: 0
-      timeBeforeNextSubWave: 0
+      timeBeforeNextSubWave: 10
       subWavePrefab: {fileID: 6199811975589453490, guid: d17d10caeb689bc4f8f4efbaa52ca8f0,
         type: 3}
     - spawnNumber: 1
-      timeBeforeNextSubWave: 0
+      timeBeforeNextSubWave: 15
       subWavePrefab: {fileID: 3794698319393442788, guid: e22d03b79eee88b479b528229db75a6e,
         type: 3}
     - spawnNumber: 2
-      timeBeforeNextSubWave: 0
+      timeBeforeNextSubWave: 10
       subWavePrefab: {fileID: 3701279376847768805, guid: 39cbc0839482a4149b6d86ca6ba4860f,
         type: 3}
     - spawnNumber: 3
@@ -13708,7 +13708,7 @@ MonoBehaviour:
     timeBeforeNextWave: 0
   - subWaveList:
     - spawnNumber: 0
-      timeBeforeNextSubWave: 0
+      timeBeforeNextSubWave: 20
       subWavePrefab: {fileID: 8035864953882912261, guid: 6ce49792ad8bf2b4790d023e51e162de,
         type: 3}
     - spawnNumber: 1
@@ -13716,7 +13716,7 @@ MonoBehaviour:
       subWavePrefab: {fileID: 8035864953882912261, guid: 9b330dc6e3c228648bef676aa75e6ebe,
         type: 3}
     - spawnNumber: 2
-      timeBeforeNextSubWave: 0
+      timeBeforeNextSubWave: 30
       subWavePrefab: {fileID: 8035864953882912261, guid: b12f4683f874e5742998f8a2c3453691,
         type: 3}
     - spawnNumber: 3
@@ -13726,11 +13726,11 @@ MonoBehaviour:
     timeBeforeNextWave: 0
   - subWaveList:
     - spawnNumber: 1
-      timeBeforeNextSubWave: 0
+      timeBeforeNextSubWave: 15
       subWavePrefab: {fileID: 6119251343514007488, guid: d3a7f3394442e234da473899a1c6c6af,
         type: 3}
     - spawnNumber: 1
-      timeBeforeNextSubWave: 0
+      timeBeforeNextSubWave: 20
       subWavePrefab: {fileID: 952608998592987316, guid: 18a1945c44af984409a4b79faaa352ac,
         type: 3}
     - spawnNumber: 0
@@ -13744,15 +13744,15 @@ MonoBehaviour:
     timeBeforeNextWave: 0
   - subWaveList:
     - spawnNumber: 1
-      timeBeforeNextSubWave: 0
+      timeBeforeNextSubWave: 20
       subWavePrefab: {fileID: 193040680613317374, guid: 1788b45ddef1a7941be9405a8607b951,
         type: 3}
     - spawnNumber: 0
-      timeBeforeNextSubWave: 0
+      timeBeforeNextSubWave: 20
       subWavePrefab: {fileID: 1216178452364926315, guid: 361996bdadbcb0c43bc9d8ddd5503f41,
         type: 3}
     - spawnNumber: 2
-      timeBeforeNextSubWave: 0
+      timeBeforeNextSubWave: 20
       subWavePrefab: {fileID: 2584302591826586681, guid: 2ebb53f6f7db8bc4a95c7a0f08a19ee3,
         type: 3}
     - spawnNumber: 3
@@ -13774,7 +13774,7 @@ MonoBehaviour:
       subWavePrefab: {fileID: 778904248522557366, guid: e8fa1988f0d5be54881b8453daf45b67,
         type: 3}
     - spawnNumber: 3
-      timeBeforeNextSubWave: 0
+      timeBeforeNextSubWave: 40
       subWavePrefab: {fileID: 778904248522557366, guid: 870fa04e263ab6b4a8c8ceffa7ce7953,
         type: 3}
     - spawnNumber: 1
