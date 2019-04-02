@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Playables;
 
-public class PrologueIntroActiveMove : Tutorial
+public class MoveTutorial : Tutorial
 {
 	PlayableDirector director;
 	bool player1HasMoved, player2HasMoved;
@@ -38,8 +38,8 @@ public class PrologueIntroActiveMove : Tutorial
 			yield return new WaitForEndOfFrame();
 		}
 
-		Coroutine end = StartCoroutine(GetsOut());
-		yield return new WaitForSeconds(1.0f);
+		StartCoroutine(GetsOut());
+		yield return new WaitForSeconds(4.0f);
 
 		director.Resume();
 		Destroy(gameObject);
