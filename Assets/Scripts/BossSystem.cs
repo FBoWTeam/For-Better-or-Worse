@@ -65,7 +65,6 @@ public class BossSystem : MonoBehaviour
     public int electricConeDamage;
     public float electricConeTimeBetweenFeedbackAndCast;
     public float electricConeChannelingTime;
-    public GameObject electricConeFeedBack;
 
     [Header("[Electric Zone Params]")]
     public float electricZoneRadius;
@@ -98,6 +97,14 @@ public class BossSystem : MonoBehaviour
     bool willBeStun = false;
     public bool isStun;
 
+    [Header("[Projectors]")]
+    public GameObject aoeCircleProjector;
+    public GameObject circleProjector;
+    public GameObject coneProjector;
+    public GameObject lineProjector;
+
+    [Range(0.8f, 1.2f)]
+    public float toleranceCoef;
 
     GameObject player1;
     GameObject player2;
@@ -106,7 +113,6 @@ public class BossSystem : MonoBehaviour
 
     void Awake()
     {
-
         hp = baseHP;
         isAttacking = false;
         actualPhase = 0;
@@ -325,13 +331,22 @@ public class BossSystem : MonoBehaviour
 
         Vector3 electricZoneLocation = aimedPlayer.transform.position;
 
+        //show feedback
+        //instanciate the circle indicator
+        GameObject circleIndicator = Instantiate(circleProjector, electricZoneLocation, Quaternion.identity) as GameObject;
+        circleIndicator.transform.GetChild(0).gameObject.GetComponent<Projector>().orthographicSize = electricZoneRadius * toleranceCoef;
+        float timeStamp = Time.time;
+        Color tempColor = Color.blue;
 
-        //show feedback=============
-        DrawAOE(electricZoneLocation, electricZoneRadius);
-
+        while (Time.time - timeStamp < electricZoneTimeBetweenFeedbackAndCast)
+        {
+            //alpha starting from 0 finishing to 0.33333
+            tempColor.a = ((Time.time - timeStamp) / electricZoneTimeBetweenFeedbackAndCast) / 3;
+            circleIndicator.transform.GetChild(0).gameObject.GetComponent<Projector>().material.color = tempColor;
+            yield return new WaitForEndOfFrame();
+        }
 
         Debug.Log("casting electric zone");
-        yield return new WaitForSeconds(electricZoneTimeBetweenFeedbackAndCast);
 
         //check if the players are in the area of effect
         Collider[] playersInRange = Physics.OverlapSphere(electricZoneLocation, electricZoneRadius, targetMask);
@@ -342,7 +357,7 @@ public class BossSystem : MonoBehaviour
             GameManager.gameManager.TakeDamage(playersInRange[i].gameObject, electricZoneDamage, electricZoneLocation, true);
         }
 
-
+        Destroy(circleIndicator);
         yield return new WaitForSeconds(1.0f);
 
         isAttacking = false;
@@ -384,12 +399,28 @@ public class BossSystem : MonoBehaviour
         Vector3 minRange = leftRotation * targetVector;
         Vector3 maxRange = rightRotation * targetVector;
 
-        //show feedback
-        electricConeFeedBack.SetActive(true);
-        electricConeFeedBack.transform.LookAt(aimedPlayer.transform);
+
+        //instanciate the circle indicator
+        GameObject coneIndicator = Instantiate(coneProjector, transform.position, Quaternion.identity) as GameObject;
+        //the instanciated circle indicator is a child of the boss
+        coneIndicator.transform.parent = transform;
+        float timeStamp = Time.time;
+        Color tempColor = Color.blue;
+
+        //warning : there is a ' - ' before 'Vector3.Angle(targetVector, Vector3.back)' because the sprite of the cone is reversed
+        //the ' - ' is necessary to turn in the right sens
+        coneIndicator.transform.Rotate(Vector3.up, -Vector3.Angle(targetVector, Vector3.back));
+
+        while (Time.time - timeStamp < electricConeTimeBetweenFeedbackAndCast)
+        {
+            //alpha starting from 0 finishing to 0.33333
+            tempColor.a = ((Time.time - timeStamp) / electricConeTimeBetweenFeedbackAndCast) / 3;
+            coneIndicator.transform.GetChild(0).gameObject.GetComponent<Projector>().material.color = tempColor;
+            yield return new WaitForEndOfFrame();
+        }
+
 
         Debug.Log("casting electric cone");
-        yield return new WaitForSeconds(electricConeTimeBetweenFeedbackAndCast);
 
 
 
@@ -408,8 +439,7 @@ public class BossSystem : MonoBehaviour
             GameManager.gameManager.TakeDamage(player2, electricConeDamage, Vector3.zero, false);
         }
 
-        electricConeFeedBack.SetActive(false);
-
+        Destroy(coneIndicator);
         yield return new WaitForSeconds(1.0f);
 
 
@@ -472,13 +502,27 @@ public class BossSystem : MonoBehaviour
         //start chaneling anim
         Debug.Log("channeling AOE zone");
         yield return new WaitForSeconds(electricAoeChannelingTime);
-        
 
-        //show feedback==========
-        DrawAOE(transform.position, electricAoeRadius);
+
+        //show indicator feedback
+        //instanciate the circle indicator
+        GameObject circleIndicator = Instantiate(aoeCircleProjector, transform.position, Quaternion.identity) as GameObject;
+        circleIndicator.transform.GetChild(0).gameObject.GetComponent<Projector>().orthographicSize = electricAoeRadius * toleranceCoef;
+        //the instanciated circle indicator is a child of the boss
+        circleIndicator.transform.parent = transform;
+        float timeStamp = Time.time;
+        Color tempColor = Color.blue;
+
+
+        while (Time.time - timeStamp < electricAoeTimeBetweenFeedbackAndCast)
+        {
+            //alpha starting from 0 finishing to 0.33333
+            tempColor.a = ((Time.time - timeStamp) / electricAoeTimeBetweenFeedbackAndCast) / 3;
+            circleIndicator.transform.GetChild(0).gameObject.GetComponent<Projector>().material.color = tempColor;
+            yield return new WaitForEndOfFrame();
+        }
 
         Debug.Log("casting electric AOE");
-        yield return new WaitForSeconds(electricAoeTimeBetweenFeedbackAndCast);
 
         //check if the players are in the area of effect
         Collider[] playersInRange = Physics.OverlapSphere(transform.position, electricAoeRadius, targetMask);
@@ -489,7 +533,7 @@ public class BossSystem : MonoBehaviour
             GameManager.gameManager.TakeDamage(playersInRange[i].gameObject, electricZoneDamage, transform.position, true);
         }
 
-
+        Destroy(circleIndicator);
         yield return new WaitForSeconds(1.0f);
 
         isAttacking = false;
