@@ -4,14 +4,6 @@ using UnityEngine;
 
 public class AmortizeTutorial : Tutorial
 {
-	public GameObject firstEnemy;
-
-	private void Update()
-	{
-		if(firstEnemy.Equals(null))
-			StartCoroutine(AmortizeTutorialCoroutine());
-	}
-
 	public IEnumerator AmortizeTutorialCoroutine()
 	{
 		GetsIn();
@@ -33,5 +25,8 @@ public class AmortizeTutorial : Tutorial
 		}
 
 		StartCoroutine(GetsOut());
+		yield return new WaitForSeconds(4.0f);
+
+		Destroy(this.gameObject);
 	}
 }
