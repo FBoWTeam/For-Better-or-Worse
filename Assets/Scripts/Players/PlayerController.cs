@@ -36,6 +36,9 @@ public class PlayerController : MonoBehaviour
 
 	Animator animator;
 
+    [HideInInspector]
+    public Coroutine actualTauntCoroutine;
+
     void Awake()
     {
         rb = GetComponent<Rigidbody>();
@@ -142,7 +145,12 @@ public class PlayerController : MonoBehaviour
         {
             if (hitColliders[i].CompareTag("Enemy"))
             {
-                hitColliders[i].GetComponent<Enemy>().StartCoroutine(hitColliders[i].GetComponent<Enemy>().TauntCoroutine(player1));
+                if (hitColliders[i].GetComponent<Enemy>().actualTauntCoroutine != null)
+                {
+                    hitColliders[i].GetComponent<Enemy>().StopCoroutine(hitColliders[i].GetComponent<Enemy>().actualTauntCoroutine);
+                }
+
+                hitColliders[i].GetComponent<Enemy>().actualTauntCoroutine = hitColliders[i].GetComponent<Enemy>().StartCoroutine(hitColliders[i].GetComponent<Enemy>().TauntCoroutine(player1));
             }
         }
     }

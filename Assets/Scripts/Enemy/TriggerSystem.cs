@@ -88,11 +88,6 @@ public class TriggerSystem : MonoBehaviour
         {
             GameManager.gameManager.UIManager.UpdateDialogBox2(player2Text, displayTime);
         }
-
-        if (player1Text == "" && player2Text == "")
-        {
-            Debug.LogError("Where are the fucking dialogs!", this);
-        }
     }
 
     private void TriggerObjects()

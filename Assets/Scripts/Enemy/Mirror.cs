@@ -13,6 +13,9 @@ public class Mirror : MonoBehaviour
 		{
 			if(GameManager.gameManager.orb.GetComponent<PowerController>().behaviouralPower == GameManager.PowerType.LargeOrb)
 			{
+                //update in score manager
+                ScoreManager.scoreManager.enemyMirrorBroken++;
+
 				EnemyBonus enemy = GetComponentInParent<EnemyBonus>();
 				enemy.bonus = EnemyBonus.Bonus.None;
 				enemy.StopCoroutine(enemy.DeactivateShieldCoroutine());
