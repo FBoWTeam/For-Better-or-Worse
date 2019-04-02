@@ -6,11 +6,7 @@ using UnityEngine;
 
 public class UIManager : MonoBehaviour
 {
-
     #region All Variables
-
-    [Header("Fader")]
-    public Canvas fader;
 
     [Header("Health Bar")]
     public Image damageTakenP1;
@@ -25,6 +21,9 @@ public class UIManager : MonoBehaviour
 
     [Header("Combo")]
     public GameObject combo;
+
+    [Header("Wave")]
+    public GameObject wave;
 
     [Header("Fox Powers")]
     public GameObject elementalPowerFox;
@@ -70,9 +69,7 @@ public class UIManager : MonoBehaviour
     Dictionary<int, GameManager.PowerType> busySlot;
 
     #endregion
-
-
-
+	
     #region All Methods
 
     public void InitDictionary()
@@ -317,6 +314,16 @@ public class UIManager : MonoBehaviour
     }
 
     #endregion
+
+    #region
+    public void UpdateWave(int nb)
+    {
+        wave.transform.GetChild(1).GetComponent<TextMeshProUGUI>().text = nb.ToString();
+    }
+
+
+    #endregion
+
 
     #region Getters
 
