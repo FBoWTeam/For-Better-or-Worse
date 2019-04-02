@@ -23,6 +23,8 @@ public class Tutorial : MonoBehaviour
 		GameObject tutorialCanvas = GameManager.gameManager.tutorials;
 		tutorialCanvas.GetComponent<Animator>().SetTrigger("TutoOut");
 		yield return new WaitForSeconds(tutorialCanvas.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).length);
+		tutorialCanvas.GetComponentInChildren<TextMeshProUGUI>().color = Color.white;
+		tutorialCanvas.GetComponentInChildren<Image>().color = Color.white;
 		tutorialCanvas.SetActive(false);
 	}
 }
