@@ -75,6 +75,8 @@ public class ArenaSystem : MonoBehaviour
         {
             yield break;
         }
+
+        GameManager.gameManager.UIManager.StartCoroutine(GameManager.gameManager.UIManager.AnnouceWave(waveIndex + 1));
         // ==== ARENA
         while (!arenaCleared)
         {
@@ -99,6 +101,7 @@ public class ArenaSystem : MonoBehaviour
                     timer = 0;
                     Debug.Log("Next Subwave");
                     subWaveIndex++;
+                    GameManager.gameManager.UIManager.UpdateWave(subWaveIndex + 1);
                 }
 
                 SpawnBoss();
@@ -115,8 +118,10 @@ public class ArenaSystem : MonoBehaviour
                     if (waveIndex < waveList.Count)
                     {
                         GameManager.gameManager.UIManager.UpdateWave(waveIndex + 1);
+                        GameManager.gameManager.UIManager.StartCoroutine(GameManager.gameManager.UIManager.AnnouceWave(waveIndex + 1));
                     }
                     subWaveIndex = 0;
+                    GameManager.gameManager.UIManager.UpdateWave(subWaveIndex + 1);
                     bonusChance = 0;
                 }
                 yield return new WaitForEndOfFrame();
