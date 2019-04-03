@@ -4,7 +4,7 @@ using UnityEngine;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 
-[RequireComponent(typeof(Collider))]
+
 public class ScoreManager : MonoBehaviour
 {
 
@@ -115,34 +115,6 @@ public class ScoreManager : MonoBehaviour
         }
     }
 
-
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.CompareTag("Player"))
-        {
-            numberOfPlayer++;
-            CheckSaveConditions();
-        }
-
-    }
-
-    private void OnTriggerExit(Collider other)
-    {
-        if (other.CompareTag("Player"))
-        {
-            numberOfPlayer--;
-        }
-    }
-
-
-    void CheckSaveConditions()
-    {
-        if (numberOfPlayer == 2)
-        {
-            GetComponent<Collider>().enabled = false;
-            Save();
-        }
-    }
 
     public void Save()
     {
