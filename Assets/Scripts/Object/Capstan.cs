@@ -79,10 +79,12 @@ public class Capstan : MonoBehaviour, IActivable
             {
                 targetAngle += 180;
             }
+            /*
             else if (orbOnTheRight == true && targetAngle > 0)
             {
                 targetAngle -= 180;
             }
+            */
         }
     }
 
@@ -105,6 +107,8 @@ public class Capstan : MonoBehaviour, IActivable
             isActive = false;
         }
     }
+
+    
 
     /// <summary>
     /// check if all the necesary object are activated to open the door

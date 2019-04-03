@@ -97,7 +97,7 @@ public class ArenaSystem : MonoBehaviour
                         yield return new WaitForEndOfFrame();
                     }
                     timer = 0;
-                    Debug.Log("Next Subwave");
+                    //Debug.Log("Next Subwave");
                     subWaveIndex++;
                 }
 
@@ -105,7 +105,7 @@ public class ArenaSystem : MonoBehaviour
 
                 if (waveCleared())
                 {
-                    Debug.Log("Next Wave");
+                    //Debug.Log("Next Wave");
                     while (timer < waveList[waveIndex].timeBeforeNextWave)
                     {
                         timer += Time.deltaTime;
@@ -127,7 +127,7 @@ public class ArenaSystem : MonoBehaviour
             }
         }
         
-        Debug.Log("Go to da next awina");
+        //Debug.Log("Go to da next awina");
         sceneLoader.SetActive(true);
     }
 
@@ -140,7 +140,7 @@ public class ArenaSystem : MonoBehaviour
                 timer += Time.deltaTime;
             }
             timer = 0;
-            Debug.Log("Boss has spawned");
+            //Debug.Log("Boss has spawned");
             GameObject boss = Instantiate(bonusWave, spawnList[spawnNumer].position, Quaternion.identity).gameObject;
             foreach (Enemy enemy in boss.GetComponentsInChildren<Enemy>())
             {
