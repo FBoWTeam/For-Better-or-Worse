@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Playables;
 
-public class HitTutorial : Tutorial
+public class PrologueIntroActiveHit : Tutorial
 {
 	PlayableDirector director;
 	bool entityHasBeenHit;

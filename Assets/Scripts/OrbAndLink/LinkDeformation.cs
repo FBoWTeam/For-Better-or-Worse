@@ -64,7 +64,7 @@ public class LinkDeformation : MonoBehaviour
 	///	return a tuple of the deformation amounts ([-1; 1]) of player 1 and 2 based on their inputs
 	/// </summary>
 	/// <returns></returns>
-	public (float, float) GetDeformInputs()
+	(float, float) GetDeformInputs()
 	{
 		Vector3 player1DeformInput = new Vector3(Input.GetAxis("DeformP1X"), 0.0f, Input.GetAxis("DeformP1Z"));
 		Vector3 player2DeformInput = new Vector3(Input.GetAxis("DeformP2X"), 0.0f, Input.GetAxis("DeformP2Z"));
