@@ -236,7 +236,7 @@ public class EnemySkill : MonoBehaviour
     IEnumerator Impact()
     {
         GetComponent<EnemyMovement>().agent.isStopped = true;
-        Enemy.isAttacking = true;
+        GetComponent<Enemy>().isAttacking = true;
         hitter.SetActive(true);
         hitter.GetComponent<BoxCollider>().size = new Vector3(range, 0.1f, 0.1f);
         hitter.GetComponent<BoxCollider>().center = new Vector3((-range) / 2.0f, 0.0f, 0.0f);
@@ -245,7 +245,7 @@ public class EnemySkill : MonoBehaviour
         hitter.SetActive(false);
         SwordEffect.SetActive(false);
         GetComponent<EnemyMovement>().agent.isStopped = false;
-        Enemy.isAttacking = false;
+		GetComponent<Enemy>().isAttacking = false;
     }
 
     /// <summary>
@@ -279,7 +279,7 @@ public class EnemySkill : MonoBehaviour
     IEnumerator Shoot(GameObject projectilePrefab, Transform firePoint, Transform target, int damage)
     {
         GetComponent<EnemyMovement>().agent.isStopped = true;
-        Enemy.isAttacking = true;
+		GetComponent<Enemy>().isAttacking = true;
         transform.LookAt(target.position);
 
 
@@ -295,7 +295,7 @@ public class EnemySkill : MonoBehaviour
 
         yield return new WaitForSeconds((GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).length * 3) / 4);
         GetComponent<EnemyMovement>().agent.isStopped = false;
-        Enemy.isAttacking = false;
+		GetComponent<Enemy>().isAttacking = false;
     }
 
     /*
