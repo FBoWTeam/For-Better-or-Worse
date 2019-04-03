@@ -166,12 +166,26 @@ public class PlayerController : MonoBehaviour
         bool behaviouralPower = player1 ? Input.GetKeyDown(KeyCode.Joystick1Button2) || Input.GetKeyDown(KeyCode.Joystick1Button0) : Input.GetKeyDown(KeyCode.Joystick2Button2) || Input.GetKeyDown(KeyCode.Joystick2Button0);
 
 		if (elementalPower && elementalPowerSlot != GameManager.PowerType.None)
-        {           
-            orbHitter.powerToApply = elementalPowerSlot;
+        {
+            if(orbHitter.powerToApply != elementalPowerSlot)
+            {
+                orbHitter.powerToApply = elementalPowerSlot;
+            }
+            else
+            {
+                orbHitter.powerToApply = GameManager.PowerType.None;
+            }            
         }
         if (behaviouralPower && behaviouralPowerSlot != GameManager.PowerType.None)
         {
-            orbHitter.powerToApply = behaviouralPowerSlot;
+            if (orbHitter.powerToApply != behaviouralPowerSlot)
+            {
+                orbHitter.powerToApply = behaviouralPowerSlot;
+            }
+            else
+            {
+                orbHitter.powerToApply = GameManager.PowerType.None;
+            }
         }
     }
 
