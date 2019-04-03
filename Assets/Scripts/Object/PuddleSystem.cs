@@ -127,6 +127,7 @@ public class PuddleSystem : MonoBehaviour
         if (Time.time - timeStamp > delayDOT)
         {
             timeStamp = Time.time;
+            CleanNullInEnemyList();
             switch (puddleType)
             {
                 case GameManager.PuddleType.Acid:

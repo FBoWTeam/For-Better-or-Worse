@@ -23,12 +23,14 @@ public class PrologueLastRoom : MonoBehaviour
             if (!alreadyActive)
             {
                 waveSystem.GetComponent<EnemyWaveSystem>().Activate();
+                alreadyActive = true;
             }
 
             timer += Time.deltaTime;
             if (timer >= flammableObject.GetComponent<FlammableObjects>().burnTime)
             {
                 Destroy(gameObject);
+                ScoreManager.scoreManager.Save();
             }
         }
 

@@ -20,7 +20,7 @@ public class GameManager : MonoBehaviour
 	[HideInInspector]
 	public GameObject tutorials;
 
-	public bool isPaused;
+    public bool isPaused;
 
 	[Header("[Distance Limits]")]
 	public float minDistance;
@@ -39,6 +39,7 @@ public class GameManager : MonoBehaviour
     public GameObject normalHealingOrbPrefab;
     public GameObject leechLifeHealingOrbPrefab;
 
+    public bool breakComboWhenEnemyHit;
 
 	public Checkpoint actualCheckpoint;
 	public struct PowerRecord
@@ -178,7 +179,12 @@ public class GameManager : MonoBehaviour
             
             StartCoroutine(targetPlayer.GetComponent<PlayerController>().InvincibilityCoroutine());
             UIManager.UpdateHealthBar();
-            UIManager.UpdateCombo(0);
+            if (breakComboWhenEnemyHit)
+            {
+                UIManager.UpdateCombo(0);
+                orb.GetComponent<OrbController>().combo = 0;
+            }
+
             targetPlayer.GetComponent<PlayerController>().isRoot = false;
         }
     }

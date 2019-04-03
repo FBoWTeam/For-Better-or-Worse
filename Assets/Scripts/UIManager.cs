@@ -24,6 +24,10 @@ public class UIManager : MonoBehaviour
 
     [Header("Wave")]
     public GameObject wave;
+    [Header("SubWave")]
+    public GameObject subwave;
+    [Header("WaveAnnouncer")]
+    public GameObject waveAnnouncer;
 
     [Header("Fox Powers")]
     public GameObject elementalPowerFox;
@@ -315,10 +319,23 @@ public class UIManager : MonoBehaviour
 
     #endregion
 
-    #region
+    #region Arena
     public void UpdateWave(int nb)
     {
         wave.transform.GetChild(1).GetComponent<TextMeshProUGUI>().text = nb.ToString();
+    }
+
+    public void UpdateSubWave(int nb)
+    {
+        subwave.transform.GetChild(1).GetComponent<TextMeshProUGUI>().text = nb.ToString();
+    }
+
+    public IEnumerator AnnouceWave(int nb)
+    {
+        waveAnnouncer.SetActive(true);
+        waveAnnouncer.transform.GetChild(1).GetComponent<TextMeshProUGUI>().text = nb.ToString();
+        yield return new WaitForSeconds(2f);
+        waveAnnouncer.SetActive(false);
     }
 
 
