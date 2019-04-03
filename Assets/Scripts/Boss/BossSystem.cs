@@ -102,6 +102,8 @@ public class BossSystem : MonoBehaviour
     public GameObject circleProjector;
     public GameObject coneProjector;
     public GameObject lineProjector;
+    public GameObject fireBallProjector;
+    public GameObject chargeProjector;
 
     [Range(0.8f, 1.2f)]
     public float toleranceCoef;
@@ -115,8 +117,12 @@ public class BossSystem : MonoBehaviour
     {
         hp = baseHP;
         isAttacking = false;
-        actualPhase = 0;
-        checkPhaseTransition();
+        /*actualPhase = 0;
+        checkPhaseTransition();*/
+
+
+        actualPhase = 4;
+        probabilityTable = phase4;
     }
 
     private void Start()
@@ -138,6 +144,14 @@ public class BossSystem : MonoBehaviour
                 LaunchPattern(RandomPattern());
                 nextAttack = Time.time + Random.Range(minWaitTime, maxWaitTime);
             }
+
+            if(actualPhase == 4)
+            {
+                Vector3 targetPos = aimedPlayer.transform.position;
+                targetPos.y += transform.position.y;
+                transform.LookAt(targetPos);
+            }
+               
         }
     }
 
@@ -148,7 +162,7 @@ public class BossSystem : MonoBehaviour
     /// </summary>
     public void SetFocus()
     {
-        int rand = Random.Range(0, 2);
+        int rand = Random.Range(0, 1);
         if (rand == 0)
         {
             Debug.Log("Aim Player 1");
@@ -308,13 +322,31 @@ public class BossSystem : MonoBehaviour
         GameObject projectileFireBall = Instantiate(fireBallPrefab, fireBallStartingPoint, Quaternion.identity);
         FireBall fireBall = projectileFireBall.GetComponent<FireBall>();
 
+        float travelTime = 0;
         if (fireBall != null)
         {
             fireBall.Init(fireBallDamage, fireBallDamageExplosion, fireBallRangeExplosion, fireBallSpeed);
-            fireBall.Launch(target + new Vector3(0f, 1.5f, 0f), fireBallStartingPoint);//offset so the fireball aims for the body of the player and not his/her feet
+            travelTime = fireBall.Launch(target + new Vector3(0f, 1.5f, 0f), fireBallStartingPoint);//offset so the fireball aims for the body of the player and not his/her feet
         }
+        
+        //show indicator feedback
+        //instanciate the fireball indicator
+        GameObject fireBallIndicator = Instantiate(fireBallProjector, target + new Vector3(0f, 1.5f, 0f), Quaternion.identity) as GameObject;
+        fireBallProjector.transform.GetChild(0).gameObject.GetComponent<Projector>().orthographicSize = fireBallRangeExplosion * toleranceCoef;
+        float timeStamp = Time.time;
+        Color tempColor = Color.red;
+
+        while (Time.time - timeStamp < travelTime)
+        {
+            //alpha starting from 0 finishing to 0.5
+            tempColor.a = ((Time.time - timeStamp) / electricAoeTimeBetweenFeedbackAndCast) / 2;
+            fireBallIndicator.transform.GetChild(0).gameObject.GetComponent<Projector>().material.color = tempColor;
+            yield return new WaitForEndOfFrame();
+        }
+        
 
         yield return new WaitUntil(() => fireBall.isDestroyed);
+        Destroy(fireBallIndicator);
 
         isAttacking = false;
     }
@@ -451,6 +483,7 @@ public class BossSystem : MonoBehaviour
     public IEnumerator ChargeCoroutine()
     {
         isAttacking = true;
+        Debug.Log("charge");
 
         Vector3 target = aimedPlayer.transform.position;
         target.y = 2f;
@@ -459,7 +492,8 @@ public class BossSystem : MonoBehaviour
 
         Vector3 vectCharge = target - posStart;
         Vector3 newTarget = target + chargeOffset * vectCharge.normalized;//aiming for behind the target player by an offset
-        
+
+
         RaycastHit hit;
         int layerMask = 1 << 11;//to only hit the walls
 
@@ -472,14 +506,43 @@ public class BossSystem : MonoBehaviour
         float distCharge = vectCharge.magnitude;
         float chargeTime = distCharge / chargeSpeed;
 
-        yield return new WaitForSeconds(chargeCastingTime);
+
+        //show indicator feedback
+        //instanciate the charge indicator
+        GameObject chargeIndicator = Instantiate(chargeProjector, transform.position + vectCharge / 2f + (chargeOffset / 2f) * vectCharge.normalized, Quaternion.identity) as GameObject;
+        float yComp = 0f;
+        if(vectCharge.x < 0)
+        {
+            yComp = Vector3.Angle(new Vector3(0f, 0f, -1f), vectCharge);
+        }
+        else
+        {
+            yComp = - Vector3.Angle(new Vector3(0f, 0f, -1f), vectCharge);
+
+        }
+        chargeIndicator.transform.eulerAngles = new Vector3(0f, yComp + 90f, 0f);
+
+        chargeIndicator.GetComponentInChildren<Projector>().aspectRatio = vectCharge.magnitude / 18f;
+
+
+        float timeStamp = Time.time;
+        Color tempColor = Color.red;
+
+        while (Time.time - timeStamp < chargeCastingTime)
+        {
+            //alpha starting from 0 finishing to 0.5
+            tempColor.a = 0.25f + ((Time.time - timeStamp) / electricAoeTimeBetweenFeedbackAndCast) / 2;
+            chargeIndicator.transform.GetChild(0).gameObject.GetComponent<Projector>().material.color = tempColor;
+            yield return new WaitForEndOfFrame();
+        }
+
 
         float t = 0f;
         while (t < 1)
         {
             transform.position = Vector3.Lerp(posStart, newTarget, t);
             t += 1f / (100f * chargeTime);
-            yield return new WaitForSeconds(0.001f);
+            yield return new WaitForEndOfFrame();
         }
 
         if(willBeStun)
@@ -489,6 +552,8 @@ public class BossSystem : MonoBehaviour
             yield return new WaitForSeconds(chargeStunTime);
             isStun = false;
         }
+
+        Destroy(chargeIndicator);
 
         isAttacking = false;
     }

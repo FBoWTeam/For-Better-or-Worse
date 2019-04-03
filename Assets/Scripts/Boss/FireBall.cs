@@ -33,7 +33,7 @@ public class FireBall : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(transform.position.y <= 0)
+        if(transform.position.y <= 1f)
         {
             if ((transform.position - GameManager.gameManager.player1.transform.position).magnitude < rangeExplosion)
             {
@@ -58,11 +58,12 @@ public class FireBall : MonoBehaviour
         gravity = velocityParam;
     }
 
-    public void Launch(Vector3 target, Vector3 fireBallStartingPoint)
+    public float Launch(Vector3 target, Vector3 fireBallStartingPoint)
     {
         Physics.gravity = Vector3.up * -gravity;
         body.useGravity = true;
-        body.velocity = ComputeThrowVelocity(target, fireBallStartingPoint);
+        body.velocity = ComputeThrowVelocity(target, fireBallStartingPoint).Item1;
+        return ComputeThrowVelocity(target, fireBallStartingPoint).Item2;
     }
 
     /// <summary>
@@ -71,7 +72,7 @@ public class FireBall : MonoBehaviour
     /// </summary>
     /// <param name="target"></param>
     /// <returns></returns>
-    Vector3 ComputeThrowVelocity(Vector3 target, Vector3 initialPos)
+    Tuple<Vector3, float> ComputeThrowVelocity(Vector3 target, Vector3 initialPos)
     {
         float dirY = target.y - initialPos.y;
         Vector3 dirXZ = new Vector3(target.x - initialPos.x, 0, target.z - initialPos.z);
@@ -79,7 +80,7 @@ public class FireBall : MonoBehaviour
         Vector3 velocityY = Vector3.up * Mathf.Sqrt(2 * gravity * fireBallHeight);
         Vector3 velocityXZ = dirXZ / time;
         Vector3 velocity = velocityXZ + velocityY * Mathf.Sign(gravity);
-        return velocity;
+        return new Tuple<Vector3, float>(velocity, time);
     }
     
     private void OnTriggerEnter(Collider other)
