@@ -19,17 +19,7 @@ public class TauntTutorial : Tutorial
 	{
 		GetsIn();
 
-		bool playersHasTaunt = false;
-
-		while (!playersHasTaunt)
-		{
-			if (Input.GetKey(KeyCode.Joystick1Button4) || Input.GetKey(KeyCode.Space) || Input.GetKey(KeyCode.Joystick2Button4) || Input.GetKey(KeyCode.Keypad0))
-			{
-				playersHasTaunt = true;
-			}
-			yield return new WaitForEndOfFrame();
-		}
-
+		yield return new WaitUntil(() => (Input.GetKey(KeyCode.Joystick1Button4) || Input.GetKey(KeyCode.Space) || Input.GetKey(KeyCode.Joystick2Button4) || Input.GetKey(KeyCode.Keypad0)));
 		StartCoroutine(GetsOut());
 		yield return new WaitForSeconds(4.0f);
 

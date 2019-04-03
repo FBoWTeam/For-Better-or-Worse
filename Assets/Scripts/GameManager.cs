@@ -20,7 +20,7 @@ public class GameManager : MonoBehaviour
 	[HideInInspector]
 	public GameObject tutorials;
 
-	public bool isPaused;
+    public bool isPaused;
 
 	[Header("[Distance Limits]")]
 	public float minDistance;
