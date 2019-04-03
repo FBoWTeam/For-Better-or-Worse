@@ -302,8 +302,23 @@ public class BossSystem : MonoBehaviour
 
         yield return new WaitForSeconds(lifeTime);
 
-        Destroy(mysticLine);
+        Destroy(mysticLine.gameObject);
 
+    }
+
+    //======================================================================================== SHRINK MYSTIC LINES
+
+    public IEnumerator ShrinkMysticLinesCoroutine()
+    {
+        isAttacking = true;
+
+        Debug.Log("Shrink MysticLines");
+
+        //canalisation + feedbacks
+        yield return new WaitForSeconds(1.0f);
+        //boom
+
+        isAttacking = false;
     }
 
     //======================================================================================== FIREBALL
@@ -366,21 +381,6 @@ public class BossSystem : MonoBehaviour
 
 
         yield return new WaitForSeconds(1.0f);
-
-        isAttacking = false;
-    }
-
-    //======================================================================================== SHRINK MYSTIC LINES
-
-    public IEnumerator ShrinkMysticLinesCoroutine()
-    {
-        isAttacking = true;
-
-        Debug.Log("Shrink MysticLines");
-
-        //canalisation + feedbacks
-        yield return new WaitForSeconds(1.0f);
-        //boom
 
         isAttacking = false;
     }
