@@ -686,14 +686,22 @@ public class PowerController : MonoBehaviour
         isActivatedByBrazier = false;
 	}
 
-    IEnumerator FireDamage(Enemy enemy, int totalDamage, float duration)
+    IEnumerator FireDamage(GameObject target, int totalDamage, float duration)
     {
         int tickDamage = Mathf.RoundToInt(totalDamage / duration);
         int curentDamage = 0;
 
 		while (curentDamage < totalDamage)
 		{
-			enemy.TakeDamage(tickDamage);
+            if (target.GetComponent<Enemy>() != null)
+            {
+                target.GetComponent<Enemy>().TakeDamage(tickDamage);
+            }
+            else if (target.GetComponent<BossSystem>() != null)
+            {
+                target.GetComponent<BossSystem>().TakeDamage(tickDamage);
+            }
+			
 			yield return new WaitForSeconds(1f);
 			curentDamage += tickDamage;
 		}
@@ -963,9 +971,9 @@ public class PowerController : MonoBehaviour
                 if (actualFireDOTCoroutine != null)
 					StopCoroutine(actualFireDOTCoroutine);
 				if(isActivatedByBrazier)
-					actualFireDOTCoroutine = StartCoroutine(FireDamage(enemy, fireTicksDamageBrazier, fireTickDurationBrazier));
+					actualFireDOTCoroutine = StartCoroutine(FireDamage(enemy.gameObject, fireTicksDamageBrazier, fireTickDurationBrazier));
 				else
-					actualFireDOTCoroutine = StartCoroutine(FireDamage(enemy, fireTicksDamage, fireTickDuration));
+					actualFireDOTCoroutine = StartCoroutine(FireDamage(enemy.gameObject, fireTicksDamage, fireTickDuration));
                 damageTaken += fireDamage;
                 break;
             case GameManager.PowerType.Electric:
@@ -997,8 +1005,6 @@ public class PowerController : MonoBehaviour
         }
 
         enemy.TakeDamage(damageTaken);
-
-
         
 
         if (behaviouralPower == GameManager.PowerType.LeechLife)
@@ -1010,6 +1016,89 @@ public class PowerController : MonoBehaviour
                 GameManager.gameManager.spawnHealingOrbs(2, (int)(damageTaken / (100 / lifeSteel)), "leechLife");
         }
     }
+
+
+
+
+
+    public void onBossHit(GameObject target)
+    {
+        BossSystem bossSystem = target.GetComponent<BossSystem>();
+        
+
+        int bonusDamage = (orbController.combo / orbController.damageIncreaseStep) * orbController.damageComboIncrease;
+        if (bonusDamage > orbController.maxComboDamage)
+        {
+            bonusDamage = orbController.maxComboDamage;
+        }
+        int damageTaken = baseDamage + bonusDamage;
+
+        switch (behaviouralPower)
+        {
+            case GameManager.PowerType.LargeOrb:
+                damageTaken += largeOrbDamage;
+                break;
+            case GameManager.PowerType.Shield:
+                damageTaken -= mitigatedDamage;
+                break;
+            case GameManager.PowerType.Slug:
+                damageTaken -= mitigatedDamageSlug;
+                break;
+        }
+
+        switch (elementalPower)
+        {
+            case GameManager.PowerType.Fire:
+                //update in score manager
+                ScoreManager.scoreManager.statusAilmentApplied++;
+
+                if (actualFireDOTCoroutine != null)
+                    StopCoroutine(actualFireDOTCoroutine);
+                if (isActivatedByBrazier)
+                    actualFireDOTCoroutine = StartCoroutine(FireDamage(bossSystem.gameObject, fireTicksDamageBrazier, fireTickDurationBrazier));
+                else
+                    actualFireDOTCoroutine = StartCoroutine(FireDamage(bossSystem.gameObject, fireTicksDamage, fireTickDuration));
+                damageTaken += fireDamage;
+                break;
+
+            case GameManager.PowerType.Electric:
+                //update in score manager
+                ScoreManager.scoreManager.statusAilmentApplied++;
+
+                StartCoroutine(ElectricZappingCoroutine(transform.position, target, true));
+                damageTaken += electricDamage;
+                DeactivatePower(elementalPower);
+                break;
+        }
+        
+        //apply damage to boss
+        bossSystem.TakeDamage(damageTaken);
+
+
+        //update in score manager (to keep track of who's given the last hit)
+        if (GameManager.gameManager.orb.GetComponent<OrbController>().toPlayer2)
+        {
+            bossSystem.damageDealtByP1 += damageTaken;
+        }
+        else
+        {
+            bossSystem.damageDealtByP2 += damageTaken;
+        }
+
+        //heals players if leachlife is on
+        if (behaviouralPower == GameManager.PowerType.LeechLife)
+        {
+            OrbController controller = GameManager.gameManager.orb.GetComponent<OrbController>();
+            if (controller.toPlayer2)
+                GameManager.gameManager.spawnHealingOrbs(1, (int)(damageTaken / (100 / lifeSteel)), "leechLife");
+            else
+                GameManager.gameManager.spawnHealingOrbs(2, (int)(damageTaken / (100 / lifeSteel)), "leechLife");
+        }
+    }
+
+
+
+
 
     /// <summary>
     /// Check if a dropped power is in the orb to give it to a player
