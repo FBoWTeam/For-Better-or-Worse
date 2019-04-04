@@ -30,6 +30,9 @@ public class PlayerController : MonoBehaviour
     [Header("[Power Slots]")]
     public GameManager.PowerType elementalPowerSlot;
     public GameManager.PowerType behaviouralPowerSlot;
+
+
+    public GameObject VFXTail;
     
     bool canTaunt = true;
     OrbHitter orbHitter;
@@ -164,15 +167,59 @@ public class PlayerController : MonoBehaviour
     {
         bool elementalPower = player1 ? Input.GetKeyDown(KeyCode.Joystick1Button3) || Input.GetKeyDown(KeyCode.Joystick1Button1) : Input.GetKeyDown(KeyCode.Joystick2Button3) || Input.GetKeyDown(KeyCode.Joystick2Button1);
         bool behaviouralPower = player1 ? Input.GetKeyDown(KeyCode.Joystick1Button2) || Input.GetKeyDown(KeyCode.Joystick1Button0) : Input.GetKeyDown(KeyCode.Joystick2Button2) || Input.GetKeyDown(KeyCode.Joystick2Button0);
+        
 
-		if (elementalPower && elementalPowerSlot != GameManager.PowerType.None)
-        {           
-            orbHitter.powerToApply = elementalPowerSlot;
+        if (elementalPower && elementalPowerSlot != GameManager.PowerType.None)
+        {
+            for (int i = 0; i < 7; i++)
+            {
+                VFXTail.transform.GetChild(i).gameObject.SetActive(false);
+            }
+            if (orbHitter.powerToApply != elementalPowerSlot)
+            {
+                orbHitter.powerToApply = elementalPowerSlot;
+                ApplyFXTail(orbHitter.powerToApply);
+            }
+            else
+            {
+                orbHitter.powerToApply = GameManager.PowerType.None;
+            }            
         }
         if (behaviouralPower && behaviouralPowerSlot != GameManager.PowerType.None)
         {
-            orbHitter.powerToApply = behaviouralPowerSlot;
+            for (int i = 0; i < 7; i++)
+            {
+                VFXTail.transform.GetChild(i).gameObject.SetActive(false);
+            }
+            if (orbHitter.powerToApply != behaviouralPowerSlot)
+            {
+                orbHitter.powerToApply = behaviouralPowerSlot;
+                ApplyFXTail(orbHitter.powerToApply);
+            }
+            else
+            {
+                orbHitter.powerToApply = GameManager.PowerType.None;
+            }
         }
+    }
+
+
+    void ApplyFXTail(GameManager.PowerType power)
+    {
+        if(power.CompareTo(GameManager.PowerType.Darkness) == 0)
+            VFXTail.transform.GetChild(0).gameObject.SetActive(true);
+        else if(power.CompareTo(GameManager.PowerType.Fire) == 0)
+            VFXTail.transform.GetChild(1).gameObject.SetActive(true);
+        else if (power.CompareTo(GameManager.PowerType.Electric) == 0)
+            VFXTail.transform.GetChild(2).gameObject.SetActive(true);
+        else if (power.CompareTo(GameManager.PowerType.Ice) == 0)
+            VFXTail.transform.GetChild(3).gameObject.SetActive(true);
+        else if (power.CompareTo(GameManager.PowerType.Vortex) == 0)
+            VFXTail.transform.GetChild(4).gameObject.SetActive(true);
+        else if (power.CompareTo(GameManager.PowerType.LeechLife) == 0)
+            VFXTail.transform.GetChild(5).gameObject.SetActive(true);
+        else if (power.CompareTo(GameManager.PowerType.Slug) == 0)
+            VFXTail.transform.GetChild(6).gameObject.SetActive(true);
     }
 
 
