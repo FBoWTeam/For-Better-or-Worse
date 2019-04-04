@@ -19,6 +19,7 @@ public class OrbController : MonoBehaviour
 
     [Header("[Valid Targets]")]
     public bool canHitEnemy;
+    public bool canHitBoss;
     public bool canHitPlayer;
 
     [Header("[Fix Coefficient]")]
@@ -205,6 +206,10 @@ public class OrbController : MonoBehaviour
         else if (other.CompareTag("Enemy") && canHitEnemy == true && !amortized)
         {
 			GetComponent<PowerController>().onEnemyHit(other.gameObject);
+        }
+        else if (other.CompareTag("Boss") && canHitBoss == true && !amortized)
+        {
+            GetComponent<PowerController>().onBossHit(other.gameObject);
         }
     }
 
