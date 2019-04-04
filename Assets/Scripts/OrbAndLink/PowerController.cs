@@ -1078,11 +1078,15 @@ public class PowerController : MonoBehaviour
         //update in score manager (to keep track of who's given the last hit)
         if (GameManager.gameManager.orb.GetComponent<OrbController>().toPlayer2)
         {
-            bossSystem.damageDealtByP1 += damageTaken;
+            ScoreManager.scoreManager.damageDealtBossP1 += damageTaken;
+            bossSystem.lastHitByP1 = true;
+            bossSystem.lastHitByP2 = false;
         }
         else
         {
-            bossSystem.damageDealtByP2 += damageTaken;
+            ScoreManager.scoreManager.damageDealtBossP2 += damageTaken;
+            bossSystem.lastHitByP1 = false;
+            bossSystem.lastHitByP2 = true;
         }
 
         //heals players if leachlife is on

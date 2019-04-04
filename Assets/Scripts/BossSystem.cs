@@ -110,9 +110,6 @@ public class BossSystem : MonoBehaviour
     [Header("[Score Values]")]
     public bool lastHitByP1;
     public bool lastHitByP2;
-    public int damageDealtByP1;
-    public int damageDealtByP2;
-
 
 
     GameObject player1;
