@@ -108,6 +108,12 @@ public class BossSystem : MonoBehaviour
     [Range(0.8f, 1.2f)]
     public float toleranceCoef;
 
+
+    [Header("[Score Values]")]
+    public bool lastHitByP1;
+    public bool lastHitByP2;
+
+
     GameObject player1;
     GameObject player2;
 
@@ -605,6 +611,31 @@ public class BossSystem : MonoBehaviour
     }
 
     #endregion
+
+    public void TakeDamage(int damage)
+    {
+        hp -= damage;
+        GameManager.gameManager.orb.GetComponent<OrbController>().hasHitEnemy = true;
+        if (hp <= 0)
+        {
+            //update in score manager
+            if (lastHitByP1 && !lastHitByP2)
+            {
+                ScoreManager.scoreManager.bossKilledByP1 = true;
+            }
+            else if (!lastHitByP1 && lastHitByP2)
+            {
+                ScoreManager.scoreManager.bossKilledByP1 = false;
+            }
+            else if (!lastHitByP1 && !lastHitByP2)
+            {
+                ScoreManager.scoreManager.killsEnvironment++;
+            }
+            StopAllCoroutines();
+            Destroy(this.gameObject);
+        }
+
+    }
 
 
 
