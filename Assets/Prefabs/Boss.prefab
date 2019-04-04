@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 6805137427954818630}
   - component: {fileID: 7915883270125608086}
   - component: {fileID: 7915883270125608082}
+  - component: {fileID: 761419247311026427}
   m_Layer: 0
   m_Name: Boss
   m_TagString: Untagged
@@ -178,7 +179,6 @@ MonoBehaviour:
   chargeOffset: 5
   chargeStunTime: 0
   isStun: 0
-  velocity: 40
   aoeCircleProjector: {fileID: 453441214144927206, guid: b8ffc654087ef914190962f050087350,
     type: 3}
   circleProjector: {fileID: 453441214144927206, guid: bf7c1e94e6e5f4544a1fbe4f91439dc3,
@@ -188,3 +188,18 @@ MonoBehaviour:
   lineProjector: {fileID: 596585565330099239, guid: 7b3767cd9cfabee42b74a581340a9e8e,
     type: 3}
   toleranceCoef: 1.1
+--- !u!114 &761419247311026427
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7915883270125608077}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2466f0d2668ca844db055d35250bc1c2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rotationSpeed: 20
+  minRotationTime: 1
+  maxRotationTime: 10
