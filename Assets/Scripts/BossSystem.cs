@@ -91,8 +91,8 @@ public class BossSystem : MonoBehaviour
 
     [Header("[Mystic Line Params]")]
     public GameObject mysticLinePrefab;
-    public float mysticLineHeight;
-    public float mysticLineWidth;
+    public int mysticLineHeight;
+    public int mysticLineWidth;
     public float lifeTime;
     public GameObject pivotLeft;
     public GameObject pivotRight;
@@ -276,30 +276,44 @@ public class BossSystem : MonoBehaviour
     public IEnumerator MysticLineCoroutine()
     {
         isAttacking = true;
-        Debug.Log("Mystic Line");
+        //Debug.Log("Mystic Line");
 
         //canalisation + feedbacks
         yield return new WaitForSeconds(1.0f);
         //boom
-
-        if (!isMysticLineCreated)
+        if (actualPhase < 2)
         {
-            RaycastHit hit;
-            Vector3 raycastPosition = transform.position - new Vector3(0, 3, 0);
+            Vector3 center = (player1.transform.position + player2.transform.position) / 2;
+
             Vector3 direction = (new Vector3(aimedPlayer.transform.position.x, raycastPosition.y, aimedPlayer.transform.position.z)
-                - new Vector3(transform.position.x, raycastPosition.y, transform.position.z)).normalized;
+                    - new Vector3(transform.position.x, raycastPosition.y, transform.position.z)).normalized;
+
+            StartCoroutine(ShrinkMysticLinesCoroutine(center, hit.transform, hit.distance));
 
 
-            if (Physics.Raycast(raycastPosition, direction, out hit, 50, LayerMask.NameToLayer("Wall")))
+        }
+        else
+        {
+            if (!isMysticLineCreated)
             {
-                print("Distance : " + hit.distance);
-                Debug.DrawRay(raycastPosition, direction * 50, Color.blue, 10);
+                RaycastHit hit;
+                Vector3 raycastPosition = new Vector3(transform.position.x, 0, transform.position.z);
+                Vector3 direction = (new Vector3(aimedPlayer.transform.position.x, raycastPosition.y, aimedPlayer.transform.position.z)
+                    - new Vector3(transform.position.x, raycastPosition.y, transform.position.z)).normalized;
 
-                Vector3 center = (transform.position + hit.transform.position) / 2;
-                //float angle = Vector3.Angle(direction, transform.forward);
-                //print("Angle : " + angle);
 
-                StartCoroutine(CreateMysticLine(center, hit.transform, hit.distance));
+                if (Physics.Raycast(raycastPosition, direction, out hit, 50, LayerMask.NameToLayer("Wall")))
+                {
+                    //print("Distance : " + hit.distance);
+                    Debug.DrawRay(raycastPosition, direction * 50, Color.blue, 10);
+
+                    Vector3 center = (raycastPosition + hit.transform.position) / 2;
+                    center += new Vector3(0, mysticLineHeight / 2, 0);
+                    //float angle = Vector3.Angle(direction, transform.forward);
+                    //print("Angle : " + angle);
+
+                    StartCoroutine(CreateMysticLine(center, hit.transform, hit.distance));
+                }
             }
         }
         isAttacking = false;
