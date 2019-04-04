@@ -1017,10 +1017,7 @@ public class PowerController : MonoBehaviour
         }
     }
 
-
-
-
-
+    
     public void onBossHit(GameObject target)
     {
         BossSystem bossSystem = target.GetComponent<BossSystem>();
@@ -1100,9 +1097,7 @@ public class PowerController : MonoBehaviour
         }
     }
 
-
-
-
+    
 
     /// <summary>
     /// Check if a dropped power is in the orb to give it to a player
