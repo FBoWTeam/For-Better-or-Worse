@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
-public class SceneLoader : MonoBehaviour
+public class SceneLoader : MonoBehaviour, IActivable
 {
 	public int sceneToLoad;
 	public bool player1, player2;
@@ -17,6 +17,8 @@ public class SceneLoader : MonoBehaviour
 
 	public Sprite foxSprite, foxGreySprite;
 	public Sprite racoonSprite, racoonGreySprite;
+
+    public bool isActive { get; set; }
 
     // Update is called once per frame
     void Update()
@@ -78,4 +80,13 @@ public class SceneLoader : MonoBehaviour
 		yield return new WaitUntil(() => GameManager.gameManager.isPaused == false);
 		SceneManager.LoadScene(sceneToLoad);
 	}
+
+    public void Activate()
+    {
+        gameObject.GetComponent<SphereCollider>().enabled = true;
+        for (int i = 0; i < transform.childCount; i++)
+        {
+            transform.GetChild(i).gameObject.SetActive(true);
+        }
+    }
 }

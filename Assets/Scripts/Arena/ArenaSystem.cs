@@ -131,9 +131,9 @@ public class ArenaSystem : MonoBehaviour
                 arenaCleared = true;
             }
         }
-        
+
         //Debug.Log("Go to da next awina");
-        sceneLoader.SetActive(true);
+        sceneLoader.GetComponent<IActivable>().Activate();
     }
 
     void SpawnBoss()
