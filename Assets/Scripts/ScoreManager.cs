@@ -32,6 +32,9 @@ public class ScoreManager : MonoBehaviour
     public int killsP2;
     public int healPointReceivedP1;
     public int healPointReceivedP2;
+    public int damageDealtBossP1;
+    public int damageDealtBossP2;
+    public bool bossKilledByP1;
 
     [Header("Time Score")]
     public float completionTime;
