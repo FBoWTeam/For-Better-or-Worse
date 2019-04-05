@@ -127,6 +127,7 @@ public class PuddleSystem : MonoBehaviour
         if (Time.time - timeStamp > delayDOT)
         {
             timeStamp = Time.time;
+            CleanNullInEnemyList();
             switch (puddleType)
             {
                 case GameManager.PuddleType.Acid:
@@ -163,6 +164,7 @@ public class PuddleSystem : MonoBehaviour
                     }
                     break;
             }
+            CleanNullInEnemyList();
         }
     }
 
@@ -527,4 +529,15 @@ public class PuddleSystem : MonoBehaviour
     #endregion
 
     #endregion
+
+
+    public void CleanNullInEnemyList()
+    {
+        if (objectsInPuddle.Exists(x => x.Equals(null)))
+        {
+            objectsInPuddle.RemoveAll(x => x.Equals(null));
+        }
+    }
+
+
 }

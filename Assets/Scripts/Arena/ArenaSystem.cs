@@ -75,6 +75,8 @@ public class ArenaSystem : MonoBehaviour
         {
             yield break;
         }
+
+        //GameManager.gameManager.UIManager.StartCoroutine(GameManager.gameManager.UIManager.AnnouceWave(waveIndex + 1));
         // ==== ARENA
         while (!arenaCleared)
         {
@@ -97,15 +99,16 @@ public class ArenaSystem : MonoBehaviour
                         yield return new WaitForEndOfFrame();
                     }
                     timer = 0;
-                    Debug.Log("Next Subwave");
+                    GameManager.gameManager.UIManager.UpdateSubWave(subWaveIndex + 1);
                     subWaveIndex++;
+                    
                 }
 
                 SpawnBoss();
 
                 if (waveCleared())
                 {
-                    Debug.Log("Next Wave");
+                    //Debug.Log("Next Wave");
                     while (timer < waveList[waveIndex].timeBeforeNextWave)
                     {
                         timer += Time.deltaTime;
@@ -115,8 +118,10 @@ public class ArenaSystem : MonoBehaviour
                     if (waveIndex < waveList.Count)
                     {
                         GameManager.gameManager.UIManager.UpdateWave(waveIndex + 1);
+                        GameManager.gameManager.UIManager.StartCoroutine(GameManager.gameManager.UIManager.AnnouceWave(waveIndex + 1));
                     }
                     subWaveIndex = 0;
+                    GameManager.gameManager.UIManager.UpdateSubWave(subWaveIndex + 1);
                     bonusChance = 0;
                 }
                 yield return new WaitForEndOfFrame();
@@ -127,8 +132,7 @@ public class ArenaSystem : MonoBehaviour
             }
         }
         
-        Debug.Log("Go to da next awina");
-        sceneLoader.SetActive(true);
+        sceneLoader.GetComponent<IActivable>().Activate();
     }
 
     void SpawnBoss()
@@ -140,7 +144,6 @@ public class ArenaSystem : MonoBehaviour
                 timer += Time.deltaTime;
             }
             timer = 0;
-            Debug.Log("Boss has spawned");
             GameObject boss = Instantiate(bonusWave, spawnList[spawnNumer].position, Quaternion.identity).gameObject;
             foreach (Enemy enemy in boss.GetComponentsInChildren<Enemy>())
             {

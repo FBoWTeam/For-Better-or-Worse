@@ -7,36 +7,39 @@ using UnityEngine.SceneManagement;
 public class GameManager : MonoBehaviour
 {
     public static GameManager gameManager;
-    [HideInInspector]
-    public GameObject player1;
-    [HideInInspector]
-    public GameObject player2;
-    [HideInInspector]
-    public GameObject orb;
-    [HideInInspector]
-    public UIManager UIManager;
-    [HideInInspector]
-    public GameObject fader;
+	[HideInInspector]
+	public GameObject player1;
+	[HideInInspector]
+	public GameObject player2;
+	[HideInInspector]
+	public GameObject orb;
+	[HideInInspector]
+	public UIManager UIManager;
+	[HideInInspector]
+	public GameObject fader;
+	[HideInInspector]
+	public GameObject tutorials;
 
     public bool isPaused;
 
-    [Header("[Distance Limits]")]
-    public float minDistance;
-    public float maxDistance;
+	[Header("[Distance Limits]")]
+	public float minDistance;
+	public float maxDistance;
 
-    [Header("[Hps]")]
-    public int hp;
-    public int damageTakenP1;
-    public int damageTakenP2;
-    public int shieldP1;
-    public int shieldP2;
-    public float knockBackForce;
-    public bool restartWhenDead;
+	[Header("[Hps]")]
+	public int hp;
+	public int damageTakenP1;
+	public int damageTakenP2;
+	public int shieldP1;
+	public int shieldP2;
+	public float knockBackForce;
+	public bool restartWhenDead;
 
     [Header("[HealingOrbs]")]
     public GameObject normalHealingOrbPrefab;
     public GameObject leechLifeHealingOrbPrefab;
 
+    public bool breakComboWhenEnemyHit;
 
     public Checkpoint actualCheckpoint;
     public struct PowerRecord
@@ -91,31 +94,33 @@ public class GameManager : MonoBehaviour
         player2 = GameObject.Find("Player2");
         orb = GameObject.Find("Orb");
         UIManager = GameObject.Find("UI").GetComponent<UIManager>();
-        UIManager.InitDictionary();
-        fader = GameObject.Find("Fader");
-        if (GameObject.Find("IntroScenario") != null)
-        {
-            UIManager.gameObject.SetActive(false);
-            player1.GetComponent<PlayerController>().active = false;
-            player2.GetComponent<PlayerController>().active = false;
-            player1.GetComponent<OrbHitter>().active = false;
-            player2.GetComponent<OrbHitter>().active = false;
-            GameObject.Find("IntroScenario").GetComponent<ScenarioHandler>().Initialize();
-        }
-        else
-        {
-            GameObject.Find("DialogSystem").SetActive(false);
-            GameObject.Find("BlackBands").SetActive(false);
-            player1.GetComponent<PlayerController>().active = true;
-            player2.GetComponent<PlayerController>().active = true;
-            player1.GetComponent<OrbHitter>().active = true;
-            player2.GetComponent<OrbHitter>().active = true;
-            StartCoroutine(FadeCoroutine("FadeIn"));
-        }
+		UIManager.InitDictionary();
+		fader = GameObject.Find("Fader");
+		tutorials = GameObject.Find("Tutorials");
+		tutorials.SetActive(false);
+		if (GameObject.Find("IntroScenario") != null)
+		{
+			UIManager.gameObject.SetActive(false);
+			player1.GetComponent<PlayerController>().active = false;
+			player2.GetComponent<PlayerController>().active = false;
+			player1.GetComponent<OrbHitter>().active = false;
+			player2.GetComponent<OrbHitter>().active = false;
+			GameObject.Find("IntroScenario").GetComponent<ScenarioHandler>().Initialize();
+		}
+		else
+		{
+			GameObject.Find("DialogSystem").SetActive(false);
+			GameObject.Find("BlackBands").SetActive(false);
+			player1.GetComponent<PlayerController>().active = true;
+			player2.GetComponent<PlayerController>().active = true;
+			player1.GetComponent<OrbHitter>().active = true;
+			player2.GetComponent<OrbHitter>().active = true;
+			StartCoroutine(FadeCoroutine("FadeIn"));
+		}
 
-        damageTakenP1 = 0;
-        damageTakenP2 = 0;
-    }
+		damageTakenP1 = 0;
+		damageTakenP2 = 0;
+	}
 
     /// <summary>
     /// Handle taking damage from an Ennemy or other things
@@ -174,7 +179,12 @@ public class GameManager : MonoBehaviour
 
             StartCoroutine(targetPlayer.GetComponent<PlayerController>().InvincibilityCoroutine());
             UIManager.UpdateHealthBar();
-            UIManager.UpdateCombo(0);
+            if (breakComboWhenEnemyHit)
+            {
+                UIManager.UpdateCombo(0);
+                orb.GetComponent<OrbController>().combo = 0;
+            }
+
             targetPlayer.GetComponent<PlayerController>().isRoot = false;
         }
     }

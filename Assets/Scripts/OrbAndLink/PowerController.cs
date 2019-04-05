@@ -12,6 +12,7 @@ public class PowerController : MonoBehaviour
 	OrbController orbController;
 
     public Material normalMaterial;
+    GameObject VFX;
     public int baseDamage;
 
 	public List<bool> canBeActivatedByPlayer1;
@@ -187,6 +188,7 @@ public class PowerController : MonoBehaviour
 		canBeActivatedByPlayer2 = new List<bool> { true, true, true, true, true, true, true, true, true };
 
 		orbController = gameObject.GetComponent<OrbController>();
+        VFX = transform.GetChild(0).gameObject;
     }
 
 	#region Activation and Deactivation Functions
@@ -326,16 +328,40 @@ public class PowerController : MonoBehaviour
     void ActivateLargeOrb()
     {
         behaviouralPower = GameManager.PowerType.LargeOrb;
-        transform.localScale = new Vector3(maxScale, maxScale, maxScale);
-        transform.GetChild(0).GetComponent<MeshRenderer>().material = normalMaterial;
+        //transform.localScale = new Vector3(maxScale, maxScale, maxScale);
+        //transform.GetChild(0).GetComponent<MeshRenderer>().material = normalMaterial;
+
+        for(int i = 0; i< 5; i++)
+        {
+            if(VFX.transform.GetChild(i).gameObject.activeSelf)
+            {
+                for(int j=0; j< 4; j++)
+                {
+                    VFX.transform.GetChild(i).gameObject.transform.GetChild(j).transform.localScale *= maxScale;
+                }                
+            }
+        }
+
+        
 		behaviouralDurationCoroutine = StartCoroutine(DurationCoroutine(GameManager.PowerType.LargeOrb, largeOrbDuration));
     }
 
     void DeactivateLargeOrb()
     {
         behaviouralPower = GameManager.PowerType.None;
-        transform.localScale = new Vector3(minScale, minScale, minScale);
-        transform.GetChild(0).GetComponent<MeshRenderer>().material = normalMaterial;
+        //transform.localScale = new Vector3(minScale, minScale, minScale);
+        //transform.GetChild(0).GetComponent<MeshRenderer>().material = normalMaterial;
+
+        for (int i = 0; i < 5; i++)
+        {
+            if (VFX.transform.GetChild(i).gameObject.activeSelf)
+            {
+                for (int j = 0; j < 4; j++)
+                {
+                    VFX.transform.GetChild(i).gameObject.transform.GetChild(j).transform.localScale /= maxScale;
+                }
+            }
+        }
     }
 
     #endregion
@@ -347,13 +373,34 @@ public class PowerController : MonoBehaviour
     {
         behaviouralPower = GameManager.PowerType.Vortex;
 		behaviouralDurationCoroutine = StartCoroutine(VortexPower());
-        transform.GetChild(0).GetComponent<MeshRenderer>().material = vortexMaterial;
+        //transform.GetChild(0).GetComponent<MeshRenderer>().material = vortexMaterial;
+        VFX.transform.GetChild(5).gameObject.SetActive(true);
+
+        for(int i=0; i<5;  i++)
+        {
+            if(VFX.transform.GetChild(i).gameObject.activeSelf)
+            {
+                VFX.transform.GetChild(i).gameObject.transform.GetChild(0).gameObject.SetActive(false);
+                VFX.transform.GetChild(i).gameObject.transform.GetChild(4).gameObject.SetActive(true);
+            }
+        }
     }
 
     void DeactivateVortex()
     {
         behaviouralPower = GameManager.PowerType.None;
-        transform.GetChild(0).GetComponent<MeshRenderer>().material = normalMaterial;
+        //transform.GetChild(0).GetComponent<MeshRenderer>().material = normalMaterial;
+        VFX.transform.GetChild(5).gameObject.SetActive(false);
+
+        for (int i = 0; i < 5; i++)
+        {
+            if (VFX.transform.GetChild(i).gameObject.activeSelf)
+            {
+                VFX.transform.GetChild(i).gameObject.transform.GetChild(4).gameObject.SetActive(false);
+                VFX.transform.GetChild(i).gameObject.transform.GetChild(0).gameObject.SetActive(true);
+            }
+        }
+        
     }
 
     IEnumerator VortexPower()
@@ -398,14 +445,38 @@ public class PowerController : MonoBehaviour
     void ActivateLeechLife()
     {
         behaviouralPower = GameManager.PowerType.LeechLife;
-        transform.GetChild(0).GetComponent<MeshRenderer>().material = leechLifeMaterial;
-		behaviouralDurationCoroutine = StartCoroutine(DurationCoroutine(GameManager.PowerType.LeechLife, leechLifeDuration));
+        //transform.GetChild(0).GetComponent<MeshRenderer>().material = leechLifeMaterial;
+
+        VFX.transform.GetChild(6).gameObject.SetActive(true);
+
+        for (int i = 0; i < 5; i++)
+        {
+            if (VFX.transform.GetChild(i).gameObject.activeSelf)
+            {
+                VFX.transform.GetChild(i).gameObject.transform.GetChild(0).gameObject.SetActive(false);
+                VFX.transform.GetChild(i).gameObject.transform.GetChild(5).gameObject.SetActive(true);
+            }
+        }
+
+
+        behaviouralDurationCoroutine = StartCoroutine(DurationCoroutine(GameManager.PowerType.LeechLife, leechLifeDuration));
     }
 
     void DeactivateLeechLife()
     {
         behaviouralPower = GameManager.PowerType.None;
-        transform.GetChild(0).GetComponent<MeshRenderer>().material = normalMaterial;
+        //transform.GetChild(0).GetComponent<MeshRenderer>().material = normalMaterial;
+
+        VFX.transform.GetChild(6).gameObject.SetActive(false);
+
+        for (int i = 0; i < 5; i++)
+        {
+            if (VFX.transform.GetChild(i).gameObject.activeSelf)
+            {
+                VFX.transform.GetChild(i).gameObject.transform.GetChild(5).gameObject.SetActive(false);
+                VFX.transform.GetChild(i).gameObject.transform.GetChild(0).gameObject.SetActive(true);
+            }
+        }
     }
 
     #endregion
@@ -417,13 +488,35 @@ public class PowerController : MonoBehaviour
     {
         behaviouralPower = GameManager.PowerType.Slug;
 		behaviouralDurationCoroutine = StartCoroutine(InstanciateSlug());
-        transform.GetChild(0).GetComponent<MeshRenderer>().material = slugMaterial;
+        //transform.GetChild(0).GetComponent<MeshRenderer>().material = slugMaterial;
+
+        VFX.transform.GetChild(7).gameObject.SetActive(true);
+
+        for (int i = 0; i < 5; i++)
+        {
+            if (VFX.transform.GetChild(i).gameObject.activeSelf)
+            {
+                VFX.transform.GetChild(i).gameObject.transform.GetChild(0).gameObject.SetActive(false);
+                VFX.transform.GetChild(i).gameObject.transform.GetChild(6).gameObject.SetActive(true);
+            }
+        }
     }
 
     void DeactivateSlug()
     {
         behaviouralPower = GameManager.PowerType.None;
-        transform.GetChild(0).GetComponent<MeshRenderer>().material = normalMaterial;
+        //transform.GetChild(0).GetComponent<MeshRenderer>().material = normalMaterial;
+
+        VFX.transform.GetChild(7).gameObject.SetActive(false);
+
+        for (int i = 0; i < 5; i++)
+        {
+            if (VFX.transform.GetChild(i).gameObject.activeSelf)
+            {
+                VFX.transform.GetChild(i).gameObject.transform.GetChild(6).gameObject.SetActive(false);
+                VFX.transform.GetChild(i).gameObject.transform.GetChild(0).gameObject.SetActive(true);
+            }
+        }
     }
 
     IEnumerator InstanciateSlug()
@@ -467,14 +560,59 @@ public class PowerController : MonoBehaviour
     void ActivateIce()
     {
         elementalPower = GameManager.PowerType.Ice;
-        GetComponent<MeshRenderer>().material = iceMaterial;
+        //GetComponent<MeshRenderer>().material = iceMaterial;
+        VFX.transform.GetChild(4).gameObject.transform.GetChild(0).gameObject.SetActive(VFX.transform.GetChild(0).gameObject.transform.GetChild(0).gameObject.activeSelf);
+        VFX.transform.GetChild(4).gameObject.transform.GetChild(4).gameObject.SetActive(VFX.transform.GetChild(0).gameObject.transform.GetChild(4).gameObject.activeSelf);
+        VFX.transform.GetChild(4).gameObject.transform.GetChild(5).gameObject.SetActive(VFX.transform.GetChild(0).gameObject.transform.GetChild(5).gameObject.activeSelf);
+        VFX.transform.GetChild(4).gameObject.transform.GetChild(6).gameObject.SetActive(VFX.transform.GetChild(0).gameObject.transform.GetChild(6).gameObject.activeSelf);
+
+        if(behaviouralPower == GameManager.PowerType.LargeOrb)
+        {
+            for (int i = 0; i < 4; i++)
+            {
+                VFX.transform.GetChild(0).gameObject.transform.GetChild(i).transform.localScale /= maxScale;
+            }
+
+            for (int i = 0; i < 4; i++)
+            {
+                VFX.transform.GetChild(4).gameObject.transform.GetChild(i).transform.localScale *= maxScale;
+            }            
+        }
+        
+        VFX.transform.GetChild(0).gameObject.SetActive(false);
+        VFX.transform.GetChild(4).gameObject.SetActive(true);
 		elementalDurationCoroutine = StartCoroutine(DurationCoroutine(GameManager.PowerType.Ice, iceDuration));
     }
 
     void DeactivateIce()
     {
         elementalPower = GameManager.PowerType.None;
-        GetComponent<MeshRenderer>().material = normalMaterial;
+        //GetComponent<MeshRenderer>().material = normalMaterial;
+
+
+        VFX.transform.GetChild(0).gameObject.transform.GetChild(0).gameObject.SetActive(VFX.transform.GetChild(4).gameObject.transform.GetChild(0).gameObject.activeSelf);
+        VFX.transform.GetChild(0).gameObject.transform.GetChild(4).gameObject.SetActive(VFX.transform.GetChild(4).gameObject.transform.GetChild(4).gameObject.activeSelf);
+        VFX.transform.GetChild(0).gameObject.transform.GetChild(5).gameObject.SetActive(VFX.transform.GetChild(4).gameObject.transform.GetChild(5).gameObject.activeSelf);
+        VFX.transform.GetChild(0).gameObject.transform.GetChild(6).gameObject.SetActive(VFX.transform.GetChild(4).gameObject.transform.GetChild(6).gameObject.activeSelf);
+
+        if (behaviouralPower == GameManager.PowerType.LargeOrb)
+        {
+
+            for (int i = 0; i < 4; i++)
+            {
+                VFX.transform.GetChild(4).gameObject.transform.GetChild(i).transform.localScale /= maxScale;
+            }
+
+            for (int i = 0; i < 4; i++)
+            {
+                VFX.transform.GetChild(0).gameObject.transform.GetChild(i).transform.localScale *= maxScale;
+            }
+        }
+
+
+
+        VFX.transform.GetChild(4).gameObject.SetActive(false);
+        VFX.transform.GetChild(0).gameObject.SetActive(true);
     }
 
     #endregion
@@ -485,8 +623,28 @@ public class PowerController : MonoBehaviour
     void ActivateFire(bool forced)
     {
         elementalPower = GameManager.PowerType.Fire;
-		GetComponent<MeshRenderer>().material = fireMaterial;
+        //GetComponent<MeshRenderer>().material = fireMaterial;
+        VFX.transform.GetChild(2).gameObject.transform.GetChild(0).gameObject.SetActive(VFX.transform.GetChild(0).gameObject.transform.GetChild(0).gameObject.activeSelf);
+        VFX.transform.GetChild(2).gameObject.transform.GetChild(4).gameObject.SetActive(VFX.transform.GetChild(0).gameObject.transform.GetChild(4).gameObject.activeSelf);
+        VFX.transform.GetChild(2).gameObject.transform.GetChild(5).gameObject.SetActive(VFX.transform.GetChild(0).gameObject.transform.GetChild(5).gameObject.activeSelf);
+        VFX.transform.GetChild(2).gameObject.transform.GetChild(6).gameObject.SetActive(VFX.transform.GetChild(0).gameObject.transform.GetChild(6).gameObject.activeSelf);
 
+        if (behaviouralPower == GameManager.PowerType.LargeOrb)
+        {
+            for (int i = 0; i < 4; i++)
+            {
+                VFX.transform.GetChild(0).gameObject.transform.GetChild(i).transform.localScale /= maxScale;
+            }
+
+            for (int i = 0; i < 4; i++)
+            {
+                VFX.transform.GetChild(2).gameObject.transform.GetChild(i).transform.localScale *= maxScale;
+            }
+        }
+        
+        VFX.transform.GetChild(0).gameObject.SetActive(false);
+        VFX.transform.GetChild(2).gameObject.SetActive(true);
+        
         if (forced)
 		{
 			elementalDurationCoroutine = StartCoroutine(DurationCoroutine(GameManager.PowerType.Fire, fireDurationBrazier));
@@ -501,18 +659,49 @@ public class PowerController : MonoBehaviour
     void DeactivateFire()
     {
         elementalPower = GameManager.PowerType.None;
-        GetComponent<MeshRenderer>().material = normalMaterial;
-		isActivatedByBrazier = false;
+        //GetComponent<MeshRenderer>().material = normalMaterial;
+
+
+        VFX.transform.GetChild(0).gameObject.transform.GetChild(0).gameObject.SetActive(VFX.transform.GetChild(2).gameObject.transform.GetChild(0).gameObject.activeSelf);
+        VFX.transform.GetChild(0).gameObject.transform.GetChild(4).gameObject.SetActive(VFX.transform.GetChild(2).gameObject.transform.GetChild(4).gameObject.activeSelf);
+        VFX.transform.GetChild(0).gameObject.transform.GetChild(5).gameObject.SetActive(VFX.transform.GetChild(2).gameObject.transform.GetChild(5).gameObject.activeSelf);
+        VFX.transform.GetChild(0).gameObject.transform.GetChild(6).gameObject.SetActive(VFX.transform.GetChild(2).gameObject.transform.GetChild(6).gameObject.activeSelf);
+
+        if (behaviouralPower == GameManager.PowerType.LargeOrb)
+        {
+
+            for (int i = 0; i < 4; i++)
+            {
+                VFX.transform.GetChild(2).gameObject.transform.GetChild(i).transform.localScale /= maxScale;
+            }
+
+            for (int i = 0; i < 4; i++)
+            {
+                VFX.transform.GetChild(0).gameObject.transform.GetChild(i).transform.localScale *= maxScale;
+            }
+        }
+
+        VFX.transform.GetChild(2).gameObject.SetActive(false);
+        VFX.transform.GetChild(0).gameObject.SetActive(true);
+        isActivatedByBrazier = false;
 	}
 
-    IEnumerator FireDamage(Enemy enemy, int totalDamage, float duration)
+    IEnumerator FireDamage(GameObject target, int totalDamage, float duration)
     {
         int tickDamage = Mathf.RoundToInt(totalDamage / duration);
         int curentDamage = 0;
 
 		while (curentDamage < totalDamage)
 		{
-			enemy.TakeDamage(tickDamage);
+            if (target.GetComponent<Enemy>() != null)
+            {
+                target.GetComponent<Enemy>().TakeDamage(tickDamage);
+            }
+            else if (target.GetComponent<BossSystem>() != null)
+            {
+                target.GetComponent<BossSystem>().TakeDamage(tickDamage);
+            }
+			
 			yield return new WaitForSeconds(1f);
 			curentDamage += tickDamage;
 		}
@@ -526,14 +715,57 @@ public class PowerController : MonoBehaviour
     void ActivateElectric()
     {
         elementalPower = GameManager.PowerType.Electric;
-        GetComponent<MeshRenderer>().material = electricMaterial;
-		elementalDurationCoroutine = StartCoroutine(DurationCoroutine(GameManager.PowerType.Electric, electricDuration));
+        //GetComponent<MeshRenderer>().material = electricMaterial;
+        VFX.transform.GetChild(3).gameObject.transform.GetChild(0).gameObject.SetActive(VFX.transform.GetChild(0).gameObject.transform.GetChild(0).gameObject.activeSelf);
+        VFX.transform.GetChild(3).gameObject.transform.GetChild(4).gameObject.SetActive(VFX.transform.GetChild(0).gameObject.transform.GetChild(4).gameObject.activeSelf);
+        VFX.transform.GetChild(3).gameObject.transform.GetChild(5).gameObject.SetActive(VFX.transform.GetChild(0).gameObject.transform.GetChild(5).gameObject.activeSelf);
+        VFX.transform.GetChild(3).gameObject.transform.GetChild(6).gameObject.SetActive(VFX.transform.GetChild(0).gameObject.transform.GetChild(6).gameObject.activeSelf);
+
+        if (behaviouralPower == GameManager.PowerType.LargeOrb)
+        {
+            for (int i = 0; i < 4; i++)
+            {
+                VFX.transform.GetChild(0).gameObject.transform.GetChild(i).transform.localScale /= maxScale;
+            }
+
+            for (int i = 0; i < 4; i++)
+            {
+                VFX.transform.GetChild(3).gameObject.transform.GetChild(i).transform.localScale *= maxScale;
+            }
+        }
+
+        VFX.transform.GetChild(0).gameObject.SetActive(false);
+        VFX.transform.GetChild(3).gameObject.SetActive(true);
+        elementalDurationCoroutine = StartCoroutine(DurationCoroutine(GameManager.PowerType.Electric, electricDuration));
     }
 
     void DeactivateElectric()
     {
         elementalPower = GameManager.PowerType.None;
-        GetComponent<MeshRenderer>().material = normalMaterial;
+        //GetComponent<MeshRenderer>().material = normalMaterial;
+
+
+        VFX.transform.GetChild(0).gameObject.transform.GetChild(0).gameObject.SetActive(VFX.transform.GetChild(3).gameObject.transform.GetChild(0).gameObject.activeSelf);
+        VFX.transform.GetChild(0).gameObject.transform.GetChild(4).gameObject.SetActive(VFX.transform.GetChild(3).gameObject.transform.GetChild(4).gameObject.activeSelf);
+        VFX.transform.GetChild(0).gameObject.transform.GetChild(5).gameObject.SetActive(VFX.transform.GetChild(3).gameObject.transform.GetChild(5).gameObject.activeSelf);
+        VFX.transform.GetChild(0).gameObject.transform.GetChild(6).gameObject.SetActive(VFX.transform.GetChild(3).gameObject.transform.GetChild(6).gameObject.activeSelf);
+
+        if (behaviouralPower == GameManager.PowerType.LargeOrb)
+        {
+
+            for (int i = 0; i < 4; i++)
+            {
+                VFX.transform.GetChild(3).gameObject.transform.GetChild(i).transform.localScale /= maxScale;
+            }
+
+            for (int i = 0; i < 4; i++)
+            {
+                VFX.transform.GetChild(0).gameObject.transform.GetChild(i).transform.localScale *= maxScale;
+            }
+        }
+
+        VFX.transform.GetChild(3).gameObject.SetActive(false);
+        VFX.transform.GetChild(0).gameObject.SetActive(true);
     }
 
 	public IEnumerator ElectricZappingCoroutine(Vector3 startPos, GameObject firstObject, bool isEnemy)
@@ -617,14 +849,54 @@ public class PowerController : MonoBehaviour
     void ActivateDarkness()
     {
         elementalPower = GameManager.PowerType.Darkness;
-        GetComponent<MeshRenderer>().material = darknessMaterial;
-		elementalDurationCoroutine = StartCoroutine(DurationCoroutine(GameManager.PowerType.Darkness, darknessDuration));
+        //GetComponent<MeshRenderer>().material = darknessMaterial;
+        VFX.transform.GetChild(1).gameObject.transform.GetChild(0).gameObject.SetActive(VFX.transform.GetChild(0).gameObject.transform.GetChild(0).gameObject.activeSelf);
+        VFX.transform.GetChild(1).gameObject.transform.GetChild(4).gameObject.SetActive(VFX.transform.GetChild(0).gameObject.transform.GetChild(4).gameObject.activeSelf);
+        VFX.transform.GetChild(1).gameObject.transform.GetChild(5).gameObject.SetActive(VFX.transform.GetChild(0).gameObject.transform.GetChild(5).gameObject.activeSelf);
+        VFX.transform.GetChild(1).gameObject.transform.GetChild(6).gameObject.SetActive(VFX.transform.GetChild(0).gameObject.transform.GetChild(6).gameObject.activeSelf);
+
+        if (behaviouralPower == GameManager.PowerType.LargeOrb)
+        {
+            for (int i = 0; i < 4; i++)
+            {
+                VFX.transform.GetChild(0).gameObject.transform.GetChild(i).transform.localScale /= maxScale;
+            }
+
+            for (int i = 0; i < 4; i++)
+            {
+                VFX.transform.GetChild(1).gameObject.transform.GetChild(i).transform.localScale *= maxScale;
+            }
+        }
+
+        VFX.transform.GetChild(0).gameObject.SetActive(false);
+        VFX.transform.GetChild(1).gameObject.SetActive(true);
+        elementalDurationCoroutine = StartCoroutine(DurationCoroutine(GameManager.PowerType.Darkness, darknessDuration));
     }
 
     void DeactivateDarkness()
     {
         elementalPower = GameManager.PowerType.None;
-        GetComponent<MeshRenderer>().material = normalMaterial;
+        //GetComponent<MeshRenderer>().material = normalMaterial;
+        VFX.transform.GetChild(0).gameObject.transform.GetChild(0).gameObject.SetActive(VFX.transform.GetChild(1).gameObject.transform.GetChild(0).gameObject.activeSelf);
+        VFX.transform.GetChild(0).gameObject.transform.GetChild(4).gameObject.SetActive(VFX.transform.GetChild(1).gameObject.transform.GetChild(4).gameObject.activeSelf);
+        VFX.transform.GetChild(0).gameObject.transform.GetChild(5).gameObject.SetActive(VFX.transform.GetChild(1).gameObject.transform.GetChild(5).gameObject.activeSelf);
+        VFX.transform.GetChild(0).gameObject.transform.GetChild(6).gameObject.SetActive(VFX.transform.GetChild(1).gameObject.transform.GetChild(6).gameObject.activeSelf);
+
+        if (behaviouralPower == GameManager.PowerType.LargeOrb)
+        {
+            for (int i = 0; i < 4; i++)
+            {
+                VFX.transform.GetChild(1).gameObject.transform.GetChild(i).transform.localScale /= maxScale;
+            }
+
+            for (int i = 0; i < 4; i++)
+            {
+                VFX.transform.GetChild(0).gameObject.transform.GetChild(i).transform.localScale *= maxScale;
+            }
+        }
+
+        VFX.transform.GetChild(1).gameObject.SetActive(false);
+        VFX.transform.GetChild(0).gameObject.SetActive(true);
     }
 
     #endregion
@@ -699,9 +971,9 @@ public class PowerController : MonoBehaviour
                 if (actualFireDOTCoroutine != null)
 					StopCoroutine(actualFireDOTCoroutine);
 				if(isActivatedByBrazier)
-					actualFireDOTCoroutine = StartCoroutine(FireDamage(enemy, fireTicksDamageBrazier, fireTickDurationBrazier));
+					actualFireDOTCoroutine = StartCoroutine(FireDamage(enemy.gameObject, fireTicksDamageBrazier, fireTickDurationBrazier));
 				else
-					actualFireDOTCoroutine = StartCoroutine(FireDamage(enemy, fireTicksDamage, fireTickDuration));
+					actualFireDOTCoroutine = StartCoroutine(FireDamage(enemy.gameObject, fireTicksDamage, fireTickDuration));
                 damageTaken += fireDamage;
                 break;
             case GameManager.PowerType.Electric:
@@ -733,8 +1005,6 @@ public class PowerController : MonoBehaviour
         }
 
         enemy.TakeDamage(damageTaken);
-
-
         
 
         if (behaviouralPower == GameManager.PowerType.LeechLife)
@@ -746,6 +1016,88 @@ public class PowerController : MonoBehaviour
                 GameManager.gameManager.spawnHealingOrbs(2, (int)(damageTaken / (100 / lifeSteel)), "leechLife");
         }
     }
+
+    
+    public void onBossHit(GameObject target)
+    {
+        BossSystem bossSystem = target.GetComponent<BossSystem>();
+        
+
+        int bonusDamage = (orbController.combo / orbController.damageIncreaseStep) * orbController.damageComboIncrease;
+        if (bonusDamage > orbController.maxComboDamage)
+        {
+            bonusDamage = orbController.maxComboDamage;
+        }
+        int damageTaken = baseDamage + bonusDamage;
+
+        switch (behaviouralPower)
+        {
+            case GameManager.PowerType.LargeOrb:
+                damageTaken += largeOrbDamage;
+                break;
+            case GameManager.PowerType.Shield:
+                damageTaken -= mitigatedDamage;
+                break;
+            case GameManager.PowerType.Slug:
+                damageTaken -= mitigatedDamageSlug;
+                break;
+        }
+
+        switch (elementalPower)
+        {
+            case GameManager.PowerType.Fire:
+                //update in score manager
+                ScoreManager.scoreManager.statusAilmentApplied++;
+
+                if (actualFireDOTCoroutine != null)
+                    StopCoroutine(actualFireDOTCoroutine);
+                if (isActivatedByBrazier)
+                    actualFireDOTCoroutine = StartCoroutine(FireDamage(bossSystem.gameObject, fireTicksDamageBrazier, fireTickDurationBrazier));
+                else
+                    actualFireDOTCoroutine = StartCoroutine(FireDamage(bossSystem.gameObject, fireTicksDamage, fireTickDuration));
+                damageTaken += fireDamage;
+                break;
+
+            case GameManager.PowerType.Electric:
+                //update in score manager
+                ScoreManager.scoreManager.statusAilmentApplied++;
+
+                StartCoroutine(ElectricZappingCoroutine(transform.position, target, true));
+                damageTaken += electricDamage;
+                DeactivatePower(elementalPower);
+                break;
+        }
+        
+        //apply damage to boss
+        bossSystem.TakeDamage(damageTaken);
+
+
+        //update in score manager (to keep track of who's given the last hit)
+        if (GameManager.gameManager.orb.GetComponent<OrbController>().toPlayer2)
+        {
+            ScoreManager.scoreManager.damageDealtBossP1 += damageTaken;
+            bossSystem.lastHitByP1 = true;
+            bossSystem.lastHitByP2 = false;
+        }
+        else
+        {
+            ScoreManager.scoreManager.damageDealtBossP2 += damageTaken;
+            bossSystem.lastHitByP1 = false;
+            bossSystem.lastHitByP2 = true;
+        }
+
+        //heals players if leachlife is on
+        if (behaviouralPower == GameManager.PowerType.LeechLife)
+        {
+            OrbController controller = GameManager.gameManager.orb.GetComponent<OrbController>();
+            if (controller.toPlayer2)
+                GameManager.gameManager.spawnHealingOrbs(1, (int)(damageTaken / (100 / lifeSteel)), "leechLife");
+            else
+                GameManager.gameManager.spawnHealingOrbs(2, (int)(damageTaken / (100 / lifeSteel)), "leechLife");
+        }
+    }
+
+    
 
     /// <summary>
     /// Check if a dropped power is in the orb to give it to a player
