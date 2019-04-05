@@ -99,7 +99,7 @@ public class ArenaSystem : MonoBehaviour
                         yield return new WaitForEndOfFrame();
                     }
                     timer = 0;
-                    GameManager.gameManager.UIManager.UpdateSubWave(subWaveIndex + 1);
+                    //GameManager.gameManager.UIManager.UpdateSubWave(subWaveIndex + 1);
                     subWaveIndex++;
                     
                 }
@@ -118,10 +118,9 @@ public class ArenaSystem : MonoBehaviour
                     if (waveIndex < waveList.Count)
                     {
                         GameManager.gameManager.UIManager.UpdateWave(waveIndex + 1);
-                        GameManager.gameManager.UIManager.StartCoroutine(GameManager.gameManager.UIManager.AnnouceWave(waveIndex + 1));
                     }
                     subWaveIndex = 0;
-                    GameManager.gameManager.UIManager.UpdateSubWave(subWaveIndex + 1);
+                    //GameManager.gameManager.UIManager.UpdateSubWave(subWaveIndex + 1);
                     bonusChance = 0;
                 }
                 yield return new WaitForEndOfFrame();
