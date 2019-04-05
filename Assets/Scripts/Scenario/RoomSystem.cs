@@ -31,8 +31,20 @@ public class RoomSystem : MonoBehaviour, IActivable
     
     public GameObject nextRoom;
 
+    private bool instantiateWait;
+
     void Update()
     {
+        if (!instantiateWait)
+        {
+            float timeStamp = 0;
+            while (timeStamp < 1.0f)
+            {
+                timeStamp += Time.deltaTime;
+            }
+            instantiateWait = true;
+        }
+
         CleanNullInEnemyList();
         if (!roomCleared && enemies.Count == 0)
         {
