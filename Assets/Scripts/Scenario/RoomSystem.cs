@@ -37,10 +37,10 @@ public class RoomSystem : MonoBehaviour, IActivable
     {
         if (!instantiateWait)
         {
-            float timeStamp = Time.time;
-            while (Time.time - timeStamp < 1.0f)
+            float timeStamp = 0;
+            while (timeStamp < 1.0f)
             {
-                //wait for a second
+                timeStamp += Time.deltaTime;
             }
             instantiateWait = true;
         }
