@@ -99,7 +99,7 @@ public class ArenaSystem : MonoBehaviour
                         yield return new WaitForEndOfFrame();
                     }
                     timer = 0;
-                    //GameManager.gameManager.UIManager.UpdateSubWave(subWaveIndex + 1);
+                    GameManager.gameManager.UIManager.UpdateSubWave(subWaveIndex + 1);
                     subWaveIndex++;
                     
                 }
@@ -120,7 +120,7 @@ public class ArenaSystem : MonoBehaviour
                         GameManager.gameManager.UIManager.UpdateWave(waveIndex + 1);
                     }
                     subWaveIndex = 0;
-                    //GameManager.gameManager.UIManager.UpdateSubWave(subWaveIndex + 1);
+                    GameManager.gameManager.UIManager.UpdateSubWave(subWaveIndex + 1);
                     bonusChance = 0;
                 }
                 yield return new WaitForEndOfFrame();
@@ -130,7 +130,7 @@ public class ArenaSystem : MonoBehaviour
                 arenaCleared = true;
             }
         }
-        
+        ScoreManager.scoreManager.Save();
         sceneLoader.GetComponent<IActivable>().Activate();
     }
 
