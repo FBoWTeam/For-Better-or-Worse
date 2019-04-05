@@ -151,6 +151,11 @@ public class ScoreManager : MonoBehaviour
         sw.WriteLine("killsP2 " + killsP2);
         sw.WriteLine("healPointReceivedP1 " + healPointReceivedP1);
         sw.WriteLine("healPointReceivedP2 " + healPointReceivedP2);
+
+        sw.WriteLine("damageDealtBossP1 " + damageDealtBossP1);
+        sw.WriteLine("damageDealtBossP2 " + damageDealtBossP2);
+        sw.WriteLine("bossKilledByP1 " + bossKilledByP1);
+
         sw.WriteLine("completionTime " + completionTime);
 
         sw.Close();
