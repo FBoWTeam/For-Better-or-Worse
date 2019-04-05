@@ -34,6 +34,7 @@ public class GameManager : MonoBehaviour
 	public int shieldP2;
 	public float knockBackForce;
 	public bool restartWhenDead;
+	bool respawning = false;
 
     [Header("[HealingOrbs]")]
     public GameObject normalHealingOrbPrefab;
@@ -166,7 +167,7 @@ public class GameManager : MonoBehaviour
                 }
                 damageTakenP2 += damage;
             }
-            if ((damageTakenP1 + damageTakenP2 >= hp) && restartWhenDead)
+            if ((damageTakenP1 + damageTakenP2 >= hp) && restartWhenDead && !respawning)
             {
                 StartCoroutine(deathCoroutine());
             }
@@ -290,6 +291,7 @@ public class GameManager : MonoBehaviour
 
     IEnumerator deathCoroutine()
     {
+		respawning = true;
         //update in score manager
         ScoreManager.scoreManager.numberOfDeaths++;
 
@@ -327,6 +329,8 @@ public class GameManager : MonoBehaviour
         actualCheckpoint.RespawnContent();
 
         StartCoroutine(FadeCoroutine("FadeIn"));
+
+		respawning = false;
     }
 
 
