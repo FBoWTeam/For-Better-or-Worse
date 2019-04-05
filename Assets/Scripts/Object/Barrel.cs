@@ -9,13 +9,13 @@ public class Barrel : MonoBehaviour, IActivable
     public float rangeAOE;//explosion range
     public int damage;//explosion damage
     public float powerForce;
+    public float TimeBeforeActivation;
 
-    
+
     // Start is called before the first frame update
     void Start()
     {
-        isActive = false;
-        
+        isActive = false;        
     }
 
     // Update is called once per frame
@@ -28,8 +28,15 @@ public class Barrel : MonoBehaviour, IActivable
     {
         if (other.CompareTag("Orb") && !isActive && GameManager.gameManager.orb.GetComponent<PowerController>().elementalPower == GameManager.PowerType.Fire)
         {
-            this.Activate();
+            StartCoroutine(TimeBeforeActivationCoroutine());
         }
+    }
+
+    IEnumerator TimeBeforeActivationCoroutine()
+    {
+        yield return new WaitForSeconds(TimeBeforeActivation);
+
+        this.Activate();
     }
 
     public void Activate()
