@@ -6,30 +6,30 @@ using UnityEngine;
 public class EntitySpam : MonoBehaviour
 {
 	public List<string> sentences;
-	TextMeshProUGUI text;
+	List<TextMeshProUGUI> textList;
 	public float writeSpeed;
 
 	private void OnEnable()
 	{
-		text = GetComponentInChildren<TextMeshProUGUI>();
+		textList = new List<TextMeshProUGUI>(GetComponentsInChildren<TextMeshProUGUI>());
 		StartCoroutine(EntitySpamCoroutine());
 	}
 
 	public IEnumerator EntitySpamCoroutine()
 	{
+		TextMeshProUGUI actualText;
 		bool pass = true;
-		text.text = "";
 		while (true)
 		{
 			foreach(string s in sentences)
 			{
+				actualText = textList[Random.Range(0, textList.Count)];
 				foreach(char c in s)
 				{
-					GetComponent<RectTransform>().localPosition += Vector3.up;
 					if (c == '\\')
-						text.text += '\n';
+						actualText.text += '\n';
 					else
-						text.text += c;
+						actualText.text += c;
 
 					pass = !pass;
 					if(!pass)
@@ -37,6 +37,7 @@ public class EntitySpam : MonoBehaviour
 						yield return new WaitForSeconds(writeSpeed);
 					}
 				}
+				actualText.text = "";
 			}
 		}
 	}
