@@ -12775,11 +12775,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 8708506531089382189, guid: e0c803f7f12a09b4cb87b0f68746c41b,
-        type: 3}
-      propertyPath: canHitPlayer
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 2970527385879693205, guid: e0c803f7f12a09b4cb87b0f68746c41b,
         type: 3}
       propertyPath: droppedPower
@@ -12798,7 +12793,12 @@ PrefabInstance:
     - target: {fileID: 2970527385879693205, guid: e0c803f7f12a09b4cb87b0f68746c41b,
         type: 3}
       propertyPath: baseDamage
-      value: 5
+      value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: 8708506531089382189, guid: e0c803f7f12a09b4cb87b0f68746c41b,
+        type: 3}
+      propertyPath: canHitPlayer
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4573906761269645459, guid: e0c803f7f12a09b4cb87b0f68746c41b,
         type: 3}
@@ -25078,7 +25078,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 618bad5fb90f5d24db4f24fb78ad3d86, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  timeToWait: 0
+  gameMode: 1
+  arenaName: Prison
   maxCombo: 0
   enemyMirrorBroken: 0
   statusAilmentApplied: 0
