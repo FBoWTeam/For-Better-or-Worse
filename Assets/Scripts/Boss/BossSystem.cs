@@ -310,37 +310,68 @@ public class BossSystem : MonoBehaviour
 
         //canalisation + feedbacks
         yield return new WaitForSeconds(1.0f);
-        //boom
 
-        if (!isMysticLineCreated)
+        Vector3 raycastPosition = new Vector3(transform.position.x, 0, transform.position.z);
+        Vector3 direction;
+        RaycastHit hit;
+
+        //if (actualPhase < 2)
+        //{
+        //    if (!isMysticLineCreated)
+        //    {
+        //        direction = (new Vector3(aimedPlayer.transform.position.x, raycastPosition.y, aimedPlayer.transform.position.z)
+        //            - raycastPosition).normalized;
+
+        //        Debug.DrawRay(raycastPosition, direction * 50, Color.blue, 10);
+        //        if (Physics.Raycast(raycastPosition, direction, out hit, 50, LayerMask.GetMask("Wall")))
+        //        {
+        //            //Debug
+        //            print("Distance : " + hit.distance);
+        //            //float angle = Vector3.Angle(direction, transform.forward);
+        //            //print("Angle : " + angle);
+
+        //            Vector3 center = (raycastPosition + hit.transform.position) / 2;
+        //            center += new Vector3(0, mysticLineHeight / 2, 0);
+
+        //            StartCoroutine(CreateMysticLineCoroutine(center, hit.transform, hit.distance));
+        //        }
+        //    }
+
+        //}
+        Vector3 centerOfPlayers = (player1.transform.position + player2.transform.position) / 2;
+
+        direction = (new Vector3(centerOfPlayers.x, raycastPosition.y, centerOfPlayers.z)
+                - raycastPosition).normalized;
+        Debug.DrawRay(raycastPosition, direction * 50, Color.blue, 10);
+
+        if (Physics.Raycast(raycastPosition, direction, out hit, 50, LayerMask.GetMask("Wall")))
         {
-            RaycastHit hit;
-            Vector3 raycastPosition = new Vector3(transform.position.x, 0, transform.position.z);
-            Vector3 direction = (new Vector3(aimedPlayer.transform.position.x, raycastPosition.y, aimedPlayer.transform.position.z)
-                - new Vector3(transform.position.x, raycastPosition.y, transform.position.z)).normalized;
+            //print("Distance : " + hit.distance);
+            //float angle = Vector3.Angle(direction, transform.forward);
+            //print("Angle : " + angle);
 
-            Debug.DrawRay(raycastPosition, direction * 50, Color.blue, 10);
+            Vector3 center = (raycastPosition + hit.transform.position) / 2;
+            center += new Vector3(0, mysticLineHeight / 2, 0);
 
-            if (Physics.Raycast(raycastPosition, direction, out hit, 50, LayerMask.NameToLayer("Wall")))
-            {
-                print("Distance : " + hit.distance);
+            StartCoroutine(CreateMysticLineCoroutine(center, hit.transform.position, hit.distance));
+        }
+        if (Physics.Raycast(raycastPosition, -direction, out hit, 50, LayerMask.GetMask("Wall")))
+        {
+            //print("Distance : " + hit.distance);
 
-                Vector3 center = (raycastPosition + hit.transform.position) / 2;
-                center += new Vector3(0, mysticLineHeight / 2, 0);
-                //float angle = Vector3.Angle(direction, transform.forward);
-                //print("Angle : " + angle);
+            Vector3 center = (raycastPosition + hit.transform.position) / 2;
+            center += new Vector3(0, mysticLineHeight / 2, 0);
 
-                StartCoroutine(CreateMysticLine(center, hit.transform, hit.distance));
-            }
+            StartCoroutine(CreateMysticLineCoroutine(center, hit.transform.position, hit.distance));
         }
 
         isAttacking = false;
     }
 
-    public IEnumerator CreateMysticLine(Vector3 position, Transform target, float length)
+    public IEnumerator CreateMysticLineCoroutine(Vector3 position, Vector3 target, float length)
     {
         GameObject mysticLine = Instantiate(mysticLinePrefab, position, Quaternion.identity);
-        mysticLine.transform.LookAt(new Vector3(target.position.x, position.y, target.position.z));
+        mysticLine.transform.LookAt(new Vector3(target.x, position.y, target.z));
         //mysticLine.transform.localEulerAngles = new Vector3(0, angle, 0);
         mysticLine.transform.localScale = new Vector3(mysticLineWidth, mysticLineHeight, length);
 
