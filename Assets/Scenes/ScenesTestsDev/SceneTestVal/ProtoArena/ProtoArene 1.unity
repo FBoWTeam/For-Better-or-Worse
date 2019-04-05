@@ -1142,15 +1142,15 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 5810302289274540122, guid: f91a56ce144fd8d49b63f05b2e6d8ddd,
-        type: 3}
-      propertyPath: m_Name
-      value: fire
-      objectReference: {fileID: 0}
     - target: {fileID: 9128034882527448053, guid: f91a56ce144fd8d49b63f05b2e6d8ddd,
         type: 3}
       propertyPath: m_Name
       value: fire_light
+      objectReference: {fileID: 0}
+    - target: {fileID: 5810302289274540122, guid: f91a56ce144fd8d49b63f05b2e6d8ddd,
+        type: 3}
+      propertyPath: m_Name
+      value: fire
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f91a56ce144fd8d49b63f05b2e6d8ddd, type: 3}
@@ -2330,6 +2330,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Brazier (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 5746403380292812007, guid: f3c0be27562e4e846b444b57b37f3ab1,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 7
+      objectReference: {fileID: 0}
     - target: {fileID: 2898469933100773413, guid: f3c0be27562e4e846b444b57b37f3ab1,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -2389,11 +2394,6 @@ PrefabInstance:
         type: 3}
       propertyPath: onFire
       value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5746403380292812007, guid: f3c0be27562e4e846b444b57b37f3ab1,
-        type: 3}
-      propertyPath: m_RootOrder
-      value: 7
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f3c0be27562e4e846b444b57b37f3ab1, type: 3}
@@ -3375,20 +3375,20 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 5810302289274540122, guid: f91a56ce144fd8d49b63f05b2e6d8ddd,
+    - target: {fileID: 8151980921738491890, guid: f91a56ce144fd8d49b63f05b2e6d8ddd,
         type: 3}
-      propertyPath: m_Name
-      value: fire
+      propertyPath: onFire
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 9128034882527448053, guid: f91a56ce144fd8d49b63f05b2e6d8ddd,
         type: 3}
       propertyPath: m_Name
       value: fire_light
       objectReference: {fileID: 0}
-    - target: {fileID: 8151980921738491890, guid: f91a56ce144fd8d49b63f05b2e6d8ddd,
+    - target: {fileID: 5810302289274540122, guid: f91a56ce144fd8d49b63f05b2e6d8ddd,
         type: 3}
-      propertyPath: onFire
-      value: 1
+      propertyPath: m_Name
+      value: fire
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f91a56ce144fd8d49b63f05b2e6d8ddd, type: 3}
@@ -3650,14 +3650,14 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
-  - {fileID: 1109115615}
-  - {fileID: 909981317}
   - {fileID: 545577049}
-  - {fileID: 954671376}
+  - {fileID: 1109115615}
   - {fileID: 7233461132968731337}
   - {fileID: 710334809}
   - {fileID: 1335615305}
   - {fileID: 279497469}
+  - {fileID: 954671376}
+  - {fileID: 909981317}
   m_Father: {fileID: 513979442}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -4110,6 +4110,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Brazier (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 5746403380292812007, guid: f3c0be27562e4e846b444b57b37f3ab1,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 13
+      objectReference: {fileID: 0}
     - target: {fileID: 2898469933100773413, guid: f3c0be27562e4e846b444b57b37f3ab1,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -4164,11 +4169,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5746403380292812007, guid: f3c0be27562e4e846b444b57b37f3ab1,
-        type: 3}
-      propertyPath: m_RootOrder
-      value: 13
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f3c0be27562e4e846b444b57b37f3ab1, type: 3}
@@ -4360,17 +4360,17 @@ MonoBehaviour:
   waveList:
   - subWaveList:
     - spawnNumber: 0
-      timeBeforeNextSubWave: 0
+      timeBeforeNextSubWave: 10
       subWavePrefab: {fileID: 9193597293470881315, guid: 1012b571cc258f44eb57d3003b1df89b,
         type: 3}
     - spawnNumber: 1
       timeBeforeNextSubWave: 0
       subWavePrefab: {fileID: 9193597293470881315, guid: 1012b571cc258f44eb57d3003b1df89b,
         type: 3}
-    timeBeforeNextWave: 0
+    timeBeforeNextWave: 5
   - subWaveList:
     - spawnNumber: 0
-      timeBeforeNextSubWave: 0
+      timeBeforeNextSubWave: 10
       subWavePrefab: {fileID: 9193597293470881315, guid: 1012b571cc258f44eb57d3003b1df89b,
         type: 3}
     - spawnNumber: 1
@@ -4414,6 +4414,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Brazier (3)
+      objectReference: {fileID: 0}
+    - target: {fileID: 5746403380292812007, guid: f3c0be27562e4e846b444b57b37f3ab1,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 2898469933100773413, guid: f3c0be27562e4e846b444b57b37f3ab1,
         type: 3}
@@ -4469,11 +4474,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5746403380292812007, guid: f3c0be27562e4e846b444b57b37f3ab1,
-        type: 3}
-      propertyPath: m_RootOrder
-      value: 10
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f3c0be27562e4e846b444b57b37f3ab1, type: 3}
@@ -6240,15 +6240,15 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 5810302289274540122, guid: f91a56ce144fd8d49b63f05b2e6d8ddd,
-        type: 3}
-      propertyPath: m_Name
-      value: fire
-      objectReference: {fileID: 0}
     - target: {fileID: 9128034882527448053, guid: f91a56ce144fd8d49b63f05b2e6d8ddd,
         type: 3}
       propertyPath: m_Name
       value: fire_light
+      objectReference: {fileID: 0}
+    - target: {fileID: 5810302289274540122, guid: f91a56ce144fd8d49b63f05b2e6d8ddd,
+        type: 3}
+      propertyPath: m_Name
+      value: fire
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f91a56ce144fd8d49b63f05b2e6d8ddd, type: 3}
@@ -7119,22 +7119,22 @@ PrefabInstance:
     - target: {fileID: 3250327374695532824, guid: a4f8c49a4aa2e204ba579e3fee687eab,
         type: 3}
       propertyPath: m_havePropertiesChanged
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3250327374695532824, guid: a4f8c49a4aa2e204ba579e3fee687eab,
         type: 3}
       propertyPath: m_isInputParsingRequired
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3250327373993441929, guid: a4f8c49a4aa2e204ba579e3fee687eab,
         type: 3}
       propertyPath: m_havePropertiesChanged
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3250327373993441929, guid: a4f8c49a4aa2e204ba579e3fee687eab,
         type: 3}
       propertyPath: m_isInputParsingRequired
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8692469023429428909, guid: a4f8c49a4aa2e204ba579e3fee687eab,
         type: 3}
@@ -7149,32 +7149,32 @@ PrefabInstance:
     - target: {fileID: 2473777766191168519, guid: a4f8c49a4aa2e204ba579e3fee687eab,
         type: 3}
       propertyPath: m_havePropertiesChanged
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2473777766191168519, guid: a4f8c49a4aa2e204ba579e3fee687eab,
         type: 3}
       propertyPath: m_isInputParsingRequired
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 350632398373425978, guid: a4f8c49a4aa2e204ba579e3fee687eab,
         type: 3}
       propertyPath: m_havePropertiesChanged
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 350632398373425978, guid: a4f8c49a4aa2e204ba579e3fee687eab,
         type: 3}
       propertyPath: m_isInputParsingRequired
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8692469024640994961, guid: a4f8c49a4aa2e204ba579e3fee687eab,
         type: 3}
       propertyPath: m_isInputParsingRequired
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8692469024640994961, guid: a4f8c49a4aa2e204ba579e3fee687eab,
         type: 3}
       propertyPath: m_havePropertiesChanged
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3250327373835680536, guid: a4f8c49a4aa2e204ba579e3fee687eab,
         type: 3}
@@ -7189,37 +7189,32 @@ PrefabInstance:
     - target: {fileID: 1211686862323295560, guid: a4f8c49a4aa2e204ba579e3fee687eab,
         type: 3}
       propertyPath: m_havePropertiesChanged
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1211686862323295560, guid: a4f8c49a4aa2e204ba579e3fee687eab,
         type: 3}
       propertyPath: m_isInputParsingRequired
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4451187332386579481, guid: a4f8c49a4aa2e204ba579e3fee687eab,
         type: 3}
       propertyPath: m_havePropertiesChanged
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4451187332386579481, guid: a4f8c49a4aa2e204ba579e3fee687eab,
         type: 3}
       propertyPath: m_isInputParsingRequired
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4369689234961902498, guid: a4f8c49a4aa2e204ba579e3fee687eab,
         type: 3}
       propertyPath: m_havePropertiesChanged
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4369689234961902498, guid: a4f8c49a4aa2e204ba579e3fee687eab,
         type: 3}
       propertyPath: m_isInputParsingRequired
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 746894911526569275, guid: a4f8c49a4aa2e204ba579e3fee687eab,
-        type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: 200.90002
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3316539518999627587, guid: a4f8c49a4aa2e204ba579e3fee687eab,
         type: 3}
@@ -7244,22 +7239,22 @@ PrefabInstance:
     - target: {fileID: 7391391615556175759, guid: a4f8c49a4aa2e204ba579e3fee687eab,
         type: 3}
       propertyPath: m_havePropertiesChanged
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7391391615556175759, guid: a4f8c49a4aa2e204ba579e3fee687eab,
         type: 3}
       propertyPath: m_isInputParsingRequired
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8313975630484722286, guid: a4f8c49a4aa2e204ba579e3fee687eab,
         type: 3}
       propertyPath: m_havePropertiesChanged
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8313975630484722286, guid: a4f8c49a4aa2e204ba579e3fee687eab,
         type: 3}
       propertyPath: m_isInputParsingRequired
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a4f8c49a4aa2e204ba579e3fee687eab, type: 3}
@@ -10140,15 +10135,15 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 5810302289274540122, guid: f91a56ce144fd8d49b63f05b2e6d8ddd,
-        type: 3}
-      propertyPath: m_Name
-      value: fire
-      objectReference: {fileID: 0}
     - target: {fileID: 9128034882527448053, guid: f91a56ce144fd8d49b63f05b2e6d8ddd,
         type: 3}
       propertyPath: m_Name
       value: fire_light
+      objectReference: {fileID: 0}
+    - target: {fileID: 5810302289274540122, guid: f91a56ce144fd8d49b63f05b2e6d8ddd,
+        type: 3}
+      propertyPath: m_Name
+      value: fire
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f91a56ce144fd8d49b63f05b2e6d8ddd, type: 3}
@@ -10163,6 +10158,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Brazier
+      objectReference: {fileID: 0}
+    - target: {fileID: 5746403380292812007, guid: f3c0be27562e4e846b444b57b37f3ab1,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 2898469933100773413, guid: f3c0be27562e4e846b444b57b37f3ab1,
         type: 3}
@@ -10218,11 +10218,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5746403380292812007, guid: f3c0be27562e4e846b444b57b37f3ab1,
-        type: 3}
-      propertyPath: m_RootOrder
-      value: 4
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f3c0be27562e4e846b444b57b37f3ab1, type: 3}
