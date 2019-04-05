@@ -28,7 +28,8 @@ public class RoomSystem : MonoBehaviour, IActivable
     public GameObject[] objectsToActivate;
 
     public bool isActive { get; set; }
-    
+
+
     public GameObject nextRoom;
 
     private bool instantiateWait;
@@ -58,7 +59,6 @@ public class RoomSystem : MonoBehaviour, IActivable
             }
         }
     }
-
 
     public void Activate()
     {
@@ -112,5 +112,5 @@ public class RoomSystem : MonoBehaviour, IActivable
             enemies.RemoveAll(x => x.Equals(null));
         }
     }
-    
+
 }
