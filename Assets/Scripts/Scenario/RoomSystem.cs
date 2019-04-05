@@ -29,40 +29,23 @@ public class RoomSystem : MonoBehaviour, IActivable
 
     public bool isActive { get; set; }
 
-    bool initialisation;
 
     public GameObject nextRoom;
 
-    private void Start()
-    {
-        initialisation = false;
-        StartCoroutine(Initialisation());
-    }
     void Update()
     {
-        if (initialisation)
+        CleanNullInEnemyList();
+        if (!roomCleared && enemies.Count == 0)
         {
-            print("Init");
-            CleanNullInEnemyList();
-            if (!roomCleared && enemies.Count == 0)
-            {
-                this.Activate();
-            }
-            else if (numberPlayerPresent == 0 && !playerLeft && enemies.Count == 0)
-            {
-                if (nextRoom != null && nextRoom.GetComponent<RoomSystem>().numberPlayerPresent == 2)
-                {
-                    this.Deactivate();
-                }
-            }
-
+            this.Activate();
         }
-    }
-
-    IEnumerator Initialisation()
-    {
-        yield return new WaitForSeconds(1);
-        initialisation = true;
+        else if (numberPlayerPresent == 0 && !playerLeft && enemies.Count == 0)
+        {
+            if (nextRoom != null && nextRoom.GetComponent<RoomSystem>().numberPlayerPresent == 2)
+            {
+                this.Deactivate();
+            }
+        }
     }
 
     public void Activate()
