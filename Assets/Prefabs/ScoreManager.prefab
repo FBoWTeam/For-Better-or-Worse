@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 5032312402884482696}
   - component: {fileID: 5032312402884482697}
-  - component: {fileID: 1863594604}
   m_Layer: 0
   m_Name: ScoreManager
   m_TagString: Untagged
@@ -44,7 +43,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 618bad5fb90f5d24db4f24fb78ad3d86, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  timeToWait: 60
+  gameMode: 0
+  arenaName: 
   maxCombo: 0
   enemyMirrorBroken: 0
   statusAilmentApplied: 0
@@ -58,17 +58,7 @@ MonoBehaviour:
   killsP2: 0
   healPointReceivedP1: 0
   healPointReceivedP2: 0
+  damageDealtBossP1: 0
+  damageDealtBossP2: 0
+  bossKilledByP1: 0
   completionTime: 0
---- !u!65 &1863594604
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5032312402884482702}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 10, y: 5, z: 10}
-  m_Center: {x: 0, y: 0, z: 0}

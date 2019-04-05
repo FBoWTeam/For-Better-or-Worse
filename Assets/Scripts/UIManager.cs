@@ -24,8 +24,10 @@ public class UIManager : MonoBehaviour
 
     [Header("Wave")]
     public GameObject wave;
-    [Header("SubWave")]
+
+    [Header("Subave")]
     public GameObject subwave;
+
     [Header("WaveAnnouncer")]
     public GameObject waveAnnouncer;
 
@@ -337,7 +339,6 @@ public class UIManager : MonoBehaviour
         yield return new WaitForSeconds(2f);
         waveAnnouncer.SetActive(false);
     }
-
 
     #endregion
 
