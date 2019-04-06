@@ -34,6 +34,7 @@ public class FlammableObjects : MonoBehaviour, IActivable
     {
         isActive = true;
         isBurning = true;
+		transform.GetChild(0).gameObject.SetActive(true);
         //gameObject.GetComponent<Renderer>().material.color = Color.red;
         Destroy(gameObject, burnTime);
     }

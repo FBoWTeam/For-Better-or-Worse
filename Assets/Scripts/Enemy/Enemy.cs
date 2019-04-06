@@ -83,6 +83,9 @@ public class Enemy : MonoBehaviour
     [HideInInspector]
     public bool isAttacking;
 
+	public GameObject VFX;
+	public GameObject deathPoofPrefab;
+
     #endregion
 
     // Start is called before the first frame update
@@ -197,6 +200,7 @@ public class Enemy : MonoBehaviour
                 ScoreManager.scoreManager.killsEnvironment++;
             }
 
+			Instantiate(deathPoofPrefab, transform.position, Quaternion.identity);
             GetComponent<LootTable>().LootEnemy();
             enemyMovement.agent.isStopped = true;
             StopAllCoroutines();
