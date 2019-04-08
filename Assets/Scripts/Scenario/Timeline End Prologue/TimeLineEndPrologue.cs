@@ -17,6 +17,7 @@ public class TimeLineEndPrologue : MonoBehaviour
         GameManager.gameManager.orb.GetComponent<OrbController>().canHitPlayer = false;
         GameManager.gameManager.UIManager.gameObject.SetActive(false);
         GameManager.gameManager.blackBands.SetActive(true);
+        GameObject.Find("SceneLoader").SetActive(false);
 
         director.Play();
         director.stopped += WhenEnded;
@@ -24,6 +25,7 @@ public class TimeLineEndPrologue : MonoBehaviour
 
     public void WhenEnded(PlayableDirector obj)
     {
-        SceneManager.LoadScene("test");
+        Debug.Log("End Prologue");
+        //SceneManager.LoadScene("test");
     }
 }
