@@ -65,6 +65,10 @@ public class OrbController : MonoBehaviour
 		{
 			SetFixedSpeedCoefficient();
 			speed = Mathf.Clamp(speed, minSpeed, maxSpeed);
+            if (Vector3.Distance(GameManager.gameManager.player1.transform.position, GameManager.gameManager.player2.transform.position) > GameManager.gameManager.maxDistance - 0.1f)
+            {
+                fixedSpeedCoefficient = 1;
+            }
 			float fixedSpeed = speed * fixedSpeedCoefficient;
 
 			step = (fixedSpeed / BezierCurve.GetPlayersDistance()) * Time.fixedDeltaTime;

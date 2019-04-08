@@ -25,7 +25,7 @@ public class MainMenu : MonoBehaviour
     #endregion
 
     #region Scene variable
-    public string sceneToLoad;
+    public int sceneToLoad;
 
     #endregion
 

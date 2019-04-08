@@ -76,7 +76,7 @@ public class ArenaSystem : MonoBehaviour
             yield break;
         }
 
-        //GameManager.gameManager.UIManager.StartCoroutine(GameManager.gameManager.UIManager.AnnouceWave(waveIndex + 1));
+        GameManager.gameManager.UIManager.StartCoroutine(GameManager.gameManager.UIManager.AnnouceWave(waveIndex + 1));
         // ==== ARENA
         while (!arenaCleared)
         {
@@ -131,7 +131,7 @@ public class ArenaSystem : MonoBehaviour
                 arenaCleared = true;
             }
         }
-        
+        ScoreManager.scoreManager.Save();
         sceneLoader.GetComponent<IActivable>().Activate();
     }
 

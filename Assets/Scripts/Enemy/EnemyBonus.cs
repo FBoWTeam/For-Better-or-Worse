@@ -22,21 +22,15 @@ public class EnemyBonus : MonoBehaviour
 	public float deactivationDuration;
 	[DrawIf(new string[] { "bonus" }, Bonus.Mirror)]
 	public float knockbackForce;
-    [DrawIf(new string[] { "bonus" }, Bonus.Mirror)]
-    public int mirrorHealth;
 
-    public Coroutine shieldDeactivatedCoroutine;
-
-    // Start is called before the first frame update
-    void Start()
+	// Start is called before the first frame update
+	void Start()
     {
 		if (bonus == Bonus.Mirror)
 		{
 			mirrorChild = Instantiate(mirrorPrefab, transform);
 			mirrorChild.GetComponent<Mirror>().knockbackForce = knockbackForce;
-            mirrorChild.GetComponent<Mirror>().mirrorHealth = mirrorHealth;
-
-        }
+		}
     }
 
     //comment
@@ -51,11 +45,8 @@ public class EnemyBonus : MonoBehaviour
 	{
 		if (other.CompareTag("Orb") && bonus == Bonus.Mirror)
 		{
-            if (shieldDeactivatedCoroutine != null)
-            {
-                StopCoroutine(DeactivateShieldCoroutine());
-            }
-            shieldDeactivatedCoroutine = StartCoroutine(DeactivateShieldCoroutine());
+			StopCoroutine(DeactivateShieldCoroutine());
+			StartCoroutine(DeactivateShieldCoroutine());
 		}
 	}
 }
