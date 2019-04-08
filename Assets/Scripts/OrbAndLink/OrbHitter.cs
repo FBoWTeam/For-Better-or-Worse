@@ -136,25 +136,7 @@ public class OrbHitter : MonoBehaviour
 			string mode = GetComponent<PlayerController>().player1 ? "player1" : "player2";
 			orbController.GetComponent<PowerController>().ActivatePower(powerToApply, mode);
             powerToApply = GameManager.PowerType.None;
-        }
-        
-        if (orbController.GetComponent<PowerController>().behaviouralPower == GameManager.PowerType.Shield && orbController.GetComponent<PowerController>().currentShieldStack > 0)
-        {
-            if (gameObject.GetComponent<PlayerController>().player1)
-            {
-                GameManager.gameManager.shieldP1 = orbController.GetComponent<PowerController>().shieldAmount;
-                orbController.GetComponent<PowerController>().currentShieldStack--;
-            }
-            else if (!gameObject.GetComponent<PlayerController>().player1)
-            {
-                GameManager.gameManager.shieldP2 = orbController.GetComponent<PowerController>().shieldAmount;
-                orbController.GetComponent<PowerController>().currentShieldStack--;
-            }
-        }
-        else if (orbController.GetComponent<PowerController>().behaviouralPower == GameManager.PowerType.Shield && orbController.GetComponent<PowerController>().currentShieldStack <= 0)
-        {
-            orbController.GetComponent<PowerController>().DeactivatePower(GameManager.PowerType.Shield);
-        }
+        }        
     }
 
 	/// <summary>

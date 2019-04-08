@@ -88,6 +88,14 @@ public class BossSystem : MonoBehaviour
     public float fireBallRangeExplosion;
     public float fireBallSpeed;
 
+    [Header("[Mystic Line Params]")]
+    public GameObject mysticLinePrefab;
+    public int mysticLineHeight;
+    public int mysticLineWidth;
+    public float lifeTime;
+    public GameObject pivotLeft;
+    public GameObject pivotRight;
+    private bool isMysticLineCreated;
 
     [Header("[Charge Params]")]
     public float chargeCastingTime;
@@ -123,12 +131,9 @@ public class BossSystem : MonoBehaviour
     {
         hp = baseHP;
         isAttacking = false;
-        /*actualPhase = 0;
-        checkPhaseTransition();*/
-
-
-        actualPhase = 4;
-        probabilityTable = phase4;
+        actualPhase = 0;
+        checkPhaseTransition();
+        isMysticLineCreated = false;
     }
 
     private void Start()
@@ -151,13 +156,13 @@ public class BossSystem : MonoBehaviour
                 nextAttack = Time.time + Random.Range(minWaitTime, maxWaitTime);
             }
 
-            if(actualPhase == 4)
+            if (actualPhase == 4)
             {
                 Vector3 targetPos = aimedPlayer.transform.position;
                 targetPos.y += transform.position.y;
                 transform.LookAt(targetPos);
             }
-               
+
         }
     }
 
@@ -305,6 +310,89 @@ public class BossSystem : MonoBehaviour
 
         //canalisation + feedbacks
         yield return new WaitForSeconds(1.0f);
+
+        Vector3 raycastPosition = new Vector3(transform.position.x, 0, transform.position.z);
+        Vector3 direction;
+        RaycastHit hit;
+
+        //if (actualPhase < 2)
+        //{
+        //    if (!isMysticLineCreated)
+        //    {
+        //        direction = (new Vector3(aimedPlayer.transform.position.x, raycastPosition.y, aimedPlayer.transform.position.z)
+        //            - raycastPosition).normalized;
+
+        //        Debug.DrawRay(raycastPosition, direction * 50, Color.blue, 10);
+        //        if (Physics.Raycast(raycastPosition, direction, out hit, 50, LayerMask.GetMask("Wall")))
+        //        {
+        //            //Debug
+        //            print("Distance : " + hit.distance);
+        //            //float angle = Vector3.Angle(direction, transform.forward);
+        //            //print("Angle : " + angle);
+
+        //            Vector3 center = (raycastPosition + hit.transform.position) / 2;
+        //            center += new Vector3(0, mysticLineHeight / 2, 0);
+
+        //            StartCoroutine(CreateMysticLineCoroutine(center, hit.transform, hit.distance));
+        //        }
+        //    }
+
+        //}
+        Vector3 centerOfPlayers = (player1.transform.position + player2.transform.position) / 2;
+
+        direction = (new Vector3(centerOfPlayers.x, raycastPosition.y, centerOfPlayers.z)
+                - raycastPosition).normalized;
+        Debug.DrawRay(raycastPosition, direction * 50, Color.blue, 10);
+
+        if (Physics.Raycast(raycastPosition, direction, out hit, 50, LayerMask.GetMask("Wall")))
+        {
+            //print("Distance : " + hit.distance);
+            //float angle = Vector3.Angle(direction, transform.forward);
+            //print("Angle : " + angle);
+
+            Vector3 center = (raycastPosition + hit.transform.position) / 2;
+            center += new Vector3(0, mysticLineHeight / 2, 0);
+
+            StartCoroutine(CreateMysticLineCoroutine(center, hit.transform.position, hit.distance));
+        }
+        if (Physics.Raycast(raycastPosition, -direction, out hit, 50, LayerMask.GetMask("Wall")))
+        {
+            //print("Distance : " + hit.distance);
+
+            Vector3 center = (raycastPosition + hit.transform.position) / 2;
+            center += new Vector3(0, mysticLineHeight / 2, 0);
+
+            StartCoroutine(CreateMysticLineCoroutine(center, hit.transform.position, hit.distance));
+        }
+
+        isAttacking = false;
+    }
+
+    public IEnumerator CreateMysticLineCoroutine(Vector3 position, Vector3 target, float length)
+    {
+        GameObject mysticLine = Instantiate(mysticLinePrefab, position, Quaternion.identity);
+        mysticLine.transform.LookAt(new Vector3(target.x, position.y, target.z));
+        //mysticLine.transform.localEulerAngles = new Vector3(0, angle, 0);
+        mysticLine.transform.localScale = new Vector3(mysticLineWidth, mysticLineHeight, length);
+
+        isMysticLineCreated = true;
+
+        yield return new WaitForSeconds(lifeTime);
+
+        Destroy(mysticLine.gameObject);
+        isMysticLineCreated = false;
+    }
+
+    //======================================================================================== SHRINK MYSTIC LINES
+
+    public IEnumerator ShrinkMysticLinesCoroutine()
+    {
+        isAttacking = true;
+
+        Debug.Log("Shrink MysticLines");
+
+        //canalisation + feedbacks
+        yield return new WaitForSeconds(1.0f);
         //boom
 
         isAttacking = false;
@@ -334,7 +422,7 @@ public class BossSystem : MonoBehaviour
             fireBall.Init(fireBallDamage, fireBallDamageExplosion, fireBallRangeExplosion, fireBallSpeed);
             travelTime = fireBall.Launch(target + new Vector3(0f, 1.5f, 0f), fireBallStartingPoint);//offset so the fireball aims for the body of the player and not his/her feet
         }
-        
+
         //show indicator feedback
         //instanciate the fireball indicator
         GameObject fireBallIndicator = Instantiate(fireBallProjector, target + new Vector3(0f, 1.5f, 0f), Quaternion.identity) as GameObject;
@@ -349,7 +437,7 @@ public class BossSystem : MonoBehaviour
             fireBallIndicator.transform.GetChild(0).gameObject.GetComponent<Projector>().material.color = tempColor;
             yield return new WaitForEndOfFrame();
         }
-        
+
 
         yield return new WaitUntil(() => fireBall.isDestroyed);
         Destroy(fireBallIndicator);
@@ -397,21 +485,6 @@ public class BossSystem : MonoBehaviour
 
         Destroy(circleIndicator);
         yield return new WaitForSeconds(1.0f);
-
-        isAttacking = false;
-    }
-
-    //======================================================================================== SHRINK MYSTIC LINES
-
-    public IEnumerator ShrinkMysticLinesCoroutine()
-    {
-        isAttacking = true;
-
-        Debug.Log("Shrink MysticLines");
-
-        //canalisation + feedbacks
-        yield return new WaitForSeconds(1.0f);
-        //boom
 
         isAttacking = false;
     }
@@ -503,12 +576,12 @@ public class BossSystem : MonoBehaviour
         RaycastHit hit;
         int layerMask = 1 << 11;//to only hit the walls
 
-        if(Physics.Raycast(posStart, vectCharge, out hit, vectCharge.magnitude + chargeOffset, layerMask))
+        if (Physics.Raycast(posStart, vectCharge, out hit, vectCharge.magnitude + chargeOffset, layerMask))
         {
             willBeStun = true;
             newTarget = hit.point - 2f * vectCharge.normalized;
-        }         
-        
+        }
+
         float distCharge = vectCharge.magnitude;
         float chargeTime = distCharge / chargeSpeed;
 
@@ -517,13 +590,13 @@ public class BossSystem : MonoBehaviour
         //instanciate the charge indicator
         GameObject chargeIndicator = Instantiate(chargeProjector, transform.position + vectCharge / 2f + (chargeOffset / 2f) * vectCharge.normalized, Quaternion.identity) as GameObject;
         float yComp = 0f;
-        if(vectCharge.x < 0)
+        if (vectCharge.x < 0)
         {
             yComp = Vector3.Angle(new Vector3(0f, 0f, -1f), vectCharge);
         }
         else
         {
-            yComp = - Vector3.Angle(new Vector3(0f, 0f, -1f), vectCharge);
+            yComp = -Vector3.Angle(new Vector3(0f, 0f, -1f), vectCharge);
 
         }
         chargeIndicator.transform.eulerAngles = new Vector3(0f, yComp + 90f, 0f);
@@ -551,7 +624,7 @@ public class BossSystem : MonoBehaviour
             yield return new WaitForEndOfFrame();
         }
 
-        if(willBeStun)
+        if (willBeStun)
         {
             willBeStun = false;
             isStun = true;
@@ -658,6 +731,6 @@ public class BossSystem : MonoBehaviour
             Debug.DrawLine(position, destination + position, Color.red, 10f);
         }
     }
-    
+
 
 }
