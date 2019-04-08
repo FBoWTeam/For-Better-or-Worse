@@ -96,11 +96,15 @@ public class Door : MonoBehaviour, IActivable
         if (doorCurrentCharge < doorMaxCharge)
         {
             doorCurrentCharge += chargingAmount;
-            if (doorCurrentCharge >= doorMaxCharge && isActive == false)
+            if (doorCurrentCharge >= doorMaxCharge)
             {
                 doorCurrentCharge = doorMaxCharge;
-                GetComponentInParent<Animation>().Play("DoorOpen");
-                isActive = true;
+                if (isActive == false && CheckValidObjects())
+                {
+                    GetComponentInParent<Animation>().Play("DoorOpen");
+                    isActive = true;
+                }
+
             }
         }
     }
