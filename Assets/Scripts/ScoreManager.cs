@@ -52,11 +52,6 @@ public class ScoreManager : MonoBehaviour
 
     private int numberOfPlayer;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        //StartCoroutine(StatPrintCoroutine(timeToWait));
-    }
 
     // Update is called once per frame
     void Update()
@@ -142,5 +137,16 @@ public class ScoreManager : MonoBehaviour
 
         sw.Close();
     }
+
+
+    float CalculatePrologueScore()
+    {
+        float timeScore = 1 / (0.00007f * completionTime);
+        float bonus = timeScore + maxCombo + (statusAilmentApplied + enemyMirrorBroken + killsP1 + killsP2) / 2;
+        float malus = (damageTakenP1 + damageTakenP2) / 50 + (orbHitMissedP1 + orbHitMissedP2) / 10 + numberOfDeaths * 5;
+        float result = bonus - malus;
+        return result;
+    }
+
 
 }
