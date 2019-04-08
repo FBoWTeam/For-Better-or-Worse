@@ -45,17 +45,19 @@ public class RoomSystem : MonoBehaviour, IActivable
             }
             instantiateWait = true;
         }
-
-        CleanNullInEnemyList();
-        if (!roomCleared && enemies.Count == 0)
+        else
         {
-            this.Activate();
-        }
-        else if (numberPlayerPresent == 0 && !playerLeft && enemies.Count == 0)
-        {
-            if (nextRoom != null && nextRoom.GetComponent<RoomSystem>().numberPlayerPresent == 2)
+            CleanNullInEnemyList();
+            if (!roomCleared && enemies.Count == 0)
             {
-                this.Deactivate();
+                this.Activate();
+            }
+            else if (numberPlayerPresent == 0 && !playerLeft && enemies.Count == 0)
+            {
+                if (nextRoom != null && nextRoom.GetComponent<RoomSystem>().numberPlayerPresent == 2)
+                {
+                    this.Deactivate();
+                }
             }
         }
     }
