@@ -691,6 +691,7 @@ public class PowerController : MonoBehaviour
         int tickDamage = Mathf.RoundToInt(totalDamage / duration);
         int curentDamage = 0;
 
+		target.GetComponent<Enemy>().VFX.transform.GetChild(0).gameObject.SetActive(true);
 		while (curentDamage < totalDamage)
 		{
             if (target.GetComponent<Enemy>() != null)
@@ -705,6 +706,7 @@ public class PowerController : MonoBehaviour
 			yield return new WaitForSeconds(1f);
 			curentDamage += tickDamage;
 		}
+		target.GetComponent<Enemy>().VFX.transform.GetChild(0).gameObject.SetActive(false);
 	}
 
     #endregion
