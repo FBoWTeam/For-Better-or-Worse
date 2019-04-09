@@ -46,7 +46,7 @@ public class EnemyWaveSystem : MonoBehaviour,IActivable
         while (!enemiesDefeated)
         {
             //instanciate the wave at the index currentWave 
-            GameObject wave = Instantiate(enemyWaves[currentWave], transform.position, Quaternion.identity);
+            GameObject wave = Instantiate(enemyWaves[currentWave], transform.position, Quaternion.identity, this.transform);
 
             //if the enemies of the current wave is not defeated or if the timer is still under the limit timeBetweenWaves => doesn't instanciate the next wave
             while (wave.transform.childCount != 0 && timer < timeBetweenWaves)
