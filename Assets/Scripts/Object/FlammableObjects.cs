@@ -9,6 +9,9 @@ public class FlammableObjects : MonoBehaviour, IActivable
 
     private bool isBurning;
 
+    [HideInInspector]
+    public bool isDestroyedByFire = false;
+
     public bool isActive { get; set; }
 
     private void OnTriggerEnter(Collider other)
@@ -37,6 +40,12 @@ public class FlammableObjects : MonoBehaviour, IActivable
 		transform.GetChild(0).gameObject.SetActive(true);
         //gameObject.GetComponent<Renderer>().material.color = Color.red;
         Destroy(gameObject, burnTime);
+    }
+
+    IEnumerator FireCoroutine()
+    {
+        yield return new WaitForSeconds(burnTime);
+        isDestroyedByFire = true;
     }
 }
 
