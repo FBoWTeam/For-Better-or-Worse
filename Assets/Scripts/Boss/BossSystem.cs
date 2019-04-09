@@ -98,7 +98,10 @@ public class BossSystem : MonoBehaviour
     private bool isMysticLineCreated;
     private bool isShrinkMysticLineCreated;
     private bool isShrinking;
+    private bool isLeft;
     public float shrinkDuration;
+    public float limitAngle;
+    private float angle;
 
     [Header("[Charge Params]")]
     public float chargeCastingTime;
@@ -145,6 +148,7 @@ public class BossSystem : MonoBehaviour
     {
         player1 = GameManager.gameManager.player1;
         player2 = GameManager.gameManager.player2;
+
     }
 
     // Update is called once per frame
@@ -168,6 +172,8 @@ public class BossSystem : MonoBehaviour
                 transform.LookAt(targetPos);
             }
         }
+
+
     }
 
     //======================================================================================== SET FOCUS
@@ -329,7 +335,7 @@ public class BossSystem : MonoBehaviour
             {
                 //Debug
                 //print("Distance : " + hit.distance);
-                Debug.DrawRay(raycastPosition, direction * 50, Color.blue, 2);
+                //Debug.DrawRay(raycastPosition, direction * 50, Color.blue, 2);
                 //float angle = Vector3.Angle(direction, transform.forward);
                 //print("Angle : " + angle);
 
@@ -384,8 +390,8 @@ public class BossSystem : MonoBehaviour
                 Vector3 center1 = (raycastPosition + hit.transform.position) / 2;
                 center1 += new Vector3(0, mysticLineHeight / 2, 0);
 
+                pivotLeft.transform.LookAt(new Vector3(hit.transform.position.x, center1.y, hit.transform.position.z));
                 GameObject shrinkMysticLine1 = Instantiate(mysticLinePrefab, center1, Quaternion.identity, pivotLeft.transform);
-                shrinkMysticLine1.transform.LookAt(new Vector3(hit.transform.position.x, center1.y, hit.transform.position.z));
                 shrinkMysticLine1.transform.localScale = new Vector3(mysticLineWidth / transform.localScale.x, mysticLineHeight / transform.localScale.y, hit.distance / transform.localScale.z);
 
                 //Only use for the hit.distance
@@ -395,35 +401,51 @@ public class BossSystem : MonoBehaviour
                 Vector3 center2 = (raycastPosition + hit.transform.position) / 2;
                 center2 += new Vector3(0, mysticLineHeight / 2, 0);
 
+                pivotRight.transform.LookAt(new Vector3(hit.transform.position.x, center2.y, hit.transform.position.z));
                 GameObject shrinkMysticLine2 = Instantiate(mysticLinePrefab, center2, Quaternion.identity, pivotRight.transform);
-                shrinkMysticLine2.transform.LookAt(new Vector3(hit.transform.position.x, center2.y, hit.transform.position.z));
                 shrinkMysticLine2.transform.localScale = new Vector3(mysticLineWidth / transform.localScale.x, mysticLineHeight / transform.localScale.y, hit.distance / transform.localScale.z);
 
                 isShrinkMysticLineCreated = true;
             }
         }
 
-        if(!isShrinking && aimedPlayer != null)
+        if (!isShrinking && aimedPlayer != null)
         {
             isShrinking = true;
             //StartCoroutine(ShrinkCoroutine(aimedPlayer.transform.position));
         }
     }
 
-    //public IEnumerator ShrinkCoroutine(Vector3 target)
-    //{
-    //    Vector3 playerPos = target - pivotLeft.transform.position;
-    //    float angle = Vector3.SignedAngle(pivotLeft.transform.forward, playerPos, target);
+    public IEnumerator ShrinkCoroutine(Vector3 target)
+    {
+        Vector3 playerDir = target - pivotLeft.transform.position;
+        angle = Vector3.SignedAngle(pivotLeft.transform.forward, playerDir, Vector3.up);
+        isLeft = (angle < 0) ? true : false;
 
-    //    Vector3 velocity = Vector3.zero;
-    //    pivotLeft.transform.eulerAngles = Vector3.SmoothDamp(pivotLeft.transform.position, target, ref velocity, 0.3f);
+        print("Angle : " + angle);
 
-    //    print("Angle : " + angle);
+        if (isLeft)
+        {
+            while (angle < -limitAngle)
+            {
+                print("move to left");
+                pivotLeft.transform.eulerAngles += Vector3.up;
+                yield return new WaitForSeconds(1.0f);
+                yield return StartCoroutine(ShrinkCoroutine(target));
+            }
+        }
+        else
+        {
+            while (angle > limitAngle)
+            {
+                print("move 2");
+                pivotLeft.transform.eulerAngles -= Vector3.up;
+                yield return new WaitForSeconds(1.0f);
+                yield return StartCoroutine(ShrinkCoroutine(target));
+            }
 
-    //    yield return new WaitForSeconds(5.0f);
-    //    yield return StartCoroutine(ShrinkCoroutine(target));
-
-    //}
+        }
+    }
 
 
     //======================================================================================== FIREBALL
