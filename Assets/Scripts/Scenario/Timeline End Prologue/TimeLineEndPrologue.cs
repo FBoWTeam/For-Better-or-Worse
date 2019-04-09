@@ -19,10 +19,8 @@ public class TimeLineEndPrologue : MonoBehaviour
         GameManager.gameManager.UIManager.gameObject.SetActive(false);
         GameManager.gameManager.blackBands.SetActive(true);
         GameObject.Find("SceneLoader").SetActive(false);
-        GameObject.Find("Wave_impact(Clone)").SetActive(false);
-        GameObject.Find("Wave_Sniper(Clone)").SetActive(false);
-        GameObject.Find("Wave_Shield(Clone)").SetActive(false);
-        GameObject.Find("Wave_miniboss(Clone)").SetActive(false);
+        GameObject.Find("Enemy_wave").SetActive(false);
+        GameObject.Find("Ennemis").SetActive(false);
         GameManager.gameManager.player1.GetComponent<CapsuleCollider>().isTrigger = true;
         GameManager.gameManager.player2.GetComponent<CapsuleCollider>().isTrigger = true;
 
