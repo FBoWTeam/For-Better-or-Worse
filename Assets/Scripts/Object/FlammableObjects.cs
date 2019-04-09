@@ -23,7 +23,7 @@ public class FlammableObjects : MonoBehaviour, IActivable
                     this.Activate();
                 }
             }
-            else if (orbPower.elementalPower == GameManager.PowerType.None && isBurning)
+            else if (isBurning)
             {
                 orbPower.ActivatePower(GameManager.PowerType.Fire, "forced");
             }
