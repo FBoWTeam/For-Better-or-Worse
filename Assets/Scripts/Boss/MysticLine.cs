@@ -19,8 +19,6 @@ public class MysticLine : MonoBehaviour
             //Vector3 knockDirection = transform.localEulerAngles + new Vector3(0, 90, 0); 
             if (collision.gameObject.CompareTag("Player"))
             {
-
-                Instantiate(new GameObject(), collision.transform.position, Quaternion.identity);
                 GameManager.gameManager.TakeDamage(collision.gameObject, damage, collision.transform.position, true);
             }
         }

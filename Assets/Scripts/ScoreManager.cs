@@ -139,7 +139,7 @@ public class ScoreManager : MonoBehaviour
     }
 
 
-    float CalculatePrologueScore()
+    public float CalculatePrologueScore()
     {
         float timeScore = 1 / (0.00007f * completionTime);
         float bonus = timeScore + maxCombo + (statusAilmentApplied + enemyMirrorBroken + killsP1 + killsP2) / 2;
