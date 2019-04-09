@@ -388,6 +388,7 @@ public class BossSystem : MonoBehaviour
                 shrinkMysticLine1.transform.LookAt(new Vector3(hit.transform.position.x, center1.y, hit.transform.position.z));
                 shrinkMysticLine1.transform.localScale = new Vector3(mysticLineWidth / transform.localScale.x, mysticLineHeight / transform.localScale.y, hit.distance / transform.localScale.z);
 
+                //Only use for the hit.distance
                 Physics.Raycast(raycastPosition, -direction, out hit, 50, LayerMask.GetMask("Wall"));
                 Debug.DrawRay(raycastPosition, -direction * 50, Color.red, 2);
 
