@@ -145,7 +145,7 @@ public class ScoreManager : MonoBehaviour
         float bonus = timeScore + maxCombo + (statusAilmentApplied + enemyMirrorBroken + killsP1 + killsP2) / 2;
         float malus = (damageTakenP1 + damageTakenP2) / 50 + (orbHitMissedP1 + orbHitMissedP2) / 10 + numberOfDeaths * 5;
         float result = bonus - malus;
-        return result;
+        return result * 10000f;
     }
 
 

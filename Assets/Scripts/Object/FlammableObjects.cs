@@ -9,6 +9,9 @@ public class FlammableObjects : MonoBehaviour, IActivable
 
     private bool isBurning;
 
+    [HideInInspector]
+    public bool isDestroyedByFire = false;
+
     public bool isActive { get; set; }
 
     private void OnTriggerEnter(Collider other)
@@ -23,7 +26,7 @@ public class FlammableObjects : MonoBehaviour, IActivable
                     this.Activate();
                 }
             }
-            else if (orbPower.elementalPower == GameManager.PowerType.None && isBurning)
+            else if (isBurning)
             {
                 orbPower.ActivatePower(GameManager.PowerType.Fire, "forced");
             }
@@ -36,7 +39,17 @@ public class FlammableObjects : MonoBehaviour, IActivable
         isBurning = true;
 		transform.GetChild(0).gameObject.SetActive(true);
         //gameObject.GetComponent<Renderer>().material.color = Color.red;
+        StartCoroutine(FireCoroutine());
+        Debug.Log("coroutine");
         Destroy(gameObject, burnTime);
+    }
+
+    IEnumerator FireCoroutine()
+    {
+        Debug.Log(burnTime - 0.01f);
+        yield return new WaitForSeconds(burnTime - 1f);
+        isDestroyedByFire = true;
+        Debug.Log("detruit par le feu");
     }
 }
 

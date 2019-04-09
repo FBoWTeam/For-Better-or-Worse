@@ -6,6 +6,7 @@ public class LaunchTimeLineEndPrologue : MonoBehaviour
 {
     private void OnDestroy()
     {
-        GameObject.Find("TimelineEnd").GetComponent<TimeLineEndPrologue>().Initialize();
+        if(GetComponent<FlammableObjects>().isDestroyedByFire)
+            GameObject.Find("TimelineEnd").GetComponent<TimeLineEndPrologue>().Initialize();
     }
 }
