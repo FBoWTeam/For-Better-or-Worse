@@ -40,16 +40,13 @@ public class FlammableObjects : MonoBehaviour, IActivable
 		transform.GetChild(0).gameObject.SetActive(true);
         //gameObject.GetComponent<Renderer>().material.color = Color.red;
         StartCoroutine(FireCoroutine());
-        Debug.Log("coroutine");
         Destroy(gameObject, burnTime);
     }
 
     IEnumerator FireCoroutine()
     {
-        Debug.Log(burnTime - 0.01f);
-        yield return new WaitForSeconds(burnTime - 1f);
+        yield return new WaitForSeconds(burnTime - 0.1f);
         isDestroyedByFire = true;
-        Debug.Log("detruit par le feu");
     }
 }
 
