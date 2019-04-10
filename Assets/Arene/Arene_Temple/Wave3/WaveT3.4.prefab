@@ -43,21 +43,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 4441984158128911616}
     m_Modifications:
-    - target: {fileID: 653001373897288500, guid: 27baea79906476f4ca4f841dc46311cd,
-        type: 3}
-      propertyPath: puddle
-      value: 
-      objectReference: {fileID: 4985460314402858058, guid: c0169421189211d439b89373a6f849f8,
-        type: 3}
     - target: {fileID: 6477808402507711506, guid: 27baea79906476f4ca4f841dc46311cd,
         type: 3}
       propertyPath: m_Name
       value: EnemyRanged Moving AOE Variant
-      objectReference: {fileID: 0}
-    - target: {fileID: 6477808402507711532, guid: 27baea79906476f4ca4f841dc46311cd,
-        type: 3}
-      propertyPath: m_Enabled
-      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6477808402507711533, guid: 27baea79906476f4ca4f841dc46311cd,
         type: 3}
@@ -114,6 +103,17 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6477808402507711532, guid: 27baea79906476f4ca4f841dc46311cd,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 653001373897288500, guid: 27baea79906476f4ca4f841dc46311cd,
+        type: 3}
+      propertyPath: puddle
+      value: 
+      objectReference: {fileID: 4985460314402858058, guid: c0169421189211d439b89373a6f849f8,
+        type: 3}
     - target: {fileID: 493969120059224611, guid: 27baea79906476f4ca4f841dc46311cd,
         type: 3}
       propertyPath: chanceOfHealing
@@ -139,6 +139,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 4441984158128911616}
     m_Modifications:
+    - target: {fileID: 4205728391272827244, guid: 45e9dc3e264d72b43a000770c6a8f38f,
+        type: 3}
+      propertyPath: m_Name
+      value: EnemyImpact Variant
+      objectReference: {fileID: 0}
     - target: {fileID: 4205728391272827219, guid: 45e9dc3e264d72b43a000770c6a8f38f,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -194,16 +199,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 4205728391272827244, guid: 45e9dc3e264d72b43a000770c6a8f38f,
-        type: 3}
-      propertyPath: m_Name
-      value: EnemyImpact Variant
-      objectReference: {fileID: 0}
-    - target: {fileID: 4205728391272827218, guid: 45e9dc3e264d72b43a000770c6a8f38f,
-        type: 3}
-      propertyPath: m_Enabled
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 7305574820202200925, guid: 45e9dc3e264d72b43a000770c6a8f38f,
         type: 3}
       propertyPath: chanceOfPowerDrop
@@ -212,6 +207,11 @@ PrefabInstance:
     - target: {fileID: 7305574820202200925, guid: 45e9dc3e264d72b43a000770c6a8f38f,
         type: 3}
       propertyPath: droppedPower
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4205728391272827218, guid: 45e9dc3e264d72b43a000770c6a8f38f,
+        type: 3}
+      propertyPath: m_Enabled
       value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
@@ -233,11 +233,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: EnemyRanged Moving Variant (1)
-      objectReference: {fileID: 0}
-    - target: {fileID: 6477808402507711532, guid: aeec04d53fd59b5489454a10db22ef8d,
-        type: 3}
-      propertyPath: m_Enabled
-      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6477808402507711533, guid: aeec04d53fd59b5489454a10db22ef8d,
         type: 3}
@@ -293,6 +288,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477808402507711532, guid: aeec04d53fd59b5489454a10db22ef8d,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 493969120059224611, guid: aeec04d53fd59b5489454a10db22ef8d,
         type: 3}
@@ -402,12 +402,12 @@ PrefabInstance:
     - target: {fileID: 6587450332966863288, guid: 282d41c7f4435ea4a8184e3051e903a7,
         type: 3}
       propertyPath: m_havePropertiesChanged
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6587450332966863288, guid: 282d41c7f4435ea4a8184e3051e903a7,
         type: 3}
       propertyPath: m_isInputParsingRequired
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 282d41c7f4435ea4a8184e3051e903a7, type: 3}
@@ -424,6 +424,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 4441984158128911616}
     m_Modifications:
+    - target: {fileID: 4205728391272827244, guid: 45e9dc3e264d72b43a000770c6a8f38f,
+        type: 3}
+      propertyPath: m_Name
+      value: EnemyImpact Variant (1)
+      objectReference: {fileID: 0}
     - target: {fileID: 4205728391272827219, guid: 45e9dc3e264d72b43a000770c6a8f38f,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -479,16 +484,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 4205728391272827244, guid: 45e9dc3e264d72b43a000770c6a8f38f,
-        type: 3}
-      propertyPath: m_Name
-      value: EnemyImpact Variant (1)
-      objectReference: {fileID: 0}
-    - target: {fileID: 4205728391272827218, guid: 45e9dc3e264d72b43a000770c6a8f38f,
-        type: 3}
-      propertyPath: m_Enabled
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 7305574820202200925, guid: 45e9dc3e264d72b43a000770c6a8f38f,
         type: 3}
       propertyPath: droppedPower
@@ -498,6 +493,11 @@ PrefabInstance:
         type: 3}
       propertyPath: chanceOfPowerDrop
       value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4205728391272827218, guid: 45e9dc3e264d72b43a000770c6a8f38f,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 45e9dc3e264d72b43a000770c6a8f38f, type: 3}
@@ -519,11 +519,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: EnemyRanged Moving Variant
       objectReference: {fileID: 0}
-    - target: {fileID: 6477808402507711532, guid: aeec04d53fd59b5489454a10db22ef8d,
-        type: 3}
-      propertyPath: m_Enabled
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 6477808402507711533, guid: aeec04d53fd59b5489454a10db22ef8d,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -579,15 +574,20 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6477808402507711532, guid: aeec04d53fd59b5489454a10db22ef8d,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 493969120059224611, guid: aeec04d53fd59b5489454a10db22ef8d,
         type: 3}
       propertyPath: chanceOfPowerDrop
-      value: 0.2
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 493969120059224611, guid: aeec04d53fd59b5489454a10db22ef8d,
         type: 3}
       propertyPath: droppedPower
-      value: 2
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: aeec04d53fd59b5489454a10db22ef8d, type: 3}
