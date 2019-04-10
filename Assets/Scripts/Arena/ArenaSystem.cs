@@ -94,10 +94,10 @@ public class ArenaSystem : MonoBehaviour
         yield return new WaitForSeconds(1f);
         countdownArena.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "1";
         yield return new WaitForSeconds(1f);
-        countdownArena.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "GO !";
+        countdownArena.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "";
         StartArena();
     }
-
+    
 
     void StartArena()
     {
