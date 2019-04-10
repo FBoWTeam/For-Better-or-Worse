@@ -47,23 +47,21 @@ public class ElectricPylon : MonoBehaviour, IActivable
 
             if (type == ElectricPylonType.Classic)
             {
-                //if the brazier is not active and the orb is on fire, set the brazier on and activates the object if not null
+                //if the electric pylon is not active and the orb is on fire, set the brazier on and activates the object if not null
                 if (!isActive && powerController.elementalPower == GameManager.PowerType.Electric)
                 {
                     this.Activate();
                 }
-                //if the brazier is active and the orb isn't, set the orb on fire
-                else if (isActive && powerController.elementalPower != GameManager.PowerType.Electric)
+                //if the electric pylon is active and the orb isn't (else refrech the duration of the power)
+                else if (isActive)
                 {
                     powerController.ActivatePower(GameManager.PowerType.Electric, "forced");
-                    //powerController.isActivatedByElectricPylon = true;
                 }
             }
 
             if (type == ElectricPylonType.ArenaElectricPylon)
             {
                 powerController.ActivatePower(GameManager.PowerType.Electric, "forced");
-                //powerController.isActivatedByElectricPylon = true;
                 Deactivate();
                 StartCoroutine(ReActivateArenaElectricPylon());
             }
