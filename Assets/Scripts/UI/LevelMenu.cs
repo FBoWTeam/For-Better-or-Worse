@@ -114,15 +114,30 @@ public class LevelMenu : MonoBehaviour
                     destPosIndex = indexPI[destPIIndex];
                 }
 
-                if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.Joystick1Button0))
+                if (Input.GetKeyDown(KeyCode.Joystick1Button0) || Input.GetKeyDown(KeyCode.Joystick2Button0) || Input.GetKeyDown(KeyCode.Return))
                 {
-                    if (curentPIIndex == 0)
-                        SceneManager.LoadScene("Prologue");
-                    if (curentPIIndex == 1)
-                        SceneManager.LoadScene("Jungle");
-                    if (curentPIIndex == 2)
-                        SceneManager.LoadScene("Boss");
+                    switch (curentPIIndex)
+                    {
+                        case 0:
+                            SceneManager.LoadScene("Prologue 1 final");
+                            break;
+                        case 1:
+                            SceneManager.LoadScene("Temple_Niveau1");
+                            break;
+                        case 2:
+                            SceneManager.LoadScene("Temple Niveau 2");
+                            break;
+                        case 3:
+                            SceneManager.LoadScene("Boss_Arene");
+                            break;
+                    }
                 }
+
+                if (Input.GetKeyDown(KeyCode.Joystick1Button1) || Input.GetKeyDown(KeyCode.Joystick2Button1) || Input.GetKeyDown(KeyCode.Backspace) || Input.GetKeyDown(KeyCode.Escape))
+                {
+                    SceneManager.LoadScene("Menu Scene");
+                }
+
             }
 
             if (curentPosIndex < destPosIndex)
@@ -136,7 +151,7 @@ public class LevelMenu : MonoBehaviour
                 StartCoroutine(GoToPreviousPos());
                 curentPIIndex = destPIIndex;
             }
-                        
+            
         }
     }
 
