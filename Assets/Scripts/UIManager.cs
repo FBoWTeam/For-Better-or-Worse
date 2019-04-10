@@ -41,7 +41,6 @@ public class UIManager : MonoBehaviour
 
     [Header("Taunt")]
     public GameObject tauntCooldownFox;
-    public GameObject tauntAvailableFox;
     public GameObject tauntCooldownRaccoon;
     
 
