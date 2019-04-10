@@ -330,7 +330,6 @@ public class BossSystem : MonoBehaviour
             direction = (new Vector3(aimedPlayer.transform.position.x, raycastPosition.y, aimedPlayer.transform.position.z)
                 - raycastPosition).normalized;
 
-
             if (Physics.Raycast(raycastPosition, direction, out hit, 50, LayerMask.GetMask("Wall")))
             {
                 //Debug
@@ -342,7 +341,7 @@ public class BossSystem : MonoBehaviour
                 Vector3 center = (raycastPosition + hit.transform.position) / 2;
                 center += new Vector3(0, mysticLineHeight / 2, 0);
 
-                StartCoroutine(CreateMysticLineCoroutine(center, hit.transform.position, hit.distance));
+                StartCoroutine(CreateMysticLineCoroutine(center, hit.transform.position, hit.distance ));
             }
         }
         isAttacking = false;
