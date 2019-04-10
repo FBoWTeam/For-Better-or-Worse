@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 8022597918052352028}
   - component: {fileID: 8022597918052352027}
   - component: {fileID: 8022597918052352026}
+  - component: {fileID: 6432250603542499667}
   m_Layer: 0
   m_Name: Barrel
   m_TagString: Untagged
@@ -87,7 +88,7 @@ CapsuleCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8022597918052352025}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   m_Radius: 0.7729134
   m_Height: 1.9470038
@@ -109,3 +110,19 @@ MonoBehaviour:
   damage: 15
   powerForce: 50
   TimeBeforeActivation: 3
+--- !u!208 &6432250603542499667
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8022597918052352025}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 0
+  m_Extents: {x: 0.763, y: 0.80100006, z: 0.763}
+  m_MoveThreshold: 0.1
+  m_Carve: 1
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0.001, y: 0.80100006, z: 0.003}
+  m_TimeToStationary: 0.5

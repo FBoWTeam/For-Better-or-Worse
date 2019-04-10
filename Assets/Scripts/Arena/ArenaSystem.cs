@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class ArenaSystem : MonoBehaviour
@@ -57,17 +58,56 @@ public class ArenaSystem : MonoBehaviour
     //enemies currently alive in the arena
     private List<GameObject> remainingEnemiesList;
 
+    private bool start;
+
+    public List<GameObject> arenaCanvas;
+    public GameObject countdownArena;
+
     private void Start()
     {
         waveIndex = 0;
         subWaveIndex = 0;
         timer = 0f;
         remainingEnemiesList = new List<GameObject>();
-        StartCoroutine(WaveSystem());
         increaseChanceValue = 100f / ((waveList.Count - threshold));
-        GameManager.gameManager.UIManager.UpdateWave(waveIndex + 1);
     }
 
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Player"))
+        {
+            StartCoroutine(CountDown());
+            GetComponent<BoxCollider>().enabled = false;
+        }
+    }
+
+    IEnumerator CountDown()
+    {
+        countdownArena.SetActive(true);
+        countdownArena.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "5";
+        yield return new WaitForSeconds(1f);
+        countdownArena.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "4";
+        yield return new WaitForSeconds(1f);
+        countdownArena.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "3";
+        yield return new WaitForSeconds(1f);
+        countdownArena.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "2";
+        yield return new WaitForSeconds(1f);
+        countdownArena.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "1";
+        yield return new WaitForSeconds(1f);
+        countdownArena.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "GO !";
+        StartArena();
+    }
+
+
+    void StartArena()
+    {
+        for (int i = 0; i < arenaCanvas.Count; i++)
+        {
+            arenaCanvas[i].SetActive(true);
+        }
+        StartCoroutine(WaveSystem());
+        GameManager.gameManager.UIManager.UpdateWave(waveIndex + 1);
+    }
 
     IEnumerator WaveSystem()
     {
@@ -101,14 +141,15 @@ public class ArenaSystem : MonoBehaviour
                     timer = 0;
                     GameManager.gameManager.UIManager.UpdateSubWave(subWaveIndex + 1);
                     subWaveIndex++;
-                    
+                    Debug.Log("Next SubWave");
+
                 }
 
                 SpawnBoss();
 
                 if (waveCleared())
                 {
-                    //Debug.Log("Next Wave");
+                    Debug.Log("Next Wave");
                     while (timer < waveList[waveIndex].timeBeforeNextWave)
                     {
                         timer += Time.deltaTime;
