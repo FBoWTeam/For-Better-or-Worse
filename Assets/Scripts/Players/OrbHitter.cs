@@ -67,6 +67,7 @@ public class OrbHitter : MonoBehaviour
                     orbController.combo++;
                     orbController.hasHitEnemy = false;
                 }
+				orbController.StartCoroutine(orbController.HitBoostCoroutine());
                 //Update combo UI
                 GameManager.gameManager.UIManager.UpdateCombo(orbController.combo);
 
