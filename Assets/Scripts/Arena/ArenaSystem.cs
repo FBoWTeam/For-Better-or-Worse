@@ -57,17 +57,21 @@ public class ArenaSystem : MonoBehaviour
     //enemies currently alive in the arena
     private List<GameObject> remainingEnemiesList;
 
-    private void Start()
+    private bool start;
+    
+    private void OnTriggerEnter(Collider other)
     {
-        waveIndex = 0;
-        subWaveIndex = 0;
-        timer = 0f;
-        remainingEnemiesList = new List<GameObject>();
-        StartCoroutine(WaveSystem());
-        increaseChanceValue = 100f / ((waveList.Count - threshold));
-        GameManager.gameManager.UIManager.UpdateWave(waveIndex + 1);
+        if (other.CompareTag("Player"))
+        {
+            waveIndex = 0;
+            subWaveIndex = 0;
+            timer = 0f;
+            remainingEnemiesList = new List<GameObject>();
+            StartCoroutine(WaveSystem());
+            increaseChanceValue = 100f / ((waveList.Count - threshold));
+            GameManager.gameManager.UIManager.UpdateWave(waveIndex + 1);
+        }
     }
-
 
     IEnumerator WaveSystem()
     {
