@@ -6,11 +6,24 @@ using UnityEngine.SceneManagement;
 
 public class SceneLoader : MonoBehaviour, IActivable
 {
-	public int sceneToLoad;
-	public bool player1, player2;
-	bool loading;
+    public enum LoaderType{
+        SceneLoader,
+        Teleporter
+    }
 
-	[Header("[UI References]")]
+    public LoaderType type;
+
+    [DrawIf(new string[] { "type" }, LoaderType.SceneLoader)]
+    public int sceneToLoad;
+    
+    [DrawIf(new string[] { "type" }, LoaderType.Teleporter)]
+    public GameObject nextLocation;
+
+
+    public bool player1, player2;
+    bool loading;
+
+    [Header("[UI References]")]
 	public Canvas charactersHead;
 
 	public Image fox, racoon;
@@ -26,7 +39,14 @@ public class SceneLoader : MonoBehaviour, IActivable
 		charactersHead.transform.LookAt(Camera.main.transform);
 		if (player1 && player2 && !loading)
 		{
-			StartCoroutine(loadSceneCoroutine());
+            if (type == LoaderType.SceneLoader)
+            {
+                StartCoroutine(loadSceneCoroutine());
+            }
+            else if (type == LoaderType.Teleporter)
+            {
+                StartCoroutine(PlayerTeleportation());
+            }
 		}
 		else if (player1 || player2)
 		{
@@ -80,6 +100,15 @@ public class SceneLoader : MonoBehaviour, IActivable
 		yield return new WaitUntil(() => GameManager.gameManager.isPaused == false);
 		SceneManager.LoadScene(sceneToLoad);
 	}
+
+    IEnumerator PlayerTeleportation()
+    {
+        yield return new WaitForSeconds(0.5f);
+        StartCoroutine(GameManager.gameManager.FadeCoroutine("FadeIn"));
+        yield return new WaitUntil(() => GameManager.gameManager.isPaused == false);
+        GameManager.gameManager.player1.transform.position = nextLocation.transform.position + new Vector3(-5, 0, 0);
+        GameManager.gameManager.player2.transform.position = nextLocation.transform.position + new Vector3(5, 0, 0);
+    }
 
     public void Activate()
     {
