@@ -29,7 +29,6 @@ public class OrbController : MonoBehaviour
     public float veryHighFixedCoefficient;
 	float fixedSpeedCoefficient = 1.0f;
 
-
 	[Header("[Hit Boost]")]
 	public float speedBoostCoefficient;
 	public float boostDrainDuration;
@@ -37,7 +36,6 @@ public class OrbController : MonoBehaviour
 
     [Header("[Direction]")]
     public bool toPlayer2;
-
     public float progression;
     float step;
 
