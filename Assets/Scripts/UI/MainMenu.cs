@@ -8,7 +8,7 @@ using TMPro;
 using UnityEngine.EventSystems;
 
 
-public class MainMenu : MonoBehaviour
+public class MainMenu : MonoBehaviour, Selectable
 {
     TextMeshProUGUI currentTextPro;
 
@@ -30,6 +30,8 @@ public class MainMenu : MonoBehaviour
 
     #endregion
 
+    BaseEventData m_baseEvent;
+
     EventSystem eS;
 
     private void Start()
@@ -40,31 +42,30 @@ public class MainMenu : MonoBehaviour
 
         resolutions = Screen.resolutions;
 
-        for (int i = 0; i<resolutions.Length; i++)
+        for (int i = 0; i < resolutions.Length; i++)
         {
             string option = resolutions[i].width + " x " + resolutions[i].height;
             resOptions.Add(option);
 
-            if(resolutions[i].width == Screen.currentResolution.width &&
+            if (resolutions[i].width == Screen.currentResolution.width &&
                resolutions[i].height == Screen.currentResolution.height)
             {
                 currentIndexRes = i;
             }
         }
 
-        if(this.name == "ValueRes")
+        if (this.name == "ValueRes")
         {
             currentTextPro.SetText(resOptions[currentIndexRes]);
         }
     }
 
-    public void LoadScene ()
+    public void LoadScene()
     {
         SceneManager.LoadScene(sceneToLoad);
-        //eS.firstSelectedGameObject = ;
     }
 
-    public void QuitGame ()
+    public void QuitGame()
     {
         Debug.Log("QUIT");
         Application.Quit();
@@ -105,6 +106,11 @@ public class MainMenu : MonoBehaviour
     }
 
     #endregion
+
+    public void setRes()
+    {
+        
+    }
 
     public void SetFullscreen(bool isFullscreen)
     {
