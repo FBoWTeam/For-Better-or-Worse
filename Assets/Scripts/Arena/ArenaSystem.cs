@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class ArenaSystem : MonoBehaviour
@@ -60,6 +61,7 @@ public class ArenaSystem : MonoBehaviour
     private bool start;
 
     public List<GameObject> arenaCanvas;
+    public GameObject countdownArena;
 
     private void Start()
     {
@@ -81,7 +83,18 @@ public class ArenaSystem : MonoBehaviour
 
     IEnumerator CountDown()
     {
-        yield return new WaitForSeconds(5f);
+        countdownArena.SetActive(true);
+        countdownArena.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "5";
+        yield return new WaitForSeconds(1f);
+        countdownArena.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "4";
+        yield return new WaitForSeconds(1f);
+        countdownArena.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "3";
+        yield return new WaitForSeconds(1f);
+        countdownArena.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "2";
+        yield return new WaitForSeconds(1f);
+        countdownArena.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "1";
+        yield return new WaitForSeconds(1f);
+        countdownArena.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "GO !";
         StartArena();
     }
 
