@@ -58,19 +58,42 @@ public class ArenaSystem : MonoBehaviour
     private List<GameObject> remainingEnemiesList;
 
     private bool start;
-    
+
+    public List<GameObject> arenaCanvas;
+
+    private void Start()
+    {
+        waveIndex = 0;
+        subWaveIndex = 0;
+        timer = 0f;
+        remainingEnemiesList = new List<GameObject>();
+        increaseChanceValue = 100f / ((waveList.Count - threshold));
+    }
+
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))
         {
-            waveIndex = 0;
-            subWaveIndex = 0;
-            timer = 0f;
-            remainingEnemiesList = new List<GameObject>();
-            StartCoroutine(WaveSystem());
-            increaseChanceValue = 100f / ((waveList.Count - threshold));
-            GameManager.gameManager.UIManager.UpdateWave(waveIndex + 1);
+            StartCoroutine(CountDown());
+            GetComponent<BoxCollider>().enabled = false;
         }
+    }
+
+    IEnumerator CountDown()
+    {
+        yield return new WaitForSeconds(5f);
+        StartArena();
+    }
+
+
+    void StartArena()
+    {
+        for (int i = 0; i < arenaCanvas.Count; i++)
+        {
+            arenaCanvas[i].SetActive(true);
+        }
+        StartCoroutine(WaveSystem());
+        GameManager.gameManager.UIManager.UpdateWave(waveIndex + 1);
     }
 
     IEnumerator WaveSystem()
@@ -105,14 +128,15 @@ public class ArenaSystem : MonoBehaviour
                     timer = 0;
                     GameManager.gameManager.UIManager.UpdateSubWave(subWaveIndex + 1);
                     subWaveIndex++;
-                    
+                    Debug.Log("Next SubWave");
+
                 }
 
                 SpawnBoss();
 
                 if (waveCleared())
                 {
-                    //Debug.Log("Next Wave");
+                    Debug.Log("Next Wave");
                     while (timer < waveList[waveIndex].timeBeforeNextWave)
                     {
                         timer += Time.deltaTime;
