@@ -24,8 +24,8 @@ public class LevelMenu : MonoBehaviour
         curentPosIndex = 0;
         destPosIndex = 0;
         isMoving = false;
-        
-        pos.Add(new Vector3(202, 445, 0));//0-tower
+
+        /*pos.Add(new Vector3(202, 445, 0));//0-tower
         pos.Add(new Vector3(265, 445, 0));
         pos.Add(new Vector3(300, 390, 0));
         pos.Add(new Vector3(370, 390, 0));//3-fire
@@ -34,7 +34,18 @@ public class LevelMenu : MonoBehaviour
         pos.Add(new Vector3(540, 355, 0));
         pos.Add(new Vector3(610, 410, 0));//7-cave
         pos.Add(new Vector3(665, 405, 0));//8-rune
-        pos.Add(new Vector3(650, 360, 0));//9-jag
+        pos.Add(new Vector3(650, 360, 0));//9-jag*/
+
+        pos.Add(new Vector3(255, 570, 0));//0-tower
+        pos.Add(new Vector3(340, 570, 0));
+        pos.Add(new Vector3(390, 500, 0));
+        pos.Add(new Vector3(470, 500, 0));//3-fire
+        pos.Add(new Vector3(580, 480, 0));//4-lake
+        pos.Add(new Vector3(640, 465, 0));//5-croco
+        pos.Add(new Vector3(680, 455, 0));
+        pos.Add(new Vector3(780, 530, 0));//7-cave
+        pos.Add(new Vector3(850, 520, 0));//8-rune
+        pos.Add(new Vector3(835, 455, 0));//9-jag
         
         indexPI.Add(0);
         indexPI.Add(7);
@@ -75,23 +86,23 @@ public class LevelMenu : MonoBehaviour
                     switch (curentPIIndex)
                     {
                         case 0:
-                            SceneManager.LoadScene("Prologue 1 final");
+                            SceneManager.LoadScene(4);
                             break;
                         case 1:
-                            SceneManager.LoadScene("Temple_Niveau1");
+                            SceneManager.LoadScene(6);
                             break;
                         case 2:
-                            SceneManager.LoadScene("Temple_Niveau2");
+                            SceneManager.LoadScene(7);
                             break;
                         case 3:
-                            SceneManager.LoadScene("Boss_Arene");
+                            SceneManager.LoadScene(8);
                             break;
                     }
                 }
 
                 if (Input.GetKeyDown(KeyCode.Joystick1Button1) || Input.GetKeyDown(KeyCode.Joystick2Button1) || Input.GetKeyDown(KeyCode.Backspace) || Input.GetKeyDown(KeyCode.Escape))
                 {
-                    SceneManager.LoadScene("MenuScene");
+                    SceneManager.LoadScene(2);
                 }
 
             }
