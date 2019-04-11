@@ -18,9 +18,8 @@ public class ScoreManager : MonoBehaviour
     
 
     public GameMode gameMode;
-
-    [DrawIf(new string[] { "gameMode" }, GameMode.Arena)]
-    public string arenaName;
+    
+    public string levelName;
 
     [Header("Orb Score")]
     public int maxCombo;
@@ -52,13 +51,8 @@ public class ScoreManager : MonoBehaviour
 
     private int numberOfPlayer;
 
-
-    // Update is called once per frame
-    void Update()
-    {
-        completionTime += Time.deltaTime;
-
-    }
+    float timeStamp;
+    public float score;
 
     void Awake()
     {
@@ -72,6 +66,8 @@ public class ScoreManager : MonoBehaviour
         }
 
         completionTime = 0;
+
+        timeStamp = Time.time;
 
         //if in story mode, we keep the scoremanager through the scenes
         //we save the scores for each arena
@@ -107,13 +103,15 @@ public class ScoreManager : MonoBehaviour
             Debug.Log("Saves Folder Created");
         }
 
-        arenaName = arenaName + "-";
+        levelName = levelName + "-";
 
-        string destination = Application.persistentDataPath + "/Saves/" + arenaName + fileName + ".txt";
+        string destination = Application.persistentDataPath + "/Saves/" + levelName + fileName + ".txt";
         
-
-
         StreamWriter sw = File.CreateText(destination);
+
+        completionTime = Time.time - timeStamp;
+        score = CalculatePrologueScore();
+
 
         sw.WriteLine("maxCombo " + maxCombo);
         sw.WriteLine("enemyMirrorBroken " + enemyMirrorBroken);
@@ -134,6 +132,8 @@ public class ScoreManager : MonoBehaviour
         sw.WriteLine("bossKilledByP1 " + bossKilledByP1);
 
         sw.WriteLine("completionTime " + completionTime);
+
+        sw.WriteLine("score " + score);
 
         sw.Close();
     }
