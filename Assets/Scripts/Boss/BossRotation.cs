@@ -21,7 +21,7 @@ public class BossRotation : MonoBehaviour
 
     IEnumerator RotationCoroutine()
     {
-        while (bossSystem.actualPhase == 2 || bossSystem.actualPhase == 3)
+        while (bossSystem.actualPhase == 1 || bossSystem.actualPhase == 3)
         {
             float rotationTime = Random.Range(minRotationTime, maxRotationTime);
             float timeStamp = Time.time;
