@@ -159,7 +159,6 @@ public class BossSystem : MonoBehaviour
             {
                 SetFocus();
                 LaunchPattern(RandomPattern());
-                nextAttack = Time.time + Random.Range(minWaitTime, maxWaitTime);
             }
 
             if (actualPhase == 4)
@@ -316,7 +315,7 @@ public class BossSystem : MonoBehaviour
         Debug.Log("Mystic Line");
 
 		//canalisation + feedbacks
-		anim.SetTrigger("Line/FireBall/Shrink");
+		anim.SetTrigger("LineFireBallShrink");
 		yield return new WaitForSeconds(anim.GetCurrentAnimatorStateInfo(0).length);
 
         Vector3 raycastPosition = new Vector3(transform.position.x, 0, transform.position.z);
@@ -342,9 +341,11 @@ public class BossSystem : MonoBehaviour
 
                 StartCoroutine(CreateMysticLineCoroutine(center, hit.transform.position, hit.distance));
             }
-        }
-        isAttacking = false;
-    }
+		}
+
+		nextAttack = Time.time + Random.Range(minWaitTime, maxWaitTime);
+		isAttacking = false;
+	}
 
     public IEnumerator CreateMysticLineCoroutine(Vector3 position, Vector3 target, float length)
     {
@@ -369,7 +370,7 @@ public class BossSystem : MonoBehaviour
         Debug.Log("Shrink MysticLines");
 
 		//canalisation + feedbacks
-		anim.SetTrigger("Line/FireBall/Shrink");
+		anim.SetTrigger("LineFireBallShrink");
         yield return new WaitForSeconds(anim.GetCurrentAnimatorStateInfo(0).length);
 
         if (!isShrinkMysticLineCreated)
@@ -438,7 +439,7 @@ public class BossSystem : MonoBehaviour
         isAttacking = true;
 
 		//yield return new WaitForSeconds(fireBallCastingTime);
-		anim.SetTrigger("Line/FireBall/Shrink");
+		anim.SetTrigger("LineFireBallShrink");
 		yield return new WaitForSeconds(anim.GetCurrentAnimatorStateInfo(0).length);
 
 		Vector3 target = aimedPlayer.transform.position;
@@ -477,7 +478,8 @@ public class BossSystem : MonoBehaviour
         yield return new WaitUntil(() => fireBall.isDestroyed);
         Destroy(fireBallIndicator);
 
-        isAttacking = false;
+		nextAttack = Time.time + Random.Range(minWaitTime, maxWaitTime);
+		isAttacking = false;
     }
 
     //======================================================================================== ELECTRIC ZONE
@@ -523,7 +525,8 @@ public class BossSystem : MonoBehaviour
         Destroy(circleIndicator);
         yield return new WaitForSeconds(1.0f);
 
-        isAttacking = false;
+		nextAttack = Time.time + Random.Range(minWaitTime, maxWaitTime);
+		isAttacking = false;
     }
 
     //======================================================================================== ELECTRIC CONE
@@ -590,9 +593,9 @@ public class BossSystem : MonoBehaviour
 
         Destroy(coneIndicator);
         yield return new WaitForSeconds(1.0f);
-
-
-        isAttacking = false;
+		
+		nextAttack = Time.time + Random.Range(minWaitTime, maxWaitTime);
+		isAttacking = false;
     }
 
     //======================================================================================== CHARGE
@@ -676,7 +679,8 @@ public class BossSystem : MonoBehaviour
 
         Destroy(chargeIndicator);
 
-        isAttacking = false;
+		nextAttack = Time.time + Random.Range(minWaitTime, maxWaitTime);
+		isAttacking = false;
     }
 
     //======================================================================================== ELECTRIC AOE
@@ -723,7 +727,8 @@ public class BossSystem : MonoBehaviour
         Destroy(circleIndicator);
         yield return new WaitForSeconds(1.0f);
 
-        isAttacking = false;
+		nextAttack = Time.time + Random.Range(minWaitTime, maxWaitTime);
+		isAttacking = false;
     }
 
     #endregion
