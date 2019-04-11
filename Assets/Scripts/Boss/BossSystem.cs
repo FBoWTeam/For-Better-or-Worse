@@ -119,14 +119,14 @@ public class BossSystem : MonoBehaviour
     [Range(0.8f, 1.2f)]
     public float toleranceCoef;
 
-
     [Header("[Score Values]")]
     public bool lastHitByP1;
     public bool lastHitByP2;
 
-
     GameObject player1;
     GameObject player2;
+
+	Animator anim;
 
     //======================================================================================== AWAKE AND UPDATE
 
@@ -139,6 +139,7 @@ public class BossSystem : MonoBehaviour
         isMysticLineCreated = false;
         isShrinkMysticLineCreated = false;
         isShrinking = false;
+		anim = GetComponent<Animator>();
     }
 
     private void Start()
@@ -213,6 +214,7 @@ public class BossSystem : MonoBehaviour
                     Debug.Log("Passage phase 2");
                     probabilityTable = phase2;
                     nextAttack = Time.time + Random.Range(minWaitTime, maxWaitTime);
+					transform.localScale = new Vector3(0.75f, 0.75f, 0.75f);
                     //infinite mystic line same side / level shrink
                 }
                 break;
@@ -233,8 +235,9 @@ public class BossSystem : MonoBehaviour
                     Debug.Log("Passage phase 4");
                     probabilityTable = phase4;
                     nextAttack = Time.time + Random.Range(minWaitTime, maxWaitTime);
-                    //fall to ground / level shrink / rock fall activation
-                }
+					transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
+					//fall to ground / level shrink / rock fall activation
+				}
                 break;
             case 4:
                 if (hp <= 0.0f)
@@ -312,8 +315,9 @@ public class BossSystem : MonoBehaviour
         isAttacking = true;
         Debug.Log("Mystic Line");
 
-        //canalisation + feedbacks
-        yield return new WaitForSeconds(1.0f);
+		//canalisation + feedbacks
+		anim.SetTrigger("Line/FireBall/Shrink");
+		yield return new WaitForSeconds(anim.GetCurrentAnimatorStateInfo(0).length);
 
         Vector3 raycastPosition = new Vector3(transform.position.x, 0, transform.position.z);
         Vector3 direction;
@@ -364,8 +368,9 @@ public class BossSystem : MonoBehaviour
         isAttacking = true;
         Debug.Log("Shrink MysticLines");
 
-        //canalisation + feedbacks
-        yield return new WaitForSeconds(1.0f);
+		//canalisation + feedbacks
+		anim.SetTrigger("Line/FireBall/Shrink");
+        yield return new WaitForSeconds(anim.GetCurrentAnimatorStateInfo(0).length);
 
         if (!isShrinkMysticLineCreated)
         {
@@ -432,9 +437,11 @@ public class BossSystem : MonoBehaviour
     {
         isAttacking = true;
 
-        yield return new WaitForSeconds(fireBallCastingTime);
+		//yield return new WaitForSeconds(fireBallCastingTime);
+		anim.SetTrigger("Line/FireBall/Shrink");
+		yield return new WaitForSeconds(anim.GetCurrentAnimatorStateInfo(0).length);
 
-        Vector3 target = aimedPlayer.transform.position;
+		Vector3 target = aimedPlayer.transform.position;
         Vector3 dir = target - transform.position;//direction of the aimed player when the Fireball is creating
         dir = dir.normalized;
         dir.y = 0;
@@ -481,9 +488,11 @@ public class BossSystem : MonoBehaviour
 
         //start chaneling anim
         Debug.Log("channeling electric zone");
-        yield return new WaitForSeconds(electricZoneChannelingTime);
+		//yield return new WaitForSeconds(electricZoneChannelingTime);
+		anim.SetTrigger("Electricity");
+		yield return new WaitForSeconds(anim.GetCurrentAnimatorStateInfo(0).length);
 
-        Vector3 electricZoneLocation = aimedPlayer.transform.position;
+		Vector3 electricZoneLocation = aimedPlayer.transform.position;
 
         //show feedback
         //instanciate the circle indicator
@@ -525,11 +534,12 @@ public class BossSystem : MonoBehaviour
 
         //start chaneling anim
         Debug.Log("channeling electric cone");
-        yield return new WaitForSeconds(electricConeChannelingTime);
+		//yield return new WaitForSeconds(electricConeChannelingTime);
+		anim.SetTrigger("Electricity");
+		yield return new WaitForSeconds(anim.GetCurrentAnimatorStateInfo(0).length);
 
-
-        //determining the area where to cast the spell
-        Vector3 bossPos = transform.position;
+		//determining the area where to cast the spell
+		Vector3 bossPos = transform.position;
         bossPos.y = 0;
 
         Vector3 targetVector = (aimedPlayer.transform.position - bossPos).normalized;
@@ -592,7 +602,7 @@ public class BossSystem : MonoBehaviour
         isAttacking = true;
         Debug.Log("charge");
 
-        Vector3 target = aimedPlayer.transform.position;
+		Vector3 target = aimedPlayer.transform.position;
         target.y = 2f;
         Vector3 posStart = transform.position;
         posStart.y = 2f;
@@ -643,8 +653,9 @@ public class BossSystem : MonoBehaviour
             yield return new WaitForEndOfFrame();
         }
 
+		anim.SetBool("IsDashing", true);
 
-        float t = 0f;
+		float t = 0f;
         while (t < 1)
         {
             transform.position = Vector3.Lerp(posStart, newTarget, t);
@@ -652,7 +663,10 @@ public class BossSystem : MonoBehaviour
             yield return new WaitForEndOfFrame();
         }
 
-        if (willBeStun)
+		anim.SetBool("IsDashing", false);
+		anim.SetBool("DashWillStun", willBeStun);
+
+		if (willBeStun)
         {
             willBeStun = false;
             isStun = true;
@@ -673,12 +687,13 @@ public class BossSystem : MonoBehaviour
 
         //start chaneling anim
         Debug.Log("channeling AOE zone");
-        yield return new WaitForSeconds(electricAoeChannelingTime);
+		//yield return new WaitForSeconds(electricAoeChannelingTime);
+		anim.SetTrigger("Electricity");
+		yield return new WaitForSeconds(anim.GetCurrentAnimatorStateInfo(0).length);
 
-
-        //show indicator feedback
-        //instanciate the circle indicator
-        GameObject circleIndicator = Instantiate(aoeCircleProjector, transform.position, Quaternion.identity) as GameObject;
+		//show indicator feedback
+		//instanciate the circle indicator
+		GameObject circleIndicator = Instantiate(aoeCircleProjector, transform.position, Quaternion.identity) as GameObject;
         circleIndicator.transform.GetChild(0).gameObject.GetComponent<Projector>().orthographicSize = electricAoeRadius * toleranceCoef;
         //the instanciated circle indicator is a child of the boss
         circleIndicator.transform.parent = transform;
