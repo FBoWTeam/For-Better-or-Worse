@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class ArenaSystem : MonoBehaviour
@@ -57,17 +58,56 @@ public class ArenaSystem : MonoBehaviour
     //enemies currently alive in the arena
     private List<GameObject> remainingEnemiesList;
 
+    private bool start;
+
+    public List<GameObject> arenaCanvas;
+    public GameObject countdownArena;
+
     private void Start()
     {
         waveIndex = 0;
         subWaveIndex = 0;
         timer = 0f;
         remainingEnemiesList = new List<GameObject>();
-        StartCoroutine(WaveSystem());
         increaseChanceValue = 100f / ((waveList.Count - threshold));
-        GameManager.gameManager.UIManager.UpdateWave(waveIndex + 1);
     }
 
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Player"))
+        {
+            StartCoroutine(CountDown());
+            GetComponent<BoxCollider>().enabled = false;
+        }
+    }
+
+    IEnumerator CountDown()
+    {
+        countdownArena.SetActive(true);
+        countdownArena.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "5";
+        yield return new WaitForSeconds(1f);
+        countdownArena.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "4";
+        yield return new WaitForSeconds(1f);
+        countdownArena.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "3";
+        yield return new WaitForSeconds(1f);
+        countdownArena.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "2";
+        yield return new WaitForSeconds(1f);
+        countdownArena.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "1";
+        yield return new WaitForSeconds(1f);
+        countdownArena.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "";
+        StartArena();
+    }
+    
+
+    void StartArena()
+    {
+        for (int i = 0; i < arenaCanvas.Count; i++)
+        {
+            arenaCanvas[i].SetActive(true);
+        }
+        StartCoroutine(WaveSystem());
+        GameManager.gameManager.UIManager.UpdateWave(waveIndex + 1);
+    }
 
     IEnumerator WaveSystem()
     {
@@ -99,16 +139,17 @@ public class ArenaSystem : MonoBehaviour
                         yield return new WaitForEndOfFrame();
                     }
                     timer = 0;
-                    //Debug.Log("Next Subwave");
+                    GameManager.gameManager.UIManager.UpdateSubWave(subWaveIndex + 1);
                     subWaveIndex++;
-                    GameManager.gameManager.UIManager.UpdateWave(subWaveIndex + 1);
+                    Debug.Log("Next SubWave");
+
                 }
 
                 SpawnBoss();
 
                 if (waveCleared())
                 {
-                    //Debug.Log("Next Wave");
+                    Debug.Log("Next Wave");
                     while (timer < waveList[waveIndex].timeBeforeNextWave)
                     {
                         timer += Time.deltaTime;
@@ -121,7 +162,7 @@ public class ArenaSystem : MonoBehaviour
                         GameManager.gameManager.UIManager.StartCoroutine(GameManager.gameManager.UIManager.AnnouceWave(waveIndex + 1));
                     }
                     subWaveIndex = 0;
-                    GameManager.gameManager.UIManager.UpdateWave(subWaveIndex + 1);
+                    GameManager.gameManager.UIManager.UpdateSubWave(subWaveIndex + 1);
                     bonusChance = 0;
                 }
                 yield return new WaitForEndOfFrame();
@@ -131,8 +172,7 @@ public class ArenaSystem : MonoBehaviour
                 arenaCleared = true;
             }
         }
-
-        //Debug.Log("Go to da next awina");
+        ScoreManager.scoreManager.Save();
         sceneLoader.GetComponent<IActivable>().Activate();
     }
 
@@ -145,7 +185,6 @@ public class ArenaSystem : MonoBehaviour
                 timer += Time.deltaTime;
             }
             timer = 0;
-            //Debug.Log("Boss has spawned");
             GameObject boss = Instantiate(bonusWave, spawnList[spawnNumer].position, Quaternion.identity).gameObject;
             foreach (Enemy enemy in boss.GetComponentsInChildren<Enemy>())
             {

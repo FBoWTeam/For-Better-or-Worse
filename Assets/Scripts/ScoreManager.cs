@@ -7,9 +7,20 @@ using System.Runtime.Serialization.Formatters.Binary;
 
 public class ScoreManager : MonoBehaviour
 {
+    public enum GameMode
+    {
+        Story,
+        Arena
+    }
+
 
     public static ScoreManager scoreManager;
-    public float timeToWait;
+    
+
+    public GameMode gameMode;
+
+    [DrawIf(new string[] { "gameMode" }, GameMode.Arena)]
+    public string arenaName;
 
     [Header("Orb Score")]
     public int maxCombo;
@@ -41,11 +52,6 @@ public class ScoreManager : MonoBehaviour
 
     private int numberOfPlayer;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        //StartCoroutine(StatPrintCoroutine(timeToWait));
-    }
 
     // Update is called once per frame
     void Update()
@@ -67,49 +73,16 @@ public class ScoreManager : MonoBehaviour
 
         completionTime = 0;
 
-        DontDestroyOnLoad(this.gameObject);
-    }
-
-    void PrintStat()
-    {
-        Debug.Log("========== Stats Orb ==========");
-        Debug.Log("Combo Max : " + maxCombo);
-        Debug.Log("========= Stats Enemy =========");
-        Debug.Log("Shield Brisé : " + enemyMirrorBroken);
-        Debug.Log("Altération d'etat appliquées : " + statusAilmentApplied);
-        Debug.Log("Ennemies morts tout seul comme des grands : " + killsEnvironment);
-        Debug.Log("======== Stats Players ========");
-        Debug.Log("Nombre de morts : " + numberOfDeaths);
-
-        Debug.Log("======== Stats Player 1 ========");
-        Debug.Log("Kills : " + killsP1);
-        Debug.Log("Degat reçu : " + damageTakenP1);
-        Debug.Log("Point de vie reçu : " + healPointReceivedP1);
-        Debug.Log("Renvoie d'orbe raté : " + orbHitMissedP1);
-        Debug.Log("======== Stats Player 2 ========");
-        Debug.Log("Kills : " + killsP2);
-        Debug.Log("Degat reçu : " + damageTakenP2);
-        Debug.Log("Point de vie reçu : " + healPointReceivedP2);
-        Debug.Log("Renvoie d'orbe raté : " + orbHitMissedP2);
-
-
-        float minutes = completionTime / 60;
-        float seconds = completionTime % 60;
-        Debug.Log("====== Temps de complétion ======");
-        Debug.Log("Temps de complétion : " + minutes + ":" + seconds);
-
-    }
-
-    IEnumerator StatPrintCoroutine(float timeToWait)
-    {
-        while (true)
+        //if in story mode, we keep the scoremanager through the scenes
+        //we save the scores for each arena
+        if (gameMode == GameMode.Story)
         {
-            yield return new WaitForSeconds(timeToWait);
-            PrintStat();
+            DontDestroyOnLoad(this.gameObject);
         }
+        
     }
-
-
+    
+    
     public void KeepMaxCombo(int currentCombo)
     {
         if (currentCombo > maxCombo)
@@ -134,8 +107,12 @@ public class ScoreManager : MonoBehaviour
             Debug.Log("Saves Folder Created");
         }
 
-        string destination = Application.persistentDataPath + "/Saves/" + fileName + ".txt";
+        arenaName = arenaName + "-";
+
+        string destination = Application.persistentDataPath + "/Saves/" + arenaName + fileName + ".txt";
         
+
+
         StreamWriter sw = File.CreateText(destination);
 
         sw.WriteLine("maxCombo " + maxCombo);
@@ -151,9 +128,25 @@ public class ScoreManager : MonoBehaviour
         sw.WriteLine("killsP2 " + killsP2);
         sw.WriteLine("healPointReceivedP1 " + healPointReceivedP1);
         sw.WriteLine("healPointReceivedP2 " + healPointReceivedP2);
+
+        sw.WriteLine("damageDealtBossP1 " + damageDealtBossP1);
+        sw.WriteLine("damageDealtBossP2 " + damageDealtBossP2);
+        sw.WriteLine("bossKilledByP1 " + bossKilledByP1);
+
         sw.WriteLine("completionTime " + completionTime);
 
         sw.Close();
     }
+
+
+    public float CalculatePrologueScore()
+    {
+        float timeScore = 1 / (0.00007f * completionTime);
+        float bonus = timeScore + maxCombo + (statusAilmentApplied + enemyMirrorBroken + killsP1 + killsP2) / 2;
+        float malus = (damageTakenP1 + damageTakenP2) / 50 + (orbHitMissedP1 + orbHitMissedP2) / 10 + numberOfDeaths * 5;
+        float result = bonus - malus;
+        return result;
+    }
+
 
 }

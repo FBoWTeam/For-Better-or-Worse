@@ -28,6 +28,7 @@ public class Rock : MonoBehaviour
         //define the color of the sprite of the projector
         Color tempColor = Color.black;
 
+
         while (transform.position.y > 1)
         {
             //alpha starting from 0 finishing to 0.666666
