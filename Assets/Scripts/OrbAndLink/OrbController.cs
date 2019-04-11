@@ -27,12 +27,15 @@ public class OrbController : MonoBehaviour
     public float lowFixedCoefficient;
     public float highFixedCoefficient;
     public float veryHighFixedCoefficient;
+	float fixedSpeedCoefficient = 1.0f;
 
-    float fixedSpeedCoefficient;
+	[Header("[Hit Boost]")]
+	public float speedBoostCoefficient;
+	public float boostDrainDuration;
+	float hitSpeedCoefficient = 1.0f;
 
     [Header("[Direction]")]
     public bool toPlayer2;
-
     public float progression;
     float step;
 
@@ -65,7 +68,11 @@ public class OrbController : MonoBehaviour
 		{
 			SetFixedSpeedCoefficient();
 			speed = Mathf.Clamp(speed, minSpeed, maxSpeed);
-			float fixedSpeed = speed * fixedSpeedCoefficient;
+            if (Vector3.Distance(GameManager.gameManager.player1.transform.position, GameManager.gameManager.player2.transform.position) > GameManager.gameManager.maxDistance - 0.1f)
+            {
+                fixedSpeedCoefficient = 1;
+            }
+			float fixedSpeed = speed * fixedSpeedCoefficient * hitSpeedCoefficient;
 
 			step = (fixedSpeed / BezierCurve.GetPlayersDistance()) * Time.fixedDeltaTime;
 			progression = toPlayer2 ? progression + step : progression - step;
@@ -228,4 +235,19 @@ public class OrbController : MonoBehaviour
 		hasHitEnemy = false;
 		progression = 0.5f;
 	}
+
+	public IEnumerator HitBoostCoroutine()
+	{
+		hitSpeedCoefficient = speedBoostCoefficient;
+		float drain = (speedBoostCoefficient - 1.0f) / boostDrainDuration;
+
+		while(hitSpeedCoefficient > 1.0f)
+		{
+			hitSpeedCoefficient -= drain * Time.deltaTime;
+			yield return new WaitForEndOfFrame();
+		}
+
+		hitSpeedCoefficient = 1.0f;
+	}
+
 }
