@@ -96,7 +96,7 @@ public class BossSystem : MonoBehaviour
     public GameObject pivotLeft;
     public GameObject pivotRight;
     private GameObject shrinkLeft;
-    public GameObject shrinkRight;
+    private GameObject shrinkRight;
     private bool isMysticLineCreated;
     private bool isShrinkMysticLineCreated;
     private bool isShrinking;
@@ -144,7 +144,6 @@ public class BossSystem : MonoBehaviour
         checkPhaseTransition();
         isMysticLineCreated = false;
         isShrinkMysticLineCreated = false;
-        isShrinking = false;
     }
 
     private void Start()
@@ -180,12 +179,6 @@ public class BossSystem : MonoBehaviour
         if (isShrinkMysticLineCreated)
         {
             UpdateScaleShrinkMysticLine();
-
-            if (!isShrinking)
-            {
-                StartCoroutine(Shrink());
-                print("Shrink");
-            }
         }
 
     }
@@ -400,6 +393,8 @@ public class BossSystem : MonoBehaviour
             }
             isShrinkMysticLineCreated = true;
         }
+
+        StartCoroutine(Shrink());
     }
 
     public void UpdateScaleShrinkMysticLine()
@@ -408,80 +403,90 @@ public class BossSystem : MonoBehaviour
         RaycastHit hit;
 
         Physics.Raycast(raycastPosition, pivotLeft.transform.forward, out hit, 50, LayerMask.GetMask("Wall"));
-        //Debug.DrawRay(raycastPosition, pivotLeft.transform.forward * 50, Color.blue, 2);
+        Debug.DrawRay(raycastPosition, pivotLeft.transform.forward * 50, Color.blue, 2);
+        print("shrinkLeft Length : " + hit.distance);
         shrinkLeft.transform.localScale = new Vector3(mysticLineWidth / transform.localScale.x, mysticLineHeight / transform.localScale.y, hit.distance / transform.localScale.z);
 
         Physics.Raycast(raycastPosition, pivotRight.transform.forward, out hit, 50, LayerMask.GetMask("Wall"));
+        print("shrinkRight Length : " + hit.distance);
+        Debug.DrawRay(raycastPosition, pivotRight.transform.forward * 50, Color.red, 2);
         shrinkRight.transform.localScale = new Vector3(mysticLineWidth / transform.localScale.x, mysticLineHeight / transform.localScale.y, hit.distance / transform.localScale.z);
 
     }
 
     public IEnumerator Shrink()
     {
-        //Vector3 playerDir = target - pivotLeft.transform.position;
-        //angle = Vector3.SignedAngle(pivotLeft.transform.forward, playerDir, Vector3.up);
-        //isLeft = (angle < 0) ? true : false;
-
-        //print("Angle : " + angle);
-
-        //if (isLeft)
-        //{
-        //    while (angle < -limitAngle)
-        //    {
-        //        print("move to left");
-        //        pivotLeft.transform.eulerAngles += Vector3.up;
-        //        yield return new WaitForSeconds(1.0f);
-        //        yield return StartCoroutine(ShrinkCoroutine(target));
-        //    }
-        //}
-        //else
-        //{
-        //    while (angle > limitAngle)
-        //    {
-        //        print("move 2");
-        //        pivotLeft.transform.eulerAngles -= Vector3.up;
-        //        yield return new WaitForSeconds(1.0f);
-        //        yield return StartCoroutine(ShrinkCoroutine(target));
-        //    }
-
-        //}
-
-        isShrinking = true;
         yield return new WaitForSeconds(1);
-        Vector3 targetDir = transform.forward * 1;
-        Vector3 vectorLeft = Quaternion.Euler(0, -limitAngle, 0) * targetDir;
-        Vector3 vectorRight = Quaternion.Euler(0, limitAngle, 0) * targetDir;
-        float step = shrinkSpeed * Time.deltaTime;
         Vector3 newDirLeft;
         Vector3 newDirRight;
+        float step = shrinkSpeed * Time.deltaTime;
 
-        while (Vector3.Angle(pivotLeft.transform.forward, vectorLeft - pivotLeft.transform.position) > 0.4)
+        int rand = Random.Range(0, 2);
+
+        //Forward
+        if (rand == 0)
         {
-            newDirLeft = Vector3.RotateTowards(pivotLeft.transform.forward, vectorLeft, step, 0.0f);
-            newDirRight = Vector3.RotateTowards(pivotRight.transform.forward, vectorRight, step, 0.0f);
+            while (Vector3.Angle(pivotLeft.transform.forward, Quaternion.Euler(0, -limitAngle, 0) * transform.forward - pivotLeft.transform.position) > 0.4 || Vector3.Angle(pivotRight.transform.forward, Quaternion.Euler(0, limitAngle, 0) * transform.forward - pivotRight.transform.position) > 0.4)
+            {
+                Vector3 vectorLeft = Quaternion.Euler(0, -limitAngle, 0) * transform.forward;
+                Vector3 vectorRight = Quaternion.Euler(0, limitAngle, 0) * transform.forward;
+                newDirLeft = Vector3.RotateTowards(pivotLeft.transform.forward, vectorLeft, step, 0.0f);
+                newDirRight = Vector3.RotateTowards(pivotRight.transform.forward, vectorRight, step, 0.0f);
 
-            pivotLeft.transform.rotation = Quaternion.LookRotation(newDirLeft);
-            pivotRight.transform.rotation = Quaternion.LookRotation(newDirRight);
-            yield return new WaitForEndOfFrame();
+                pivotLeft.transform.rotation = Quaternion.LookRotation(newDirLeft);
+                pivotRight.transform.rotation = Quaternion.LookRotation(newDirRight);
+                yield return new WaitForEndOfFrame();
+            }
+            yield return new WaitForSeconds(shrinkDuration);
+
+            while (Vector3.Angle(pivotLeft.transform.forward, Quaternion.Euler(0, -90, 0) * transform.forward - pivotLeft.transform.position) > 0.4 || Vector3.Angle(pivotRight.transform.forward, Quaternion.Euler(0, 90, 0) * transform.forward - pivotRight.transform.position) > 0.4)
+            {
+                Vector3 vectorLeft = Quaternion.Euler(0, -90, 0) * transform.forward;
+                Vector3 vectorRight = Quaternion.Euler(0, 90, 0) * transform.forward;
+
+                newDirLeft = Vector3.RotateTowards(pivotLeft.transform.forward, vectorLeft, step, 0.0f);
+                newDirRight = Vector3.RotateTowards(pivotRight.transform.forward, vectorRight, step, 0.0f);
+
+                pivotLeft.transform.rotation = Quaternion.LookRotation(newDirLeft);
+                pivotRight.transform.rotation = Quaternion.LookRotation(newDirRight);
+
+                yield return new WaitForEndOfFrame();
+            }
+
         }
-        yield return new WaitForSeconds(shrinkDuration);
-
-
-        vectorLeft = Quaternion.Euler(0, -90, 0) * targetDir;
-        vectorRight = Quaternion.Euler(0, 90, 0) * targetDir;
-
-
-        while (Vector3.Angle(pivotLeft.transform.forward, vectorLeft - pivotLeft.transform.position) > 0.4)
+        //Backward
+        else
         {
-            newDirLeft = Vector3.RotateTowards(pivotLeft.transform.forward, vectorLeft, step, 0.0f);
-            newDirRight = Vector3.RotateTowards(pivotRight.transform.forward, vectorRight, step, 0.0f);
-            
-            pivotLeft.transform.rotation = Quaternion.LookRotation(newDirLeft);
-            pivotRight.transform.rotation = Quaternion.LookRotation(newDirRight);
+            while (Vector3.Angle(pivotLeft.transform.forward, Quaternion.Euler(0, limitAngle, 0) * -transform.forward - pivotLeft.transform.position) > 0.4 || Vector3.Angle(pivotRight.transform.forward, Quaternion.Euler(0, -limitAngle, 0) * -transform.forward - pivotRight.transform.position) > 0.4)
+            {
+                Vector3 vectorLeft = Quaternion.Euler(0, limitAngle, 0) * -transform.forward;
+                Vector3 vectorRight = Quaternion.Euler(0, -limitAngle, 0) * -transform.forward;
+                newDirLeft = Vector3.RotateTowards(pivotLeft.transform.forward, vectorLeft, step, 0.0f);
+                newDirRight = Vector3.RotateTowards(pivotRight.transform.forward, vectorRight, step, 0.0f);
 
-            yield return new WaitForEndOfFrame();
+                pivotLeft.transform.rotation = Quaternion.LookRotation(newDirLeft);
+                pivotRight.transform.rotation = Quaternion.LookRotation(newDirRight);
+                yield return new WaitForEndOfFrame();
+            }
+            yield return new WaitForSeconds(shrinkDuration);
+
+            while (Vector3.Angle(pivotLeft.transform.forward, Quaternion.Euler(0, 90, 0) * -transform.forward - pivotLeft.transform.position) > 0.4 || Vector3.Angle(pivotRight.transform.forward, Quaternion.Euler(0, -90, 0) * -transform.forward - pivotRight.transform.position) > 0.4)
+            {
+                Vector3 vectorLeft = Quaternion.Euler(0, 90, 0) * -transform.forward;
+                Vector3 vectorRight = Quaternion.Euler(0, -90, 0) * -transform.forward;
+
+                newDirLeft = Vector3.RotateTowards(pivotLeft.transform.forward, vectorLeft, step, 0.0f);
+                newDirRight = Vector3.RotateTowards(pivotRight.transform.forward, vectorRight, step, 0.0f);
+
+                pivotLeft.transform.rotation = Quaternion.LookRotation(newDirLeft);
+                pivotRight.transform.rotation = Quaternion.LookRotation(newDirRight);
+
+                yield return new WaitForEndOfFrame();
+            }
+
         }
-        isShrinking = false;
+        isAttacking = false;
+
     }
 
 
