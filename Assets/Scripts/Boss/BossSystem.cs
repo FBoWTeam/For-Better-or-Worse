@@ -755,9 +755,10 @@ public class BossSystem : MonoBehaviour
 
         //start chaneling anim
         Debug.Log("channeling AOE zone");
-		//yield return new WaitForSeconds(electricAoeChannelingTime);
 		anim.SetTrigger("Electricity");
-		yield return new WaitForSeconds(anim.GetCurrentAnimatorStateInfo(0).length);
+        //wait 75% of the cast time
+		yield return new WaitForSeconds(anim.GetCurrentAnimatorStateInfo(0).length * 0.75f);
+        
 
 		//show indicator feedback
 		//instanciate the circle indicator
@@ -767,17 +768,16 @@ public class BossSystem : MonoBehaviour
         circleIndicator.transform.parent = transform;
         float timeStamp = Time.time;
         Color tempColor = Color.blue;
-
-
-        while (Time.time - timeStamp < electricAoeTimeBetweenFeedbackAndCast)
+        
+        while (Time.time - timeStamp < anim.GetCurrentAnimatorStateInfo(0).length * 0.25f)
         {
             //alpha starting from 0 finishing to 0.33333
             tempColor.a = ((Time.time - timeStamp) / electricAoeTimeBetweenFeedbackAndCast) / 3;
             circleIndicator.transform.GetChild(0).gameObject.GetComponent<Projector>().material.color = tempColor;
             yield return new WaitForEndOfFrame();
         }
+        
 
-        Debug.Log("casting electric AOE");
 
         //check if the players are in the area of effect
         Collider[] playersInRange = Physics.OverlapSphere(transform.position, electricAoeRadius, targetMask);
