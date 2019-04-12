@@ -82,7 +82,6 @@ public class BossSystem : MonoBehaviour
 
     [Header("[FireBall Params]")]
     public GameObject fireBallPrefab;
-    public float fireBallCastingTime;
     public int fireBallDamage;
     public int fireBallDamageExplosion;
     public float fireBallRangeExplosion;
@@ -111,7 +110,6 @@ public class BossSystem : MonoBehaviour
     public float chargeCastingTime;
     public float chargeSpeed;
     public float chargeOffset;
-    public float chargeStunTime;
     bool willBeStun = false;
     public bool isStun;
 
@@ -528,16 +526,18 @@ public class BossSystem : MonoBehaviour
     {
         isAttacking = true;
 
-		//yield return new WaitForSeconds(fireBallCastingTime);
-		anim.SetTrigger("LineFireBallShrink");
-		yield return new WaitForSeconds(anim.GetCurrentAnimatorStateInfo(0).length);
+        anim.SetTrigger("LineFireBallShrink");
+        yield return new WaitForSeconds(4.2f);
 
-		Vector3 target = aimedPlayer.transform.position;
-        Vector3 dir = target - transform.position;//direction of the aimed player when the Fireball is creating
+       
+		//yield return new WaitForSeconds(anim.GetCurrentAnimatorStateInfo(0).length);
+
+        Vector3 target = aimedPlayer.transform.position;
+        /*Vector3 dir = target - transform.position;//direction of the aimed player when the Fireball is creating
         dir = dir.normalized;
-        dir.y = 0;
+        dir.y = 0;*/
 
-        Vector3 fireBallStartingPoint = transform.position + 2.8f * dir;
+        Vector3 fireBallStartingPoint = transform.position + new Vector3(0f, 8.5f, 0f);// + 2.8f * dir;
 
         GameObject projectileFireBall = Instantiate(fireBallPrefab, fireBallStartingPoint, Quaternion.identity);
         FireBall fireBall = projectileFireBall.GetComponent<FireBall>();
@@ -692,17 +692,13 @@ public class BossSystem : MonoBehaviour
     public IEnumerator ChargeCoroutine()
     {
         isAttacking = true;
-        Debug.Log("charge");
 
 		Vector3 target = aimedPlayer.transform.position;
-        target.y = 2f;
         Vector3 posStart = transform.position;
-        posStart.y = 2f;
 
         Vector3 vectCharge = target - posStart;
         Vector3 newTarget = target + chargeOffset * vectCharge.normalized;//aiming for behind the target player by an offset
-
-
+        
         RaycastHit hit;
         int layerMask = 1 << 11;//to only hit the walls
 
@@ -737,16 +733,16 @@ public class BossSystem : MonoBehaviour
         float timeStamp = Time.time;
         Color tempColor = Color.red;
 
+        anim.SetBool("IsDashing", true);
+
         while (Time.time - timeStamp < chargeCastingTime)
         {
-            //alpha starting from 0 finishing to 0.5
+            //alpha starting from 0.25 finishing to 0.75
             tempColor.a = 0.25f + ((Time.time - timeStamp) / electricAoeTimeBetweenFeedbackAndCast) / 2;
             chargeIndicator.transform.GetChild(0).gameObject.GetComponent<Projector>().material.color = tempColor;
             yield return new WaitForEndOfFrame();
         }
-
-		anim.SetBool("IsDashing", true);
-
+        
 		float t = 0f;
         while (t < 1)
         {
@@ -762,11 +758,13 @@ public class BossSystem : MonoBehaviour
         {
             willBeStun = false;
             isStun = true;
-            yield return new WaitForSeconds(chargeStunTime);
+            yield return new WaitForSeconds(0.8f);
             isStun = false;
         }
 
         Destroy(chargeIndicator);
+
+        yield return new WaitForSeconds(0.7f);//wait for the end animation
 
 		nextAttack = Time.time + Random.Range(minWaitTime, maxWaitTime);
 		isAttacking = false;
