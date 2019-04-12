@@ -90,12 +90,21 @@ public class BossSystem : MonoBehaviour
 
     [Header("[Mystic Line Params]")]
     public GameObject mysticLinePrefab;
-    public int mysticLineHeight;
-    public int mysticLineWidth;
+    public float mysticLineHeight;
+    public float mysticLineWidth;
     public float lifeTime;
     public GameObject pivotLeft;
     public GameObject pivotRight;
+    private GameObject shrinkLeft;
+    private GameObject shrinkRight;
     private bool isMysticLineCreated;
+    private bool isShrinkMysticLineCreated;
+    private bool isShrinking;
+    private bool isLeft;
+    public float shrinkDuration;
+    public float limitAngle;
+    public float shrinkSpeed;
+    private float angle;
 
     [Header("[Charge Params]")]
     public float chargeCastingTime;
@@ -116,14 +125,14 @@ public class BossSystem : MonoBehaviour
     [Range(0.8f, 1.2f)]
     public float toleranceCoef;
 
-
     [Header("[Score Values]")]
     public bool lastHitByP1;
     public bool lastHitByP2;
 
-
     GameObject player1;
     GameObject player2;
+
+	Animator anim;
 
     //======================================================================================== AWAKE AND UPDATE
 
@@ -134,12 +143,15 @@ public class BossSystem : MonoBehaviour
         actualPhase = 0;
         checkPhaseTransition();
         isMysticLineCreated = false;
+        isShrinkMysticLineCreated = false;
+		anim = GetComponent<Animator>();
     }
 
     private void Start()
     {
         player1 = GameManager.gameManager.player1;
         player2 = GameManager.gameManager.player2;
+
     }
 
     // Update is called once per frame
@@ -153,7 +165,6 @@ public class BossSystem : MonoBehaviour
             {
                 SetFocus();
                 LaunchPattern(RandomPattern());
-                nextAttack = Time.time + Random.Range(minWaitTime, maxWaitTime);
             }
 
             if (actualPhase == 4)
@@ -164,6 +175,12 @@ public class BossSystem : MonoBehaviour
             }
 
         }
+
+        if (isShrinkMysticLineCreated)
+        {
+            UpdateScaleShrinkMysticLine();
+        }
+
     }
 
     //======================================================================================== SET FOCUS
@@ -209,6 +226,7 @@ public class BossSystem : MonoBehaviour
                     Debug.Log("Passage phase 2");
                     probabilityTable = phase2;
                     nextAttack = Time.time + Random.Range(minWaitTime, maxWaitTime);
+					transform.localScale = new Vector3(0.75f, 0.75f, 0.75f);
                     //infinite mystic line same side / level shrink
                 }
                 break;
@@ -229,8 +247,9 @@ public class BossSystem : MonoBehaviour
                     Debug.Log("Passage phase 4");
                     probabilityTable = phase4;
                     nextAttack = Time.time + Random.Range(minWaitTime, maxWaitTime);
-                    //fall to ground / level shrink / rock fall activation
-                }
+					transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
+					//fall to ground / level shrink / rock fall activation
+				}
                 break;
             case 4:
                 if (hp <= 0.0f)
@@ -308,78 +327,44 @@ public class BossSystem : MonoBehaviour
         isAttacking = true;
         Debug.Log("Mystic Line");
 
-        //canalisation + feedbacks
-        yield return new WaitForSeconds(1.0f);
+		//canalisation + feedbacks
+		anim.SetTrigger("LineFireBallShrink");
+		yield return new WaitForSeconds(anim.GetCurrentAnimatorStateInfo(0).length);
 
         Vector3 raycastPosition = new Vector3(transform.position.x, 0, transform.position.z);
         Vector3 direction;
         RaycastHit hit;
 
-        //if (actualPhase < 2)
-        //{
-        //    if (!isMysticLineCreated)
-        //    {
-        //        direction = (new Vector3(aimedPlayer.transform.position.x, raycastPosition.y, aimedPlayer.transform.position.z)
-        //            - raycastPosition).normalized;
-
-        //        Debug.DrawRay(raycastPosition, direction * 50, Color.blue, 10);
-        //        if (Physics.Raycast(raycastPosition, direction, out hit, 50, LayerMask.GetMask("Wall")))
-        //        {
-        //            //Debug
-        //            print("Distance : " + hit.distance);
-        //            //float angle = Vector3.Angle(direction, transform.forward);
-        //            //print("Angle : " + angle);
-
-        //            Vector3 center = (raycastPosition + hit.transform.position) / 2;
-        //            center += new Vector3(0, mysticLineHeight / 2, 0);
-
-        //            StartCoroutine(CreateMysticLineCoroutine(center, hit.transform, hit.distance));
-        //        }
-        //    }
-
-        //}
-        Vector3 centerOfPlayers = (player1.transform.position + player2.transform.position) / 2;
-
-        direction = (new Vector3(centerOfPlayers.x, raycastPosition.y, centerOfPlayers.z)
+        if (!isMysticLineCreated)
+        {
+            direction = (new Vector3(aimedPlayer.transform.position.x, raycastPosition.y, aimedPlayer.transform.position.z)
                 - raycastPosition).normalized;
-        Debug.DrawRay(raycastPosition, direction * 50, Color.blue, 10);
 
-        if (Physics.Raycast(raycastPosition, direction, out hit, 50, LayerMask.GetMask("Wall")))
-        {
-            //print("Distance : " + hit.distance);
-            //float angle = Vector3.Angle(direction, transform.forward);
-            //print("Angle : " + angle);
+            if (Physics.Raycast(raycastPosition, direction, out hit, 50, LayerMask.GetMask("Wall")))
+            {
+                //Debug
+                //print("Distance : " + hit.distance);
+                //Debug.DrawRay(raycastPosition, direction * 50, Color.blue, 2);
 
-            Vector3 center = (raycastPosition + hit.transform.position) / 2;
-            center += new Vector3(0, mysticLineHeight / 2, 0);
+                StartCoroutine(CreateMysticLineCoroutine(raycastPosition, hit.transform.position, hit.distance));
+            }
+		}
 
-            StartCoroutine(CreateMysticLineCoroutine(center, hit.transform.position, hit.distance));
-        }
-        if (Physics.Raycast(raycastPosition, -direction, out hit, 50, LayerMask.GetMask("Wall")))
-        {
-            //print("Distance : " + hit.distance);
-
-            Vector3 center = (raycastPosition + hit.transform.position) / 2;
-            center += new Vector3(0, mysticLineHeight / 2, 0);
-
-            StartCoroutine(CreateMysticLineCoroutine(center, hit.transform.position, hit.distance));
-        }
-
-        isAttacking = false;
-    }
+		nextAttack = Time.time + Random.Range(minWaitTime, maxWaitTime);
+		isAttacking = false;
+	}
 
     public IEnumerator CreateMysticLineCoroutine(Vector3 position, Vector3 target, float length)
     {
-        GameObject mysticLine = Instantiate(mysticLinePrefab, position, Quaternion.identity);
+        GameObject mysticLine = Instantiate(mysticLinePrefab, position, Quaternion.identity, transform);
         mysticLine.transform.LookAt(new Vector3(target.x, position.y, target.z));
-        //mysticLine.transform.localEulerAngles = new Vector3(0, angle, 0);
-        mysticLine.transform.localScale = new Vector3(mysticLineWidth, mysticLineHeight, length);
+        mysticLine.transform.localScale = new Vector3(mysticLineWidth / transform.localScale.x, mysticLineHeight / transform.localScale.y, length / transform.localScale.z);
 
         isMysticLineCreated = true;
 
         yield return new WaitForSeconds(lifeTime);
 
-        Destroy(mysticLine.gameObject);
+        Destroy(mysticLine);
         isMysticLineCreated = false;
     }
 
@@ -387,16 +372,129 @@ public class BossSystem : MonoBehaviour
 
     public IEnumerator ShrinkMysticLinesCoroutine()
     {
-        isAttacking = true;
 
+        isAttacking = true;
         Debug.Log("Shrink MysticLines");
 
-        //canalisation + feedbacks
-        yield return new WaitForSeconds(1.0f);
-        //boom
+		//canalisation + feedbacks
+		anim.SetTrigger("LineFireBallShrink");
+        yield return new WaitForSeconds(anim.GetCurrentAnimatorStateInfo(0).length);
 
-        isAttacking = false;
+        if (!isShrinkMysticLineCreated)
+        {
+            Vector3 raycastPosition = new Vector3(transform.position.x, 0, transform.position.z);
+            RaycastHit hit;
+
+            if (Physics.Raycast(raycastPosition, pivotLeft.transform.forward, out hit, 50, LayerMask.GetMask("Wall")))
+            {
+                //Debug
+                //print("Distance : " + hit.distance);
+
+                shrinkLeft = Instantiate(mysticLinePrefab, pivotLeft.transform.position, Quaternion.identity, pivotLeft.transform);
+                shrinkLeft.transform.LookAt(new Vector3(hit.transform.position.x, shrinkLeft.transform.position.y, hit.transform.position.z));
+
+                shrinkRight = Instantiate(mysticLinePrefab, pivotRight.transform.position, Quaternion.identity, pivotRight.transform);
+                shrinkRight.transform.LookAt(new Vector3(-hit.transform.position.x, shrinkRight.transform.position.y, -hit.transform.position.z));
+
+            }
+            isShrinkMysticLineCreated = true;
+        }
+
+        StartCoroutine(Shrink());
     }
+
+    public void UpdateScaleShrinkMysticLine()
+    {
+        Vector3 raycastPosition = new Vector3(transform.position.x, 0, transform.position.z);
+        RaycastHit hit;
+
+        Physics.Raycast(raycastPosition, pivotLeft.transform.forward, out hit, 50, LayerMask.GetMask("Wall"));
+        Debug.DrawRay(raycastPosition, pivotLeft.transform.forward * 50, Color.blue, 2);
+        print("shrinkLeft Length : " + hit.distance);
+        shrinkLeft.transform.localScale = new Vector3(mysticLineWidth / transform.localScale.x, mysticLineHeight / transform.localScale.y, hit.distance / transform.localScale.z);
+
+        Physics.Raycast(raycastPosition, pivotRight.transform.forward, out hit, 50, LayerMask.GetMask("Wall"));
+        print("shrinkRight Length : " + hit.distance);
+        Debug.DrawRay(raycastPosition, pivotRight.transform.forward * 50, Color.red, 2);
+        shrinkRight.transform.localScale = new Vector3(mysticLineWidth / transform.localScale.x, mysticLineHeight / transform.localScale.y, hit.distance / transform.localScale.z);
+
+    }
+
+    public IEnumerator Shrink()
+    {
+        yield return new WaitForSeconds(1);
+        Vector3 newDirLeft;
+        Vector3 newDirRight;
+        float step = shrinkSpeed * Time.deltaTime;
+
+        int rand = Random.Range(0, 2);
+
+        //Forward
+        if (rand == 0)
+        {
+            while (Vector3.Angle(pivotLeft.transform.forward, Quaternion.Euler(0, -limitAngle, 0) * transform.forward - pivotLeft.transform.position) > 0.4 || Vector3.Angle(pivotRight.transform.forward, Quaternion.Euler(0, limitAngle, 0) * transform.forward - pivotRight.transform.position) > 0.4)
+            {
+                Vector3 vectorLeft = Quaternion.Euler(0, -limitAngle, 0) * transform.forward;
+                Vector3 vectorRight = Quaternion.Euler(0, limitAngle, 0) * transform.forward;
+                newDirLeft = Vector3.RotateTowards(pivotLeft.transform.forward, vectorLeft, step, 0.0f);
+                newDirRight = Vector3.RotateTowards(pivotRight.transform.forward, vectorRight, step, 0.0f);
+
+                pivotLeft.transform.rotation = Quaternion.LookRotation(newDirLeft);
+                pivotRight.transform.rotation = Quaternion.LookRotation(newDirRight);
+                yield return new WaitForEndOfFrame();
+            }
+            yield return new WaitForSeconds(shrinkDuration);
+
+            while (Vector3.Angle(pivotLeft.transform.forward, Quaternion.Euler(0, -90, 0) * transform.forward - pivotLeft.transform.position) > 0.4 || Vector3.Angle(pivotRight.transform.forward, Quaternion.Euler(0, 90, 0) * transform.forward - pivotRight.transform.position) > 0.4)
+            {
+                Vector3 vectorLeft = Quaternion.Euler(0, -90, 0) * transform.forward;
+                Vector3 vectorRight = Quaternion.Euler(0, 90, 0) * transform.forward;
+
+                newDirLeft = Vector3.RotateTowards(pivotLeft.transform.forward, vectorLeft, step, 0.0f);
+                newDirRight = Vector3.RotateTowards(pivotRight.transform.forward, vectorRight, step, 0.0f);
+
+                pivotLeft.transform.rotation = Quaternion.LookRotation(newDirLeft);
+                pivotRight.transform.rotation = Quaternion.LookRotation(newDirRight);
+
+                yield return new WaitForEndOfFrame();
+            }
+
+        }
+        //Backward
+        else
+        {
+            while (Vector3.Angle(pivotLeft.transform.forward, Quaternion.Euler(0, limitAngle, 0) * -transform.forward - pivotLeft.transform.position) > 0.4 || Vector3.Angle(pivotRight.transform.forward, Quaternion.Euler(0, -limitAngle, 0) * -transform.forward - pivotRight.transform.position) > 0.4)
+            {
+                Vector3 vectorLeft = Quaternion.Euler(0, limitAngle, 0) * -transform.forward;
+                Vector3 vectorRight = Quaternion.Euler(0, -limitAngle, 0) * -transform.forward;
+                newDirLeft = Vector3.RotateTowards(pivotLeft.transform.forward, vectorLeft, step, 0.0f);
+                newDirRight = Vector3.RotateTowards(pivotRight.transform.forward, vectorRight, step, 0.0f);
+
+                pivotLeft.transform.rotation = Quaternion.LookRotation(newDirLeft);
+                pivotRight.transform.rotation = Quaternion.LookRotation(newDirRight);
+                yield return new WaitForEndOfFrame();
+            }
+            yield return new WaitForSeconds(shrinkDuration);
+
+            while (Vector3.Angle(pivotLeft.transform.forward, Quaternion.Euler(0, 90, 0) * -transform.forward - pivotLeft.transform.position) > 0.4 || Vector3.Angle(pivotRight.transform.forward, Quaternion.Euler(0, -90, 0) * -transform.forward - pivotRight.transform.position) > 0.4)
+            {
+                Vector3 vectorLeft = Quaternion.Euler(0, 90, 0) * -transform.forward;
+                Vector3 vectorRight = Quaternion.Euler(0, -90, 0) * -transform.forward;
+
+                newDirLeft = Vector3.RotateTowards(pivotLeft.transform.forward, vectorLeft, step, 0.0f);
+                newDirRight = Vector3.RotateTowards(pivotRight.transform.forward, vectorRight, step, 0.0f);
+
+                pivotLeft.transform.rotation = Quaternion.LookRotation(newDirLeft);
+                pivotRight.transform.rotation = Quaternion.LookRotation(newDirRight);
+
+                yield return new WaitForEndOfFrame();
+            }
+
+        }
+        isAttacking = false;
+
+    }
+
 
     //======================================================================================== FIREBALL
 
@@ -404,9 +502,11 @@ public class BossSystem : MonoBehaviour
     {
         isAttacking = true;
 
-        yield return new WaitForSeconds(fireBallCastingTime);
+		//yield return new WaitForSeconds(fireBallCastingTime);
+		anim.SetTrigger("LineFireBallShrink");
+		yield return new WaitForSeconds(anim.GetCurrentAnimatorStateInfo(0).length);
 
-        Vector3 target = aimedPlayer.transform.position;
+		Vector3 target = aimedPlayer.transform.position;
         Vector3 dir = target - transform.position;//direction of the aimed player when the Fireball is creating
         dir = dir.normalized;
         dir.y = 0;
@@ -442,7 +542,8 @@ public class BossSystem : MonoBehaviour
         yield return new WaitUntil(() => fireBall.isDestroyed);
         Destroy(fireBallIndicator);
 
-        isAttacking = false;
+		nextAttack = Time.time + Random.Range(minWaitTime, maxWaitTime);
+		isAttacking = false;
     }
 
     //======================================================================================== ELECTRIC ZONE
@@ -453,9 +554,11 @@ public class BossSystem : MonoBehaviour
 
         //start chaneling anim
         Debug.Log("channeling electric zone");
-        yield return new WaitForSeconds(electricZoneChannelingTime);
+		//yield return new WaitForSeconds(electricZoneChannelingTime);
+		anim.SetTrigger("Electricity");
+		yield return new WaitForSeconds(anim.GetCurrentAnimatorStateInfo(0).length);
 
-        Vector3 electricZoneLocation = aimedPlayer.transform.position;
+		Vector3 electricZoneLocation = aimedPlayer.transform.position;
 
         //show feedback
         //instanciate the circle indicator
@@ -486,7 +589,8 @@ public class BossSystem : MonoBehaviour
         Destroy(circleIndicator);
         yield return new WaitForSeconds(1.0f);
 
-        isAttacking = false;
+		nextAttack = Time.time + Random.Range(minWaitTime, maxWaitTime);
+		isAttacking = false;
     }
 
     //======================================================================================== ELECTRIC CONE
@@ -497,11 +601,12 @@ public class BossSystem : MonoBehaviour
 
         //start chaneling anim
         Debug.Log("channeling electric cone");
-        yield return new WaitForSeconds(electricConeChannelingTime);
+		//yield return new WaitForSeconds(electricConeChannelingTime);
+		anim.SetTrigger("Electricity");
+		yield return new WaitForSeconds(anim.GetCurrentAnimatorStateInfo(0).length);
 
-
-        //determining the area where to cast the spell
-        Vector3 bossPos = transform.position;
+		//determining the area where to cast the spell
+		Vector3 bossPos = transform.position;
         bossPos.y = 0;
 
         Vector3 targetVector = (aimedPlayer.transform.position - bossPos).normalized;
@@ -552,9 +657,9 @@ public class BossSystem : MonoBehaviour
 
         Destroy(coneIndicator);
         yield return new WaitForSeconds(1.0f);
-
-
-        isAttacking = false;
+		
+		nextAttack = Time.time + Random.Range(minWaitTime, maxWaitTime);
+		isAttacking = false;
     }
 
     //======================================================================================== CHARGE
@@ -564,7 +669,7 @@ public class BossSystem : MonoBehaviour
         isAttacking = true;
         Debug.Log("charge");
 
-        Vector3 target = aimedPlayer.transform.position;
+		Vector3 target = aimedPlayer.transform.position;
         target.y = 2f;
         Vector3 posStart = transform.position;
         posStart.y = 2f;
@@ -615,8 +720,9 @@ public class BossSystem : MonoBehaviour
             yield return new WaitForEndOfFrame();
         }
 
+		anim.SetBool("IsDashing", true);
 
-        float t = 0f;
+		float t = 0f;
         while (t < 1)
         {
             transform.position = Vector3.Lerp(posStart, newTarget, t);
@@ -624,7 +730,10 @@ public class BossSystem : MonoBehaviour
             yield return new WaitForEndOfFrame();
         }
 
-        if (willBeStun)
+		anim.SetBool("IsDashing", false);
+		anim.SetBool("DashWillStun", willBeStun);
+
+		if (willBeStun)
         {
             willBeStun = false;
             isStun = true;
@@ -634,7 +743,8 @@ public class BossSystem : MonoBehaviour
 
         Destroy(chargeIndicator);
 
-        isAttacking = false;
+		nextAttack = Time.time + Random.Range(minWaitTime, maxWaitTime);
+		isAttacking = false;
     }
 
     //======================================================================================== ELECTRIC AOE
@@ -645,28 +755,29 @@ public class BossSystem : MonoBehaviour
 
         //start chaneling anim
         Debug.Log("channeling AOE zone");
-        yield return new WaitForSeconds(electricAoeChannelingTime);
+		anim.SetTrigger("Electricity");
+        //wait 75% of the cast time
+		yield return new WaitForSeconds(anim.GetCurrentAnimatorStateInfo(0).length * 0.75f);
+        
 
-
-        //show indicator feedback
-        //instanciate the circle indicator
-        GameObject circleIndicator = Instantiate(aoeCircleProjector, transform.position, Quaternion.identity) as GameObject;
+		//show indicator feedback
+		//instanciate the circle indicator
+		GameObject circleIndicator = Instantiate(aoeCircleProjector, transform.position, Quaternion.identity) as GameObject;
         circleIndicator.transform.GetChild(0).gameObject.GetComponent<Projector>().orthographicSize = electricAoeRadius * toleranceCoef;
         //the instanciated circle indicator is a child of the boss
         circleIndicator.transform.parent = transform;
         float timeStamp = Time.time;
         Color tempColor = Color.blue;
-
-
-        while (Time.time - timeStamp < electricAoeTimeBetweenFeedbackAndCast)
+        
+        while (Time.time - timeStamp < anim.GetCurrentAnimatorStateInfo(0).length * 0.25f)
         {
             //alpha starting from 0 finishing to 0.33333
             tempColor.a = ((Time.time - timeStamp) / electricAoeTimeBetweenFeedbackAndCast) / 3;
             circleIndicator.transform.GetChild(0).gameObject.GetComponent<Projector>().material.color = tempColor;
             yield return new WaitForEndOfFrame();
         }
+        
 
-        Debug.Log("casting electric AOE");
 
         //check if the players are in the area of effect
         Collider[] playersInRange = Physics.OverlapSphere(transform.position, electricAoeRadius, targetMask);
@@ -680,7 +791,8 @@ public class BossSystem : MonoBehaviour
         Destroy(circleIndicator);
         yield return new WaitForSeconds(1.0f);
 
-        isAttacking = false;
+		nextAttack = Time.time + Random.Range(minWaitTime, maxWaitTime);
+		isAttacking = false;
     }
 
     #endregion

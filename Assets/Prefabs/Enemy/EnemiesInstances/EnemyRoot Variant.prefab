@@ -72,6 +72,11 @@ PrefabInstance:
       propertyPath: movement
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 9164865582948619922, guid: 8e72342c511536043883f2199df73730,
+        type: 3}
+      propertyPath: movement
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 6759876714258691777, guid: 8e72342c511536043883f2199df73730,
         type: 3}
       propertyPath: taunt
@@ -80,13 +85,33 @@ PrefabInstance:
     - target: {fileID: 6759876714258691777, guid: 8e72342c511536043883f2199df73730,
         type: 3}
       propertyPath: baseHP
-      value: 25
+      value: 15
       objectReference: {fileID: 0}
     - target: {fileID: 6759876714258691777, guid: 8e72342c511536043883f2199df73730,
         type: 3}
       propertyPath: hp
-      value: 25
+      value: 15
       objectReference: {fileID: 0}
+    - target: {fileID: 6759876714258691777, guid: 8e72342c511536043883f2199df73730,
+        type: 3}
+      propertyPath: taunt
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6759876714258691777, guid: 8e72342c511536043883f2199df73730,
+        type: 3}
+      propertyPath: baseHP
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 6759876714258691777, guid: 8e72342c511536043883f2199df73730,
+        type: 3}
+      propertyPath: hp
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 6759876714258691777, guid: 8e72342c511536043883f2199df73730,
+        type: 3}
+      propertyPath: VFX
+      value: 
+      objectReference: {fileID: 3915890013130068333}
     - target: {fileID: 947384502557923801, guid: 8e72342c511536043883f2199df73730,
         type: 3}
       propertyPath: skill
@@ -117,26 +142,6 @@ PrefabInstance:
       propertyPath: SwordEffect
       value: 
       objectReference: {fileID: 9024113596528043469}
-    - target: {fileID: 9164865582948619922, guid: 8e72342c511536043883f2199df73730,
-        type: 3}
-      propertyPath: movement
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 6759876714258691777, guid: 8e72342c511536043883f2199df73730,
-        type: 3}
-      propertyPath: taunt
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6759876714258691777, guid: 8e72342c511536043883f2199df73730,
-        type: 3}
-      propertyPath: baseHP
-      value: 25
-      objectReference: {fileID: 0}
-    - target: {fileID: 6759876714258691777, guid: 8e72342c511536043883f2199df73730,
-        type: 3}
-      propertyPath: hp
-      value: 25
-      objectReference: {fileID: 0}
     - target: {fileID: 5671656072612708471, guid: 8e72342c511536043883f2199df73730,
         type: 3}
       propertyPath: m_Bones.Array.data[0]
@@ -302,6 +307,11 @@ PrefabInstance:
       propertyPath: m_RootBone
       value: 
       objectReference: {fileID: 1206775818313740278}
+    - target: {fileID: 387804616328773293, guid: 8e72342c511536043883f2199df73730,
+        type: 3}
+      propertyPath: m_textInfo.textComponent
+      value: 
+      objectReference: {fileID: 6587450332966863288}
     - target: {fileID: 6089536808562621324, guid: 8e72342c511536043883f2199df73730,
         type: 3}
       propertyPath: m_Bones.Array.data[0]
@@ -555,15 +565,15 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 6776388102245891861}
   m_PrefabAsset: {fileID: 0}
---- !u!4 &1206775818313740228 stripped
+--- !u!4 &1206775818313739808 stripped
 Transform:
-  m_CorrespondingSourceObject: {fileID: 5671656072617890001, guid: 8e72342c511536043883f2199df73730,
+  m_CorrespondingSourceObject: {fileID: 5671656072617890101, guid: 8e72342c511536043883f2199df73730,
     type: 3}
   m_PrefabInstance: {fileID: 6776388102245891861}
   m_PrefabAsset: {fileID: 0}
---- !u!4 &1206775818313740178 stripped
+--- !u!4 &1206775818313740228 stripped
 Transform:
-  m_CorrespondingSourceObject: {fileID: 5671656072617889927, guid: 8e72342c511536043883f2199df73730,
+  m_CorrespondingSourceObject: {fileID: 5671656072617890001, guid: 8e72342c511536043883f2199df73730,
     type: 3}
   m_PrefabInstance: {fileID: 6776388102245891861}
   m_PrefabAsset: {fileID: 0}
@@ -657,9 +667,27 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 6776388102245891861}
   m_PrefabAsset: {fileID: 0}
---- !u!4 &1206775818313739808 stripped
+--- !u!114 &6587450332966863288 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 387804616328773293, guid: 8e72342c511536043883f2199df73730,
+    type: 3}
+  m_PrefabInstance: {fileID: 6776388102245891861}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!1 &3915890013130068333 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7517238039602703992, guid: 8e72342c511536043883f2199df73730,
+    type: 3}
+  m_PrefabInstance: {fileID: 6776388102245891861}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1206775818313740178 stripped
 Transform:
-  m_CorrespondingSourceObject: {fileID: 5671656072617890101, guid: 8e72342c511536043883f2199df73730,
+  m_CorrespondingSourceObject: {fileID: 5671656072617889927, guid: 8e72342c511536043883f2199df73730,
     type: 3}
   m_PrefabInstance: {fileID: 6776388102245891861}
   m_PrefabAsset: {fileID: 0}

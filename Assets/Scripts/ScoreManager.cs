@@ -18,9 +18,8 @@ public class ScoreManager : MonoBehaviour
     
 
     public GameMode gameMode;
-
-    [DrawIf(new string[] { "gameMode" }, GameMode.Arena)]
-    public string arenaName;
+    
+    public string levelName;
 
     [Header("Orb Score")]
     public int maxCombo;
@@ -52,18 +51,8 @@ public class ScoreManager : MonoBehaviour
 
     private int numberOfPlayer;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        //StartCoroutine(StatPrintCoroutine(timeToWait));
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        completionTime += Time.deltaTime;
-
-    }
+    float timeStamp;
+    public float score;
 
     void Awake()
     {
@@ -77,6 +66,8 @@ public class ScoreManager : MonoBehaviour
         }
 
         completionTime = 0;
+
+        timeStamp = Time.time;
 
         //if in story mode, we keep the scoremanager through the scenes
         //we save the scores for each arena
@@ -112,13 +103,15 @@ public class ScoreManager : MonoBehaviour
             Debug.Log("Saves Folder Created");
         }
 
-        arenaName = arenaName + "-";
+        levelName = levelName + "-";
 
-        string destination = Application.persistentDataPath + "/Saves/" + arenaName + fileName + ".txt";
+        string destination = Application.persistentDataPath + "/Saves/" + levelName + fileName + ".txt";
         
-
-
         StreamWriter sw = File.CreateText(destination);
+
+        completionTime = Time.time - timeStamp;
+        score = CalculatePrologueScore();
+
 
         sw.WriteLine("maxCombo " + maxCombo);
         sw.WriteLine("enemyMirrorBroken " + enemyMirrorBroken);
@@ -140,7 +133,20 @@ public class ScoreManager : MonoBehaviour
 
         sw.WriteLine("completionTime " + completionTime);
 
+        sw.WriteLine("score " + score);
+
         sw.Close();
     }
+
+
+    public float CalculatePrologueScore()
+    {
+        float timeScore = 1 / (0.00007f * completionTime);
+        float bonus = timeScore + maxCombo + (statusAilmentApplied + enemyMirrorBroken + killsP1 + killsP2) / 2;
+        float malus = (damageTakenP1 + damageTakenP2) / 50 + (orbHitMissedP1 + orbHitMissedP2) / 10 + numberOfDeaths * 5;
+        float result = bonus - malus;
+        return result;
+    }
+
 
 }
