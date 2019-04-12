@@ -184,6 +184,6 @@ public class DialogSystem : MonoBehaviour
     }
 
     private void setTexture(GameObject foxOrRacoon,Material toAply) {
-        foxOrRacoon.GetComponent<MeshRenderer>().material = toAply;
+        foxOrRacoon.transform.GetChild(0).GetComponent<SkinnedMeshRenderer>().material = toAply;
     }
 }
