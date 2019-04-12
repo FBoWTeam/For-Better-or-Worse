@@ -105,6 +105,7 @@ public class BossSystem : MonoBehaviour
     public float limitAngle;
     public float shrinkSpeed;
     private float angle;
+    public float mysticLineTimeBetweenFeedbackAndCast;
 
     [Header("[Charge Params]")]
     public float chargeCastingTime;
@@ -121,6 +122,7 @@ public class BossSystem : MonoBehaviour
     public GameObject lineProjector;
     public GameObject fireBallProjector;
     public GameObject chargeProjector;
+    public GameObject mysticLineProjector;
 
     [Range(0.8f, 1.2f)]
     public float toleranceCoef;
@@ -334,28 +336,47 @@ public class BossSystem : MonoBehaviour
 
 		//canalisation + feedbacks
 		anim.SetTrigger("LineFireBallShrink");
-		yield return new WaitForSeconds(anim.GetCurrentAnimatorStateInfo(0).length);
+        
+		yield return new WaitForSeconds(2.8f);
 
         Vector3 raycastPosition = new Vector3(transform.position.x, 0, transform.position.z);
-        Vector3 direction;
         RaycastHit hit;
+        Vector3 direction = (new Vector3(aimedPlayer.transform.position.x, raycastPosition.y, aimedPlayer.transform.position.z) - raycastPosition).normalized;
+        
+
+        //show feedback
+        //instanciate the circle indicator
+        GameObject mysticLineIndicator = Instantiate(mysticLineProjector, transform.position, Quaternion.identity) as GameObject;
+
+        float timeStamp = Time.time;
+        Color tempColor = Color.magenta;
+
+
+        mysticLineIndicator.transform.Rotate(Vector3.up, -Vector3.SignedAngle(direction, Vector3.back, Vector3.up));
+
+
+
+        while (Time.time - timeStamp < 1.2f)
+        {
+            //alpha starting from 0 finishing to 0.33333
+            tempColor.a = ((Time.time - timeStamp) / mysticLineTimeBetweenFeedbackAndCast) / 3;
+            mysticLineIndicator.transform.GetChild(0).gameObject.GetComponent<Projector>().material.color = tempColor;
+            yield return new WaitForEndOfFrame();
+        }
+        
 
         if (!isMysticLineCreated)
         {
-            direction = (new Vector3(aimedPlayer.transform.position.x, raycastPosition.y, aimedPlayer.transform.position.z)
-                - raycastPosition).normalized;
-
             if (Physics.Raycast(raycastPosition, direction, out hit, 50, LayerMask.GetMask("Wall")))
             {
-                //Debug
-                //print("Distance : " + hit.distance);
-                //Debug.DrawRay(raycastPosition, direction * 50, Color.blue, 2);
-
                 StartCoroutine(CreateMysticLineCoroutine(raycastPosition, hit.transform.position, hit.distance));
             }
 		}
 
-		nextAttack = Time.time + Random.Range(minWaitTime, maxWaitTime);
+
+        Destroy(mysticLineIndicator);
+
+        nextAttack = Time.time + Random.Range(minWaitTime, maxWaitTime);
 		isAttacking = false;
 	}
 
@@ -627,7 +648,7 @@ public class BossSystem : MonoBehaviour
 
         //warning : there is a ' - ' before 'Vector3.Angle(targetVector, Vector3.back)' because the sprite of the cone is reversed
         //the ' - ' is necessary to turn in the right sens
-        coneIndicator.transform.Rotate(Vector3.up, -Vector3.Angle(targetVector, Vector3.back));
+        coneIndicator.transform.Rotate(Vector3.up, -Vector3.SignedAngle(targetVector, Vector3.back, Vector3.up));
 
         while (Time.time - timeStamp < 2f)
         {
@@ -636,7 +657,6 @@ public class BossSystem : MonoBehaviour
             coneIndicator.transform.GetChild(0).gameObject.GetComponent<Projector>().material.color = tempColor;
             yield return new WaitForEndOfFrame();
         }
-
 
         Debug.Log("casting electric cone");
         
