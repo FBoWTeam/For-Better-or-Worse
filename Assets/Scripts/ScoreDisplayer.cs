@@ -48,10 +48,9 @@ public class ScoreDisplayer : MonoBehaviour
         overallKills.GetComponent<TextMeshProUGUI>().text = (ScoreManager.scoreManager.killsP1 + ScoreManager.scoreManager.killsP2).ToString();
         overallDamageTaken.GetComponent<TextMeshProUGUI>().text = (ScoreManager.scoreManager.damageTakenP1 + ScoreManager.scoreManager.damageTakenP2).ToString();
         overallOrbMissed.GetComponent<TextMeshProUGUI>().text = (ScoreManager.scoreManager.orbHitMissedP1 + ScoreManager.scoreManager.orbHitMissedP2).ToString();
+        
 
-
-
-        float finalScoreValue = ScoreManager.scoreManager.CalculatePrologueScore();
+        float finalScoreValue = ScoreManager.scoreManager.score;
         finalScore.GetComponent<TextMeshProUGUI>().text = (finalScoreValue).ToString();
 
         if (finalScoreValue > 90)
