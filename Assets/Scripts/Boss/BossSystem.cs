@@ -104,6 +104,7 @@ public class BossSystem : MonoBehaviour
     public float limitAngle;
     public float shrinkSpeed;
     private float angle;
+    public float mysticLineTimeBetweenFeedbackAndCast;
 
     [Header("[Charge Params]")]
     public float chargeCastingTime;
@@ -119,6 +120,7 @@ public class BossSystem : MonoBehaviour
     public GameObject lineProjector;
     public GameObject fireBallProjector;
     public GameObject chargeProjector;
+    public GameObject mysticLineProjector;
 
     [Range(0.8f, 1.2f)]
     public float toleranceCoef;
@@ -131,6 +133,11 @@ public class BossSystem : MonoBehaviour
     GameObject player2;
 
 	Animator anim;
+    private float electricAoeAnimationTime;
+    private float electricConeAnimationTime;
+    private float electricZoneAnimationTime;
+    
+
 
     //======================================================================================== AWAKE AND UPDATE
 
@@ -327,28 +334,47 @@ public class BossSystem : MonoBehaviour
 
 		//canalisation + feedbacks
 		anim.SetTrigger("LineFireBallShrink");
-		yield return new WaitForSeconds(anim.GetCurrentAnimatorStateInfo(0).length);
+        
+		yield return new WaitForSeconds(2.8f);
 
         Vector3 raycastPosition = new Vector3(transform.position.x, 0, transform.position.z);
-        Vector3 direction;
         RaycastHit hit;
+        Vector3 direction = (new Vector3(aimedPlayer.transform.position.x, raycastPosition.y, aimedPlayer.transform.position.z) - raycastPosition).normalized;
+        
+
+        //show feedback
+        //instanciate the circle indicator
+        GameObject mysticLineIndicator = Instantiate(mysticLineProjector, transform.position, Quaternion.identity) as GameObject;
+
+        float timeStamp = Time.time;
+        Color tempColor = Color.magenta;
+
+
+        mysticLineIndicator.transform.Rotate(Vector3.up, -Vector3.SignedAngle(direction, Vector3.back, Vector3.up));
+
+
+
+        while (Time.time - timeStamp < 1.2f)
+        {
+            //alpha starting from 0 finishing to 0.33333
+            tempColor.a = ((Time.time - timeStamp) / mysticLineTimeBetweenFeedbackAndCast) / 3;
+            mysticLineIndicator.transform.GetChild(0).gameObject.GetComponent<Projector>().material.color = tempColor;
+            yield return new WaitForEndOfFrame();
+        }
+        
 
         if (!isMysticLineCreated)
         {
-            direction = (new Vector3(aimedPlayer.transform.position.x, raycastPosition.y, aimedPlayer.transform.position.z)
-                - raycastPosition).normalized;
-
             if (Physics.Raycast(raycastPosition, direction, out hit, 50, LayerMask.GetMask("Wall")))
             {
-                //Debug
-                //print("Distance : " + hit.distance);
-                //Debug.DrawRay(raycastPosition, direction * 50, Color.blue, 2);
-
                 StartCoroutine(CreateMysticLineCoroutine(raycastPosition, hit.transform.position, hit.distance));
             }
 		}
 
-		nextAttack = Time.time + Random.Range(minWaitTime, maxWaitTime);
+
+        Destroy(mysticLineIndicator);
+
+        nextAttack = Time.time + Random.Range(minWaitTime, maxWaitTime);
 		isAttacking = false;
 	}
 
@@ -554,9 +580,8 @@ public class BossSystem : MonoBehaviour
 
         //start chaneling anim
         Debug.Log("channeling electric zone");
-		//yield return new WaitForSeconds(electricZoneChannelingTime);
 		anim.SetTrigger("Electricity");
-		yield return new WaitForSeconds(anim.GetCurrentAnimatorStateInfo(0).length);
+		yield return new WaitForSeconds(2.6f);
 
 		Vector3 electricZoneLocation = aimedPlayer.transform.position;
 
@@ -567,7 +592,7 @@ public class BossSystem : MonoBehaviour
         float timeStamp = Time.time;
         Color tempColor = Color.blue;
 
-        while (Time.time - timeStamp < electricZoneTimeBetweenFeedbackAndCast)
+        while (Time.time - timeStamp < 2f)
         {
             //alpha starting from 0 finishing to 0.33333
             tempColor.a = ((Time.time - timeStamp) / electricZoneTimeBetweenFeedbackAndCast) / 3;
@@ -601,9 +626,8 @@ public class BossSystem : MonoBehaviour
 
         //start chaneling anim
         Debug.Log("channeling electric cone");
-		//yield return new WaitForSeconds(electricConeChannelingTime);
 		anim.SetTrigger("Electricity");
-		yield return new WaitForSeconds(anim.GetCurrentAnimatorStateInfo(0).length);
+		yield return new WaitForSeconds(2.6f);
 
 		//determining the area where to cast the spell
 		Vector3 bossPos = transform.position;
@@ -614,8 +638,7 @@ public class BossSystem : MonoBehaviour
         Quaternion rightRotation = Quaternion.Euler(0, electricConeAngle / 2, 0);
         Vector3 minRange = leftRotation * targetVector;
         Vector3 maxRange = rightRotation * targetVector;
-
-
+        
         //instanciate the circle indicator
         GameObject coneIndicator = Instantiate(coneProjector, transform.position, Quaternion.identity) as GameObject;
         //the instanciated circle indicator is a child of the boss
@@ -625,9 +648,9 @@ public class BossSystem : MonoBehaviour
 
         //warning : there is a ' - ' before 'Vector3.Angle(targetVector, Vector3.back)' because the sprite of the cone is reversed
         //the ' - ' is necessary to turn in the right sens
-        coneIndicator.transform.Rotate(Vector3.up, -Vector3.Angle(targetVector, Vector3.back));
+        coneIndicator.transform.Rotate(Vector3.up, -Vector3.SignedAngle(targetVector, Vector3.back, Vector3.up));
 
-        while (Time.time - timeStamp < electricConeTimeBetweenFeedbackAndCast)
+        while (Time.time - timeStamp < 2f)
         {
             //alpha starting from 0 finishing to 0.33333
             tempColor.a = ((Time.time - timeStamp) / electricConeTimeBetweenFeedbackAndCast) / 3;
@@ -635,25 +658,27 @@ public class BossSystem : MonoBehaviour
             yield return new WaitForEndOfFrame();
         }
 
-
         Debug.Log("casting electric cone");
-
-
-
+        
         //check if players are in the area of effect to apply damages
         Vector3 dirToTarget;
         dirToTarget = (player1.transform.position - bossPos).normalized;
         dirToTarget.y = 0;
-        if (Vector3.Angle(targetVector, dirToTarget) < electricConeAngle / 2 && Vector3.Angle(targetVector, dirToTarget) > -electricConeAngle / 2)
+        
+
+        if (Vector3.Angle(targetVector, dirToTarget) < electricConeAngle / 2)
         {
             GameManager.gameManager.TakeDamage(player1, electricConeDamage, Vector3.zero, false);
         }
+        
         dirToTarget = (player2.transform.position - bossPos).normalized;
         dirToTarget.y = 0;
-        if (Vector3.Angle(targetVector, dirToTarget) < electricConeAngle / 2 && Vector3.Angle(targetVector, dirToTarget) > -electricConeAngle / 2)
+
+        if (Vector3.Angle(targetVector, dirToTarget) < electricConeAngle / 2)
         {
             GameManager.gameManager.TakeDamage(player2, electricConeDamage, Vector3.zero, false);
         }
+
 
         Destroy(coneIndicator);
         yield return new WaitForSeconds(1.0f);
@@ -755,19 +780,18 @@ public class BossSystem : MonoBehaviour
         Debug.Log("channeling AOE zone");
 		anim.SetTrigger("Electricity");
         //wait 75% of the cast time
-		yield return new WaitForSeconds(anim.GetCurrentAnimatorStateInfo(0).length * 0.75f);
+        yield return new WaitForSeconds(2.8f);
         
-
-		//show indicator feedback
-		//instanciate the circle indicator
-		GameObject circleIndicator = Instantiate(aoeCircleProjector, transform.position, Quaternion.identity) as GameObject;
+        //show indicator feedback
+        //instanciate the circle indicator
+        GameObject circleIndicator = Instantiate(aoeCircleProjector, transform.position, Quaternion.identity) as GameObject;
         circleIndicator.transform.GetChild(0).gameObject.GetComponent<Projector>().orthographicSize = electricAoeRadius * toleranceCoef;
         //the instanciated circle indicator is a child of the boss
         circleIndicator.transform.parent = transform;
         float timeStamp = Time.time;
         Color tempColor = Color.blue;
         
-        while (Time.time - timeStamp < anim.GetCurrentAnimatorStateInfo(0).length * 0.25f)
+        while (Time.time - timeStamp < 1.8f)
         {
             //alpha starting from 0 finishing to 0.33333
             tempColor.a = ((Time.time - timeStamp) / electricAoeTimeBetweenFeedbackAndCast) / 3;
@@ -820,8 +844,6 @@ public class BossSystem : MonoBehaviour
 
     }
 
-
-
     public IEnumerator Stun()
     {
         isStuned = true;
@@ -841,6 +863,5 @@ public class BossSystem : MonoBehaviour
             Debug.DrawLine(position, destination + position, Color.red, 10f);
         }
     }
-
-
+    
 }
