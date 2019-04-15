@@ -82,7 +82,6 @@ public class BossSystem : MonoBehaviour
 
     [Header("[FireBall Params]")]
     public GameObject fireBallPrefab;
-    public float fireBallCastingTime;
     public int fireBallDamage;
     public int fireBallDamageExplosion;
     public float fireBallRangeExplosion;
@@ -105,12 +104,12 @@ public class BossSystem : MonoBehaviour
     public float limitAngle;
     public float shrinkSpeed;
     private float angle;
+    public float mysticLineTimeBetweenFeedbackAndCast;
 
     [Header("[Charge Params]")]
     public float chargeCastingTime;
     public float chargeSpeed;
     public float chargeOffset;
-    public float chargeStunTime;
     bool willBeStun = false;
     public bool isStun;
 
@@ -121,6 +120,7 @@ public class BossSystem : MonoBehaviour
     public GameObject lineProjector;
     public GameObject fireBallProjector;
     public GameObject chargeProjector;
+    public GameObject mysticLineProjector;
 
     [Range(0.8f, 1.2f)]
     public float toleranceCoef;
@@ -334,28 +334,47 @@ public class BossSystem : MonoBehaviour
 
 		//canalisation + feedbacks
 		anim.SetTrigger("LineFireBallShrink");
-		yield return new WaitForSeconds(anim.GetCurrentAnimatorStateInfo(0).length);
+        
+		yield return new WaitForSeconds(2.8f);
 
         Vector3 raycastPosition = new Vector3(transform.position.x, 0, transform.position.z);
-        Vector3 direction;
         RaycastHit hit;
+        Vector3 direction = (new Vector3(aimedPlayer.transform.position.x, raycastPosition.y, aimedPlayer.transform.position.z) - raycastPosition).normalized;
+        
+
+        //show feedback
+        //instanciate the circle indicator
+        GameObject mysticLineIndicator = Instantiate(mysticLineProjector, transform.position, Quaternion.identity) as GameObject;
+
+        float timeStamp = Time.time;
+        Color tempColor = Color.magenta;
+
+
+        mysticLineIndicator.transform.Rotate(Vector3.up, -Vector3.SignedAngle(direction, Vector3.back, Vector3.up));
+
+
+
+        while (Time.time - timeStamp < 1.2f)
+        {
+            //alpha starting from 0 finishing to 0.33333
+            tempColor.a = ((Time.time - timeStamp) / mysticLineTimeBetweenFeedbackAndCast) / 3;
+            mysticLineIndicator.transform.GetChild(0).gameObject.GetComponent<Projector>().material.color = tempColor;
+            yield return new WaitForEndOfFrame();
+        }
+        
 
         if (!isMysticLineCreated)
         {
-            direction = (new Vector3(aimedPlayer.transform.position.x, raycastPosition.y, aimedPlayer.transform.position.z)
-                - raycastPosition).normalized;
-
             if (Physics.Raycast(raycastPosition, direction, out hit, 50, LayerMask.GetMask("Wall")))
             {
-                //Debug
-                //print("Distance : " + hit.distance);
-                //Debug.DrawRay(raycastPosition, direction * 50, Color.blue, 2);
-
                 StartCoroutine(CreateMysticLineCoroutine(raycastPosition, hit.transform.position, hit.distance));
             }
 		}
 
-		nextAttack = Time.time + Random.Range(minWaitTime, maxWaitTime);
+
+        Destroy(mysticLineIndicator);
+
+        nextAttack = Time.time + Random.Range(minWaitTime, maxWaitTime);
 		isAttacking = false;
 	}
 
@@ -507,16 +526,18 @@ public class BossSystem : MonoBehaviour
     {
         isAttacking = true;
 
-		//yield return new WaitForSeconds(fireBallCastingTime);
-		anim.SetTrigger("LineFireBallShrink");
-		yield return new WaitForSeconds(anim.GetCurrentAnimatorStateInfo(0).length);
+        anim.SetTrigger("LineFireBallShrink");
+        yield return new WaitForSeconds(4.2f);
 
-		Vector3 target = aimedPlayer.transform.position;
-        Vector3 dir = target - transform.position;//direction of the aimed player when the Fireball is creating
+       
+		//yield return new WaitForSeconds(anim.GetCurrentAnimatorStateInfo(0).length);
+
+        Vector3 target = aimedPlayer.transform.position;
+        /*Vector3 dir = target - transform.position;//direction of the aimed player when the Fireball is creating
         dir = dir.normalized;
-        dir.y = 0;
+        dir.y = 0;*/
 
-        Vector3 fireBallStartingPoint = transform.position + 2.8f * dir;
+        Vector3 fireBallStartingPoint = transform.position + new Vector3(0f, 8.5f, 0f);// + 2.8f * dir;
 
         GameObject projectileFireBall = Instantiate(fireBallPrefab, fireBallStartingPoint, Quaternion.identity);
         FireBall fireBall = projectileFireBall.GetComponent<FireBall>();
@@ -627,7 +648,7 @@ public class BossSystem : MonoBehaviour
 
         //warning : there is a ' - ' before 'Vector3.Angle(targetVector, Vector3.back)' because the sprite of the cone is reversed
         //the ' - ' is necessary to turn in the right sens
-        coneIndicator.transform.Rotate(Vector3.up, -Vector3.Angle(targetVector, Vector3.back));
+        coneIndicator.transform.Rotate(Vector3.up, -Vector3.SignedAngle(targetVector, Vector3.back, Vector3.up));
 
         while (Time.time - timeStamp < 2f)
         {
@@ -636,7 +657,6 @@ public class BossSystem : MonoBehaviour
             coneIndicator.transform.GetChild(0).gameObject.GetComponent<Projector>().material.color = tempColor;
             yield return new WaitForEndOfFrame();
         }
-
 
         Debug.Log("casting electric cone");
         
@@ -672,17 +692,13 @@ public class BossSystem : MonoBehaviour
     public IEnumerator ChargeCoroutine()
     {
         isAttacking = true;
-        Debug.Log("charge");
 
 		Vector3 target = aimedPlayer.transform.position;
-        target.y = 2f;
         Vector3 posStart = transform.position;
-        posStart.y = 2f;
 
         Vector3 vectCharge = target - posStart;
         Vector3 newTarget = target + chargeOffset * vectCharge.normalized;//aiming for behind the target player by an offset
-
-
+        
         RaycastHit hit;
         int layerMask = 1 << 11;//to only hit the walls
 
@@ -717,16 +733,16 @@ public class BossSystem : MonoBehaviour
         float timeStamp = Time.time;
         Color tempColor = Color.red;
 
+        anim.SetBool("IsDashing", true);
+
         while (Time.time - timeStamp < chargeCastingTime)
         {
-            //alpha starting from 0 finishing to 0.5
+            //alpha starting from 0.25 finishing to 0.75
             tempColor.a = 0.25f + ((Time.time - timeStamp) / electricAoeTimeBetweenFeedbackAndCast) / 2;
             chargeIndicator.transform.GetChild(0).gameObject.GetComponent<Projector>().material.color = tempColor;
             yield return new WaitForEndOfFrame();
         }
-
-		anim.SetBool("IsDashing", true);
-
+        
 		float t = 0f;
         while (t < 1)
         {
@@ -742,11 +758,13 @@ public class BossSystem : MonoBehaviour
         {
             willBeStun = false;
             isStun = true;
-            yield return new WaitForSeconds(chargeStunTime);
+            yield return new WaitForSeconds(0.8f);
             isStun = false;
         }
 
         Destroy(chargeIndicator);
+
+        yield return new WaitForSeconds(0.7f);//wait for the end animation
 
 		nextAttack = Time.time + Random.Range(minWaitTime, maxWaitTime);
 		isAttacking = false;
