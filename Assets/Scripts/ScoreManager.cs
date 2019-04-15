@@ -18,9 +18,8 @@ public class ScoreManager : MonoBehaviour
     
 
     public GameMode gameMode;
-
-    [DrawIf(new string[] { "gameMode" }, GameMode.Arena)]
-    public string arenaName;
+    
+    public string levelName;
 
     [Header("Orb Score")]
     public int maxCombo;
@@ -50,15 +49,14 @@ public class ScoreManager : MonoBehaviour
     [Header("Time Score")]
     public float completionTime;
 
+    [Header("Total Wave")]
+    public int totalWave;
+
+
     private int numberOfPlayer;
 
-
-    // Update is called once per frame
-    void Update()
-    {
-        completionTime += Time.deltaTime;
-
-    }
+    float timeStamp;
+    public float score;
 
     void Awake()
     {
@@ -73,6 +71,8 @@ public class ScoreManager : MonoBehaviour
 
         completionTime = 0;
 
+        timeStamp = Time.time;
+
         //if in story mode, we keep the scoremanager through the scenes
         //we save the scores for each arena
         if (gameMode == GameMode.Story)
@@ -81,7 +81,7 @@ public class ScoreManager : MonoBehaviour
         }
         
     }
-    
+
     
     public void KeepMaxCombo(int currentCombo)
     {
@@ -107,14 +107,25 @@ public class ScoreManager : MonoBehaviour
             Debug.Log("Saves Folder Created");
         }
 
-        arenaName = arenaName + "-";
+        levelName = levelName + "-";
 
-        string destination = Application.persistentDataPath + "/Saves/" + arenaName + fileName + ".txt";
+        string destination = Application.persistentDataPath + "/Saves/" + levelName + fileName + ".txt";
         
-
-
         StreamWriter sw = File.CreateText(destination);
 
+        completionTime = Time.time - timeStamp;
+
+
+        if (gameMode == GameMode.Story)
+        {
+            score = CalculatePrologueScore();
+        }
+        else if (gameMode == GameMode.Arena)
+        {
+            score = CalculateArenaScore();
+        }
+
+        
         sw.WriteLine("maxCombo " + maxCombo);
         sw.WriteLine("enemyMirrorBroken " + enemyMirrorBroken);
         sw.WriteLine("statusAilmentApplied " + statusAilmentApplied);
@@ -135,6 +146,8 @@ public class ScoreManager : MonoBehaviour
 
         sw.WriteLine("completionTime " + completionTime);
 
+        sw.WriteLine("score " + score);
+
         sw.Close();
     }
 
@@ -148,5 +161,9 @@ public class ScoreManager : MonoBehaviour
         return result;
     }
 
+    public float CalculateArenaScore()
+    {
+        return 0f;
+    }
 
 }

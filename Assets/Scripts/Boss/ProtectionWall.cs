@@ -13,7 +13,7 @@ public class ProtectionWall : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Player"))
         {
-            GameManager.gameManager.TakeDamage(collision.gameObject, wallDamage, transform.position, true);
+            GameManager.gameManager.TakeDamage(collision.gameObject, wallDamage, collision.contacts[0].point, true);
         }
     }
 
