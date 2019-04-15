@@ -81,7 +81,7 @@ public class ScoreManager : MonoBehaviour
         }
         
     }
-    
+
     
     public void KeepMaxCombo(int currentCombo)
     {
