@@ -68,7 +68,12 @@ public class ArenaSystem : MonoBehaviour
             subWaveIndex = 0;
             timer = 0f;
             remainingEnemiesList = new List<GameObject>();
-            StartCoroutine(WaveSystem());
+            if (!start)
+            {
+                StartCoroutine(WaveSystem());
+                start = true;
+            }
+            
             increaseChanceValue = 100f / ((waveList.Count - threshold));
             GameManager.gameManager.UIManager.UpdateWave(waveIndex + 1);
         }
