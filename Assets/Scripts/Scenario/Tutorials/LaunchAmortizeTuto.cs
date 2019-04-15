@@ -8,7 +8,6 @@ public class LaunchAmortizeTuto : MonoBehaviour
 
 	private void OnDestroy()
 	{
-		Debug.Log("oui");
 		tuto.StartCoroutine(tuto.AmortizeTutorialCoroutine());
 	}
 }
