@@ -49,6 +49,10 @@ public class ScoreManager : MonoBehaviour
     [Header("Time Score")]
     public float completionTime;
 
+    [Header("Total Wave")]
+    public int totalWave;
+
+
     private int numberOfPlayer;
 
     float timeStamp;
@@ -110,9 +114,18 @@ public class ScoreManager : MonoBehaviour
         StreamWriter sw = File.CreateText(destination);
 
         completionTime = Time.time - timeStamp;
-        score = CalculatePrologueScore();
 
 
+        if (gameMode == GameMode.Story)
+        {
+            score = CalculatePrologueScore();
+        }
+        else if (gameMode == GameMode.Arena)
+        {
+            score = CalculateArenaScore();
+        }
+
+        
         sw.WriteLine("maxCombo " + maxCombo);
         sw.WriteLine("enemyMirrorBroken " + enemyMirrorBroken);
         sw.WriteLine("statusAilmentApplied " + statusAilmentApplied);
@@ -148,5 +161,9 @@ public class ScoreManager : MonoBehaviour
         return result;
     }
 
+    public float CalculateArenaScore()
+    {
+        return 0f;
+    }
 
 }
