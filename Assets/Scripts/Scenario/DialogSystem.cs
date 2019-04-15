@@ -19,8 +19,6 @@ public class DialogSystem : MonoBehaviour
     public Material rakaNotTalkingMat;
 
 	public GameObject entity;
-	public Material entityTalkingMat;
-	public Material entityNotTalkingMat;
 
 	public GameObject alan;
 	public Material alanTalkingMat;
@@ -107,8 +105,7 @@ public class DialogSystem : MonoBehaviour
 				alan.SetActive(false);
 				break;
 			case Dialog.BonusCharacter.Entity:
-				entity.SetActive(true);
-				setTexture(entity, entityNotTalkingMat);
+				entity.SetActive(false);
 				alan.SetActive(false);
 				break;
 			case Dialog.BonusCharacter.Alan:
@@ -130,25 +127,25 @@ public class DialogSystem : MonoBehaviour
 			case Dialog.Character.Mia:
 				setTexture(mia, miaTalkingMat);
 				setTexture(raka, rakaNotTalkingMat);
-				setTexture(entity, entityNotTalkingMat);
+				entity.SetActive(false);
 				setTexture(alan, alanNotTalkingMat);
 				break;
 			case Dialog.Character.Raka:
 				setTexture(mia, miaNotTalkingMat);
 				setTexture(raka, rakaTalkingMat);
-				setTexture(entity, entityNotTalkingMat);
+				entity.SetActive(false);
 				setTexture(alan, alanNotTalkingMat);
 				break;
 			case Dialog.Character.Entity:
 				setTexture(mia, miaNotTalkingMat);
 				setTexture(raka, rakaNotTalkingMat);
-				setTexture(entity, entityTalkingMat);
+				entity.SetActive(true);
 				setTexture(alan, alanNotTalkingMat);
 				break;
 			case Dialog.Character.Alan:
 				setTexture(mia, miaNotTalkingMat);
 				setTexture(raka, rakaNotTalkingMat);
-				setTexture(entity, entityNotTalkingMat);
+				entity.SetActive(false);
 				setTexture(alan, alanTalkingMat);
 				break;
 		}
