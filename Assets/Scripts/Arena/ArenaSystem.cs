@@ -59,6 +59,7 @@ public class ArenaSystem : MonoBehaviour
 
     private bool start;
     
+    
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))
@@ -121,7 +122,7 @@ public class ArenaSystem : MonoBehaviour
                     waveIndex++;
                     if (waveIndex < waveList.Count)
                     {
-                        GameManager.gameManager.UIManager.UpdateWave(waveIndex + 1);
+                        GameManager.gameManager.UIManager.UpdateWave(ScoreManager.scoreManager.totalWave + waveIndex + 1);
                         GameManager.gameManager.UIManager.StartCoroutine(GameManager.gameManager.UIManager.AnnouceWave(waveIndex + 1));
                     }
                     subWaveIndex = 0;
@@ -133,6 +134,9 @@ public class ArenaSystem : MonoBehaviour
             if (waveIndex >= waveList.Count)
             {
                 arenaCleared = true;
+
+                //update total wave cleared
+                ScoreManager.scoreManager.totalWave += waveIndex + 1;
             }
         }
         ScoreManager.scoreManager.Save();
