@@ -686,28 +686,7 @@ public class PowerController : MonoBehaviour
         isActivatedByBrazier = false;
 	}
 
-    IEnumerator FireDamage(GameObject target, int totalDamage, float duration)
-    {
-        int tickDamage = Mathf.RoundToInt(totalDamage / duration);
-        int curentDamage = 0;
 
-		target.GetComponent<Enemy>().VFX.transform.GetChild(0).gameObject.SetActive(true);
-		while (curentDamage < totalDamage)
-		{
-            if (target.GetComponent<Enemy>() != null)
-            {
-                target.GetComponent<Enemy>().TakeDamage(tickDamage);
-            }
-            else if (target.GetComponent<BossSystem>() != null)
-            {
-                target.GetComponent<BossSystem>().TakeDamage(tickDamage);
-            }
-			
-			yield return new WaitForSeconds(1f);
-			curentDamage += tickDamage;
-		}
-		target.GetComponent<Enemy>().VFX.transform.GetChild(0).gameObject.SetActive(false);
-	}
 
     #endregion
 
@@ -970,12 +949,12 @@ public class PowerController : MonoBehaviour
                 //update in score manager
                 ScoreManager.scoreManager.statusAilmentApplied++;
 
-                if (actualFireDOTCoroutine != null)
-					StopCoroutine(actualFireDOTCoroutine);
+                if (enemy.actualFireCoroutine != null)
+					StopCoroutine(enemy.actualFireCoroutine);
 				if(isActivatedByBrazier)
-					actualFireDOTCoroutine = StartCoroutine(FireDamage(enemy.gameObject, fireTicksDamageBrazier, fireTickDurationBrazier));
+                    enemy.actualFireCoroutine = enemy.StartCoroutine(enemy.FireDamage(enemy.gameObject, fireTicksDamageBrazier, fireTickDurationBrazier));
 				else
-					actualFireDOTCoroutine = StartCoroutine(FireDamage(enemy.gameObject, fireTicksDamage, fireTickDuration));
+                    enemy.actualFireCoroutine = enemy.StartCoroutine(enemy.FireDamage(enemy.gameObject, fireTicksDamage, fireTickDuration));
                 damageTaken += fireDamage;
                 break;
             case GameManager.PowerType.Electric:
@@ -1051,12 +1030,12 @@ public class PowerController : MonoBehaviour
                 //update in score manager
                 ScoreManager.scoreManager.statusAilmentApplied++;
 
-                if (actualFireDOTCoroutine != null)
-                    StopCoroutine(actualFireDOTCoroutine);
+                if (bossSystem.actualFireCoroutine != null)
+                    StopCoroutine(bossSystem.actualFireCoroutine);
                 if (isActivatedByBrazier)
-                    actualFireDOTCoroutine = StartCoroutine(FireDamage(bossSystem.gameObject, fireTicksDamageBrazier, fireTickDurationBrazier));
+                    bossSystem.actualFireCoroutine = bossSystem.StartCoroutine(bossSystem.FireDamage(bossSystem.gameObject, fireTicksDamageBrazier, fireTickDurationBrazier));
                 else
-                    actualFireDOTCoroutine = StartCoroutine(FireDamage(bossSystem.gameObject, fireTicksDamage, fireTickDuration));
+                    bossSystem.actualFireCoroutine = bossSystem.StartCoroutine(bossSystem.FireDamage(bossSystem.gameObject, fireTicksDamage, fireTickDuration));
                 damageTaken += fireDamage;
                 break;
 
