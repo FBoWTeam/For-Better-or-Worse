@@ -136,7 +136,9 @@ public class BossSystem : MonoBehaviour
     private float electricAoeAnimationTime;
     private float electricConeAnimationTime;
     private float electricZoneAnimationTime;
-    
+
+    [HideInInspector]
+    public Coroutine actualFireCoroutine;
 
 
     //======================================================================================== AWAKE AND UPDATE
@@ -851,6 +853,34 @@ public class BossSystem : MonoBehaviour
         isStuned = false;
     }
 
+    public IEnumerator FireDamage(GameObject target, int totalDamage, float duration)
+    {
+        int tickDamage = Mathf.RoundToInt(totalDamage / duration);
+        int curentDamage = 0;
+        
+        BossSystem bossSystem = target.GetComponent<BossSystem>();
+
+        if (bossSystem != null)
+        {
+            //activer les fx de feu sur le boss
+        }
+        
+        while (curentDamage < totalDamage)
+        {
+            if (bossSystem != null)
+            {
+                bossSystem.TakeDamage(tickDamage);
+            }
+
+            yield return new WaitForSeconds(1f);
+            curentDamage += tickDamage;
+        }
+
+        if (bossSystem != null)
+        {
+            //désactiver les fx de feu sur le boss
+        }
+    }
 
     //function to visualize the effect zone of an AOE
     void DrawAOE(Vector3 position, float radius)
