@@ -273,6 +273,71 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7541909}
   m_CullTransparentMesh: 0
+--- !u!1 &58008927
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 58008929}
+  - component: {fileID: 58008928}
+  m_Layer: 0
+  m_Name: ScoreManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &58008928
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 58008927}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 618bad5fb90f5d24db4f24fb78ad3d86, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gameMode: 1
+  levelName: lOLOL
+  sceneIndex: 0
+  maxCombo: 0
+  enemyMirrorBroken: 0
+  statusAilmentApplied: 0
+  killsEnvironment: 0
+  damageTakenP1: 0
+  damageTakenP2: 0
+  numberOfDeaths: 0
+  orbHitMissedP1: 0
+  orbHitMissedP2: 0
+  killsP1: 0
+  killsP2: 0
+  healPointReceivedP1: 0
+  healPointReceivedP2: 0
+  damageDealtBossP1: 0
+  damageDealtBossP2: 0
+  bossKilledByP1: 0
+  completionTime: 0
+  totalWave: 8
+  score: 0
+--- !u!4 &58008929
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 58008927}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.01944783, y: 0.55946165, z: -4.7246466}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &133163327
 GameObject:
   m_ObjectHideFlags: 0
@@ -769,6 +834,52 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: -84.29994}
   m_SizeDelta: {x: 0, y: 67.7}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!1 &391906388
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 391906390}
+  - component: {fileID: 391906389}
+  m_Layer: 0
+  m_Name: ScoreController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &391906389
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 391906388}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: da83f25a1790a024c9e36118c389d681, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  buttonA: {fileID: 660463045}
+  buttonB: {fileID: 1783405082}
+  timeBeforeActiveControl: 3
+--- !u!4 &391906390
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 391906388}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.08899608, y: 0.7043047, z: -6.2809014}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &398162258
 GameObject:
   m_ObjectHideFlags: 0
@@ -1833,7 +1944,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &660463046
 RectTransform:
   m_ObjectHideFlags: 0
@@ -4406,7 +4517,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1783405083
 RectTransform:
   m_ObjectHideFlags: 0
@@ -5761,6 +5872,7 @@ MonoBehaviour:
   overallDamageTaken: {fileID: 474798442}
   overallOrbMissed: {fileID: 1550290177}
   finalScore: {fileID: 1670819479}
+  starCanvas: {fileID: 0}
 --- !u!222 &520980052015839013
 CanvasRenderer:
   m_ObjectHideFlags: 0

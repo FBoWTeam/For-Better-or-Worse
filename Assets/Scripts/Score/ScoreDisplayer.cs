@@ -43,7 +43,7 @@ public class ScoreDisplayer : MonoBehaviour
 
     private void Start()
     {
-        levelName.GetComponent<TextMeshProUGUI>().text = ScoreManager.scoreManager.levelName.ToString();
+        levelName.GetComponent<TextMeshProUGUI>().text = ScoreManager.scoreManager.levelName;
 
         killsP1.GetComponent<TextMeshProUGUI>().text = ScoreManager.scoreManager.killsP1.ToString();
         damageTakenP1.GetComponent<TextMeshProUGUI>().text = ScoreManager.scoreManager.damageTakenP1.ToString();
