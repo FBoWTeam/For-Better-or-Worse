@@ -2876,6 +2876,11 @@ PrefabInstance:
       propertyPath: arenaName
       value: Arena1
       objectReference: {fileID: 0}
+    - target: {fileID: 5032312402884482697, guid: 803229b9aa4a4ce48ad2658f0c9c52ca,
+        type: 3}
+      propertyPath: levelName
+      value: Tippie
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 803229b9aa4a4ce48ad2658f0c9c52ca, type: 3}
 --- !u!1001 &621452411
@@ -3851,7 +3856,7 @@ PrefabInstance:
     - target: {fileID: 1963540010838136425, guid: 6c9d85762baf8aa408ebfbe35bfcea49,
         type: 3}
       propertyPath: sceneToLoad
-      value: 8
+      value: 13
       objectReference: {fileID: 0}
     - target: {fileID: 1963540010838136425, guid: 6c9d85762baf8aa408ebfbe35bfcea49,
         type: 3}
@@ -4381,25 +4386,11 @@ MonoBehaviour:
   waveList:
   - subWaveList:
     - spawnNumber: 0
-      timeBeforeNextSubWave: 10
+      timeBeforeNextSubWave: 1
       subWavePrefab: {fileID: 9193597293470881315, guid: 1012b571cc258f44eb57d3003b1df89b,
         type: 3}
-    - spawnNumber: 1
-      timeBeforeNextSubWave: 0
-      subWavePrefab: {fileID: 9193597293470881315, guid: 1012b571cc258f44eb57d3003b1df89b,
-        type: 3}
-    timeBeforeNextWave: 5
-  - subWaveList:
-    - spawnNumber: 0
-      timeBeforeNextSubWave: 10
-      subWavePrefab: {fileID: 9193597293470881315, guid: 1012b571cc258f44eb57d3003b1df89b,
-        type: 3}
-    - spawnNumber: 1
-      timeBeforeNextSubWave: 0
-      subWavePrefab: {fileID: 9193597293470881315, guid: 1012b571cc258f44eb57d3003b1df89b,
-        type: 3}
-    timeBeforeNextWave: 0
-  bonusWave: {fileID: 6970929828074265096, guid: 77c5544cf9804e048b133fc57470a41c,
+    timeBeforeNextWave: 2
+  bonusWave: {fileID: 9193597293470881315, guid: 1012b571cc258f44eb57d3003b1df89b,
     type: 3}
   spawnNumer: 1
   threshold: 1
@@ -11662,7 +11653,7 @@ PrefabInstance:
     - target: {fileID: 2970527385879693205, guid: e0c803f7f12a09b4cb87b0f68746c41b,
         type: 3}
       propertyPath: baseDamage
-      value: 5
+      value: 500
       objectReference: {fileID: 0}
     - target: {fileID: 8532492035236268594, guid: e0c803f7f12a09b4cb87b0f68746c41b,
         type: 3}

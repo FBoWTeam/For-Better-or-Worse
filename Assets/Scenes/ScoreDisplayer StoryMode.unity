@@ -520,7 +520,7 @@ GameObject:
   - component: {fileID: 216193502}
   - component: {fileID: 216193501}
   m_Layer: 0
-  m_Name: DeathScore
+  m_Name: DeathValue
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -781,7 +781,7 @@ GameObject:
   - component: {fileID: 257524108}
   - component: {fileID: 257524107}
   m_Layer: 0
-  m_Name: UseOfPowersScore
+  m_Name: UseOfPowersValue
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1325,7 +1325,7 @@ GameObject:
   - component: {fileID: 474798445}
   - component: {fileID: 474798444}
   m_Layer: 0
-  m_Name: DamageTakenScore
+  m_Name: DamageTakenValue
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1491,7 +1491,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &503121483
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2213,7 +2213,7 @@ GameObject:
   - component: {fileID: 675057154}
   - component: {fileID: 675057153}
   m_Layer: 0
-  m_Name: DamageTakenScore
+  m_Name: DamageTakenValue
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2805,7 +2805,7 @@ GameObject:
   - component: {fileID: 835719653}
   - component: {fileID: 835719652}
   m_Layer: 0
-  m_Name: TimeScore
+  m_Name: TimeValue
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3163,7 +3163,7 @@ GameObject:
   - component: {fileID: 999031961}
   - component: {fileID: 999031960}
   m_Layer: 0
-  m_Name: OrbMissedScore
+  m_Name: OrbMissedValue
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3487,7 +3487,7 @@ GameObject:
   - component: {fileID: 1212418645}
   - component: {fileID: 1212418644}
   m_Layer: 0
-  m_Name: KillsScore
+  m_Name: KillsValue
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3685,7 +3685,7 @@ GameObject:
   - component: {fileID: 1409008679}
   - component: {fileID: 1409008678}
   m_Layer: 0
-  m_Name: MaxComboScore
+  m_Name: MaxComboValue
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3883,7 +3883,7 @@ GameObject:
   - component: {fileID: 1550290180}
   - component: {fileID: 1550290179}
   m_Layer: 0
-  m_Name: OrbMissedScore
+  m_Name: OrbMissedValue
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5580,7 +5580,7 @@ GameObject:
   - component: {fileID: 1988551633}
   - component: {fileID: 1988551632}
   m_Layer: 0
-  m_Name: KillsScore
+  m_Name: KillsValue
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6242,7 +6242,7 @@ GameObject:
   - component: {fileID: 5581650599813524055}
   - component: {fileID: 3667182340134588580}
   m_Layer: 0
-  m_Name: OrbMissedScore
+  m_Name: OrbMissedValue
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6280,12 +6280,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d27f2f4fb18ccbe479fd1fe1984e1e66, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  scoreMode: 0
+  levelName: {fileID: 1934380295}
   killsP1: {fileID: 8741069427276530918}
   damageTakenP1: {fileID: 5730931901987907742}
   orbMissedP1: {fileID: 278830153326201227}
-  killsP2: {fileID: 942109438}
-  damageTakenP2: {fileID: 1506886464}
-  orbMissedP2: {fileID: 450255151}
+  killsP2: {fileID: 1212418642}
+  damageTakenP2: {fileID: 675057151}
+  orbMissedP2: {fileID: 999031958}
   completionTime: {fileID: 835719650}
   maxCombo: {fileID: 1409008676}
   useOfPower: {fileID: 257524105}
@@ -6294,12 +6296,7 @@ MonoBehaviour:
   overallDamageTaken: {fileID: 474798442}
   overallOrbMissed: {fileID: 1550290177}
   finalScore: {fileID: 1670819479}
-  stars:
-  - {fileID: 776758953}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  starCanvas: {fileID: 1571829056}
 --- !u!222 &520980052015839013
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -7130,7 +7127,7 @@ GameObject:
   - component: {fileID: 1982494670077395094}
   - component: {fileID: 7982687560112488961}
   m_Layer: 0
-  m_Name: DamageTakenScore
+  m_Name: DamageTakenValue
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7674,7 +7671,7 @@ GameObject:
   - component: {fileID: 3432328991970892264}
   - component: {fileID: 7052899364483779627}
   m_Layer: 0
-  m_Name: KillsScore
+  m_Name: KillsValue
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

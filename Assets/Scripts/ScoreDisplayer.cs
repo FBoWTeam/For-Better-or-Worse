@@ -7,6 +7,12 @@ using UnityEngine.SceneManagement;
 
 public class ScoreDisplayer : MonoBehaviour
 {
+    public enum ScoreMode { Story, Arena };
+
+    public ScoreMode scoreMode;
+
+    public GameObject levelName;
+
     [Header("Score P1")]
     public GameObject killsP1;
     public GameObject damageTakenP1;
@@ -21,60 +27,76 @@ public class ScoreDisplayer : MonoBehaviour
     public GameObject completionTime;
     public GameObject maxCombo;
     public GameObject useOfPower;
+
+    [DrawIf(new string[] { "scoreMode" }, ScoreMode.Story)]
     public GameObject numberOfDeath;
+
     public GameObject overallKills;
     public GameObject overallDamageTaken;
     public GameObject overallOrbMissed;
 
     [Header("Final Score")]
     public GameObject finalScore;
-    
-    public List<GameObject> stars;
+
+    [DrawIf(new string[] { "scoreMode" }, ScoreMode.Story)]
+    public GameObject starCanvas;
 
     private void Start()
     {
-        //killsP1.GetComponent<TextMeshProUGUI>().text = ScoreManager.scoreManager.killsP1.ToString();
-        //damageTakenP1.GetComponent<TextMeshProUGUI>().text = ScoreManager.scoreManager.damageTakenP1.ToString();
+        levelName.GetComponent<TextMeshProUGUI>().text = ScoreManager.scoreManager.levelName.ToString();
+
+        killsP1.GetComponent<TextMeshProUGUI>().text = ScoreManager.scoreManager.killsP1.ToString();
+        damageTakenP1.GetComponent<TextMeshProUGUI>().text = ScoreManager.scoreManager.damageTakenP1.ToString();
         orbMissedP1.GetComponent<TextMeshProUGUI>().text = ScoreManager.scoreManager.orbHitMissedP1.ToString();
 
         killsP2.GetComponent<TextMeshProUGUI>().text = ScoreManager.scoreManager.killsP2.ToString();
         damageTakenP2.GetComponent<TextMeshProUGUI>().text = ScoreManager.scoreManager.damageTakenP2.ToString();
         orbMissedP2.GetComponent<TextMeshProUGUI>().text = ScoreManager.scoreManager.orbHitMissedP2.ToString();
-        
+
         completionTime.GetComponent<TextMeshProUGUI>().text = ((float)Mathf.Round(ScoreManager.scoreManager.completionTime * 100f) / 100f).ToString();
         maxCombo.GetComponent<TextMeshProUGUI>().text = ScoreManager.scoreManager.maxCombo.ToString();
         useOfPower.GetComponent<TextMeshProUGUI>().text = (ScoreManager.scoreManager.enemyMirrorBroken + ScoreManager.scoreManager.statusAilmentApplied).ToString();
-        numberOfDeath.GetComponent<TextMeshProUGUI>().text = ScoreManager.scoreManager.numberOfDeaths.ToString();
+
         overallKills.GetComponent<TextMeshProUGUI>().text = (ScoreManager.scoreManager.killsP1 + ScoreManager.scoreManager.killsP2).ToString();
         overallDamageTaken.GetComponent<TextMeshProUGUI>().text = (ScoreManager.scoreManager.damageTakenP1 + ScoreManager.scoreManager.damageTakenP2).ToString();
         overallOrbMissed.GetComponent<TextMeshProUGUI>().text = (ScoreManager.scoreManager.orbHitMissedP1 + ScoreManager.scoreManager.orbHitMissedP2).ToString();
-        
 
-        float finalScoreValue = ScoreManager.scoreManager.score;
-        finalScore.GetComponent<TextMeshProUGUI>().text = (finalScoreValue).ToString();
 
-        if (finalScoreValue > 90)
+        if (scoreMode == ScoreMode.Story)
         {
-            ShowStars(5);
-        }
-        else if (finalScoreValue > 70)
-        {
-            ShowStars(4);
-        }
-        else if (finalScoreValue > 50)
-        {
-            ShowStars(3);
-        }
-        else if (finalScoreValue > 30)
-        {
-            ShowStars(2);
+            numberOfDeath.GetComponent<TextMeshProUGUI>().text = ScoreManager.scoreManager.numberOfDeaths.ToString();
+            float finalScoreValue = ScoreManager.scoreManager.score;
+            finalScore.GetComponent<TextMeshProUGUI>().text = (finalScoreValue).ToString();
+
+            if (finalScoreValue > 90)
+            {
+                starCanvas.transform.GetChild(4).gameObject.SetActive(true);
+            }
+            else if (finalScoreValue > 70)
+            {
+                starCanvas.transform.GetChild(3).gameObject.SetActive(true);
+            }
+            else if (finalScoreValue > 50)
+            {
+                starCanvas.transform.GetChild(2).gameObject.SetActive(true);
+            }
+            else if (finalScoreValue > 30)
+            {
+                starCanvas.transform.GetChild(1).gameObject.SetActive(true);
+            }
+            else
+            {
+                starCanvas.transform.GetChild(0).gameObject.SetActive(true);
+            }
         }
         else
         {
-            ShowStars(1);
+            finalScore.GetComponent<TextMeshProUGUI>().text =  ScoreManager.scoreManager.totalWave.ToString();
         }
 
-        print(ScoreManager.scoreManager.levelName);
+
+
+
     }
 
     private void Update()
@@ -84,15 +106,5 @@ public class ScoreDisplayer : MonoBehaviour
             SceneManager.LoadScene(0);
         }
     }
-
-
-    void ShowStars(int nbStars)
-    {
-        for (int i = 0; i < nbStars; i++)
-        {
-            stars[i].SetActive(true);
-        }
-    }
-
 
 }
