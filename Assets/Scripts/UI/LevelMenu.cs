@@ -86,16 +86,20 @@ public class LevelMenu : MonoBehaviour
                     switch (curentPIIndex)
                     {
                         case 0:
+							GameData.nextSceneToLoad = 5;
                             SceneManager.LoadScene(4);
                             break;
                         case 1:
-                            SceneManager.LoadScene(6);
+							GameData.nextSceneToLoad = 7;
+							SceneManager.LoadScene(4);
                             break;
                         case 2:
-                            SceneManager.LoadScene(7);
+							GameData.nextSceneToLoad = 8;
+							SceneManager.LoadScene(4);
                             break;
                         case 3:
-                            SceneManager.LoadScene(8);
+							GameData.nextSceneToLoad = 9;
+							SceneManager.LoadScene(4);
                             break;
                     }
                 }
