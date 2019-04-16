@@ -33,8 +33,8 @@ public class ScoreDisplayer : MonoBehaviour
 
     private void Start()
     {
-        killsP1.GetComponent<TextMeshProUGUI>().text = ScoreManager.scoreManager.killsP1.ToString();
-        damageTakenP1.GetComponent<TextMeshProUGUI>().text = ScoreManager.scoreManager.damageTakenP1.ToString();
+        //killsP1.GetComponent<TextMeshProUGUI>().text = ScoreManager.scoreManager.killsP1.ToString();
+        //damageTakenP1.GetComponent<TextMeshProUGUI>().text = ScoreManager.scoreManager.damageTakenP1.ToString();
         orbMissedP1.GetComponent<TextMeshProUGUI>().text = ScoreManager.scoreManager.orbHitMissedP1.ToString();
 
         killsP2.GetComponent<TextMeshProUGUI>().text = ScoreManager.scoreManager.killsP2.ToString();
@@ -73,6 +73,8 @@ public class ScoreDisplayer : MonoBehaviour
         {
             ShowStars(1);
         }
+
+        print(ScoreManager.scoreManager.levelName);
     }
 
     private void Update()
