@@ -36,14 +36,16 @@ public class TimeLineRockFall : MonoBehaviour
         GameManager.gameManager.player1.GetComponent<CapsuleCollider>().isTrigger = false;
         GameManager.gameManager.player2.GetComponent<CapsuleCollider>().isTrigger = false;
         GameManager.gameManager.isPaused = false;
-        SceneManager.LoadScene(3);
+        GameManager.gameManager.player1.GetComponent<PlayerController>().active = true;
+        GameManager.gameManager.player2.GetComponent<PlayerController>().active = true;
+        GameManager.gameManager.player1.GetComponent<OrbHitter>().active = true;
+        GameManager.gameManager.player2.GetComponent<OrbHitter>().active = true;
     }
 
     IEnumerator InitCoroutine()
     {
         yield return new WaitForSeconds(1.5f);//temps a changer
         WallForTimeLine.SetActive(true);
-        GameManager.gameManager.isPaused = false;
         GameManager.gameManager.orb.GetComponent<OrbController>().canHitPlayer = false;
         GameManager.gameManager.UIManager.gameObject.SetActive(false);
         GameManager.gameManager.blackBands.SetActive(true);
