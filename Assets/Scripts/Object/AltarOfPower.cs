@@ -39,7 +39,13 @@ public class AltarOfPower : MonoBehaviour, IActivable
             controller.droppedPower = powerToGive;
             controller.reflectedDrop = false;
             GameManager.gameManager.UIManager.UpdateDroppedPower(powerToGive);
-            GetComponent<MeshRenderer>().material.color = Color.black;
+            if (transform.childCount > 0)
+            {
+                for (int i = 0; i < transform.childCount; i++)
+                {
+                    transform.GetChild(i).gameObject.SetActive(false);
+                }
+            }
         }
     }
 
