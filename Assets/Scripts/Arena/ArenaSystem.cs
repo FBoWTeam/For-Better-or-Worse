@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class ArenaSystem : MonoBehaviour
@@ -56,23 +57,59 @@ public class ArenaSystem : MonoBehaviour
 
     //enemies currently alive in the arena
     private List<GameObject> remainingEnemiesList;
-
-    private bool start;
     
+
+    public List<GameObject> arenaCanvas;
+    public GameObject countdownArena;
+
+
+    private void Start()
+    {
+        waveIndex = 0;
+        subWaveIndex = 0;
+        timer = 0f;
+        remainingEnemiesList = new List<GameObject>();
+        increaseChanceValue = 100f / ((waveList.Count - threshold));
+    }
+
+
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))
         {
-            waveIndex = 0;
-            subWaveIndex = 0;
-            timer = 0f;
-            remainingEnemiesList = new List<GameObject>();
-            StartCoroutine(WaveSystem());
-            increaseChanceValue = 100f / ((waveList.Count - threshold));
-            GameManager.gameManager.UIManager.UpdateWave(waveIndex + 1);
+            StartCoroutine(CountDown());
+            GetComponent<BoxCollider>().enabled = false;
         }
     }
 
+
+    IEnumerator CountDown()
+    {
+        countdownArena.SetActive(true);
+        countdownArena.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "5";
+        yield return new WaitForSeconds(1f);
+        countdownArena.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "4";
+        yield return new WaitForSeconds(1f);
+        countdownArena.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "3";
+        yield return new WaitForSeconds(1f);
+        countdownArena.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "2";
+        yield return new WaitForSeconds(1f);
+        countdownArena.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "1";
+        yield return new WaitForSeconds(1f);
+        countdownArena.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "";
+        StartArena();
+    }
+
+    void StartArena()
+    {
+        for (int i = 0; i < arenaCanvas.Count; i++)
+        {
+            arenaCanvas[i].SetActive(true);
+        }
+        StartCoroutine(WaveSystem());
+        GameManager.gameManager.UIManager.UpdateWave(waveIndex + 1);
+    }
+    
     IEnumerator WaveSystem()
     {
         if (waveList.Count <= 0)
@@ -121,7 +158,7 @@ public class ArenaSystem : MonoBehaviour
                     waveIndex++;
                     if (waveIndex < waveList.Count)
                     {
-                        GameManager.gameManager.UIManager.UpdateWave(waveIndex + 1);
+                        GameManager.gameManager.UIManager.UpdateWave(ScoreManager.scoreManager.totalWave + waveIndex + 1);
                         GameManager.gameManager.UIManager.StartCoroutine(GameManager.gameManager.UIManager.AnnouceWave(waveIndex + 1));
                     }
                     subWaveIndex = 0;
@@ -133,6 +170,9 @@ public class ArenaSystem : MonoBehaviour
             if (waveIndex >= waveList.Count)
             {
                 arenaCleared = true;
+
+                //update total wave cleared
+                ScoreManager.scoreManager.totalWave += waveIndex + 1;
             }
         }
         ScoreManager.scoreManager.Save();
