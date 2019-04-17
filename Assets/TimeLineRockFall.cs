@@ -12,9 +12,9 @@ public class TimeLineRockFall : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        WallForTimeLine = GameObject.Find("Wall reverse");
-        WallForTimeLine.SetActive(false);
+        WallForTimeLine = GameObject.Find("Wall Reverse");
         Debug.Log("wall");
+        WallForTimeLine.SetActive(false);
     }
 
     public void Initialize()
@@ -47,7 +47,7 @@ public class TimeLineRockFall : MonoBehaviour
 
     IEnumerator InitCoroutine()
     {
-        yield return new WaitForSeconds(1.5f);//temps a changer
+        yield return new WaitForSeconds(1.5f);
         WallForTimeLine.SetActive(true);
         GameManager.gameManager.orb.GetComponent<OrbController>().canHitPlayer = false;
         GameManager.gameManager.UIManager.gameObject.SetActive(false);
