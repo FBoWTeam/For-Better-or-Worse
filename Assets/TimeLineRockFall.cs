@@ -14,6 +14,7 @@ public class TimeLineRockFall : MonoBehaviour
     {
         WallForTimeLine = GameObject.Find("Wall reverse");
         WallForTimeLine.SetActive(false);
+        Debug.Log("wall");
     }
 
     public void Initialize()
@@ -40,6 +41,8 @@ public class TimeLineRockFall : MonoBehaviour
         GameManager.gameManager.player2.GetComponent<PlayerController>().active = true;
         GameManager.gameManager.player1.GetComponent<OrbHitter>().active = true;
         GameManager.gameManager.player2.GetComponent<OrbHitter>().active = true;
+        GameManager.gameManager.UIManager.gameObject.SetActive(true);
+        GameManager.gameManager.blackBands.SetActive(false);
     }
 
     IEnumerator InitCoroutine()
