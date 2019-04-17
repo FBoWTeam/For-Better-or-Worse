@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
+using UnityEngine.SceneManagement;
+
 
 
 public class ScoreManager : MonoBehaviour
@@ -20,6 +22,9 @@ public class ScoreManager : MonoBehaviour
     public GameMode gameMode;
     
     public string levelName;
+
+    [HideInInspector]
+    public int sceneIndex;
 
     [Header("Orb Score")]
     public int maxCombo;
@@ -79,7 +84,8 @@ public class ScoreManager : MonoBehaviour
         {
             DontDestroyOnLoad(this.gameObject);
         }
-        
+
+        sceneIndex = SceneManager.GetActiveScene().buildIndex;
     }
 
     
