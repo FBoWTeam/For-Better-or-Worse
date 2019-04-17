@@ -7,12 +7,12 @@ using UnityEngine.SceneManagement;
 public class LevelMenu : MonoBehaviour
 {
 
-    List<Vector3> pos = new List<Vector3>();
+    public List<GameObject> pos = new List<GameObject>();
     List<int> indexPI = new List<int>();
-    public int curentPosIndex;
-    public int curentPIIndex;
-    public int destPosIndex;
-    public int destPIIndex;
+    int curentPosIndex;
+    int curentPIIndex;
+    int destPosIndex;
+    int destPIIndex;
 
     public bool isMoving;
 
@@ -24,35 +24,13 @@ public class LevelMenu : MonoBehaviour
         curentPosIndex = 0;
         destPosIndex = 0;
         isMoving = false;
-
-        /*pos.Add(new Vector3(202, 445, 0));//0-tower
-        pos.Add(new Vector3(265, 445, 0));
-        pos.Add(new Vector3(300, 390, 0));
-        pos.Add(new Vector3(370, 390, 0));//3-fire
-        pos.Add(new Vector3(450, 375, 0));//4-lake
-        pos.Add(new Vector3(500, 360, 0));//5-croco
-        pos.Add(new Vector3(540, 355, 0));
-        pos.Add(new Vector3(610, 410, 0));//7-cave
-        pos.Add(new Vector3(665, 405, 0));//8-rune
-        pos.Add(new Vector3(650, 360, 0));//9-jag*/
-
-        pos.Add(new Vector3(255, 570, 0));//0-tower
-        pos.Add(new Vector3(340, 570, 0));
-        pos.Add(new Vector3(390, 500, 0));
-        pos.Add(new Vector3(470, 500, 0));//3-fire
-        pos.Add(new Vector3(580, 480, 0));//4-lake
-        pos.Add(new Vector3(640, 465, 0));//5-croco
-        pos.Add(new Vector3(680, 455, 0));
-        pos.Add(new Vector3(780, 530, 0));//7-cave
-        pos.Add(new Vector3(850, 520, 0));//8-rune
-        pos.Add(new Vector3(835, 455, 0));//9-jag
         
         indexPI.Add(0);
         indexPI.Add(7);
         indexPI.Add(8);
         indexPI.Add(9);
 
-        transform.position = pos[0];
+		transform.position = pos[0].transform.position;
     }
 
     // Update is called once per frame
@@ -134,7 +112,7 @@ public class LevelMenu : MonoBehaviour
 
         while(t<1)
         {
-            transform.position = Vector3.Lerp(pos[curentPosIndex], pos[curentPosIndex + 1], t);
+			transform.position = Vector3.Lerp(pos[curentPosIndex].transform.position, pos[curentPosIndex + 1].transform.position, t);
             t += 0.02f;
             yield return new WaitForSecondsRealtime(0.01f);
         }
@@ -151,8 +129,9 @@ public class LevelMenu : MonoBehaviour
 
         while (t < 1)
         {
-            transform.position = Vector3.Lerp(pos[curentPosIndex], pos[curentPosIndex - 1], t);
-            t += 0.02f;
+			transform.position = Vector3.Lerp(pos[curentPosIndex].transform.position, pos[curentPosIndex - 1].transform.position, t);
+
+			t += 0.02f;
             yield return new WaitForSecondsRealtime(0.01f);
         }
 
