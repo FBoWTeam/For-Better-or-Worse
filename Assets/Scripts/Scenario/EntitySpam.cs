@@ -21,8 +21,9 @@ public class EntitySpam : MonoBehaviour
 		bool pass = true;
 		while (true)
 		{
-			foreach(string s in sentences)
+			foreach(string key in sentences)
 			{
+				string s = I18n.Translate(key);
 				actualText = textList[Random.Range(0, textList.Count)];
 				foreach(char c in s)
 				{

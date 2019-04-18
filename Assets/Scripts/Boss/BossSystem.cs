@@ -122,6 +122,7 @@ public class BossSystem : MonoBehaviour
     public GameObject fireBallProjector;
     public GameObject chargeProjector;
     public GameObject mysticLineProjector;
+    List<GameObject> projectorList = new List<GameObject>();
 
     [Range(0.8f, 1.2f)]
     public float toleranceCoef;
@@ -165,9 +166,10 @@ public class BossSystem : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        checkPhaseTransition();
         if (!GameManager.gameManager.isPaused && !isAttacking)
         {
-            checkPhaseTransition();
+
 
             if (Time.time >= nextAttack && !isStuned)
             {
@@ -218,6 +220,7 @@ public class BossSystem : MonoBehaviour
     /// </summary>
     public void checkPhaseTransition()
     {
+
         switch (actualPhase)
         {
             case 0:
@@ -236,7 +239,12 @@ public class BossSystem : MonoBehaviour
                     nextAttack = Time.time + Random.Range(minWaitTime, maxWaitTime);
                     transform.localScale = new Vector3(0.75f, 0.75f, 0.75f);
                     //infinite mystic line same side / level shrink
-                    GameObject.Find("Rock Lines").GetComponent<TimeLineRockFall>().Initialize();
+                    //GameObject.Find("Rock Lines").GetComponent<TimeLineRockFall>().Initialize();
+
+                    StopAllCoroutines();
+                    isAttacking = false;
+                    anim.SetTrigger("Stop");
+                    CleanProjectorList();
                 }
                 break;
             case 2:
@@ -247,6 +255,11 @@ public class BossSystem : MonoBehaviour
                     probabilityTable = phase3;
                     nextAttack = Time.time + Random.Range(minWaitTime, maxWaitTime);
                     //infinite mystic line separation / etc
+
+                    StopAllCoroutines();
+                    isAttacking = false;
+                    anim.SetTrigger("Stop");
+                    CleanProjectorList();
                 }
                 break;
             case 3:
@@ -258,6 +271,11 @@ public class BossSystem : MonoBehaviour
                     nextAttack = Time.time + Random.Range(minWaitTime, maxWaitTime);
                     transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
                     //fall to ground / level shrink / rock fall activation
+
+                    StopAllCoroutines();
+                    isAttacking = false;
+                    anim.SetTrigger("Stop");
+                    CleanProjectorList();
                 }
                 break;
             case 4:
@@ -269,6 +287,18 @@ public class BossSystem : MonoBehaviour
                 break;
         }
     }
+
+
+    void CleanProjectorList()
+    {
+        foreach (GameObject indic in projectorList)
+        {
+            Destroy(indic);
+        }
+        projectorList.Clear();
+    }
+
+
 
     //======================================================================================== RANDOM PATTERN
 
@@ -348,6 +378,7 @@ public class BossSystem : MonoBehaviour
         //show feedback
         //instanciate the circle indicator
         GameObject mysticLineIndicator = Instantiate(mysticLineProjector, transform.position, Quaternion.identity) as GameObject;
+        projectorList.Add(mysticLineIndicator);
 
         float timeStamp = Time.time;
         Color tempColor = Color.magenta;
@@ -405,8 +436,9 @@ public class BossSystem : MonoBehaviour
 
         if (!isShrinkMysticLineCreated)
         {
-            Vector3 raycastPosition = new Vector3(transform.position.x, 0, transform.position.z);
+            Vector3 raycastPosition = new Vector3(pivotLeft.transform.position.x, 1, transform.position.z);
             RaycastHit hit;
+            //Debug.DrawRay(raycastPosition, pivotLeft.transform.forward * 50, Color.blue, 20);
 
             if (Physics.Raycast(raycastPosition, pivotLeft.transform.forward, out hit, 50, LayerMask.GetMask("Wall")))
             {
@@ -414,16 +446,18 @@ public class BossSystem : MonoBehaviour
                 //print("Distance : " + hit.distance);
 
                 shrinkLeft = Instantiate(mysticLinePrefab, pivotLeft.transform.position, Quaternion.identity, pivotLeft.transform);
-                shrinkLeft.transform.LookAt(new Vector3(hit.transform.position.x, shrinkLeft.transform.position.y, hit.transform.position.z));
+                //shrinkLeft.transform.LookAt(new Vector3(hit.transform.position.x, shrinkLeft.transform.position.y, hit.transform.position.z));
+                shrinkLeft.transform.LookAt(pivotLeft.transform.forward);
 
                 shrinkRight = Instantiate(mysticLinePrefab, pivotRight.transform.position, Quaternion.identity, pivotRight.transform);
-                shrinkRight.transform.LookAt(new Vector3(-hit.transform.position.x, shrinkRight.transform.position.y, -hit.transform.position.z));
+                //shrinkRight.transform.LookAt(new Vector3(-hit.transform.position.x, shrinkRight.transform.position.y, -hit.transform.position.z));
+                shrinkRight.transform.LookAt(pivotRight.transform.forward);
 
             }
             isShrinkMysticLineCreated = true;
         }
 
-        StartCoroutine(Shrink());
+        //StartCoroutine(Shrink());
     }
 
     public void UpdateScaleShrinkMysticLine()
@@ -432,13 +466,13 @@ public class BossSystem : MonoBehaviour
         RaycastHit hit;
 
         Physics.Raycast(raycastPosition, pivotLeft.transform.forward, out hit, 50, LayerMask.GetMask("Wall"));
-        Debug.DrawRay(raycastPosition, pivotLeft.transform.forward * 50, Color.blue, 2);
-        print("shrinkLeft Length : " + hit.distance);
+        //Debug.DrawRay(raycastPosition, pivotLeft.transform.forward * 50, Color.blue, 2);
+        //print("shrinkLeft Length : " + hit.distance);
         shrinkLeft.transform.localScale = new Vector3(mysticLineWidth / transform.localScale.x, mysticLineHeight / transform.localScale.y, hit.distance / transform.localScale.z);
 
         Physics.Raycast(raycastPosition, pivotRight.transform.forward, out hit, 50, LayerMask.GetMask("Wall"));
-        print("shrinkRight Length : " + hit.distance);
-        Debug.DrawRay(raycastPosition, pivotRight.transform.forward * 50, Color.red, 2);
+        //print("shrinkRight Length : " + hit.distance);
+        //Debug.DrawRay(raycastPosition, pivotRight.transform.forward * 50, Color.red, 2);
         shrinkRight.transform.localScale = new Vector3(mysticLineWidth / transform.localScale.x, mysticLineHeight / transform.localScale.y, hit.distance / transform.localScale.z);
 
     }
@@ -451,6 +485,7 @@ public class BossSystem : MonoBehaviour
         float step = shrinkSpeed * Time.deltaTime;
 
         int rand = Random.Range(0, 2);
+        print("Rand : " + rand);
 
         //Forward
         if (rand == 0)
@@ -551,6 +586,7 @@ public class BossSystem : MonoBehaviour
         //show indicator feedback
         //instanciate the fireball indicator
         GameObject fireBallIndicator = Instantiate(fireBallProjector, target + new Vector3(0f, 1.5f, 0f), Quaternion.identity) as GameObject;
+        projectorList.Add(fireBallIndicator);
         fireBallProjector.transform.GetChild(0).gameObject.GetComponent<Projector>().orthographicSize = fireBallRangeExplosion * toleranceCoef;
         float timeStamp = Time.time;
         Color tempColor = Color.red;
@@ -587,6 +623,7 @@ public class BossSystem : MonoBehaviour
         //show feedback
         //instanciate the circle indicator
         GameObject circleIndicator = Instantiate(circleProjector, electricZoneLocation, Quaternion.identity) as GameObject;
+        projectorList.Add(circleIndicator);
         circleIndicator.transform.GetChild(0).gameObject.GetComponent<Projector>().orthographicSize = electricZoneRadius * toleranceCoef;
         float timeStamp = Time.time;
         Color tempColor = Color.blue;
@@ -640,6 +677,7 @@ public class BossSystem : MonoBehaviour
 
         //instanciate the circle indicator
         GameObject coneIndicator = Instantiate(coneProjector, transform.position, Quaternion.identity) as GameObject;
+        projectorList.Add(coneIndicator);
         //the instanciated circle indicator is a child of the boss
         coneIndicator.transform.parent = transform;
         float timeStamp = Time.time;
@@ -714,6 +752,7 @@ public class BossSystem : MonoBehaviour
         //show indicator feedback
         //instanciate the charge indicator
         GameObject chargeIndicator = Instantiate(chargeProjector, transform.position + vectCharge / 2f + (chargeOffset / 2f) * vectCharge.normalized, Quaternion.identity) as GameObject;
+        projectorList.Add(chargeIndicator);
         float yComp = 0f;
         if (vectCharge.x < 0)
         {
@@ -784,6 +823,7 @@ public class BossSystem : MonoBehaviour
         //show indicator feedback
         //instanciate the circle indicator
         GameObject circleIndicator = Instantiate(aoeCircleProjector, transform.position, Quaternion.identity) as GameObject;
+        projectorList.Add(circleIndicator);
         circleIndicator.transform.GetChild(0).gameObject.GetComponent<Projector>().orthographicSize = electricAoeRadius * toleranceCoef;
         //the instanciated circle indicator is a child of the boss
         circleIndicator.transform.parent = transform;
