@@ -12,7 +12,7 @@ public class LanguageMenu : MonoBehaviour
 		else
 			I18n.LoadLang("en_US");
 
-		GameData.previousScene = 9;
-		SceneManager.LoadScene(10);
+		GameData.previousScene = 12;
+		SceneManager.LoadScene(15);
 	}
 }
