@@ -31,7 +31,7 @@ public class TimeLineEndPrologue : MonoBehaviour
         GameManager.gameManager.player1.GetComponent<CapsuleCollider>().isTrigger = false;
         GameManager.gameManager.player2.GetComponent<CapsuleCollider>().isTrigger = false;
         GameManager.gameManager.isPaused = false;
-        SceneManager.LoadScene(3);
+        SceneManager.LoadScene(11);
     }
 
     IEnumerator InitCoroutine()
