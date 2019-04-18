@@ -463,13 +463,13 @@ public class BossSystem : MonoBehaviour
         RaycastHit hit;
 
         Physics.Raycast(raycastPosition, pivotLeft.transform.forward, out hit, 50, LayerMask.GetMask("Wall"));
-        Debug.DrawRay(raycastPosition, pivotLeft.transform.forward * 50, Color.blue, 2);
-        print("shrinkLeft Length : " + hit.distance);
+        //Debug.DrawRay(raycastPosition, pivotLeft.transform.forward * 50, Color.blue, 2);
+        //print("shrinkLeft Length : " + hit.distance);
         shrinkLeft.transform.localScale = new Vector3(mysticLineWidth / transform.localScale.x, mysticLineHeight / transform.localScale.y, hit.distance / transform.localScale.z);
 
         Physics.Raycast(raycastPosition, pivotRight.transform.forward, out hit, 50, LayerMask.GetMask("Wall"));
-        print("shrinkRight Length : " + hit.distance);
-        Debug.DrawRay(raycastPosition, pivotRight.transform.forward * 50, Color.red, 2);
+        //print("shrinkRight Length : " + hit.distance);
+        //Debug.DrawRay(raycastPosition, pivotRight.transform.forward * 50, Color.red, 2);
         shrinkRight.transform.localScale = new Vector3(mysticLineWidth / transform.localScale.x, mysticLineHeight / transform.localScale.y, hit.distance / transform.localScale.z);
 
     }
@@ -482,6 +482,7 @@ public class BossSystem : MonoBehaviour
         float step = shrinkSpeed * Time.deltaTime;
 
         int rand = Random.Range(0, 2);
+        print("Rand : " + rand);
 
         //Forward
         if (rand == 0)
