@@ -22,17 +22,23 @@ public class ProtectionPylon : MonoBehaviour
             switch (pylonType)
             {
                 case PylonElement.Aquatic:
-                    pylonHealth--;
                     if (other.gameObject.GetComponent<PowerController>().elementalPower == GameManager.PowerType.Electric)
                     {
                         pylonHealth--;
                     }
+                    else if (other.gameObject.GetComponent<PowerController>().elementalPower == GameManager.PowerType.Fire)
+                    {
+                        other.gameObject.GetComponent<PowerController>().DeactivatePower(GameManager.PowerType.Fire);
+                    }
                     break;
                 case PylonElement.Plant:
-                    pylonHealth--;
                     if (other.gameObject.GetComponent<PowerController>().elementalPower == GameManager.PowerType.Fire)
                     {
                         pylonHealth--;
+                    }
+                    else if (other.gameObject.GetComponent<PowerController>().elementalPower == GameManager.PowerType.Electric)
+                    {
+                        other.gameObject.GetComponent<PowerController>().DeactivatePower(GameManager.PowerType.Electric);
                     }
                     break;
             }
