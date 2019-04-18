@@ -239,7 +239,7 @@ public class BossSystem : MonoBehaviour
                     nextAttack = Time.time + Random.Range(minWaitTime, maxWaitTime);
                     transform.localScale = new Vector3(0.75f, 0.75f, 0.75f);
                     //infinite mystic line same side / level shrink
-                    //GameObject.Find("Rock Lines").GetComponent<TimeLineRockFall>().Initialize();
+                    GameObject.Find("Rock Lines").GetComponent<TimeLineRockFall>().Initialize();
 
                     StopAllCoroutines();
                     isAttacking = false;
