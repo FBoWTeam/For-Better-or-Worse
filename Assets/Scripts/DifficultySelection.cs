@@ -5,18 +5,10 @@ using UnityEngine.SceneManagement;
 
 public class DifficultySelection : MonoBehaviour
 {
-    public int sceneToLoad;
-
-    public void SetHardMode(int sceneToLoad)
+    public void SetDifficultyMode(bool worseActivated)
     {
-        PlayerPrefs.SetInt("Mode", 1);
-        SceneManager.LoadScene(sceneToLoad);
-    }
-
-    public void SetEasyMode(int sceneToLoad)
-    {
-        PlayerPrefs.SetInt("Mode", 0);
-        SceneManager.LoadScene(sceneToLoad);
+		GameData.worseModeActivated = worseActivated;
+        SceneManager.LoadScene(GameData.nextSceneToLoad);
     }
 
 }
