@@ -169,7 +169,7 @@ public class BossSystem : MonoBehaviour
         checkPhaseTransition();
         if (!GameManager.gameManager.isPaused && !isAttacking)
         {
-            
+
 
             if (Time.time >= nextAttack && !isStuned)
             {
@@ -220,7 +220,7 @@ public class BossSystem : MonoBehaviour
     /// </summary>
     public void checkPhaseTransition()
     {
-        
+
         switch (actualPhase)
         {
             case 0:
@@ -239,7 +239,7 @@ public class BossSystem : MonoBehaviour
                     nextAttack = Time.time + Random.Range(minWaitTime, maxWaitTime);
                     transform.localScale = new Vector3(0.75f, 0.75f, 0.75f);
                     //infinite mystic line same side / level shrink
-                    GameObject.Find("Rock Lines").GetComponent<TimeLineRockFall>().Initialize();
+                    //GameObject.Find("Rock Lines").GetComponent<TimeLineRockFall>().Initialize();
 
                     StopAllCoroutines();
                     isAttacking = false;
@@ -269,7 +269,7 @@ public class BossSystem : MonoBehaviour
                     Debug.Log("Passage phase 4");
                     probabilityTable = phase4;
                     nextAttack = Time.time + Random.Range(minWaitTime, maxWaitTime);
-					transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
+                    transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
                     //fall to ground / level shrink / rock fall activation
 
                     StopAllCoroutines();
@@ -291,7 +291,7 @@ public class BossSystem : MonoBehaviour
 
     void CleanProjectorList()
     {
-        foreach(GameObject indic in projectorList)
+        foreach (GameObject indic in projectorList)
         {
             Destroy(indic);
         }
@@ -436,8 +436,9 @@ public class BossSystem : MonoBehaviour
 
         if (!isShrinkMysticLineCreated)
         {
-            Vector3 raycastPosition = new Vector3(transform.position.x, 0, transform.position.z);
+            Vector3 raycastPosition = new Vector3(pivotLeft.transform.position.x, 1, transform.position.z);
             RaycastHit hit;
+            //Debug.DrawRay(raycastPosition, pivotLeft.transform.forward * 50, Color.blue, 20);
 
             if (Physics.Raycast(raycastPosition, pivotLeft.transform.forward, out hit, 50, LayerMask.GetMask("Wall")))
             {
@@ -454,7 +455,7 @@ public class BossSystem : MonoBehaviour
             isShrinkMysticLineCreated = true;
         }
 
-        StartCoroutine(Shrink());
+        //StartCoroutine(Shrink());
     }
 
     public void UpdateScaleShrinkMysticLine()
