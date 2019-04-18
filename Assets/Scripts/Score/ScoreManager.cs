@@ -20,8 +20,6 @@ public class ScoreManager : MonoBehaviour
     
 
     public GameMode gameMode;
-    
-    public string levelName;
 
     [HideInInspector]
     public int sceneIndex;
@@ -113,9 +111,7 @@ public class ScoreManager : MonoBehaviour
             Debug.Log("Saves Folder Created");
         }
 
-        levelName = levelName + "-";
-
-        string destination = Application.persistentDataPath + "/Saves/" + levelName + fileName + ".txt";
+        string destination = Application.persistentDataPath + "/Saves/" + fileName + ".txt";
         
         StreamWriter sw = File.CreateText(destination);
 
