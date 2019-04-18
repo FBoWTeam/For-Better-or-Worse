@@ -59,6 +59,7 @@ public class OrbController : MonoBehaviour
 		if (!isHealingOrb)
 		{
 			transform.position = BezierCurve.CalculateCubicBezierPoint(progression);
+			canHitPlayer = GameData.worseModeActivated;
 		}
 	}
 
