@@ -239,7 +239,7 @@ public class BossSystem : MonoBehaviour
                     nextAttack = Time.time + Random.Range(minWaitTime, maxWaitTime);
                     transform.localScale = new Vector3(0.75f, 0.75f, 0.75f);
                     //infinite mystic line same side / level shrink
-                    //GameObject.Find("Rock Lines").GetComponent<TimeLineRockFall>().Initialize();
+                    GameObject.Find("Rock Lines").GetComponent<TimeLineRockFall>().Initialize();
 
                     StopAllCoroutines();
                     isAttacking = false;
@@ -343,7 +343,7 @@ public class BossSystem : MonoBehaviour
                 StartCoroutine(ElectricZoneCoroutine());
                 break;
             case BossPattern.ShrinkMysticLines:
-                StartCoroutine(ShrinkMysticLinesCoroutine());
+                StartCoroutine(Shrink());
                 break;
             case BossPattern.ElectricCone:
                 StartCoroutine(ElectricConeCoroutine());
@@ -432,7 +432,7 @@ public class BossSystem : MonoBehaviour
 
         //canalisation + feedbacks
         anim.SetTrigger("LineFireBallShrink");
-        yield return new WaitForSeconds(anim.GetCurrentAnimatorStateInfo(0).length);
+        yield return new WaitForSeconds(4.2f);
 
         if (!isShrinkMysticLineCreated)
         {

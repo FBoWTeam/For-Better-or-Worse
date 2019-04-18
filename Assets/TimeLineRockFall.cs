@@ -8,13 +8,14 @@ public class TimeLineRockFall : MonoBehaviour
 {
     PlayableDirector director;
     GameObject WallForTimeLine;
+    GameObject Boss;
 
     // Start is called before the first frame update
     void Start()
     {
         WallForTimeLine = GameObject.Find("Wall Reverse");
-        Debug.Log("wall");
         WallForTimeLine.SetActive(false);
+        Boss = GameObject.Find("Boss");
     }
 
     public void Initialize()
@@ -34,6 +35,7 @@ public class TimeLineRockFall : MonoBehaviour
     public void WhenEnded(PlayableDirector obj)
     {
         WallForTimeLine.SetActive(false);
+        Boss.GetComponent<BossRotation>().enabled = true ;
         GameManager.gameManager.player1.GetComponent<CapsuleCollider>().isTrigger = false;
         GameManager.gameManager.player2.GetComponent<CapsuleCollider>().isTrigger = false;
         GameManager.gameManager.isPaused = false;
@@ -54,6 +56,10 @@ public class TimeLineRockFall : MonoBehaviour
         GameManager.gameManager.blackBands.SetActive(true);
         GameManager.gameManager.player1.GetComponent<CapsuleCollider>().isTrigger = true;
         GameManager.gameManager.player2.GetComponent<CapsuleCollider>().isTrigger = true;
+        //GameManager.gameManager.isPaused = false;
+
+        yield return new WaitForSeconds(4f);//wait the animation
+        StartCoroutine(Boss.GetComponent<BossSystem>().ShrinkMysticLinesCoroutine());
     }
 
 }
