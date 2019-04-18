@@ -89,6 +89,7 @@ public class BossSystem : MonoBehaviour
 
     [Header("[Mystic Line Params]")]
     public GameObject mysticLinePrefab;
+    public int mysticLineLineDamage;
     public float mysticLineHeight;
     public float mysticLineWidth;
     public float lifeTime;
@@ -121,6 +122,7 @@ public class BossSystem : MonoBehaviour
     public GameObject fireBallProjector;
     public GameObject chargeProjector;
     public GameObject mysticLineProjector;
+    List<GameObject> projectorList = new List<GameObject>();
 
     [Range(0.8f, 1.2f)]
     public float toleranceCoef;
@@ -132,11 +134,13 @@ public class BossSystem : MonoBehaviour
     GameObject player1;
     GameObject player2;
 
-	Animator anim;
+    Animator anim;
     private float electricAoeAnimationTime;
     private float electricConeAnimationTime;
     private float electricZoneAnimationTime;
-    
+
+    [HideInInspector]
+    public Coroutine actualFireCoroutine;
 
 
     //======================================================================================== AWAKE AND UPDATE
@@ -149,22 +153,23 @@ public class BossSystem : MonoBehaviour
         checkPhaseTransition();
         isMysticLineCreated = false;
         isShrinkMysticLineCreated = false;
-		anim = GetComponent<Animator>();
+        anim = GetComponent<Animator>();
     }
 
     private void Start()
     {
         player1 = GameManager.gameManager.player1;
         player2 = GameManager.gameManager.player2;
-
+        mysticLinePrefab.GetComponentInChildren<MysticLine>().damage = mysticLineLineDamage;
     }
 
     // Update is called once per frame
     void Update()
     {
+        checkPhaseTransition();
         if (!GameManager.gameManager.isPaused && !isAttacking)
         {
-            checkPhaseTransition();
+
 
             if (Time.time >= nextAttack && !isStuned)
             {
@@ -215,6 +220,7 @@ public class BossSystem : MonoBehaviour
     /// </summary>
     public void checkPhaseTransition()
     {
+
         switch (actualPhase)
         {
             case 0:
@@ -231,8 +237,14 @@ public class BossSystem : MonoBehaviour
                     Debug.Log("Passage phase 2");
                     probabilityTable = phase2;
                     nextAttack = Time.time + Random.Range(minWaitTime, maxWaitTime);
-					transform.localScale = new Vector3(0.75f, 0.75f, 0.75f);
+                    transform.localScale = new Vector3(0.75f, 0.75f, 0.75f);
                     //infinite mystic line same side / level shrink
+                    //GameObject.Find("Rock Lines").GetComponent<TimeLineRockFall>().Initialize();
+
+                    StopAllCoroutines();
+                    isAttacking = false;
+                    anim.SetTrigger("Stop");
+                    CleanProjectorList();
                 }
                 break;
             case 2:
@@ -243,6 +255,11 @@ public class BossSystem : MonoBehaviour
                     probabilityTable = phase3;
                     nextAttack = Time.time + Random.Range(minWaitTime, maxWaitTime);
                     //infinite mystic line separation / etc
+
+                    StopAllCoroutines();
+                    isAttacking = false;
+                    anim.SetTrigger("Stop");
+                    CleanProjectorList();
                 }
                 break;
             case 3:
@@ -252,9 +269,14 @@ public class BossSystem : MonoBehaviour
                     Debug.Log("Passage phase 4");
                     probabilityTable = phase4;
                     nextAttack = Time.time + Random.Range(minWaitTime, maxWaitTime);
-					transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
-					//fall to ground / level shrink / rock fall activation
-				}
+                    transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
+                    //fall to ground / level shrink / rock fall activation
+
+                    StopAllCoroutines();
+                    isAttacking = false;
+                    anim.SetTrigger("Stop");
+                    CleanProjectorList();
+                }
                 break;
             case 4:
                 if (hp <= 0.0f)
@@ -265,6 +287,18 @@ public class BossSystem : MonoBehaviour
                 break;
         }
     }
+
+
+    void CleanProjectorList()
+    {
+        foreach (GameObject indic in projectorList)
+        {
+            Destroy(indic);
+        }
+        projectorList.Clear();
+    }
+
+
 
     //======================================================================================== RANDOM PATTERN
 
@@ -332,27 +366,24 @@ public class BossSystem : MonoBehaviour
         isAttacking = true;
         Debug.Log("Mystic Line");
 
-		//canalisation + feedbacks
-		anim.SetTrigger("LineFireBallShrink");
-        
-		yield return new WaitForSeconds(2.8f);
+        //canalisation + feedbacks
+        anim.SetTrigger("LineFireBallShrink");
+
+        yield return new WaitForSeconds(2.8f);
 
         Vector3 raycastPosition = new Vector3(transform.position.x, 0, transform.position.z);
         RaycastHit hit;
         Vector3 direction = (new Vector3(aimedPlayer.transform.position.x, raycastPosition.y, aimedPlayer.transform.position.z) - raycastPosition).normalized;
-        
 
         //show feedback
         //instanciate the circle indicator
         GameObject mysticLineIndicator = Instantiate(mysticLineProjector, transform.position, Quaternion.identity) as GameObject;
+        projectorList.Add(mysticLineIndicator);
 
         float timeStamp = Time.time;
         Color tempColor = Color.magenta;
 
-
         mysticLineIndicator.transform.Rotate(Vector3.up, -Vector3.SignedAngle(direction, Vector3.back, Vector3.up));
-
-
 
         while (Time.time - timeStamp < 1.2f)
         {
@@ -361,22 +392,21 @@ public class BossSystem : MonoBehaviour
             mysticLineIndicator.transform.GetChild(0).gameObject.GetComponent<Projector>().material.color = tempColor;
             yield return new WaitForEndOfFrame();
         }
-        
 
-        if (!isMysticLineCreated)
+        //if (!isMysticLineCreated)
+        //{
+        //}
+
+        if (Physics.Raycast(raycastPosition, direction, out hit, 50, LayerMask.GetMask("Wall")))
         {
-            if (Physics.Raycast(raycastPosition, direction, out hit, 50, LayerMask.GetMask("Wall")))
-            {
-                StartCoroutine(CreateMysticLineCoroutine(raycastPosition, hit.transform.position, hit.distance));
-            }
-		}
-
+            StartCoroutine(CreateMysticLineCoroutine(raycastPosition, hit.transform.position, hit.distance));
+        }
 
         Destroy(mysticLineIndicator);
 
         nextAttack = Time.time + Random.Range(minWaitTime, maxWaitTime);
-		isAttacking = false;
-	}
+        isAttacking = false;
+    }
 
     public IEnumerator CreateMysticLineCoroutine(Vector3 position, Vector3 target, float length)
     {
@@ -400,14 +430,15 @@ public class BossSystem : MonoBehaviour
         isAttacking = true;
         Debug.Log("Shrink MysticLines");
 
-		//canalisation + feedbacks
-		anim.SetTrigger("LineFireBallShrink");
+        //canalisation + feedbacks
+        anim.SetTrigger("LineFireBallShrink");
         yield return new WaitForSeconds(anim.GetCurrentAnimatorStateInfo(0).length);
 
         if (!isShrinkMysticLineCreated)
         {
-            Vector3 raycastPosition = new Vector3(transform.position.x, 0, transform.position.z);
+            Vector3 raycastPosition = new Vector3(pivotLeft.transform.position.x, 1, transform.position.z);
             RaycastHit hit;
+            //Debug.DrawRay(raycastPosition, pivotLeft.transform.forward * 50, Color.blue, 20);
 
             if (Physics.Raycast(raycastPosition, pivotLeft.transform.forward, out hit, 50, LayerMask.GetMask("Wall")))
             {
@@ -424,7 +455,7 @@ public class BossSystem : MonoBehaviour
             isShrinkMysticLineCreated = true;
         }
 
-        StartCoroutine(Shrink());
+        //StartCoroutine(Shrink());
     }
 
     public void UpdateScaleShrinkMysticLine()
@@ -433,13 +464,13 @@ public class BossSystem : MonoBehaviour
         RaycastHit hit;
 
         Physics.Raycast(raycastPosition, pivotLeft.transform.forward, out hit, 50, LayerMask.GetMask("Wall"));
-        Debug.DrawRay(raycastPosition, pivotLeft.transform.forward * 50, Color.blue, 2);
-        print("shrinkLeft Length : " + hit.distance);
+        //Debug.DrawRay(raycastPosition, pivotLeft.transform.forward * 50, Color.blue, 2);
+        //print("shrinkLeft Length : " + hit.distance);
         shrinkLeft.transform.localScale = new Vector3(mysticLineWidth / transform.localScale.x, mysticLineHeight / transform.localScale.y, hit.distance / transform.localScale.z);
 
         Physics.Raycast(raycastPosition, pivotRight.transform.forward, out hit, 50, LayerMask.GetMask("Wall"));
-        print("shrinkRight Length : " + hit.distance);
-        Debug.DrawRay(raycastPosition, pivotRight.transform.forward * 50, Color.red, 2);
+        //print("shrinkRight Length : " + hit.distance);
+        //Debug.DrawRay(raycastPosition, pivotRight.transform.forward * 50, Color.red, 2);
         shrinkRight.transform.localScale = new Vector3(mysticLineWidth / transform.localScale.x, mysticLineHeight / transform.localScale.y, hit.distance / transform.localScale.z);
 
     }
@@ -452,6 +483,7 @@ public class BossSystem : MonoBehaviour
         float step = shrinkSpeed * Time.deltaTime;
 
         int rand = Random.Range(0, 2);
+        print("Rand : " + rand);
 
         //Forward
         if (rand == 0)
@@ -529,8 +561,8 @@ public class BossSystem : MonoBehaviour
         anim.SetTrigger("LineFireBallShrink");
         yield return new WaitForSeconds(4.2f);
 
-       
-		//yield return new WaitForSeconds(anim.GetCurrentAnimatorStateInfo(0).length);
+
+        //yield return new WaitForSeconds(anim.GetCurrentAnimatorStateInfo(0).length);
 
         Vector3 target = aimedPlayer.transform.position;
         /*Vector3 dir = target - transform.position;//direction of the aimed player when the Fireball is creating
@@ -552,6 +584,7 @@ public class BossSystem : MonoBehaviour
         //show indicator feedback
         //instanciate the fireball indicator
         GameObject fireBallIndicator = Instantiate(fireBallProjector, target + new Vector3(0f, 1.5f, 0f), Quaternion.identity) as GameObject;
+        projectorList.Add(fireBallIndicator);
         fireBallProjector.transform.GetChild(0).gameObject.GetComponent<Projector>().orthographicSize = fireBallRangeExplosion * toleranceCoef;
         float timeStamp = Time.time;
         Color tempColor = Color.red;
@@ -568,8 +601,8 @@ public class BossSystem : MonoBehaviour
         yield return new WaitUntil(() => fireBall.isDestroyed);
         Destroy(fireBallIndicator);
 
-		nextAttack = Time.time + Random.Range(minWaitTime, maxWaitTime);
-		isAttacking = false;
+        nextAttack = Time.time + Random.Range(minWaitTime, maxWaitTime);
+        isAttacking = false;
     }
 
     //======================================================================================== ELECTRIC ZONE
@@ -580,14 +613,15 @@ public class BossSystem : MonoBehaviour
 
         //start chaneling anim
         Debug.Log("channeling electric zone");
-		anim.SetTrigger("Electricity");
-		yield return new WaitForSeconds(2.6f);
+        anim.SetTrigger("Electricity");
+        yield return new WaitForSeconds(2.6f);
 
-		Vector3 electricZoneLocation = aimedPlayer.transform.position;
+        Vector3 electricZoneLocation = aimedPlayer.transform.position;
 
         //show feedback
         //instanciate the circle indicator
         GameObject circleIndicator = Instantiate(circleProjector, electricZoneLocation, Quaternion.identity) as GameObject;
+        projectorList.Add(circleIndicator);
         circleIndicator.transform.GetChild(0).gameObject.GetComponent<Projector>().orthographicSize = electricZoneRadius * toleranceCoef;
         float timeStamp = Time.time;
         Color tempColor = Color.blue;
@@ -614,8 +648,8 @@ public class BossSystem : MonoBehaviour
         Destroy(circleIndicator);
         yield return new WaitForSeconds(1.0f);
 
-		nextAttack = Time.time + Random.Range(minWaitTime, maxWaitTime);
-		isAttacking = false;
+        nextAttack = Time.time + Random.Range(minWaitTime, maxWaitTime);
+        isAttacking = false;
     }
 
     //======================================================================================== ELECTRIC CONE
@@ -626,11 +660,11 @@ public class BossSystem : MonoBehaviour
 
         //start chaneling anim
         Debug.Log("channeling electric cone");
-		anim.SetTrigger("Electricity");
-		yield return new WaitForSeconds(2.6f);
+        anim.SetTrigger("Electricity");
+        yield return new WaitForSeconds(2.6f);
 
-		//determining the area where to cast the spell
-		Vector3 bossPos = transform.position;
+        //determining the area where to cast the spell
+        Vector3 bossPos = transform.position;
         bossPos.y = 0;
 
         Vector3 targetVector = (aimedPlayer.transform.position - bossPos).normalized;
@@ -638,9 +672,10 @@ public class BossSystem : MonoBehaviour
         Quaternion rightRotation = Quaternion.Euler(0, electricConeAngle / 2, 0);
         Vector3 minRange = leftRotation * targetVector;
         Vector3 maxRange = rightRotation * targetVector;
-        
+
         //instanciate the circle indicator
         GameObject coneIndicator = Instantiate(coneProjector, transform.position, Quaternion.identity) as GameObject;
+        projectorList.Add(coneIndicator);
         //the instanciated circle indicator is a child of the boss
         coneIndicator.transform.parent = transform;
         float timeStamp = Time.time;
@@ -659,18 +694,18 @@ public class BossSystem : MonoBehaviour
         }
 
         Debug.Log("casting electric cone");
-        
+
         //check if players are in the area of effect to apply damages
         Vector3 dirToTarget;
         dirToTarget = (player1.transform.position - bossPos).normalized;
         dirToTarget.y = 0;
-        
+
 
         if (Vector3.Angle(targetVector, dirToTarget) < electricConeAngle / 2)
         {
             GameManager.gameManager.TakeDamage(player1, electricConeDamage, Vector3.zero, false);
         }
-        
+
         dirToTarget = (player2.transform.position - bossPos).normalized;
         dirToTarget.y = 0;
 
@@ -682,9 +717,9 @@ public class BossSystem : MonoBehaviour
 
         Destroy(coneIndicator);
         yield return new WaitForSeconds(1.0f);
-		
-		nextAttack = Time.time + Random.Range(minWaitTime, maxWaitTime);
-		isAttacking = false;
+
+        nextAttack = Time.time + Random.Range(minWaitTime, maxWaitTime);
+        isAttacking = false;
     }
 
     //======================================================================================== CHARGE
@@ -693,12 +728,12 @@ public class BossSystem : MonoBehaviour
     {
         isAttacking = true;
 
-		Vector3 target = aimedPlayer.transform.position;
+        Vector3 target = aimedPlayer.transform.position;
         Vector3 posStart = transform.position;
 
         Vector3 vectCharge = target - posStart;
         Vector3 newTarget = target + chargeOffset * vectCharge.normalized;//aiming for behind the target player by an offset
-        
+
         RaycastHit hit;
         int layerMask = 1 << 11;//to only hit the walls
 
@@ -715,6 +750,7 @@ public class BossSystem : MonoBehaviour
         //show indicator feedback
         //instanciate the charge indicator
         GameObject chargeIndicator = Instantiate(chargeProjector, transform.position + vectCharge / 2f + (chargeOffset / 2f) * vectCharge.normalized, Quaternion.identity) as GameObject;
+        projectorList.Add(chargeIndicator);
         float yComp = 0f;
         if (vectCharge.x < 0)
         {
@@ -742,8 +778,8 @@ public class BossSystem : MonoBehaviour
             chargeIndicator.transform.GetChild(0).gameObject.GetComponent<Projector>().material.color = tempColor;
             yield return new WaitForEndOfFrame();
         }
-        
-		float t = 0f;
+
+        float t = 0f;
         while (t < 1)
         {
             transform.position = Vector3.Lerp(posStart, newTarget, t);
@@ -751,10 +787,10 @@ public class BossSystem : MonoBehaviour
             yield return new WaitForEndOfFrame();
         }
 
-		anim.SetBool("IsDashing", false);
-		anim.SetBool("DashWillStun", willBeStun);
+        anim.SetBool("IsDashing", false);
+        anim.SetBool("DashWillStun", willBeStun);
 
-		if (willBeStun)
+        if (willBeStun)
         {
             willBeStun = false;
             isStun = true;
@@ -766,8 +802,8 @@ public class BossSystem : MonoBehaviour
 
         yield return new WaitForSeconds(0.7f);//wait for the end animation
 
-		nextAttack = Time.time + Random.Range(minWaitTime, maxWaitTime);
-		isAttacking = false;
+        nextAttack = Time.time + Random.Range(minWaitTime, maxWaitTime);
+        isAttacking = false;
     }
 
     //======================================================================================== ELECTRIC AOE
@@ -778,19 +814,20 @@ public class BossSystem : MonoBehaviour
 
         //start chaneling anim
         Debug.Log("channeling AOE zone");
-		anim.SetTrigger("Electricity");
+        anim.SetTrigger("Electricity");
         //wait 75% of the cast time
         yield return new WaitForSeconds(2.8f);
-        
+
         //show indicator feedback
         //instanciate the circle indicator
         GameObject circleIndicator = Instantiate(aoeCircleProjector, transform.position, Quaternion.identity) as GameObject;
+        projectorList.Add(circleIndicator);
         circleIndicator.transform.GetChild(0).gameObject.GetComponent<Projector>().orthographicSize = electricAoeRadius * toleranceCoef;
         //the instanciated circle indicator is a child of the boss
         circleIndicator.transform.parent = transform;
         float timeStamp = Time.time;
         Color tempColor = Color.blue;
-        
+
         while (Time.time - timeStamp < 1.8f)
         {
             //alpha starting from 0 finishing to 0.33333
@@ -798,7 +835,7 @@ public class BossSystem : MonoBehaviour
             circleIndicator.transform.GetChild(0).gameObject.GetComponent<Projector>().material.color = tempColor;
             yield return new WaitForEndOfFrame();
         }
-        
+
 
 
         //check if the players are in the area of effect
@@ -813,8 +850,8 @@ public class BossSystem : MonoBehaviour
         Destroy(circleIndicator);
         yield return new WaitForSeconds(1.0f);
 
-		nextAttack = Time.time + Random.Range(minWaitTime, maxWaitTime);
-		isAttacking = false;
+        nextAttack = Time.time + Random.Range(minWaitTime, maxWaitTime);
+        isAttacking = false;
     }
 
     #endregion
@@ -851,6 +888,34 @@ public class BossSystem : MonoBehaviour
         isStuned = false;
     }
 
+    public IEnumerator FireDamage(GameObject target, int totalDamage, float duration)
+    {
+        int tickDamage = Mathf.RoundToInt(totalDamage / duration);
+        int curentDamage = 0;
+
+        BossSystem bossSystem = target.GetComponent<BossSystem>();
+
+        if (bossSystem != null)
+        {
+            //activer les fx de feu sur le boss
+        }
+
+        while (curentDamage < totalDamage)
+        {
+            if (bossSystem != null)
+            {
+                bossSystem.TakeDamage(tickDamage);
+            }
+
+            yield return new WaitForSeconds(1f);
+            curentDamage += tickDamage;
+        }
+
+        if (bossSystem != null)
+        {
+            //désactiver les fx de feu sur le boss
+        }
+    }
 
     //function to visualize the effect zone of an AOE
     void DrawAOE(Vector3 position, float radius)
@@ -863,5 +928,5 @@ public class BossSystem : MonoBehaviour
             Debug.DrawLine(position, destination + position, Color.red, 10f);
         }
     }
-    
+
 }
