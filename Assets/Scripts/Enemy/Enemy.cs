@@ -76,6 +76,9 @@ public class Enemy : MonoBehaviour
     [HideInInspector]
     public Coroutine actualDarknessCoroutine;
 
+    [HideInInspector]
+    public Coroutine actualFireCoroutine;
+
     Animator animator;
 
     public bool lastHitByP1;
@@ -85,6 +88,8 @@ public class Enemy : MonoBehaviour
 
 	public GameObject VFX;
 	public GameObject deathPoofPrefab;
+
+
 
     #endregion
 
@@ -249,5 +254,34 @@ public class Enemy : MonoBehaviour
         isWeaken = true;
         yield return new WaitForSecondsRealtime(darknessTimer);
         isWeaken = false;
+    }
+
+    public IEnumerator FireDamage(GameObject target, int totalDamage, float duration)
+    {
+        int tickDamage = Mathf.RoundToInt(totalDamage / duration);
+        int curentDamage = 0;
+
+        Enemy enemy = target.GetComponent<Enemy>();
+
+        if (enemy != null)
+        {
+            target.GetComponent<Enemy>().VFX.transform.GetChild(0).gameObject.SetActive(true);
+        }
+        
+        while (curentDamage < totalDamage)
+        {
+            if (enemy != null)
+            {
+                enemy.TakeDamage(tickDamage);
+            }
+
+            yield return new WaitForSeconds(1f);
+            curentDamage += tickDamage;
+        }
+
+        if (enemy != null)
+        {
+            target.GetComponent<Enemy>().VFX.transform.GetChild(0).gameObject.SetActive(false);
+        }
     }
 }

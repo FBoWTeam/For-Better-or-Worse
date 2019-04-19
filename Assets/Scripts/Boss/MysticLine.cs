@@ -4,22 +4,17 @@ using UnityEngine;
 
 public class MysticLine : MonoBehaviour
 {
+    [HideInInspector]
     public int damage;
-    // Start is called before the first frame update
-    void Start()
-    {
-    }
 
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.CompareTag("Player"))
         {
-            print("Collision");
-
-            //Vector3 knockDirection = transform.localEulerAngles + new Vector3(0, 90, 0); 
             if (collision.gameObject.CompareTag("Player"))
             {
-                GameManager.gameManager.TakeDamage(collision.gameObject, damage, collision.transform.position, true);
+                GameManager.gameManager.TakeDamage(collision.gameObject, damage, collision.contacts[0].point, true);
+                print("toucher");
             }
         }
 

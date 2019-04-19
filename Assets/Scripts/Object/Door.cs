@@ -100,6 +100,10 @@ public class Door : MonoBehaviour, IActivable
             {
                 GetComponentInParent<Animation>().Play("DoorOpen");
                 isActive = true;
+                for (int i = 0; i < transform.childCount; i++)
+                {
+                    transform.GetChild(i).gameObject.SetActive(false);
+                }
             }
 
         }
