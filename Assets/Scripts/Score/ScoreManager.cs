@@ -15,16 +15,9 @@ public class ScoreManager : MonoBehaviour
         Arena
     }
 
-
     public static ScoreManager scoreManager;
     
-
     public GameMode gameMode;
-    
-    public string levelName;
-
-    [HideInInspector]
-    public int sceneIndex;
 
     [Header("Orb Score")]
     public int maxCombo;
@@ -57,7 +50,6 @@ public class ScoreManager : MonoBehaviour
     [Header("Total Wave")]
     public int totalWave;
 
-
     private int numberOfPlayer;
 
     float timeStamp;
@@ -72,20 +64,13 @@ public class ScoreManager : MonoBehaviour
         else if (scoreManager != this)
         {
             Destroy(this.gameObject);
-        }
+		}
 
-        completionTime = 0;
+		DontDestroyOnLoad(this.gameObject);
+
+		completionTime = 0;
 
         timeStamp = Time.time;
-
-        //if in story mode, we keep the scoremanager through the scenes
-        //we save the scores for each arena
-        if (gameMode == GameMode.Story)
-        {
-            DontDestroyOnLoad(this.gameObject);
-        }
-
-        sceneIndex = SceneManager.GetActiveScene().buildIndex;
     }
 
     
@@ -113,9 +98,7 @@ public class ScoreManager : MonoBehaviour
             Debug.Log("Saves Folder Created");
         }
 
-        levelName = levelName + "-";
-
-        string destination = Application.persistentDataPath + "/Saves/" + levelName + fileName + ".txt";
+        string destination = Application.persistentDataPath + "/Saves/" + fileName + ".txt";
         
         StreamWriter sw = File.CreateText(destination);
 
