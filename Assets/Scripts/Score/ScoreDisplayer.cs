@@ -43,7 +43,34 @@ public class ScoreDisplayer : MonoBehaviour
 
     private void Start()
     {
-        levelName.GetComponent<TextMeshProUGUI>().text = ScoreManager.scoreManager.levelName;
+		switch (GameData.previousScene)
+		{
+			case 6:
+				levelName.GetComponent<TextMeshProUGUI>().text = I18n.Translate("menu.score.texte1");
+				break;
+			case 7:
+				levelName.GetComponent<TextMeshProUGUI>().text = I18n.Translate("menu.score.texte2");
+				break;
+			case 8:
+				levelName.GetComponent<TextMeshProUGUI>().text = I18n.Translate("menu.score.texte3");
+				break;
+			case 9:
+				levelName.GetComponent<TextMeshProUGUI>().text = I18n.Translate("menu.score.texte4");
+				break;
+			case 12:
+				levelName.GetComponent<TextMeshProUGUI>().text = I18n.Translate("menu.score.texte15");
+				break;
+			case 13:
+				levelName.GetComponent<TextMeshProUGUI>().text = I18n.Translate("menu.score.texte16");
+				break;
+			case 14:
+				levelName.GetComponent<TextMeshProUGUI>().text = I18n.Translate("menu.score.texte17");
+				break;
+			default:
+				levelName.GetComponent<TextMeshProUGUI>().text = "not a normal scene";
+				break;
+		}
+        
 
         killsP1.GetComponent<TextMeshProUGUI>().text = ScoreManager.scoreManager.killsP1.ToString();
         damageTakenP1.GetComponent<TextMeshProUGUI>().text = ScoreManager.scoreManager.damageTakenP1.ToString();
@@ -98,13 +125,4 @@ public class ScoreDisplayer : MonoBehaviour
 
 
     }
-
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            SceneManager.LoadScene(0);
-        }
-    }
-
 }
