@@ -79,6 +79,7 @@ public class GameManager : MonoBehaviour
         Flammable,
         Mud
     }
+    
 
     // Start is called before the first frame update
     void Awake()
