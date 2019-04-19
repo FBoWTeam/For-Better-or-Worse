@@ -6,7 +6,6 @@ using UnityEngine.SceneManagement;
 public class ScoreController : MonoBehaviour
 {
     public GameObject buttonA;
-    public GameObject buttonB;
     public float timeBeforeActiveControl;
     private float timer;
     // Start is called before the first frame update
@@ -20,20 +19,14 @@ public class ScoreController : MonoBehaviour
     {
         if (timer < 0)
         {
-
-            //foreach (GameObject button in buttons)
-            //{
-            //    button.SetActive(true);
-            //}
             buttonA.SetActive(true);
-            buttonB.SetActive(true);
 
-            if (Input.GetKeyDown(KeyCode.Joystick1Button0))
+            if (Input.GetKeyDown(KeyCode.Joystick1Button0) || Input.GetKeyDown(KeyCode.Joystick2Button0))
             {
                 if (ScoreManager.scoreManager.gameMode == ScoreManager.GameMode.Story)
                 {
                     //Button A
-                    SceneManager.LoadScene(ScoreManager.scoreManager.sceneIndex + 1);
+                    SceneManager.LoadScene(3);
                 }
                 else
                 {
@@ -42,7 +35,7 @@ public class ScoreController : MonoBehaviour
             }
 
             //Button B
-            else if (Input.GetKeyDown(KeyCode.Joystick1Button1))
+            else if (Input.GetKeyDown(KeyCode.Joystick1Button1) || Input.GetKeyDown(KeyCode.Joystick2Button1))
             {
                 SceneManager.LoadScene(2);
             }
