@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 using Random = UnityEngine.Random;
+using UnityEngine.SceneManagement;
 
 public class BossSystem : MonoBehaviour
 {
@@ -878,7 +879,8 @@ public class BossSystem : MonoBehaviour
                 ScoreManager.scoreManager.killsEnvironment++;
             }
             StopAllCoroutines();
-            Destroy(this.gameObject);
+			GameData.previousScene = 9;
+			SceneManager.LoadScene(10);
         }
 
     }
