@@ -49,8 +49,10 @@ public class TimeLineRockFall : MonoBehaviour
 
     IEnumerator InitCoroutine()
     {
-        yield return new WaitForSeconds(1.5f);//fade in + fade out
+        yield return new WaitForSeconds(1.5f);//fade in
         WallForTimeLine.SetActive(true);
+        Boss.GetComponent<BossSystem>().CleanProjectorList();
+        Boss.GetComponent<BossSystem>().CleanMysticLineList();
         GameManager.gameManager.orb.GetComponent<OrbController>().canHitPlayer = false;
         GameManager.gameManager.UIManager.gameObject.SetActive(false);
         GameManager.gameManager.blackBands.SetActive(true);

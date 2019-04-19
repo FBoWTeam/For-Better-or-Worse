@@ -106,6 +106,7 @@ public class BossSystem : MonoBehaviour
     public float shrinkSpeed;
     private float angle;
     public float mysticLineTimeBetweenFeedbackAndCast;
+    List<GameObject> mysticLineList = new List<GameObject>();
 
     [Header("[Charge Params]")]
     public float chargeCastingTime;
@@ -244,7 +245,6 @@ public class BossSystem : MonoBehaviour
                     StopAllCoroutines();
                     isAttacking = false;
                     anim.SetTrigger("Stop");
-                    CleanProjectorList();
                 }
                 break;
             case 2:
@@ -289,13 +289,22 @@ public class BossSystem : MonoBehaviour
     }
 
 
-    void CleanProjectorList()
+    public void CleanProjectorList()
     {
         foreach (GameObject indic in projectorList)
         {
             Destroy(indic);
         }
         projectorList.Clear();
+    }
+
+    public void CleanMysticLineList()
+    {
+        foreach (GameObject myst in mysticLineList)
+        {
+            Destroy(myst);
+        }
+        mysticLineList.Clear();
     }
 
 
@@ -415,6 +424,8 @@ public class BossSystem : MonoBehaviour
         mysticLine.transform.localScale = new Vector3(mysticLineWidth / transform.localScale.x, mysticLineHeight / transform.localScale.y, length / transform.localScale.z);
 
         isMysticLineCreated = true;
+
+        mysticLineList.Add(mysticLine);
 
         yield return new WaitForSeconds(lifeTime);
 
