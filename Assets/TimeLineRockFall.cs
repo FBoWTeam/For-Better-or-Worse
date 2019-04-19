@@ -56,7 +56,6 @@ public class TimeLineRockFall : MonoBehaviour
         GameManager.gameManager.blackBands.SetActive(true);
         GameManager.gameManager.player1.GetComponent<CapsuleCollider>().isTrigger = true;
         GameManager.gameManager.player2.GetComponent<CapsuleCollider>().isTrigger = true;
-        //GameManager.gameManager.isPaused = false;
 
         yield return new WaitForSeconds(4f);//wait the animation
         StartCoroutine(Boss.GetComponent<BossSystem>().ShrinkMysticLinesCoroutine());

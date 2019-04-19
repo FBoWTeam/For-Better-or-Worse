@@ -436,7 +436,7 @@ public class BossSystem : MonoBehaviour
 
         if (!isShrinkMysticLineCreated)
         {
-            Vector3 raycastPosition = new Vector3(pivotLeft.transform.position.x, 1, transform.position.z);
+            Vector3 raycastPosition = new Vector3(transform.position.x, 1f, transform.position.z);//(pivotLeft.transform.position.x, 1, transform.position.z);
             RaycastHit hit;
             //Debug.DrawRay(raycastPosition, pivotLeft.transform.forward * 50, Color.blue, 20);
 
@@ -447,11 +447,15 @@ public class BossSystem : MonoBehaviour
 
                 shrinkLeft = Instantiate(mysticLinePrefab, pivotLeft.transform.position, Quaternion.identity, pivotLeft.transform);
                 //shrinkLeft.transform.LookAt(new Vector3(hit.transform.position.x, shrinkLeft.transform.position.y, hit.transform.position.z));
-                shrinkLeft.transform.LookAt(pivotLeft.transform.forward);
+                //shrinkLeft.transform.LookAt(pivotLeft.transform.forward);
+                shrinkLeft.transform.LookAt(hit.transform);
 
+                Physics.Raycast(raycastPosition, pivotRight.transform.forward, out hit, 50, LayerMask.GetMask("Wall"));
                 shrinkRight = Instantiate(mysticLinePrefab, pivotRight.transform.position, Quaternion.identity, pivotRight.transform);
                 //shrinkRight.transform.LookAt(new Vector3(-hit.transform.position.x, shrinkRight.transform.position.y, -hit.transform.position.z));
-                shrinkRight.transform.LookAt(pivotRight.transform.forward);
+                //shrinkRight.transform.LookAt(pivotRight.transform.forward);
+                shrinkRight.transform.LookAt(hit.transform);
+
 
             }
             isShrinkMysticLineCreated = true;
@@ -469,12 +473,13 @@ public class BossSystem : MonoBehaviour
         //Debug.DrawRay(raycastPosition, pivotLeft.transform.forward * 50, Color.blue, 2);
         //print("shrinkLeft Length : " + hit.distance);
         shrinkLeft.transform.localScale = new Vector3(mysticLineWidth / transform.localScale.x, mysticLineHeight / transform.localScale.y, hit.distance / transform.localScale.z);
+        shrinkLeft.transform.LookAt(hit.transform);
 
         Physics.Raycast(raycastPosition, pivotRight.transform.forward, out hit, 50, LayerMask.GetMask("Wall"));
         //print("shrinkRight Length : " + hit.distance);
         //Debug.DrawRay(raycastPosition, pivotRight.transform.forward * 50, Color.red, 2);
         shrinkRight.transform.localScale = new Vector3(mysticLineWidth / transform.localScale.x, mysticLineHeight / transform.localScale.y, hit.distance / transform.localScale.z);
-
+        shrinkRight.transform.LookAt(hit.transform);
     }
 
     public IEnumerator Shrink()
