@@ -79,6 +79,7 @@ public class GameManager : MonoBehaviour
         Flammable,
         Mud
     }
+    
 
     // Start is called before the first frame update
     void Awake()
@@ -92,7 +93,6 @@ public class GameManager : MonoBehaviour
             Destroy(this.gameObject);
         }
 
-        I18n.LoadLang("fr_FR");
         player1 = GameObject.Find("Player1");
         player2 = GameObject.Find("Player2");
         orb = GameObject.Find("Orb");

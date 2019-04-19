@@ -40,7 +40,6 @@ public class Door : MonoBehaviour, IActivable
                 break;
             case DoorType.Electric:
                 ActivateElectricDoor();
-                Debug.Log("active");
                 break;
             case DoorType.ArenaDoor:
                 ActivateArenaDoor();
@@ -94,7 +93,6 @@ public class Door : MonoBehaviour, IActivable
 
     void ActivateElectricDoor()
     {
-        Debug.Log("fct");
         if (doorCurrentCharge >= doorMaxCharge)
         {
             doorCurrentCharge = doorMaxCharge;
@@ -102,6 +100,10 @@ public class Door : MonoBehaviour, IActivable
             {
                 GetComponentInParent<Animation>().Play("DoorOpen");
                 isActive = true;
+                for (int i = 0; i < transform.childCount; i++)
+                {
+                    transform.GetChild(i).gameObject.SetActive(false);
+                }
             }
 
         }
@@ -112,7 +114,6 @@ public class Door : MonoBehaviour, IActivable
     {
         if (other.CompareTag("Orb") && doorType == DoorType.Electric && other.gameObject.GetComponent<PowerController>().elementalPower == GameManager.PowerType.Electric)
         {
-            Debug.Log("ta mere la collider");
             doorCurrentCharge += chargingAmount;
             this.Activate();
         }
