@@ -55,6 +55,7 @@ public class TimeLineRockFall : MonoBehaviour
         GameManager.gameManager.UIManager.gameObject.SetActive(true);
         GameManager.gameManager.blackBands.SetActive(false);
         Boss.SetActive(true);
+        Boss.GetComponent<BossSystem>().isAttacking = false;
         RockLineAnimatation.SetActive(false);
         RockLine1.SetActive(true);
         RockLine2.SetActive(true);

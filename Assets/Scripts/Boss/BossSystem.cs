@@ -56,7 +56,7 @@ public class BossSystem : MonoBehaviour
     public float minWaitTime;
     public float maxWaitTime;
     float nextAttack;
-    bool isAttacking;
+    public bool isAttacking;
     public LayerMask targetMask;
 
 
@@ -483,12 +483,12 @@ public class BossSystem : MonoBehaviour
         Vector3 raycastPosition = new Vector3(transform.position.x, 1f, transform.position.z);
         RaycastHit hit;
 
-        Physics.Raycast(raycastPosition, pivotLeft.transform.forward, out hit, 50, LayerMask.GetMask("Wall"));
-        Debug.Log("draw ray");
+        Physics.Raycast(raycastPosition, pivotLeft.transform.forward, out hit, 500, LayerMask.GetMask("Wall"));
         Debug.DrawRay(raycastPosition, pivotLeft.transform.forward * 50, Color.blue, 2);
         //print("shrinkLeft Length : " + hit.distance);
         shrinkLeft.transform.localScale = new Vector3(mysticLineWidth / transform.localScale.x, mysticLineHeight / transform.localScale.y, hit.distance / transform.localScale.z);
         shrinkLeft.transform.LookAt(hit.transform);
+        //Debug.Log(hit.transform.position);
 
         Physics.Raycast(raycastPosition, pivotRight.transform.forward, out hit, 50, LayerMask.GetMask("Wall"));
         //print("shrinkRight Length : " + hit.distance);
