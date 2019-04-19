@@ -52,12 +52,12 @@ public class Tutorial : MonoBehaviour
 
         while (readyPlayer1 == false || readyPlayer2 == false)
         {
-            if (Input.GetKey(KeyCode.Joystick1Button0))
+            if (Input.GetKey(KeyCode.Joystick1Button0) || Input.GetKey(KeyCode.Space))
             {
                 readyPlayer1 = true;
                 tutorialCanvas.transform.Find("readyIconP1").gameObject.SetActive(true);
             }
-            if (Input.GetKey(KeyCode.Joystick2Button0))
+            if (Input.GetKey(KeyCode.Joystick2Button0) || Input.GetKey(KeyCode.KeypadEnter))
             {
                 readyPlayer2 = true;
                 tutorialCanvas.transform.Find("readyIconP2").gameObject.SetActive(true);
@@ -68,7 +68,9 @@ public class Tutorial : MonoBehaviour
         tutorialCanvas.transform.Find("readyIconP1").gameObject.SetActive(false);
         tutorialCanvas.transform.Find("readyIconP2").gameObject.SetActive(false);
         tutorialCanvas.SetActive(false);
-        GameManager.gameManager.isPaused = true;
+        GameManager.gameManager.isPaused = false;
+
+        Destroy(gameObject);
     }
 
 }
