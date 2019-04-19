@@ -446,10 +446,12 @@ public class BossSystem : MonoBehaviour
                 //print("Distance : " + hit.distance);
 
                 shrinkLeft = Instantiate(mysticLinePrefab, pivotLeft.transform.position, Quaternion.identity, pivotLeft.transform);
-                shrinkLeft.transform.LookAt(new Vector3(hit.transform.position.x, shrinkLeft.transform.position.y, hit.transform.position.z));
+                //shrinkLeft.transform.LookAt(new Vector3(hit.transform.position.x, shrinkLeft.transform.position.y, hit.transform.position.z));
+                shrinkLeft.transform.LookAt(pivotLeft.transform.forward);
 
                 shrinkRight = Instantiate(mysticLinePrefab, pivotRight.transform.position, Quaternion.identity, pivotRight.transform);
-                shrinkRight.transform.LookAt(new Vector3(-hit.transform.position.x, shrinkRight.transform.position.y, -hit.transform.position.z));
+                //shrinkRight.transform.LookAt(new Vector3(-hit.transform.position.x, shrinkRight.transform.position.y, -hit.transform.position.z));
+                shrinkRight.transform.LookAt(pivotRight.transform.forward);
 
             }
             isShrinkMysticLineCreated = true;
