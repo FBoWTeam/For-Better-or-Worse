@@ -276,6 +276,9 @@ public class BossSystem : MonoBehaviour
                     isAttacking = false;
                     anim.SetTrigger("Stop");
                     CleanProjectorList();
+                    Destroy(shrinkLeft);
+                    Destroy(shrinkRight);
+                    isShrinkMysticLineCreated = false;
                 }
                 break;
             case 4:
@@ -380,7 +383,7 @@ public class BossSystem : MonoBehaviour
 
         yield return new WaitForSeconds(2.8f);
 
-        Vector3 raycastPosition = new Vector3(transform.position.x, 0, transform.position.z);
+        Vector3 raycastPosition = new Vector3(transform.position.x, 1f, transform.position.z);
         RaycastHit hit;
         Vector3 direction = (new Vector3(aimedPlayer.transform.position.x, raycastPosition.y, aimedPlayer.transform.position.z) - raycastPosition).normalized;
 
@@ -477,11 +480,12 @@ public class BossSystem : MonoBehaviour
 
     public void UpdateScaleShrinkMysticLine()
     {
-        Vector3 raycastPosition = new Vector3(transform.position.x, 0, transform.position.z);
+        Vector3 raycastPosition = new Vector3(transform.position.x, 1f, transform.position.z);
         RaycastHit hit;
 
         Physics.Raycast(raycastPosition, pivotLeft.transform.forward, out hit, 50, LayerMask.GetMask("Wall"));
-        //Debug.DrawRay(raycastPosition, pivotLeft.transform.forward * 50, Color.blue, 2);
+        Debug.Log("draw ray");
+        Debug.DrawRay(raycastPosition, pivotLeft.transform.forward * 50, Color.blue, 2);
         //print("shrinkLeft Length : " + hit.distance);
         shrinkLeft.transform.localScale = new Vector3(mysticLineWidth / transform.localScale.x, mysticLineHeight / transform.localScale.y, hit.distance / transform.localScale.z);
         shrinkLeft.transform.LookAt(hit.transform);
