@@ -30,7 +30,51 @@ public class LevelMenu : MonoBehaviour
         indexPI.Add(8);
         indexPI.Add(9);
 
-		transform.position = pos[0].transform.position;
+		switch(GameData.previousScene)
+		{
+			case 2:
+				curentPIIndex = 0;
+				destPIIndex = 0;
+				curentPosIndex = 0;
+				destPosIndex = 0;
+				transform.position = pos[0].transform.position;
+				break;
+			case 6:
+				curentPIIndex = 0;
+				destPIIndex = 0;
+				curentPosIndex = 0;
+				destPosIndex = 0;
+				transform.position = pos[0].transform.position;
+				break;
+			case 7:
+				curentPIIndex = 1;
+				destPIIndex = 1;
+				curentPosIndex = 7;
+				destPosIndex = 7;
+				transform.position = pos[7].transform.position;
+				break;
+			case 8:
+				curentPIIndex = 2;
+				destPIIndex = 2;
+				curentPosIndex = 8;
+				destPosIndex = 8;
+				transform.position = pos[8].transform.position;
+				break;
+			case 9:
+				curentPIIndex = 3;
+				destPIIndex = 3;
+				curentPosIndex = 9;
+				destPosIndex = 9;
+				transform.position = pos[9].transform.position;
+				break;
+			default:
+				curentPIIndex = 0;
+				destPIIndex = 0;
+				curentPosIndex = 0;
+				destPosIndex = 0;
+				transform.position = pos[0].transform.position;
+				break;
+		}
     }
 
     // Update is called once per frame
