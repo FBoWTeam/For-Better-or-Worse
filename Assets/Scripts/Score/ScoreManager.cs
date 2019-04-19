@@ -15,14 +15,9 @@ public class ScoreManager : MonoBehaviour
         Arena
     }
 
-
     public static ScoreManager scoreManager;
     
-
     public GameMode gameMode;
-
-    [HideInInspector]
-    public int sceneIndex;
 
     [Header("Orb Score")]
     public int maxCombo;
@@ -55,7 +50,6 @@ public class ScoreManager : MonoBehaviour
     [Header("Total Wave")]
     public int totalWave;
 
-
     private int numberOfPlayer;
 
     float timeStamp;
@@ -70,20 +64,13 @@ public class ScoreManager : MonoBehaviour
         else if (scoreManager != this)
         {
             Destroy(this.gameObject);
-        }
+		}
 
-        completionTime = 0;
+		DontDestroyOnLoad(this.gameObject);
+
+		completionTime = 0;
 
         timeStamp = Time.time;
-
-        //if in story mode, we keep the scoremanager through the scenes
-        //we save the scores for each arena
-        if (gameMode == GameMode.Story)
-        {
-            DontDestroyOnLoad(this.gameObject);
-        }
-
-        sceneIndex = SceneManager.GetActiveScene().buildIndex;
     }
 
     

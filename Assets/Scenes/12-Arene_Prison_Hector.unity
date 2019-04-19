@@ -12144,11 +12144,6 @@ PrefabInstance:
       propertyPath: canHitPlayer
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 4573906761269645459, guid: e0c803f7f12a09b4cb87b0f68746c41b,
-        type: 3}
-      propertyPath: elementalPowerSlot
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 2970527385879693205, guid: e0c803f7f12a09b4cb87b0f68746c41b,
         type: 3}
       propertyPath: droppedPower
@@ -12168,6 +12163,11 @@ PrefabInstance:
         type: 3}
       propertyPath: baseDamage
       value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4573906761269645459, guid: e0c803f7f12a09b4cb87b0f68746c41b,
+        type: 3}
+      propertyPath: elementalPowerSlot
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e0c803f7f12a09b4cb87b0f68746c41b, type: 3}
@@ -13524,6 +13524,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1963540010838136425, guid: 6c9d85762baf8aa408ebfbe35bfcea49,
+        type: 3}
+      propertyPath: sceneToLoad
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 1963540010838136427, guid: 6c9d85762baf8aa408ebfbe35bfcea49,
         type: 3}
       propertyPath: m_Size.z
@@ -13543,11 +13548,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Center.x
       value: -0.0060548782
-      objectReference: {fileID: 0}
-    - target: {fileID: 1963540010838136425, guid: 6c9d85762baf8aa408ebfbe35bfcea49,
-        type: 3}
-      propertyPath: sceneToLoad
-      value: 3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6c9d85762baf8aa408ebfbe35bfcea49, type: 3}
@@ -13793,6 +13793,8 @@ MonoBehaviour:
   - {fileID: 34759697}
   - {fileID: 1498121685}
   sceneLoader: {fileID: 1463575845}
+  arenaCanvas: []
+  countdownArena: {fileID: 0}
 --- !u!4 &746361365
 Transform:
   m_ObjectHideFlags: 0
@@ -22931,6 +22933,61 @@ PrefabInstance:
       propertyPath: m_isInputParsingRequired
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 1799868560580539931, guid: a4f8c49a4aa2e204ba579e3fee687eab,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2812769255179866488, guid: a4f8c49a4aa2e204ba579e3fee687eab,
+        type: 3}
+      propertyPath: m_havePropertiesChanged
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2812769255179866488, guid: a4f8c49a4aa2e204ba579e3fee687eab,
+        type: 3}
+      propertyPath: m_isInputParsingRequired
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4630489802095653334, guid: a4f8c49a4aa2e204ba579e3fee687eab,
+        type: 3}
+      propertyPath: m_havePropertiesChanged
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4630489802095653334, guid: a4f8c49a4aa2e204ba579e3fee687eab,
+        type: 3}
+      propertyPath: m_isInputParsingRequired
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8692469024640994961, guid: a4f8c49a4aa2e204ba579e3fee687eab,
+        type: 3}
+      propertyPath: m_havePropertiesChanged
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8692469024640994961, guid: a4f8c49a4aa2e204ba579e3fee687eab,
+        type: 3}
+      propertyPath: m_isInputParsingRequired
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1063861270775323784, guid: a4f8c49a4aa2e204ba579e3fee687eab,
+        type: 3}
+      propertyPath: m_havePropertiesChanged
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1063861270775323784, guid: a4f8c49a4aa2e204ba579e3fee687eab,
+        type: 3}
+      propertyPath: m_isInputParsingRequired
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7870858056347987446, guid: a4f8c49a4aa2e204ba579e3fee687eab,
+        type: 3}
+      propertyPath: m_havePropertiesChanged
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7870858056347987446, guid: a4f8c49a4aa2e204ba579e3fee687eab,
+        type: 3}
+      propertyPath: m_isInputParsingRequired
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a4f8c49a4aa2e204ba579e3fee687eab, type: 3}
 --- !u!1001 &1188505117
@@ -24845,7 +24902,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 618bad5fb90f5d24db4f24fb78ad3d86, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  timeToWait: 0
+  gameMode: 0
+  sceneIndex: 0
   maxCombo: 0
   enemyMirrorBroken: 0
   statusAilmentApplied: 0
@@ -24859,7 +24917,12 @@ MonoBehaviour:
   killsP2: 0
   healPointReceivedP1: 0
   healPointReceivedP2: 0
+  damageDealtBossP1: 0
+  damageDealtBossP2: 0
+  bossKilledByP1: 0
   completionTime: 0
+  totalWave: 0
+  score: 0
 --- !u!4 &1271221222
 Transform:
   m_ObjectHideFlags: 0
@@ -37790,6 +37853,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4487474537082509497, guid: d788871d895483a41a7c6049bf2bc49b,
+        type: 3}
+      propertyPath: arena
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4487474537082509497, guid: d788871d895483a41a7c6049bf2bc49b,
+        type: 3}
+      propertyPath: canDie
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d788871d895483a41a7c6049bf2bc49b, type: 3}
