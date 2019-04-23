@@ -11,7 +11,7 @@ public class LanguageMenu : MonoBehaviour
 			I18n.LoadLang("fr_FR");
 		else
 			I18n.LoadLang("en_US");
-
+		
 		SceneManager.LoadScene(2);
 	}
 }
