@@ -11,8 +11,8 @@ GameObject:
   - component: {fileID: 7099849533425728469}
   - component: {fileID: 1974141736898671432}
   - component: {fileID: 1953044603739522461}
-  - component: {fileID: 6362786971311919386}
   - component: {fileID: 1681947853025217023}
+  - component: {fileID: 2995436414546742540}
   m_Layer: 0
   m_Name: Rock7
   m_TagString: Untagged
@@ -79,19 +79,6 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!65 &6362786971311919386
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7892569402900409180}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1.9627385, y: 1.1587547, z: 1.7354467}
-  m_Center: {x: 0.057888746, y: 0.57937735, z: 0.03581819}
 --- !u!208 &1681947853025217023
 NavMeshObstacle:
   m_ObjectHideFlags: 0
@@ -101,10 +88,24 @@ NavMeshObstacle:
   m_GameObject: {fileID: 7892569402900409180}
   m_Enabled: 1
   serializedVersion: 3
-  m_Shape: 1
-  m_Extents: {x: 0.98100007, y: 0.57900006, z: 0.86800003}
+  m_Shape: 0
+  m_Extents: {x: 0.98100007, y: 0.57900006, z: 0.98100007}
   m_MoveThreshold: 0.1
   m_Carve: 1
   m_CarveOnlyStationary: 1
   m_Center: {x: 0.058000002, y: 0.57900006, z: 0.036000002}
   m_TimeToStationary: 0.5
+--- !u!136 &2995436414546742540
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7892569402900409180}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 1.0445585
+  m_Height: 2.089117
+  m_Direction: 1
+  m_Center: {x: 0.057888746, y: 0.5793774, z: 0.023180366}
