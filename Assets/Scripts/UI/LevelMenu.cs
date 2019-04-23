@@ -6,8 +6,10 @@ using UnityEngine.SceneManagement;
 
 public class LevelMenu : MonoBehaviour
 {
+	public Animation fader;
+	bool active;
 
-    public List<GameObject> pos = new List<GameObject>();
+	public List<GameObject> pos = new List<GameObject>();
     List<int> indexPI = new List<int>();
     int curentPosIndex;
     int curentPIIndex;
@@ -16,8 +18,14 @@ public class LevelMenu : MonoBehaviour
 
     public bool isMoving;
 
-    // Start is called before the first frame update
-    void Start()
+	public void Awake()
+	{
+		active = false;
+		StartCoroutine(FadeIn());
+	}
+
+	// Start is called before the first frame update
+	void Start()
     {
         curentPIIndex = 0;
         destPIIndex = 0;
@@ -75,13 +83,15 @@ public class LevelMenu : MonoBehaviour
 				transform.position = pos[0].transform.position;
 				break;
 		}
+
+
     }
 
     // Update is called once per frame
     void Update()
     {
         //Debug.Log(transform.position);
-        if (!isMoving)
+        if (!isMoving && active)
         {
             if (curentPosIndex == destPosIndex)
             {
@@ -109,27 +119,27 @@ public class LevelMenu : MonoBehaviour
                     {
                         case 0:
 							GameData.nextSceneToLoad = 5;
-                            SceneManager.LoadScene(4);
-                            break;
+							StartCoroutine(FadeOut(4));
+							break;
                         case 1:
 							GameData.nextSceneToLoad = 7;
-							SceneManager.LoadScene(4);
-                            break;
+							StartCoroutine(FadeOut(4));
+							break;
                         case 2:
 							GameData.nextSceneToLoad = 8;
-							SceneManager.LoadScene(4);
-                            break;
+							StartCoroutine(FadeOut(4));
+							break;
                         case 3:
 							GameData.nextSceneToLoad = 9;
-							SceneManager.LoadScene(4);
-                            break;
+							StartCoroutine(FadeOut(4));
+							break;
                     }
                 }
 
                 if (Input.GetKeyDown(KeyCode.Joystick1Button1) || Input.GetKeyDown(KeyCode.Joystick2Button1) || Input.GetKeyDown(KeyCode.Backspace) || Input.GetKeyDown(KeyCode.Escape))
                 {
-                    SceneManager.LoadScene(2);
-                }
+					StartCoroutine(FadeOut(2));
+				}
 
             }
 
@@ -183,5 +193,21 @@ public class LevelMenu : MonoBehaviour
         isMoving = false;
     }
 
+	IEnumerator FadeIn()
+	{
+		fader.Play();
+		yield return new WaitForSeconds(0.1f);
+		yield return new WaitUntil(() => fader.isPlaying == false);
+		active = true;
+	}
 
+	IEnumerator FadeOut(int sceneToLoad)
+	{
+		active = false;
+		fader.clip = fader.GetClip("FadeOut");
+		fader.Play();
+		yield return new WaitForSeconds(0.1f);
+		yield return new WaitUntil(() => fader.isPlaying == false);
+		SceneManager.LoadScene(sceneToLoad);
+	}
 }

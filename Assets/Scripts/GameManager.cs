@@ -306,7 +306,6 @@ public class GameManager : MonoBehaviour
 		if(arena)
 		{
 			GameData.previousScene = SceneManager.GetActiveScene().buildIndex;
-			Debug.Log(GameData.previousScene);
 			SceneManager.LoadScene(15);
 		}
 		else
