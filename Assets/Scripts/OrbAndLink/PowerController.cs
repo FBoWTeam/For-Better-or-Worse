@@ -189,6 +189,7 @@ public class PowerController : MonoBehaviour
 
 		orbController = gameObject.GetComponent<OrbController>();
         VFX = transform.GetChild(0).gameObject;
+        
     }
 
 	#region Activation and Deactivation Functions

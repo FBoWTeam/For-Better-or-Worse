@@ -120,9 +120,5 @@ public class ScoreDisplayer : MonoBehaviour
         {
             finalScore.GetComponent<TextMeshProUGUI>().text =  ScoreManager.scoreManager.totalWave.ToString();
         }
-
-
-
-
-    }
+	}
 }
