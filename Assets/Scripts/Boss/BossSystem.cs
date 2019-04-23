@@ -405,13 +405,9 @@ public class BossSystem : MonoBehaviour
             yield return new WaitForEndOfFrame();
         }
 
-        //if (!isMysticLineCreated)
-        //{
-        //}
-
         if (Physics.Raycast(raycastPosition, direction, out hit, 50, LayerMask.GetMask("Wall")))
         {
-            StartCoroutine(CreateMysticLineCoroutine(raycastPosition, hit.transform.position, hit.distance));
+            StartCoroutine(CreateMysticLineCoroutine(transform.position, hit.transform.position, hit.distance));
         }
 
         Destroy(mysticLineIndicator);
@@ -441,7 +437,6 @@ public class BossSystem : MonoBehaviour
     public IEnumerator ShrinkMysticLinesCoroutine()
     {
 
-        isAttacking = true;
         Debug.Log("Shrink MysticLines");
 
         //canalisation + feedbacks
@@ -456,26 +451,17 @@ public class BossSystem : MonoBehaviour
 
             if (Physics.Raycast(raycastPosition, pivotLeft.transform.forward, out hit, 50, LayerMask.GetMask("Wall")))
             {
-                //Debug
-                //print("Distance : " + hit.distance);
-
                 shrinkLeft = Instantiate(mysticLinePrefab, pivotLeft.transform.position, Quaternion.identity, pivotLeft.transform);
-                //shrinkLeft.transform.LookAt(new Vector3(hit.transform.position.x, shrinkLeft.transform.position.y, hit.transform.position.z));
-                //shrinkLeft.transform.LookAt(pivotLeft.transform.forward);
                 shrinkLeft.transform.LookAt(hit.transform);
 
                 Physics.Raycast(raycastPosition, pivotRight.transform.forward, out hit, 50, LayerMask.GetMask("Wall"));
                 shrinkRight = Instantiate(mysticLinePrefab, pivotRight.transform.position, Quaternion.identity, pivotRight.transform);
-                //shrinkRight.transform.LookAt(new Vector3(-hit.transform.position.x, shrinkRight.transform.position.y, -hit.transform.position.z));
-                //shrinkRight.transform.LookAt(pivotRight.transform.forward);
                 shrinkRight.transform.LookAt(hit.transform);
-
-
             }
             isShrinkMysticLineCreated = true;
         }
 
-        //StartCoroutine(Shrink());
+        isAttacking = false;
     }
 
     public void UpdateScaleShrinkMysticLine()
@@ -484,21 +470,17 @@ public class BossSystem : MonoBehaviour
         RaycastHit hit;
 
         Physics.Raycast(raycastPosition, pivotLeft.transform.forward, out hit, 500, LayerMask.GetMask("Wall"));
-        Debug.DrawRay(raycastPosition, pivotLeft.transform.forward * 50, Color.blue, 2);
-        //print("shrinkLeft Length : " + hit.distance);
+        //Debug.DrawRay(raycastPosition, pivotLeft.transform.forward * hit.distance, Color.blue, 1);
         shrinkLeft.transform.localScale = new Vector3(mysticLineWidth / transform.localScale.x, mysticLineHeight / transform.localScale.y, hit.distance / transform.localScale.z);
-        shrinkLeft.transform.LookAt(hit.transform);
-        //Debug.Log(hit.transform.position);
 
         Physics.Raycast(raycastPosition, pivotRight.transform.forward, out hit, 50, LayerMask.GetMask("Wall"));
-        //print("shrinkRight Length : " + hit.distance);
-        //Debug.DrawRay(raycastPosition, pivotRight.transform.forward * 50, Color.red, 2);
+        //Debug.DrawRay(raycastPosition, pivotRight.transform.forward * hit.distance, Color.red, 1);
         shrinkRight.transform.localScale = new Vector3(mysticLineWidth / transform.localScale.x, mysticLineHeight / transform.localScale.y, hit.distance / transform.localScale.z);
-        shrinkRight.transform.LookAt(hit.transform);
     }
 
     public IEnumerator Shrink()
     {
+        isAttacking = true;
         yield return new WaitForSeconds(1);
         Vector3 newDirLeft;
         Vector3 newDirRight;
@@ -510,8 +492,10 @@ public class BossSystem : MonoBehaviour
         //Forward
         if (rand == 0)
         {
-            while (Vector3.Angle(pivotLeft.transform.forward, Quaternion.Euler(0, -limitAngle, 0) * transform.forward - pivotLeft.transform.position) > 0.4 || Vector3.Angle(pivotRight.transform.forward, Quaternion.Euler(0, limitAngle, 0) * transform.forward - pivotRight.transform.position) > 0.4)
+            while (Vector3.Angle(pivotLeft.transform.forward, Quaternion.Euler(0, -limitAngle, 0) * transform.forward) > 0.4 || Vector3.Angle(pivotRight.transform.forward, Quaternion.Euler(0, limitAngle, 0) * transform.forward) > 0.4)
             {
+                print("While1");
+                //print("Angle PivotLeft: " + Vector3.Angle(pivotLeft.transform.forward, Quaternion.Euler(0, -limitAngle, 0) * transform.forward - pivotLeft.transform.position));
                 Vector3 vectorLeft = Quaternion.Euler(0, -limitAngle, 0) * transform.forward;
                 Vector3 vectorRight = Quaternion.Euler(0, limitAngle, 0) * transform.forward;
                 newDirLeft = Vector3.RotateTowards(pivotLeft.transform.forward, vectorLeft, step, 0.0f);
@@ -523,8 +507,9 @@ public class BossSystem : MonoBehaviour
             }
             yield return new WaitForSeconds(shrinkDuration);
 
-            while (Vector3.Angle(pivotLeft.transform.forward, Quaternion.Euler(0, -90, 0) * transform.forward - pivotLeft.transform.position) > 0.4 || Vector3.Angle(pivotRight.transform.forward, Quaternion.Euler(0, 90, 0) * transform.forward - pivotRight.transform.position) > 0.4)
+            while (Vector3.Angle(pivotLeft.transform.forward, Quaternion.Euler(0, -90, 0) * transform.forward) > 0.4 || Vector3.Angle(pivotRight.transform.forward, Quaternion.Euler(0, 90, 0) * transform.forward) > 0.4)
             {
+                print("While2");
                 Vector3 vectorLeft = Quaternion.Euler(0, -90, 0) * transform.forward;
                 Vector3 vectorRight = Quaternion.Euler(0, 90, 0) * transform.forward;
 
@@ -541,8 +526,10 @@ public class BossSystem : MonoBehaviour
         //Backward
         else
         {
-            while (Vector3.Angle(pivotLeft.transform.forward, Quaternion.Euler(0, limitAngle, 0) * -transform.forward - pivotLeft.transform.position) > 0.4 || Vector3.Angle(pivotRight.transform.forward, Quaternion.Euler(0, -limitAngle, 0) * -transform.forward - pivotRight.transform.position) > 0.4)
+            while (Vector3.Angle(pivotLeft.transform.forward, Quaternion.Euler(0, limitAngle, 0) * -transform.forward) > 0.4 || Vector3.Angle(pivotRight.transform.forward, Quaternion.Euler(0, -limitAngle, 0) * -transform.forward) > 0.4)
             {
+                print("While3");
+
                 Vector3 vectorLeft = Quaternion.Euler(0, limitAngle, 0) * -transform.forward;
                 Vector3 vectorRight = Quaternion.Euler(0, -limitAngle, 0) * -transform.forward;
                 newDirLeft = Vector3.RotateTowards(pivotLeft.transform.forward, vectorLeft, step, 0.0f);
@@ -551,11 +538,14 @@ public class BossSystem : MonoBehaviour
                 pivotLeft.transform.rotation = Quaternion.LookRotation(newDirLeft);
                 pivotRight.transform.rotation = Quaternion.LookRotation(newDirRight);
                 yield return new WaitForEndOfFrame();
+
             }
             yield return new WaitForSeconds(shrinkDuration);
 
-            while (Vector3.Angle(pivotLeft.transform.forward, Quaternion.Euler(0, 90, 0) * -transform.forward - pivotLeft.transform.position) > 0.4 || Vector3.Angle(pivotRight.transform.forward, Quaternion.Euler(0, -90, 0) * -transform.forward - pivotRight.transform.position) > 0.4)
+            while (Vector3.Angle(pivotLeft.transform.forward, Quaternion.Euler(0, 90, 0) * -transform.forward) > 0.4 || Vector3.Angle(pivotRight.transform.forward, Quaternion.Euler(0, -90, 0) * -transform.forward) > 0.4)
             {
+                print("While4");
+
                 Vector3 vectorLeft = Quaternion.Euler(0, 90, 0) * -transform.forward;
                 Vector3 vectorRight = Quaternion.Euler(0, -90, 0) * -transform.forward;
 
@@ -566,6 +556,7 @@ public class BossSystem : MonoBehaviour
                 pivotRight.transform.rotation = Quaternion.LookRotation(newDirRight);
 
                 yield return new WaitForEndOfFrame();
+
             }
 
         }
