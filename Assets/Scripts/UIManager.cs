@@ -33,16 +33,22 @@ public class UIManager : MonoBehaviour
 
     [Header("Fox Powers")]
     public GameObject elementalPowerFox;
-	public GameObject behaviouralPowerFox;
+    public GameObject behaviouralPowerFox;
+    public GameObject elementalReadyFox;
+    public GameObject behaviouralReadyFox;
 
-	[Header("Raccoon Powers")]
+    [Header("Raccoon Powers")]
     public GameObject elementalPowerRaccoon;
     public GameObject behaviouralPowerRaccoon;
+    public GameObject elementalReadyRaccoon;
+    public GameObject behaviouralReadyRaccoon;
 
     [Header("Taunt")]
     public GameObject tauntCooldownFox;
     public GameObject tauntCooldownRaccoon;
-    
+    public GameObject tauntReadyFox;
+    public GameObject tauntReadyRaccoon;
+
 
     [Header("Powers Image")]
     public Sprite largeOrb;
@@ -71,31 +77,35 @@ public class UIManager : MonoBehaviour
 
     public List<string> player2TextsOrbHit;//quotes of the player 2 when hit by an enemy
     public List<string> player2TextsOtherOrbHit;//quotes of the player 2 when player 1 is hit by the orb
-	
+
     [HideInInspector]
     Dictionary<int, GameManager.PowerType> busySlot;
 
     #endregion
-	
+
     #region All Methods
 
     public void InitDictionary()
     {
-		busySlot = new Dictionary<int, GameManager.PowerType>(2);
-		busySlot.Add(1, GameManager.PowerType.None);
+        busySlot = new Dictionary<int, GameManager.PowerType>(2);
+        busySlot.Add(1, GameManager.PowerType.None);
         busySlot.Add(2, GameManager.PowerType.None);
     }
 
-    public void TauntCooldownSystem(bool player1, float tauntCooldown)
+    public IEnumerator TauntCooldownSystem(bool player1, float tauntCooldown)
     {
         if (player1)
         {
-            StartCoroutine(startCooldown(tauntCooldown, tauntCooldownFox.GetComponent<Image>()));
+            yield return StartCoroutine(startCooldown(tauntCooldown, tauntCooldownFox.GetComponent<Image>()));
+            tauntReadyFox.GetComponent<ParticleSystem>().Play();
         }
         else
         {
-            StartCoroutine(startCooldown(tauntCooldown, tauntCooldownRaccoon.GetComponent<Image>()));
+            yield return StartCoroutine(startCooldown(tauntCooldown, tauntCooldownRaccoon.GetComponent<Image>()));
+            tauntReadyRaccoon.GetComponent<ParticleSystem>().Play();
         }
+
+        yield return null;
     }
 
     #region Other Methods
@@ -249,37 +259,60 @@ public class UIManager : MonoBehaviour
     /// </summary>
     /// <param name="power"></param>
     /// <param name="cd"></param>
-    public void Cooldown(GameManager.PowerType power, float cd, bool player1) {
+    public IEnumerator Cooldown(GameManager.PowerType power, float cd, bool player1)
+    {
         // lancer start cooldown sur les ( p1 et p2) slot assigner au power
 
         int slot = getSlotByPower(power);
-        if (slot > -1) {
-            switch (slot) {
+        if (slot > -1)
+        {
+            switch (slot)
+            {
                 case 1:
                     if (player1)
-                        StartCoroutine(startCooldown(cd, GetCdImage(elementalPowerFox)));
+                    {
+                        yield return StartCoroutine(startCooldown(cd, GetCdImage(elementalPowerFox)));
+                        elementalReadyFox.GetComponent<ParticleSystem>().Play();
+                    }
                     else
-                        StartCoroutine(startCooldown(cd, GetCdImage(elementalPowerRaccoon)));
+                    {
+                        yield return StartCoroutine(startCooldown(cd, GetCdImage(elementalPowerRaccoon)));
+                        elementalReadyRaccoon.GetComponent<ParticleSystem>().Play();
+                    }
                     break;
                 case 2:
                     if (player1)
-                        StartCoroutine(startCooldown(cd, GetCdImage(behaviouralPowerFox)));
+                    {
+                        yield return StartCoroutine(startCooldown(cd, GetCdImage(behaviouralPowerFox)));
+                        behaviouralReadyFox.GetComponent<ParticleSystem>().Play();
+                    }
                     else
-                        StartCoroutine(startCooldown(cd, GetCdImage(behaviouralPowerRaccoon)));
+                    {
+                        yield return StartCoroutine(startCooldown(cd, GetCdImage(behaviouralPowerRaccoon)));
+                        behaviouralReadyRaccoon.GetComponent<ParticleSystem>().Play();
+                    }
                     break;
                 default:
                     break;
             }
-        } else {
+        }
+        else
+        {
             Debug.LogError("NO SLOT FOUND FOR THIS POWER");
         }
+
+        yield return null;
     }
 
-    int getSlotByPower(GameManager.PowerType power) {
+    int getSlotByPower(GameManager.PowerType power)
+    {
 
-        if (busySlot.ContainsValue(power)) {
-            foreach (KeyValuePair<int, GameManager.PowerType> item in busySlot) {
-                if (item.Value == power) {
+        if (busySlot.ContainsValue(power))
+        {
+            foreach (KeyValuePair<int, GameManager.PowerType> item in busySlot)
+            {
+                if (item.Value == power)
+                {
                     return item.Key;
                 }
             }
@@ -288,12 +321,15 @@ public class UIManager : MonoBehaviour
         return -1;
     }
 
-    IEnumerator startCooldown(float cd, Image image) {
+    IEnumerator startCooldown(float cd, Image image)
+    {
 
         image.fillAmount = 0.999f;
-        while (image.fillAmount != 1) {
+        while (image.fillAmount != 1)
+        {
             image.fillAmount -= 1 / cd * Time.deltaTime;
-            if (image.fillAmount <= 0.001f) {
+            if (image.fillAmount <= 0.001f)
+            {
                 image.fillAmount = 1;
             }
             yield return new WaitForEndOfFrame();
@@ -309,11 +345,15 @@ public class UIManager : MonoBehaviour
     /// Update Combo UI
     /// </summary>
     /// <param name="nb"></param>
-    public void UpdateCombo(int nb) {
-        if (nb < 2) {
+    public void UpdateCombo(int nb)
+    {
+        if (nb < 2)
+        {
             combo.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = string.Empty;
             combo.transform.GetChild(1).GetComponent<TextMeshProUGUI>().text = string.Empty;
-        } else if (nb >= 2) {
+        }
+        else if (nb >= 2)
+        {
             combo.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "Combo !";
             combo.transform.GetChild(1).GetComponent<TextMeshProUGUI>().text = "x" + nb;
         }
@@ -351,7 +391,8 @@ public class UIManager : MonoBehaviour
     /// </summary>
     /// <param name="go"></param>
     /// <returns></returns>
-    Image GetImage(GameObject go) {
+    Image GetImage(GameObject go)
+    {
         return go.transform.GetChild(0).GetComponent<Image>();
     }
     /// <summary>
@@ -359,13 +400,14 @@ public class UIManager : MonoBehaviour
     /// </summary>
     /// <param name="go"></param>
     /// <returns></returns>
-    Image GetCdImage(GameObject go) {
+    Image GetCdImage(GameObject go)
+    {
         return go.transform.GetChild(1).GetComponent<Image>();
     }
 
     #endregion
 
-  
+
 
     /// <summary>
     /// Call the UpdateDialogBox randomly when a player get hit by anything
@@ -374,11 +416,11 @@ public class UIManager : MonoBehaviour
     {
         if (Random.Range(1, 101)/*return an integer between 1(inclusive) and 101(exclusive)*/ <= pourcentageQuote)
         {
-            if(damageDealer == "enemy")
-            { 
+            if (damageDealer == "enemy")
+            {
                 if (targetPlayer == GameManager.gameManager.player1)
                 {
-                    if(Random.Range(1, 3) == 1 )//50%
+                    if (Random.Range(1, 3) == 1)//50%
                     {
                         UpdateDialogBox1(player1TextsGetHit[Random.Range(0, player1TextsGetHit.Count)], displayTime);
                     }
@@ -399,7 +441,7 @@ public class UIManager : MonoBehaviour
                     }
                 }
             }
-            else if(damageDealer == "orb")
+            else if (damageDealer == "orb")
             {
                 if (targetPlayer == GameManager.gameManager.player1)
                 {
@@ -427,17 +469,17 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    
 
-	public void RespawnReset()
-	{
-		GetCdImage(elementalPowerFox).fillAmount = 0;
-		GetCdImage(behaviouralPowerFox).fillAmount = 0;
-		tauntCooldownFox.GetComponent<Image>().fillAmount = 0;
 
-		GetCdImage(elementalPowerRaccoon).fillAmount = 0;
-		GetCdImage(behaviouralPowerRaccoon).fillAmount = 0;
-		tauntCooldownRaccoon.GetComponent<Image>().fillAmount = 0;
-	}
+    public void RespawnReset()
+    {
+        GetCdImage(elementalPowerFox).fillAmount = 0;
+        GetCdImage(behaviouralPowerFox).fillAmount = 0;
+        tauntCooldownFox.GetComponent<Image>().fillAmount = 0;
+
+        GetCdImage(elementalPowerRaccoon).fillAmount = 0;
+        GetCdImage(behaviouralPowerRaccoon).fillAmount = 0;
+        tauntCooldownRaccoon.GetComponent<Image>().fillAmount = 0;
+    }
     #endregion
 }
