@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Playables;
 
-public class TimeLineRockFall : MonoBehaviour
+public class TimeLineCornerRockFall : MonoBehaviour
 {
     PlayableDirector director;
     GameObject WallForTimeLine;
@@ -42,7 +42,7 @@ public class TimeLineRockFall : MonoBehaviour
     public void WhenEnded(PlayableDirector obj)
     {
         WallForTimeLine.SetActive(false);
-        Boss.GetComponent<BossRotation>().enabled = true ;
+        Boss.GetComponent<BossRotation>().enabled = true;
         GameManager.gameManager.player1.GetComponent<CapsuleCollider>().isTrigger = false;
         GameManager.gameManager.player2.GetComponent<CapsuleCollider>().isTrigger = false;
         GameManager.gameManager.isPaused = false;
@@ -72,7 +72,7 @@ public class TimeLineRockFall : MonoBehaviour
         GameManager.gameManager.player2.GetComponent<CapsuleCollider>().isTrigger = true;
 
         yield return new WaitForSeconds(4f);//wait the animation
-        StartCoroutine(Boss.GetComponent<BossSystem>().ShrinkMysticLinesCoroutine());        
+        StartCoroutine(Boss.GetComponent<BossSystem>().ShrinkMysticLinesCoroutine());
     }
 
 }
