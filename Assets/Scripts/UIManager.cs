@@ -62,6 +62,10 @@ public class UIManager : MonoBehaviour
     public Sprite darkness;
     public Sprite none;
 
+    [Header("Drop GO")]
+    public Camera camera;
+    public GameObject drop;
+
     [Header("Text Quote")]
     public float displayTime;
     public int pourcentageQuote;
@@ -214,6 +218,7 @@ public class UIManager : MonoBehaviour
     public void UpdateDroppedPower(GameManager.PowerType droppedPower)
     {
         orbPower.sprite = ImageAssignment(droppedPower);
+        DropFeedback();
     }
 
     #endregion
@@ -469,8 +474,6 @@ public class UIManager : MonoBehaviour
         }
     }
 
-
-
     public void RespawnReset()
     {
         GetCdImage(elementalPowerFox).fillAmount = 0;
@@ -481,5 +484,19 @@ public class UIManager : MonoBehaviour
         GetCdImage(behaviouralPowerRaccoon).fillAmount = 0;
         tauntCooldownRaccoon.GetComponent<Image>().fillAmount = 0;
     }
+
+    public void DropFeedback()
+    {
+        Vector3 viewPos = camera.WorldToScreenPoint(GameManager.gameManager.player1.transform.position);
+        print("Orb : " + GameManager.gameManager.orb.transform.position);
+        print(viewPos.ToString());
+        viewPos = new Vector3(1920 / viewPos.x, 1080 / viewPos.y);
+
+        drop.GetComponent<RectTransform>().anchoredPosition = viewPos;
+    }
+
+
+
+
     #endregion
 }
