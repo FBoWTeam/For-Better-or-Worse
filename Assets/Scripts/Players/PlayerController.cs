@@ -130,7 +130,7 @@ public class PlayerController : MonoBehaviour
         {
             Taunt();
             StartCoroutine(TauntCoolDown(tauntCooldown));
-			GameManager.gameManager.UIManager.TauntCooldownSystem(player1, tauntCooldown);
+			StartCoroutine(GameManager.gameManager.UIManager.TauntCooldownSystem(player1, tauntCooldown));
         }
 
     }
