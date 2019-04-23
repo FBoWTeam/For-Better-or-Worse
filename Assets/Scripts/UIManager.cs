@@ -34,10 +34,14 @@ public class UIManager : MonoBehaviour
     [Header("Fox Powers")]
     public GameObject elementalPowerFox;
     public GameObject behaviouralPowerFox;
+    public GameObject elementalReadyFox;
+    public GameObject behaviouralReadyFox;
 
     [Header("Raccoon Powers")]
     public GameObject elementalPowerRaccoon;
     public GameObject behaviouralPowerRaccoon;
+    public GameObject elementalReadyRaccoon;
+    public GameObject behaviouralReadyRaccoon;
 
     [Header("Taunt")]
     public GameObject tauntCooldownFox;
@@ -255,7 +259,7 @@ public class UIManager : MonoBehaviour
     /// </summary>
     /// <param name="power"></param>
     /// <param name="cd"></param>
-    public void Cooldown(GameManager.PowerType power, float cd, bool player1)
+    public IEnumerator Cooldown(GameManager.PowerType power, float cd, bool player1)
     {
         // lancer start cooldown sur les ( p1 et p2) slot assigner au power
 
@@ -266,15 +270,27 @@ public class UIManager : MonoBehaviour
             {
                 case 1:
                     if (player1)
-                        StartCoroutine(startCooldown(cd, GetCdImage(elementalPowerFox)));
+                    {
+                        yield return StartCoroutine(startCooldown(cd, GetCdImage(elementalPowerFox)));
+                        elementalReadyFox.GetComponent<ParticleSystem>().Play();
+                    }
                     else
-                        StartCoroutine(startCooldown(cd, GetCdImage(elementalPowerRaccoon)));
+                    {
+                        yield return StartCoroutine(startCooldown(cd, GetCdImage(elementalPowerRaccoon)));
+                        elementalReadyRaccoon.GetComponent<ParticleSystem>().Play();
+                    }
                     break;
                 case 2:
                     if (player1)
-                        StartCoroutine(startCooldown(cd, GetCdImage(behaviouralPowerFox)));
+                    {
+                        yield return StartCoroutine(startCooldown(cd, GetCdImage(behaviouralPowerFox)));
+                        behaviouralReadyFox.GetComponent<ParticleSystem>().Play();
+                    }
                     else
-                        StartCoroutine(startCooldown(cd, GetCdImage(behaviouralPowerRaccoon)));
+                    {
+                        yield return StartCoroutine(startCooldown(cd, GetCdImage(behaviouralPowerRaccoon)));
+                        behaviouralReadyRaccoon.GetComponent<ParticleSystem>().Play();
+                    }
                     break;
                 default:
                     break;
@@ -284,6 +300,8 @@ public class UIManager : MonoBehaviour
         {
             Debug.LogError("NO SLOT FOUND FOR THIS POWER");
         }
+
+        yield return null;
     }
 
     int getSlotByPower(GameManager.PowerType power)
