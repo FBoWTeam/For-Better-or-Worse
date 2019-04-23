@@ -59,8 +59,12 @@ public class MainMenu : MonoBehaviour
         }
     }
 
-    public void LoadScene()
+    public void LoadScene(bool arena)
     {
+		if(arena)
+		{
+			GameData.nextSceneToLoad = 12;
+		}
         SceneManager.LoadScene(sceneToLoad);
     }
 
