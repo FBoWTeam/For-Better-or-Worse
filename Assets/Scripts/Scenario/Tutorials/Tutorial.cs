@@ -4,27 +4,73 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
+
 public class Tutorial : MonoBehaviour
 {
-	public string tutorialText;
-	public Sprite tutorialIcon;
+    public bool isCinematicTutorial;
 
-    public void GetsIn()
+    [Header("Canvas")]
+    public GameObject tutorialCanvas;
+
+    [Header("Text & Image")]
+    public Sprite tutorialImage;
+    public Sprite tutorialButton;
+    public string tutorialTitleKey;
+    public string tutorialTextKey;
+
+
+    private void OnTriggerEnter(Collider other)
     {
-		GameObject tutorialCanvas = GameManager.gameManager.tutorials;
-		tutorialCanvas.SetActive(true);
-		tutorialCanvas.transform.Find("Text").GetComponent<TextMeshProUGUI>().text = tutorialText;
-		tutorialCanvas.transform.Find("Image").GetComponent<Image>().sprite = tutorialIcon;
-		tutorialCanvas.GetComponent<Animator>().SetTrigger("TutoIn");
+        if (other.CompareTag("Player"))
+        {
+            StartCoroutine(TutorialCoroutine());
+        }
     }
 
-	public IEnumerator GetsOut()
-	{
-		GameObject tutorialCanvas = GameManager.gameManager.tutorials;
-		tutorialCanvas.GetComponent<Animator>().SetTrigger("TutoOut");
-		yield return new WaitForSeconds(tutorialCanvas.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).length);
-		tutorialCanvas.GetComponentInChildren<TextMeshProUGUI>().color = Color.white;
-		tutorialCanvas.GetComponentInChildren<Image>().color = Color.white;
-		tutorialCanvas.SetActive(false);
-	}
+    private void OnEnable()
+    {
+        if (isCinematicTutorial)
+        {
+            StartCoroutine(TutorialCoroutine());
+        }
+    }
+
+
+    IEnumerator TutorialCoroutine()
+    {
+        GameManager.gameManager.isPaused = true;
+        bool readyPlayer1 = false;
+        bool readyPlayer2 = false;
+
+        tutorialCanvas.SetActive(true);
+
+        tutorialCanvas.transform.Find("tutorialImage").GetComponent<Image>().sprite = tutorialImage;
+        tutorialCanvas.transform.Find("tutorialButton").GetComponent<Image>().sprite = tutorialButton;
+        tutorialCanvas.transform.Find("tutorialTitle").GetComponent<TextMeshProUGUI>().text = I18n.Translate(tutorialTitleKey);
+        tutorialCanvas.transform.Find("tutorialText").GetComponent<TextMeshProUGUI>().text = I18n.Translate(tutorialTextKey);
+
+
+        while (readyPlayer1 == false || readyPlayer2 == false)
+        {
+            if (Input.GetKey(KeyCode.Joystick1Button0) || Input.GetKey(KeyCode.Space))
+            {
+                readyPlayer1 = true;
+                tutorialCanvas.transform.Find("readyIconP1").gameObject.SetActive(true);
+            }
+            if (Input.GetKey(KeyCode.Joystick2Button0) || Input.GetKey(KeyCode.KeypadEnter))
+            {
+                readyPlayer2 = true;
+                tutorialCanvas.transform.Find("readyIconP2").gameObject.SetActive(true);
+            }
+            yield return new WaitForEndOfFrame();
+        }
+
+        tutorialCanvas.transform.Find("readyIconP1").gameObject.SetActive(false);
+        tutorialCanvas.transform.Find("readyIconP2").gameObject.SetActive(false);
+        tutorialCanvas.SetActive(false);
+        GameManager.gameManager.isPaused = false;
+
+        Destroy(gameObject);
+    }
+
 }

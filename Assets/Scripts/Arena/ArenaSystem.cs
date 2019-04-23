@@ -57,11 +57,11 @@ public class ArenaSystem : MonoBehaviour
 
     //enemies currently alive in the arena
     private List<GameObject> remainingEnemiesList;
-
-    private bool start;
+    
 
     public List<GameObject> arenaCanvas;
     public GameObject countdownArena;
+
 
     private void Start()
     {
@@ -72,6 +72,7 @@ public class ArenaSystem : MonoBehaviour
         increaseChanceValue = 100f / ((waveList.Count - threshold));
     }
 
+
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))
@@ -80,6 +81,7 @@ public class ArenaSystem : MonoBehaviour
             GetComponent<BoxCollider>().enabled = false;
         }
     }
+
 
     IEnumerator CountDown()
     {
@@ -97,7 +99,6 @@ public class ArenaSystem : MonoBehaviour
         countdownArena.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "";
         StartArena();
     }
-    
 
     void StartArena()
     {
@@ -108,7 +109,7 @@ public class ArenaSystem : MonoBehaviour
         StartCoroutine(WaveSystem());
         GameManager.gameManager.UIManager.UpdateWave(waveIndex + 1);
     }
-
+    
     IEnumerator WaveSystem()
     {
         if (waveList.Count <= 0)
@@ -141,15 +142,14 @@ public class ArenaSystem : MonoBehaviour
                     timer = 0;
                     GameManager.gameManager.UIManager.UpdateSubWave(subWaveIndex + 1);
                     subWaveIndex++;
-                    Debug.Log("Next SubWave");
-
+                    
                 }
 
                 SpawnBoss();
 
                 if (waveCleared())
                 {
-                    Debug.Log("Next Wave");
+                    //Debug.Log("Next Wave");
                     while (timer < waveList[waveIndex].timeBeforeNextWave)
                     {
                         timer += Time.deltaTime;
@@ -158,7 +158,7 @@ public class ArenaSystem : MonoBehaviour
                     waveIndex++;
                     if (waveIndex < waveList.Count)
                     {
-                        GameManager.gameManager.UIManager.UpdateWave(waveIndex + 1);
+                        GameManager.gameManager.UIManager.UpdateWave(ScoreManager.scoreManager.totalWave + waveIndex + 1);
                         GameManager.gameManager.UIManager.StartCoroutine(GameManager.gameManager.UIManager.AnnouceWave(waveIndex + 1));
                     }
                     subWaveIndex = 0;
@@ -170,6 +170,9 @@ public class ArenaSystem : MonoBehaviour
             if (waveIndex >= waveList.Count)
             {
                 arenaCleared = true;
+
+                //update total wave cleared
+                ScoreManager.scoreManager.totalWave += waveIndex + 1;
             }
         }
         ScoreManager.scoreManager.Save();
