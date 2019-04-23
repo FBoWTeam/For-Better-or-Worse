@@ -10,111 +10,83 @@ using UnityEngine.EventSystems;
 
 public class MainMenu : MonoBehaviour
 {
-    TextMeshProUGUI currentTextPro;
+	public Animation fader;
+	bool active;
 
-    #region Resolution variable
-    int currentIndexRes;
-    List<string> resOptions = new List<string>();
-    Resolution[] resolutions;
+	public EventSystem eS;
 
-    #endregion
+	public GameObject MainMenuCanvas;
+	public GameObject MainMenuFirstSelected;
+	public GameObject QuitMenuCanvas;
+	public GameObject QuitMenuFirstSelected;
 
-    #region Volume variable
-    AudioMixer mixer;
+	public void Awake()
+	{
+		active = false;
+		StartCoroutine(FadeIn());
+	}
 
-    #endregion
+	public void LoadHistory()
+	{
+		if (active)
+		{
+			StartCoroutine(FadeOut(3));
+		}
+	}
 
-    #region Scene variable
-    public int sceneToLoad;
-
-    #endregion
-
-    BaseEventData m_baseEvent;
-
-    EventSystem eS;
-
-    private void Start()
-    {
-        currentTextPro = GetComponent<TextMeshProUGUI>();
-
-        eS = EventSystem.current;
-
-        resolutions = Screen.resolutions;
-
-        for (int i = 0; i < resolutions.Length; i++)
-        {
-            string option = resolutions[i].width + " x " + resolutions[i].height;
-            resOptions.Add(option);
-
-            if (resolutions[i].width == Screen.currentResolution.width &&
-                resolutions[i].height == Screen.currentResolution.height)
-            {
-                currentIndexRes = i;
-            }
-        }
-
-        if (this.name == "ValueRes")
-        {
-            currentTextPro.SetText(resOptions[currentIndexRes]);
-        }
-    }
-
-    public void LoadScene(bool arena)
-    {
-		if(arena)
+	public void LoadArena()
+	{
+		if (active)
 		{
 			GameData.nextSceneToLoad = 12;
+			StartCoroutine(FadeOut(4));
 		}
-        SceneManager.LoadScene(sceneToLoad);
-    }
+	}
 
-    public void QuitGame()
-    {
-        Debug.Log("QUIT");
-        Application.Quit();
-    }
+	public void OnQuitButtonClick()
+	{
+		if (active)
+		{
+			MainMenuCanvas.SetActive(false);
+			QuitMenuCanvas.SetActive(true);
+			eS.SetSelectedGameObject(QuitMenuFirstSelected);
+		}
+	}
 
+	public void OnCancelQuitButtonClick()
+	{
+		if (active)
+		{
+			QuitMenuCanvas.SetActive(false);
+			MainMenuCanvas.SetActive(true);
+			eS.SetSelectedGameObject(MainMenuFirstSelected);
+		}
+	}
 
-    public void UpdateTextSlider(float value)
-    {
-        currentTextPro.SetText(Mathf.RoundToInt(100 * value) + "%");
-    }
+	public void QuitGame()
+	{
+		if(active)
+		{
+			Application.Quit();
+			UnityEditor.EditorApplication.isPlaying = false;
+		}
+	}
 
-    #region Resolution
+	IEnumerator FadeIn()
+	{
+		fader.Play();
+		yield return new WaitForSeconds(0.1f);
+		yield return new WaitUntil(() => fader.isPlaying == false);
+		active = true;
+	}
 
-    public void NextRes()
-    {
-        if (currentIndexRes < resOptions.Capacity - 1)
-        {
-            currentIndexRes++;
-            currentTextPro.SetText(resOptions[currentIndexRes]);
-            SetResolution(currentIndexRes);
-        }
-    }
-
-    public void PreviousRes()
-    {
-        if (currentIndexRes > 0)
-        {
-            currentIndexRes--;
-            currentTextPro.SetText(resOptions[currentIndexRes]);
-            SetResolution(currentIndexRes);
-        }
-    }
-
-    public void SetResolution(int resolutionindex)
-    {
-        Resolution resolution = resolutions[resolutionindex];
-        Screen.SetResolution(resolution.width, resolution.height, Screen.fullScreen);
-    }
-
-    #endregion
-    
-    public void SetFullscreen(bool isFullscreen)
-    {
-        Debug.Log(isFullscreen);
-        Screen.fullScreen = isFullscreen; 
-    }
-
-    
+	IEnumerator FadeOut(int sceneToLoad)
+	{
+		active = false;
+		fader.clip = fader.GetClip("FadeOut");
+		fader.Play();
+		yield return new WaitForSeconds(0.1f);
+		yield return new WaitUntil(() => fader.isPlaying == false);
+		SceneManager.LoadScene(sceneToLoad);
+	}
 }
