@@ -60,8 +60,8 @@ public class FireBall : MonoBehaviour
 
     public float Launch(Vector3 target, Vector3 fireBallStartingPoint)
     {
-        Physics.gravity = Vector3.up * -gravity;
-        body.useGravity = true;
+        /*Physics.gravity = Vector3.up * -gravity;
+        body.useGravity = true;*/
         body.velocity = ComputeThrowVelocity(target, fireBallStartingPoint).Item1;
         return ComputeThrowVelocity(target, fireBallStartingPoint).Item2;
     }
@@ -80,6 +80,7 @@ public class FireBall : MonoBehaviour
         Vector3 velocityY = Vector3.up * Mathf.Sqrt(2 * gravity * fireBallHeight);
         Vector3 velocityXZ = dirXZ / time;
         Vector3 velocity = velocityXZ + velocityY * Mathf.Sign(gravity);
+        velocity += Vector3.up * -13.5f;
         return new Tuple<Vector3, float>(velocity, time);
     }
     
