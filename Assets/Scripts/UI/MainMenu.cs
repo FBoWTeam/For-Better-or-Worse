@@ -68,7 +68,7 @@ public class MainMenu : MonoBehaviour
 		if(active)
 		{
 			Application.Quit();
-			UnityEditor.EditorApplication.isPlaying = false;
+			//UnityEditor.EditorApplication.isPlaying = false;
 		}
 	}
 
