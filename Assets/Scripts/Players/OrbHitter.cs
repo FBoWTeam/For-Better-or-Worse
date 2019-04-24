@@ -147,7 +147,7 @@ public class OrbHitter : MonoBehaviour
 	IEnumerator HitCoroutine()
 	{
 		hitting = true;
-		GetComponent<Animation>().Play();
+        GetComponent<Animator>().SetTrigger("Hit");
 		yield return new WaitForSeconds(hitDuration);
 		hitting = false;
 		hitTimer = hitCooldown;
