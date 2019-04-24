@@ -19,8 +19,8 @@ public class ScenarioHandler : MonoBehaviour
 		dialogSystem = GameObject.Find("DialogSystem").GetComponent<DialogSystem>();
 		dialogSystem.gameObject.SetActive(false);
 		actualDialog = 0;
-
-		director.Play();
+        
+        director.Play();
 		director.stopped += WhenEnded;
 ;
 	}
@@ -39,6 +39,11 @@ public class ScenarioHandler : MonoBehaviour
 		GameManager.gameManager.damageTakenP2 = 0;
 		GameManager.gameManager.UIManager.gameObject.SetActive(true);
 		GameManager.gameManager.UIManager.UpdateHealthBar();
-		Destroy(this.gameObject);
+        GameManager.gameManager.player1.GetComponent<PlayerController>().active = true;
+        GameManager.gameManager.player2.GetComponent<PlayerController>().active = true;
+        GameManager.gameManager.player1.GetComponent<OrbHitter>().active = true;
+        GameManager.gameManager.player2.GetComponent<OrbHitter>().active = true;
+        GameManager.gameManager.orb.GetComponent<OrbController>().canHitPlayer = GameData.worseModeActivated;
+        Destroy(this.gameObject);
 	}
 }
