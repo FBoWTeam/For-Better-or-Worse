@@ -19,8 +19,8 @@ public class ScenarioHandler : MonoBehaviour
 		dialogSystem = GameObject.Find("DialogSystem").GetComponent<DialogSystem>();
 		dialogSystem.gameObject.SetActive(false);
 		actualDialog = 0;
-
-		director.Play();
+        
+        director.Play();
 		director.stopped += WhenEnded;
 ;
 	}
