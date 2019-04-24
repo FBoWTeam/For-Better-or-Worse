@@ -575,13 +575,7 @@ public class BossSystem : MonoBehaviour
         anim.SetTrigger("LineFireBallShrink");
         yield return new WaitForSeconds(4.2f);
 
-
-        //yield return new WaitForSeconds(anim.GetCurrentAnimatorStateInfo(0).length);
-
         Vector3 target = aimedPlayer.transform.position;
-        /*Vector3 dir = target - transform.position;//direction of the aimed player when the Fireball is creating
-        dir = dir.normalized;
-        dir.y = 0;*/
 
         Vector3 fireBallStartingPoint = transform.position + new Vector3(0f, 8.5f, 0f);// + 2.8f * dir;
 
@@ -612,7 +606,7 @@ public class BossSystem : MonoBehaviour
         }
 
 
-        yield return new WaitUntil(() => fireBall.isDestroyed);
+        yield return new WaitUntil(() => fireBall.willBeDestroyed);
         Destroy(fireBallIndicator);
 
         nextAttack = Time.time + Random.Range(minWaitTime, maxWaitTime);
