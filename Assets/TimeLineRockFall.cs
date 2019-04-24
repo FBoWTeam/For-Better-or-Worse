@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Playables;
-using UnityEngine.SceneManagement;
 
 public class TimeLineRockFall : MonoBehaviour
 {
@@ -24,7 +23,6 @@ public class TimeLineRockFall : MonoBehaviour
         RockLine1.SetActive(false);
         RockLine2 = GameObject.Find("Rock line 2");
         RockLine2.SetActive(false);
-
     }
 
     public void Initialize()
