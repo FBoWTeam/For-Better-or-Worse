@@ -4,6 +4,7 @@ using UnityEngine;
 
 public static class GameData
 {
+	public static bool english = false;
 	public static bool worseModeActivated = false;
 	public static int previousScene = 0;
     
