@@ -62,6 +62,12 @@ public class UIManager : MonoBehaviour
     public Sprite darkness;
     public Sprite none;
 
+    [Header("Drop GO")]
+    public Camera camera;
+    public GameObject drop;
+    public GameObject drop1;
+    public GameObject dropTarget;
+
     [Header("Text Quote")]
     public float displayTime;
     public int pourcentageQuote;
@@ -214,6 +220,7 @@ public class UIManager : MonoBehaviour
     public void UpdateDroppedPower(GameManager.PowerType droppedPower)
     {
         orbPower.sprite = ImageAssignment(droppedPower);
+        //DropFeedback();
     }
 
     #endregion
@@ -469,8 +476,6 @@ public class UIManager : MonoBehaviour
         }
     }
 
-
-
     public void RespawnReset()
     {
         GetCdImage(elementalPowerFox).fillAmount = 0;
@@ -481,5 +486,33 @@ public class UIManager : MonoBehaviour
         GetCdImage(behaviouralPowerRaccoon).fillAmount = 0;
         tauntCooldownRaccoon.GetComponent<Image>().fillAmount = 0;
     }
+
+
+
+
+    public void SceneToUI(GameObject UIElement, Vector3 target)
+    {
+        //first you need the RectTransform component of your canvas
+        RectTransform CanvasRect = this.GetComponent<RectTransform>();
+
+        //then you calculate the position of the UI element
+        //0,0 for the canvas is at the center of the screen, whereas WorldToViewPortPoint treats the lower left corner as 0,0. Because of this, you need to subtract the height / width of the canvas * 0.5 to get the correct position.
+
+        Vector2 ViewportPosition = camera.WorldToViewportPoint(target);
+        Vector2 WorldObject_ScreenPosition = new Vector2(
+        ((ViewportPosition.x * CanvasRect.sizeDelta.x) - (CanvasRect.sizeDelta.x * 0.5f)),
+        ((ViewportPosition.y * CanvasRect.sizeDelta.y) - (CanvasRect.sizeDelta.y * 0.5f)));
+
+        //now you can set the position of the ui element
+        UIElement.GetComponent<RectTransform>().anchoredPosition = WorldObject_ScreenPosition;
+
+    }
+
+    private void Update()
+    {
+        SceneToUI(drop, GameManager.gameManager.player1.transform.position);
+       //SceneToUI(drop1, GameManager.gameManager.player2.transform.position + new Vector3(0, 1, 0));
+    }
+
     #endregion
 }

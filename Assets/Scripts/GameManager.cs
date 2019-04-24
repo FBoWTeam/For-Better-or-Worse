@@ -7,38 +7,38 @@ using UnityEngine.SceneManagement;
 public class GameManager : MonoBehaviour
 {
     public static GameManager gameManager;
-	[HideInInspector]
-	public GameObject player1;
-	[HideInInspector]
-	public GameObject player2;
-	[HideInInspector]
-	public GameObject orb;
-	[HideInInspector]
-	public UIManager UIManager;
-	[HideInInspector]
-	public GameObject fader;
+    [HideInInspector]
+    public GameObject player1;
+    [HideInInspector]
+    public GameObject player2;
+    [HideInInspector]
+    public GameObject orb;
+    [HideInInspector]
+    public UIManager UIManager;
+    [HideInInspector]
+    public GameObject fader;
     [HideInInspector]
     public GameObject blackBands;
     [HideInInspector]
-	public GameObject tutorials;
+    public GameObject tutorials;
 
-	public bool arena;
+    public bool arena;
 
-	public bool isPaused;
+    public bool isPaused;
 
-	[Header("[Distance Limits]")]
-	public float minDistance;
-	public float maxDistance;
+    [Header("[Distance Limits]")]
+    public float minDistance;
+    public float maxDistance;
 
-	[Header("[Hps]")]
-	public int hp;
-	public int damageTakenP1;
-	public int damageTakenP2;
-	public int shieldP1;
-	public int shieldP2;
-	public float knockBackForce;
-	public bool canDie;
-	bool respawning = false;
+    [Header("[Hps]")]
+    public int hp;
+    public int damageTakenP1;
+    public int damageTakenP2;
+    public int shieldP1;
+    public int shieldP2;
+    public float knockBackForce;
+    public bool canDie;
+    bool respawning = false;
 
     [Header("[HealingOrbs]")]
     public GameObject normalHealingOrbPrefab;
@@ -81,7 +81,7 @@ public class GameManager : MonoBehaviour
         Flammable,
         Mud
     }
-    
+
 
     // Start is called before the first frame update
     void Awake()
@@ -99,34 +99,34 @@ public class GameManager : MonoBehaviour
         player2 = GameObject.Find("Player2");
         orb = GameObject.Find("Orb");
         UIManager = GameObject.Find("UI").GetComponent<UIManager>();
-		UIManager.InitDictionary();
+        UIManager.InitDictionary();
         fader = GameObject.Find("Fader");
         blackBands = GameObject.Find("BlackBands");
         tutorials = GameObject.Find("Tutorials");
-		tutorials.SetActive(false);
-		if (GameObject.Find("IntroScenario") != null)
-		{
-			UIManager.gameObject.SetActive(false);
-			player1.GetComponent<PlayerController>().active = false;
-			player2.GetComponent<PlayerController>().active = false;
-			player1.GetComponent<OrbHitter>().active = false;
-			player2.GetComponent<OrbHitter>().active = false;
-			GameObject.Find("IntroScenario").GetComponent<ScenarioHandler>().Initialize();
-		}
-		else
-		{
-			GameObject.Find("DialogSystem").SetActive(false);
-			blackBands.SetActive(false);
-			player1.GetComponent<PlayerController>().active = true;
-			player2.GetComponent<PlayerController>().active = true;
-			player1.GetComponent<OrbHitter>().active = true;
-			player2.GetComponent<OrbHitter>().active = true;
-			StartCoroutine(FadeCoroutine("FadeIn"));
-		}
+        tutorials.SetActive(false);
+        if (GameObject.Find("IntroScenario") != null)
+        {
+            UIManager.gameObject.SetActive(false);
+            player1.GetComponent<PlayerController>().active = false;
+            player2.GetComponent<PlayerController>().active = false;
+            player1.GetComponent<OrbHitter>().active = false;
+            player2.GetComponent<OrbHitter>().active = false;
+            GameObject.Find("IntroScenario").GetComponent<ScenarioHandler>().Initialize();
+        }
+        else
+        {
+            GameObject.Find("DialogSystem").SetActive(false);
+            blackBands.SetActive(false);
+            player1.GetComponent<PlayerController>().active = true;
+            player2.GetComponent<PlayerController>().active = true;
+            player1.GetComponent<OrbHitter>().active = true;
+            player2.GetComponent<OrbHitter>().active = true;
+            StartCoroutine(FadeCoroutine("FadeIn"));
+        }
 
-		damageTakenP1 = 0;
-		damageTakenP2 = 0;
-	}
+        damageTakenP1 = 0;
+        damageTakenP2 = 0;
+    }
 
     /// <summary>
     /// Handle taking damage from an Ennemy or other things
@@ -296,54 +296,54 @@ public class GameManager : MonoBehaviour
 
     IEnumerator deathCoroutine()
     {
-		respawning = true;
+        respawning = true;
         //update in score manager
         ScoreManager.scoreManager.numberOfDeaths++;
 
         StartCoroutine(FadeCoroutine("FadeOut"));
         yield return new WaitUntil(() => isPaused == false);
 
-		if(arena)
-		{
-			GameData.previousScene = SceneManager.GetActiveScene().buildIndex;
-			SceneManager.LoadScene(15);
-		}
-		else
-		{
-			isPaused = true;
+        if (arena)
+        {
+            GameData.previousScene = SceneManager.GetActiveScene().buildIndex;
+            SceneManager.LoadScene(15);
+        }
+        else
+        {
+            isPaused = true;
 
-			player1.transform.position = actualCheckpoint.transform.GetChild(0).position - 5 * Camera.main.transform.right;
-			player2.transform.position = actualCheckpoint.transform.GetChild(0).position + 5 * Camera.main.transform.right;
+            player1.transform.position = actualCheckpoint.transform.GetChild(0).position - 5 * Camera.main.transform.right;
+            player2.transform.position = actualCheckpoint.transform.GetChild(0).position + 5 * Camera.main.transform.right;
 
-			damageTakenP1 = 0;
-			damageTakenP2 = 0;
-			shieldP1 = 0;
-			shieldP2 = 0;
-			UIManager.UpdateHealthBar();
+            damageTakenP1 = 0;
+            damageTakenP2 = 0;
+            shieldP1 = 0;
+            shieldP2 = 0;
+            UIManager.UpdateHealthBar();
 
-			player1.GetComponent<PlayerController>().elementalPowerSlot = respawnPowerRecord.player1ElementalPower;
-			player1.GetComponent<PlayerController>().behaviouralPowerSlot = respawnPowerRecord.player1BehaviouralPower;
-			player2.GetComponent<PlayerController>().elementalPowerSlot = respawnPowerRecord.player2ElementalPower;
-			player2.GetComponent<PlayerController>().behaviouralPowerSlot = respawnPowerRecord.player2BehaviouralPower;
-			UIManager.UpdatePowerSlot(1, true, respawnPowerRecord.player1ElementalPower);
-			UIManager.UpdatePowerSlot(2, true, respawnPowerRecord.player1BehaviouralPower);
-			UIManager.UpdatePowerSlot(1, false, respawnPowerRecord.player2ElementalPower);
-			UIManager.UpdatePowerSlot(2, false, respawnPowerRecord.player2BehaviouralPower);
+            player1.GetComponent<PlayerController>().elementalPowerSlot = respawnPowerRecord.player1ElementalPower;
+            player1.GetComponent<PlayerController>().behaviouralPowerSlot = respawnPowerRecord.player1BehaviouralPower;
+            player2.GetComponent<PlayerController>().elementalPowerSlot = respawnPowerRecord.player2ElementalPower;
+            player2.GetComponent<PlayerController>().behaviouralPowerSlot = respawnPowerRecord.player2BehaviouralPower;
+            UIManager.UpdatePowerSlot(1, true, respawnPowerRecord.player1ElementalPower);
+            UIManager.UpdatePowerSlot(2, true, respawnPowerRecord.player1BehaviouralPower);
+            UIManager.UpdatePowerSlot(1, false, respawnPowerRecord.player2ElementalPower);
+            UIManager.UpdatePowerSlot(2, false, respawnPowerRecord.player2BehaviouralPower);
 
-			player1.GetComponent<PlayerController>().RespawnReset();
-			player2.GetComponent<PlayerController>().RespawnReset();
-			player1.GetComponent<OrbHitter>().RespawnReset();
-			player2.GetComponent<OrbHitter>().RespawnReset();
-			orb.GetComponent<OrbController>().RespawnReset();
-			orb.GetComponent<PowerController>().RespawnReset();
-			UIManager.RespawnReset();
+            player1.GetComponent<PlayerController>().RespawnReset();
+            player2.GetComponent<PlayerController>().RespawnReset();
+            player1.GetComponent<OrbHitter>().RespawnReset();
+            player2.GetComponent<OrbHitter>().RespawnReset();
+            orb.GetComponent<OrbController>().RespawnReset();
+            orb.GetComponent<PowerController>().RespawnReset();
+            UIManager.RespawnReset();
 
-			actualCheckpoint.RespawnContent();
+            actualCheckpoint.RespawnContent();
 
-			StartCoroutine(FadeCoroutine("FadeIn"));
+            StartCoroutine(FadeCoroutine("FadeIn"));
 
-			respawning = false;
-		}
+            respawning = false;
+        }
     }
 
 
