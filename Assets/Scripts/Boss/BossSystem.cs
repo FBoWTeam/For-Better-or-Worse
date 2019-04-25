@@ -96,10 +96,13 @@ public class BossSystem : MonoBehaviour
     public float lifeTime;
     public GameObject pivotLeft;
     public GameObject pivotRight;
-    private GameObject shrinkLeft;
-    private GameObject shrinkRight;
+    [HideInInspector]
+    public GameObject shrinkLeft;
+    [HideInInspector]
+    public GameObject shrinkRight;
+    [HideInInspector]
+    public bool isShrinkMysticLineCreated;
     private bool isMysticLineCreated;
-    private bool isShrinkMysticLineCreated;
     private bool isShrinking;
     private bool isLeft;
     public float shrinkDuration;
@@ -144,6 +147,8 @@ public class BossSystem : MonoBehaviour
     [HideInInspector]
     public Coroutine actualFireCoroutine;
 
+    public bool canHitBoss;
+
 
     //======================================================================================== AWAKE AND UPDATE
 
@@ -163,6 +168,7 @@ public class BossSystem : MonoBehaviour
         player1 = GameManager.gameManager.player1;
         player2 = GameManager.gameManager.player2;
         mysticLinePrefab.GetComponentInChildren<MysticLine>().damage = mysticLineLineDamage;
+        canHitBoss = false;
     }
 
     // Update is called once per frame
@@ -239,7 +245,6 @@ public class BossSystem : MonoBehaviour
                     Debug.Log("Passage phase 2");
                     probabilityTable = phase2;
                     nextAttack = Time.time + Random.Range(minWaitTime, maxWaitTime);
-                    transform.localScale = new Vector3(0.75f, 0.75f, 0.75f);
                     //infinite mystic line same side / level shrink
                     GameObject.Find("Rock Lines").GetComponent<TimeLineRockFall>().Initialize();
 
@@ -270,8 +275,9 @@ public class BossSystem : MonoBehaviour
                     Debug.Log("Passage phase 4");
                     probabilityTable = phase4;
                     nextAttack = Time.time + Random.Range(minWaitTime, maxWaitTime);
-                    transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
+                    //transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
                     //fall to ground / level shrink / rock fall activation
+                    GameObject.Find("Rock Corners").GetComponent<TimeLineCornerRockFall>().Initialize();
 
                     StopAllCoroutines();
                     isAttacking = false;
@@ -866,28 +872,30 @@ public class BossSystem : MonoBehaviour
 
     public void TakeDamage(int damage)
     {
-        hp -= damage;
-        GameManager.gameManager.orb.GetComponent<OrbController>().hasHitEnemy = true;
-        if (hp <= 0)
+        if (canHitBoss)
         {
-            //update in score manager
-            if (lastHitByP1 && !lastHitByP2)
+            hp -= damage;
+            GameManager.gameManager.orb.GetComponent<OrbController>().hasHitEnemy = true;
+            if (hp <= 0)
             {
-                ScoreManager.scoreManager.bossKilledByP1 = true;
+                //update in score manager
+                if (lastHitByP1 && !lastHitByP2)
+                {
+                    ScoreManager.scoreManager.bossKilledByP1 = true;
+                }
+                else if (!lastHitByP1 && lastHitByP2)
+                {
+                    ScoreManager.scoreManager.bossKilledByP1 = false;
+                }
+                else if (!lastHitByP1 && !lastHitByP2)
+                {
+                    ScoreManager.scoreManager.killsEnvironment++;
+                }
+                StopAllCoroutines();
+                GameData.previousScene = 9;
+                SceneManager.LoadScene(10);
             }
-            else if (!lastHitByP1 && lastHitByP2)
-            {
-                ScoreManager.scoreManager.bossKilledByP1 = false;
-            }
-            else if (!lastHitByP1 && !lastHitByP2)
-            {
-                ScoreManager.scoreManager.killsEnvironment++;
-            }
-            StopAllCoroutines();
-			GameData.previousScene = 9;
-			SceneManager.LoadScene(10);
         }
-
     }
 
     public IEnumerator Stun()

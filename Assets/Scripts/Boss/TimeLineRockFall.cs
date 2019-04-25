@@ -42,7 +42,6 @@ public class TimeLineRockFall : MonoBehaviour
     public void WhenEnded(PlayableDirector obj)
     {
         WallForTimeLine.SetActive(false);
-        Boss.GetComponent<BossRotation>().enabled = true ;
         GameManager.gameManager.player1.GetComponent<CapsuleCollider>().isTrigger = false;
         GameManager.gameManager.player2.GetComponent<CapsuleCollider>().isTrigger = false;
         GameManager.gameManager.isPaused = false;
@@ -53,10 +52,11 @@ public class TimeLineRockFall : MonoBehaviour
         GameManager.gameManager.UIManager.gameObject.SetActive(true);
         GameManager.gameManager.blackBands.SetActive(false);
         Boss.SetActive(true);
-        Boss.GetComponent<BossSystem>().isAttacking = false;
         RockLineAnimatation.SetActive(false);
         RockLine1.SetActive(true);
         RockLine2.SetActive(true);
+
+        StartCoroutine(End());
     }
 
     IEnumerator InitCoroutine()
@@ -73,6 +73,14 @@ public class TimeLineRockFall : MonoBehaviour
 
         yield return new WaitForSeconds(4f);//wait the animation
         StartCoroutine(Boss.GetComponent<BossSystem>().ShrinkMysticLinesCoroutine());        
+    }
+
+    IEnumerator End()
+    {
+        yield return new WaitForSeconds(1.5f);
+        Boss.GetComponent<BossRotation>().enabled = true;
+        Boss.GetComponent<BossSystem>().isAttacking = false;
+        GameManager.gameManager.orb.GetComponent<OrbController>().canHitPlayer = GameData.worseModeActivated;
     }
 
 }

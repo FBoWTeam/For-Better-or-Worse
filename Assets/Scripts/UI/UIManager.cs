@@ -65,8 +65,8 @@ public class UIManager : MonoBehaviour
     [Header("Drop GO")]
     public Camera camera;
     public GameObject drop;
-    public GameObject drop1;
     public GameObject dropTarget;
+    public float dropSpeed;
 
     [Header("Text Quote")]
     public float displayTime;
@@ -204,15 +204,24 @@ public class UIManager : MonoBehaviour
             case 1:
 
                 if (player1)
+                {
                     GetImage(elementalPowerFox).sprite = ImageAssignment(powerSlot);
+
+                }
                 else
+                {
                     GetImage(elementalPowerRaccoon).sprite = ImageAssignment(powerSlot);
+                }
                 break;
             case 2:
                 if (player1)
+                {
                     GetImage(behaviouralPowerFox).sprite = ImageAssignment(powerSlot);
+                }
                 else
+                {
                     GetImage(behaviouralPowerRaccoon).sprite = ImageAssignment(powerSlot);
+                }
                 break;
         }
     }
@@ -220,7 +229,7 @@ public class UIManager : MonoBehaviour
     public void UpdateDroppedPower(GameManager.PowerType droppedPower)
     {
         orbPower.sprite = ImageAssignment(droppedPower);
-        //DropFeedback();
+        //StartCoroutine(DropFeedback());
     }
 
     #endregion
@@ -487,9 +496,6 @@ public class UIManager : MonoBehaviour
         tauntCooldownRaccoon.GetComponent<Image>().fillAmount = 0;
     }
 
-
-
-
     public void SceneToUI(GameObject UIElement, Vector3 target)
     {
         //first you need the RectTransform component of your canvas
@@ -508,11 +514,57 @@ public class UIManager : MonoBehaviour
 
     }
 
-    private void Update()
+    public IEnumerator DropFeedback()
     {
-        SceneToUI(drop, GameManager.gameManager.player1.transform.position);
-       //SceneToUI(drop1, GameManager.gameManager.player2.transform.position + new Vector3(0, 1, 0));
+        SceneToUI(drop, GameManager.gameManager.orb.transform.position);
+
+        print(Vector3.Distance(drop.transform.position, orbPower.transform.position));
+
+        while (Vector3.Distance(drop.transform.position, orbPower.transform.position) > 0.01)
+        {
+            drop.transform.position = Vector3.Lerp(drop.transform.position, orbPower.transform.position, dropSpeed);
+            yield return new WaitForEndOfFrame();
+        }
+        yield return null;
     }
+
+    //public void SceneToUI(GameObject UIElement, Vector3 target)
+    //{
+    //    //first you need the RectTransform component of your canvas
+    //    RectTransform CanvasRect = this.GetComponent<RectTransform>();
+
+    //    //then you calculate the position of the UI element
+    //    //0,0 for the canvas is at the center of the screen, whereas WorldToViewPortPoint treats the lower left corner as 0,0. Because of this, you need to subtract the height / width of the canvas * 0.5 to get the correct position.
+
+    //    Vector2 ViewportPosition = camera.WorldToViewportPoint(target);
+    //    Vector2 WorldObject_ScreenPosition = new Vector2(
+    //    ((ViewportPosition.x * CanvasRect.sizeDelta.x) - (CanvasRect.sizeDelta.x * 0.5f)),
+    //    ((ViewportPosition.y * CanvasRect.sizeDelta.y) - (CanvasRect.sizeDelta.y * 0.5f)));
+
+    //    //now you can set the position of the ui element
+    //    UIElement.GetComponent<RectTransform>().anchoredPosition = WorldObject_ScreenPosition;
+
+    //}
+
+    //public IEnumerator DropFeedback(GameObject UIElement, Vector3 start, Vector3 end)
+    //{
+    //    SceneToUI(UIElement, start);
+
+    //    //print(Vector3.Distance(UIElement.transform.position, end));
+
+    //    while (Vector3.Distance(UIElement.transform.position, end) > 0.01)
+    //    {
+    //        UIElement.transform.position = Vector3.Lerp(UIElement.transform.position, end, dropSpeed);
+    //        yield return new WaitForEndOfFrame();
+    //    }
+    //    yield return null;
+    //}
+
+    //private void Update()
+    //{
+    //    SceneToUI(drop, GameManager.gameManager.orb.transform.position);
+    //    SceneToUI(drop1, GameManager.gameManager.player2.transform.position + new Vector3(0, 1, 0));
+    //}
 
     #endregion
 }

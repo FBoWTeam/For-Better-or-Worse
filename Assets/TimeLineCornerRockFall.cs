@@ -6,27 +6,43 @@ using UnityEngine.Playables;
 public class TimeLineCornerRockFall : MonoBehaviour
 {
     PlayableDirector director;
-    GameObject WallForTimeLine;
     GameObject Boss;
-    GameObject RockLineAnimatation;
-    GameObject RockLine1;
-    GameObject RockLine2;
+    Vector3 posBoss;
+    GameObject RockCornerAnimatation;
+    GameObject RockCorner1;
+    GameObject RockCorner2;
+    GameObject RockCorner3;
+    GameObject RockCorner4;
+
+    GameObject Brazier1;
+    GameObject Brazier2;
+    GameObject ElectricPylon1;
+    GameObject ElectricPylon2;
 
     // Start is called before the first frame update
     void Start()
     {
-        WallForTimeLine = GameObject.Find("Wall Reverse");
-        WallForTimeLine.SetActive(false);
         Boss = GameObject.Find("Boss");
-        RockLineAnimatation = GameObject.Find("Rock line Animation");
-        RockLine1 = GameObject.Find("Rock line 1");
-        RockLine1.SetActive(false);
-        RockLine2 = GameObject.Find("Rock line 2");
-        RockLine2.SetActive(false);
+        posBoss = Boss.transform.position;
+        RockCornerAnimatation = GameObject.Find("Rock corner Animation");
+        RockCorner1 = GameObject.Find("Rock corner 1");
+        RockCorner1.SetActive(false);
+        RockCorner2 = GameObject.Find("Rock corner 2");
+        RockCorner2.SetActive(false);
+        RockCorner3 = GameObject.Find("Rock corner 3");
+        RockCorner3.SetActive(false);
+        RockCorner4 = GameObject.Find("Rock corner 4");
+        RockCorner4.SetActive(false);
+        Brazier1 = GameObject.Find("Brazier");
+        Brazier2 = GameObject.Find("Brazier (1)");
+        ElectricPylon1 = GameObject.Find("ElectricPylon");
+        ElectricPylon2 = GameObject.Find("ElectricPylon (1)");
     }
 
     public void Initialize()
     {
+        Boss.transform.localScale = new Vector3(0.75f, 0.75f, 0.75f);
+        Boss.transform.position = posBoss;
         GameManager.gameManager.isPaused = true;
         GameManager.gameManager.player1.GetComponent<PlayerController>().active = false;
         GameManager.gameManager.player2.GetComponent<PlayerController>().active = false;
@@ -41,7 +57,6 @@ public class TimeLineCornerRockFall : MonoBehaviour
 
     public void WhenEnded(PlayableDirector obj)
     {
-        WallForTimeLine.SetActive(false);
         Boss.GetComponent<BossRotation>().enabled = true;
         GameManager.gameManager.player1.GetComponent<CapsuleCollider>().isTrigger = false;
         GameManager.gameManager.player2.GetComponent<CapsuleCollider>().isTrigger = false;
@@ -53,26 +68,42 @@ public class TimeLineCornerRockFall : MonoBehaviour
         GameManager.gameManager.UIManager.gameObject.SetActive(true);
         GameManager.gameManager.blackBands.SetActive(false);
         Boss.SetActive(true);
-        Boss.GetComponent<BossSystem>().isAttacking = false;
-        RockLineAnimatation.SetActive(false);
-        RockLine1.SetActive(true);
-        RockLine2.SetActive(true);
+        RockCornerAnimatation.SetActive(false);
+        RockCorner1.SetActive(true);
+        RockCorner2.SetActive(true);
+        RockCorner3.SetActive(true);
+        RockCorner4.SetActive(true);
+        Brazier1.SetActive(false);
+        Brazier2.SetActive(false);
+        ElectricPylon1.SetActive(false);
+        ElectricPylon2.SetActive(false);
+
+        StartCoroutine(End());
     }
 
     IEnumerator InitCoroutine()
     {
         yield return new WaitForSeconds(1.5f);//fade out
-        WallForTimeLine.SetActive(true);
         Boss.GetComponent<BossSystem>().CleanProjectorList();
-        Boss.GetComponent<BossSystem>().CleanMysticLineList();
+        //Boss.GetComponent<BossSystem>().CleanMysticLineList();
         GameManager.gameManager.orb.GetComponent<OrbController>().canHitPlayer = false;
         GameManager.gameManager.UIManager.gameObject.SetActive(false);
         GameManager.gameManager.blackBands.SetActive(true);
         GameManager.gameManager.player1.GetComponent<CapsuleCollider>().isTrigger = true;
         GameManager.gameManager.player2.GetComponent<CapsuleCollider>().isTrigger = true;
 
-        yield return new WaitForSeconds(4f);//wait the animation
-        StartCoroutine(Boss.GetComponent<BossSystem>().ShrinkMysticLinesCoroutine());
+        yield return new WaitForSeconds(3f);
+
+        Destroy(Boss.GetComponent<BossSystem>().shrinkLeft);
+        Destroy(Boss.GetComponent<BossSystem>().shrinkRight);
+        Boss.GetComponent<BossSystem>().isShrinkMysticLineCreated = false;
+    }
+
+    IEnumerator End()
+    {
+        yield return new WaitForSeconds(1.5f);
+        Boss.GetComponent<BossSystem>().isAttacking = false;
+        GameManager.gameManager.orb.GetComponent<OrbController>().canHitPlayer = GameData.worseModeActivated;
     }
 
 }
