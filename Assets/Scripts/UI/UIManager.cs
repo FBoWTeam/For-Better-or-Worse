@@ -220,7 +220,7 @@ public class UIManager : MonoBehaviour
     public void UpdateDroppedPower(GameManager.PowerType droppedPower)
     {
         orbPower.sprite = ImageAssignment(droppedPower);
-        //DropFeedback();
+        DropFeedback();
     }
 
     #endregion
@@ -487,9 +487,6 @@ public class UIManager : MonoBehaviour
         tauntCooldownRaccoon.GetComponent<Image>().fillAmount = 0;
     }
 
-
-
-
     public void SceneToUI(GameObject UIElement, Vector3 target)
     {
         //first you need the RectTransform component of your canvas
@@ -508,10 +505,18 @@ public class UIManager : MonoBehaviour
 
     }
 
-    private void Update()
+    public void DropFeedback()
     {
         SceneToUI(drop, GameManager.gameManager.player1.transform.position);
-       //SceneToUI(drop1, GameManager.gameManager.player2.transform.position + new Vector3(0, 1, 0));
+
+        //drop = Vector3.Lerp(drop.transform.position, orbPower.transform.position, fracJourney);
+
+    }
+
+    private void Update()
+    {
+        SceneToUI(drop, GameManager.gameManager.orb.transform.position);
+        //SceneToUI(drop1, GameManager.gameManager.player2.transform.position + new Vector3(0, 1, 0));
     }
 
     #endregion
