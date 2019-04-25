@@ -8,7 +8,7 @@ public class TimeLineRockFall : MonoBehaviour
     PlayableDirector director;
     GameObject WallForTimeLine;
     GameObject Boss;
-    GameObject RockLineAnimatation;
+    GameObject RockLineAnimation;
     GameObject RockLine1;
     GameObject RockLine2;
 
@@ -18,7 +18,7 @@ public class TimeLineRockFall : MonoBehaviour
         WallForTimeLine = GameObject.Find("Wall Reverse");
         WallForTimeLine.SetActive(false);
         Boss = GameObject.Find("Boss");
-        RockLineAnimatation = GameObject.Find("Rock line Animation");
+        RockLineAnimation = GameObject.Find("Rock line Animation");
         RockLine1 = GameObject.Find("Rock line 1");
         RockLine1.SetActive(false);
         RockLine2 = GameObject.Find("Rock line 2");
@@ -52,9 +52,10 @@ public class TimeLineRockFall : MonoBehaviour
         GameManager.gameManager.UIManager.gameObject.SetActive(true);
         GameManager.gameManager.blackBands.SetActive(false);
         Boss.SetActive(true);
-        RockLineAnimatation.SetActive(false);
+        RockLineAnimation.SetActive(false);
         RockLine1.SetActive(true);
         RockLine2.SetActive(true);
+        Destroy(GetComponent<PlayableDirector>());
 
         StartCoroutine(End());
     }

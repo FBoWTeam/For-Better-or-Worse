@@ -7,7 +7,7 @@ public class TimeLineCornerRockFall : MonoBehaviour
 {
     PlayableDirector director;
     GameObject Boss;
-    Vector3 posBoss;
+    //Vector3 posBoss;
     GameObject RockCornerAnimatation;
     GameObject RockCorner1;
     GameObject RockCorner2;
@@ -25,7 +25,7 @@ public class TimeLineCornerRockFall : MonoBehaviour
     void Start()
     {
         Boss = GameObject.Find("Boss");
-        posBoss = Boss.transform.position;
+        //posBoss = Boss.transform.position;
         RockCornerAnimatation = GameObject.Find("Rock corner Animation");
         RockCorner1 = GameObject.Find("Rock corner 1");
         RockCorner1.SetActive(false);
@@ -44,45 +44,22 @@ public class TimeLineCornerRockFall : MonoBehaviour
 
     public void Initialize()
     {
-        Boss.transform.localScale = new Vector3(0.75f, 0.75f, 0.75f);
-        Boss.transform.position = posBoss;
+        //Boss.transform.localScale = new Vector3(0.75f, 0.75f, 0.75f);
+        /*Debug.Log(posBoss);
+        Boss.transform.position = posBoss;*/
         GameManager.gameManager.isPaused = true;
         GameManager.gameManager.player1.GetComponent<PlayerController>().active = false;
         GameManager.gameManager.player2.GetComponent<PlayerController>().active = false;
         GameManager.gameManager.player1.GetComponent<OrbHitter>().active = false;
         GameManager.gameManager.player2.GetComponent<OrbHitter>().active = false;
         director = GetComponent<PlayableDirector>();
+        Boss.GetComponent<BossRotation>().enabled = false;
         StartCoroutine(InitCoroutine());
 
         director.Play();
         director.stopped += WhenEnded;
     }
-
-    public void WhenEnded(PlayableDirector obj)
-    {
-        Boss.GetComponent<BossRotation>().enabled = true;
-        GameManager.gameManager.player1.GetComponent<CapsuleCollider>().isTrigger = false;
-        GameManager.gameManager.player2.GetComponent<CapsuleCollider>().isTrigger = false;
-        GameManager.gameManager.isPaused = false;
-        GameManager.gameManager.player1.GetComponent<PlayerController>().active = true;
-        GameManager.gameManager.player2.GetComponent<PlayerController>().active = true;
-        GameManager.gameManager.player1.GetComponent<OrbHitter>().active = true;
-        GameManager.gameManager.player2.GetComponent<OrbHitter>().active = true;
-        GameManager.gameManager.UIManager.gameObject.SetActive(true);
-        GameManager.gameManager.blackBands.SetActive(false);
-        Boss.SetActive(true);
-        RockCornerAnimatation.SetActive(false);
-        RockCorner1.SetActive(true);
-        RockCorner2.SetActive(true);
-        RockCorner3.SetActive(true);
-        RockCorner4.SetActive(true);
-        Brazier1.SetActive(false);
-        Brazier2.SetActive(false);
-        ElectricPylon1.SetActive(false);
-        ElectricPylon2.SetActive(false);
-
-        StartCoroutine(End());
-    }
+    
 
     IEnumerator InitCoroutine()
     {
@@ -94,17 +71,44 @@ public class TimeLineCornerRockFall : MonoBehaviour
         GameManager.gameManager.blackBands.SetActive(true);
         GameManager.gameManager.player1.GetComponent<CapsuleCollider>().isTrigger = true;
         GameManager.gameManager.player2.GetComponent<CapsuleCollider>().isTrigger = true;
-        PlayersContent.SetActive(false);
 
         yield return new WaitForSeconds(3f);
 
+        Debug.Log("destroy shrink");
         Destroy(Boss.GetComponent<BossSystem>().shrinkLeft);
         Destroy(Boss.GetComponent<BossSystem>().shrinkRight);
         Boss.GetComponent<BossSystem>().isShrinkMysticLineCreated = false;
 
         yield return new WaitForSeconds(7.5f);
-        PlayersContent.SetActive(true);
 
+    }
+
+
+    public void WhenEnded(PlayableDirector obj)
+    {
+        GameManager.gameManager.player1.GetComponent<CapsuleCollider>().isTrigger = false;
+        GameManager.gameManager.player2.GetComponent<CapsuleCollider>().isTrigger = false;
+        GameManager.gameManager.isPaused = false;
+        GameManager.gameManager.player1.GetComponent<PlayerController>().active = true;
+        GameManager.gameManager.player2.GetComponent<PlayerController>().active = true;
+        GameManager.gameManager.player1.GetComponent<OrbHitter>().active = true;
+        GameManager.gameManager.player2.GetComponent<OrbHitter>().active = true;
+        GameManager.gameManager.UIManager.gameObject.SetActive(true);
+        GameManager.gameManager.blackBands.SetActive(false);
+        RockCornerAnimatation.SetActive(false);
+        RockCorner1.SetActive(true);
+        RockCorner2.SetActive(true);
+        RockCorner3.SetActive(true);
+        RockCorner4.SetActive(true);
+        Brazier1.SetActive(false);
+        Brazier2.SetActive(false);
+        ElectricPylon1.SetActive(false);
+        ElectricPylon2.SetActive(false);
+        Destroy(GetComponent<PlayableDirector>());
+        Boss.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
+        Debug.Log(Boss.transform.localScale);
+
+        StartCoroutine(End());
     }
 
     IEnumerator End()
