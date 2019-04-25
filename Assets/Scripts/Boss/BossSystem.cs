@@ -96,10 +96,13 @@ public class BossSystem : MonoBehaviour
     public float lifeTime;
     public GameObject pivotLeft;
     public GameObject pivotRight;
-    private GameObject shrinkLeft;
-    private GameObject shrinkRight;
+    [HideInInspector]
+    public GameObject shrinkLeft;
+    [HideInInspector]
+    public GameObject shrinkRight;
+    [HideInInspector]
+    public bool isShrinkMysticLineCreated;
     private bool isMysticLineCreated;
-    private bool isShrinkMysticLineCreated;
     private bool isShrinking;
     private bool isLeft;
     public float shrinkDuration;
@@ -239,7 +242,6 @@ public class BossSystem : MonoBehaviour
                     Debug.Log("Passage phase 2");
                     probabilityTable = phase2;
                     nextAttack = Time.time + Random.Range(minWaitTime, maxWaitTime);
-                    transform.localScale = new Vector3(0.75f, 0.75f, 0.75f);
                     //infinite mystic line same side / level shrink
                     GameObject.Find("Rock Lines").GetComponent<TimeLineRockFall>().Initialize();
 
@@ -270,8 +272,9 @@ public class BossSystem : MonoBehaviour
                     Debug.Log("Passage phase 4");
                     probabilityTable = phase4;
                     nextAttack = Time.time + Random.Range(minWaitTime, maxWaitTime);
-                    transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
+                    //transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
                     //fall to ground / level shrink / rock fall activation
+                    GameObject.Find("Rock Corners").GetComponent<TimeLineCornerRockFall>().Initialize();
 
                     StopAllCoroutines();
                     isAttacking = false;
