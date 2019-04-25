@@ -80,7 +80,7 @@ public class TimeLineRockFall : MonoBehaviour
         yield return new WaitForSeconds(1.5f);
         Boss.GetComponent<BossRotation>().enabled = true;
         Boss.GetComponent<BossSystem>().isAttacking = false;
-        GameManager.gameManager.orb.GetComponent<OrbController>().canHitPlayer = true;
+        GameManager.gameManager.orb.GetComponent<OrbController>().canHitPlayer = GameData.worseModeActivated;
     }
 
 }
