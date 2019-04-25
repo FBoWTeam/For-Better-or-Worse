@@ -695,6 +695,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8963abb783707e749abfceadfff33481, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  protectionSystem: {fileID: 8293862570631427856}
   element: 0
   wallDamage: 15
 --- !u!54 &5936534740676195308
@@ -1084,6 +1085,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8963abb783707e749abfceadfff33481, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  protectionSystem: {fileID: 8293862570631427856}
   element: 1
   wallDamage: 15
 --- !u!54 &5278071268674607717
@@ -1401,6 +1403,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5064038666349114172}
+  - component: {fileID: 911809407}
   m_Layer: 0
   m_Name: BossProtectionPylon
   m_TagString: Untagged
@@ -1424,3 +1427,18 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &911809407
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8293862570631427856}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 45f6dc2b417273f498c63a7a60bc1697, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  theBoss: {fileID: 0}
+  waterWallsDestroyed: 0
+  plantWallsDestroyed: 0

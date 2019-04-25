@@ -149,10 +149,6 @@ public class OrbHitter : MonoBehaviour
 		hitting = true;
         GetComponent<Animator>().SetTrigger("Hit");
 
-        //test ===============
-        GameManager.gameManager.orb.GetComponent<Animator>().SetTrigger("OrbHitAnim");
-        //====================
-
 		yield return new WaitForSeconds(hitDuration);
 		hitting = false;
 		hitTimer = hitCooldown;
