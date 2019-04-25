@@ -690,8 +690,7 @@ public class BossSystem : MonoBehaviour
         //instanciate the circle indicator
         GameObject coneIndicator = Instantiate(coneProjector, transform.position, Quaternion.identity) as GameObject;
         projectorList.Add(coneIndicator);
-        //the instanciated circle indicator is a child of the boss
-        coneIndicator.transform.parent = transform;
+
         float timeStamp = Time.time;
         Color tempColor = Color.blue;
 
