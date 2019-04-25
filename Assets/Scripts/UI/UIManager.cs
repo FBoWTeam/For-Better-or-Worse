@@ -229,7 +229,7 @@ public class UIManager : MonoBehaviour
     public void UpdateDroppedPower(GameManager.PowerType droppedPower)
     {
         orbPower.sprite = ImageAssignment(droppedPower);
-        StartCoroutine(DropFeedback());
+        //StartCoroutine(DropFeedback());
     }
 
     #endregion
