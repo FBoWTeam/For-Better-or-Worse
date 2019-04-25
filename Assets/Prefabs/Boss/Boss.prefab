@@ -23620,7 +23620,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b6c701f8079d00340a8ae5293ecdf603, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  baseHP: 1000
+  baseHP: 500
   hp: 0
   stunTime: 2
   actualPhase: 0
@@ -23629,19 +23629,25 @@ MonoBehaviour:
   phase4Threshold: 0.4
   phase1:
   - pattern: 0
-    probability: 0.33
+    probability: 0.3
   - pattern: 1
-    probability: 0.33
+    probability: 0.4
   - pattern: 2
-    probability: 0.33
+    probability: 0.3
   phase2:
   - pattern: 3
-    probability: 0.5
+    probability: 0.3
   - pattern: 4
-    probability: 0.5
+    probability: 0.4
+  - pattern: 1
+    probability: 0.3
   phase3:
+  - pattern: 3
+    probability: 0.3
   - pattern: 4
-    probability: 1
+    probability: 0.4
+  - pattern: 1
+    probability: 0.3
   phase4:
   - pattern: 5
     probability: 0.5
@@ -23654,9 +23660,9 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 1024
   electricConeAngle: 60
-  electricConeDamage: 0
-  electricConeTimeBetweenFeedbackAndCast: 5
-  electricConeChannelingTime: 2
+  electricConeDamage: 10
+  electricConeTimeBetweenFeedbackAndCast: 1
+  electricConeChannelingTime: 0
   electricZoneRadius: 12
   electricZoneChannelingTime: 0
   electricZoneTimeBetweenFeedbackAndCast: 1
@@ -23669,8 +23675,8 @@ MonoBehaviour:
     type: 3}
   fireBallDamage: 20
   fireBallDamageExplosion: 10
-  fireBallRangeExplosion: 8
-  fireBallSpeed: 30
+  fireBallRangeExplosion: 6
+  fireBallSpeed: 20
   mysticLinePrefab: {fileID: 7756416073340475419, guid: a76ddd411067b3f44bfff00ce4942087,
     type: 3}
   mysticLineLineDamage: 5
@@ -23684,7 +23690,7 @@ MonoBehaviour:
   isShrinkMysticLineCreated: 0
   shrinkDuration: 2
   limitAngle: 20
-  shrinkSpeed: 0.5
+  shrinkSpeed: 0.2
   mysticLineTimeBetweenFeedbackAndCast: 2
   chargeCastingTime: 0.5
   chargeSpeed: 50
