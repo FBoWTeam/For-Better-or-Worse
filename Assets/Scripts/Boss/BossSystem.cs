@@ -277,6 +277,7 @@ public class BossSystem : MonoBehaviour
                     isAttacking = false;
                     anim.SetTrigger("Stop");
                     CleanProjectorList();
+                    Debug.Log("fin trans");
                 }
                 break;
             case 4:

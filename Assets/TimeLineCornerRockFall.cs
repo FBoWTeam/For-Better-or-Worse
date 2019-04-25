@@ -18,8 +18,8 @@ public class TimeLineCornerRockFall : MonoBehaviour
     GameObject Brazier2;
     GameObject ElectricPylon1;
     GameObject ElectricPylon2;
-
-    GameObject PlayersContent;
+    
+    public RuntimeAnimatorController RAC;
 
     // Start is called before the first frame update
     void Start()
@@ -39,7 +39,6 @@ public class TimeLineCornerRockFall : MonoBehaviour
         Brazier2 = GameObject.Find("Brazier (1)");
         ElectricPylon1 = GameObject.Find("ElectricPylon");
         ElectricPylon2 = GameObject.Find("ElectricPylon (1)");
-        PlayersContent = GameObject.Find("PlayersContent");
     }
 
     public void Initialize()
@@ -54,6 +53,7 @@ public class TimeLineCornerRockFall : MonoBehaviour
         GameManager.gameManager.player2.GetComponent<OrbHitter>().active = false;
         director = GetComponent<PlayableDirector>();
         Boss.GetComponent<BossRotation>().enabled = false;
+        Boss.GetComponent<Animator>().runtimeAnimatorController = null;
         StartCoroutine(InitCoroutine());
 
         director.Play();
@@ -93,8 +93,10 @@ public class TimeLineCornerRockFall : MonoBehaviour
         GameManager.gameManager.player2.GetComponent<PlayerController>().active = true;
         GameManager.gameManager.player1.GetComponent<OrbHitter>().active = true;
         GameManager.gameManager.player2.GetComponent<OrbHitter>().active = true;
+
         GameManager.gameManager.UIManager.gameObject.SetActive(true);
         GameManager.gameManager.blackBands.SetActive(false);
+
         RockCornerAnimatation.SetActive(false);
         RockCorner1.SetActive(true);
         RockCorner2.SetActive(true);
@@ -104,9 +106,8 @@ public class TimeLineCornerRockFall : MonoBehaviour
         Brazier2.SetActive(false);
         ElectricPylon1.SetActive(false);
         ElectricPylon2.SetActive(false);
+
         Destroy(GetComponent<PlayableDirector>());
-        Boss.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
-        Debug.Log(Boss.transform.localScale);
 
         StartCoroutine(End());
     }
@@ -114,6 +115,7 @@ public class TimeLineCornerRockFall : MonoBehaviour
     IEnumerator End()
     {
         yield return new WaitForSeconds(1.5f);
+        Boss.GetComponent<Animator>().runtimeAnimatorController = RAC;
         Boss.GetComponent<BossSystem>().isAttacking = false;
         GameManager.gameManager.orb.GetComponent<OrbController>().canHitPlayer = GameData.worseModeActivated;
     }
