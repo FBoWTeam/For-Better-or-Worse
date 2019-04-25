@@ -103,7 +103,7 @@ public class TimeLineCornerRockFall : MonoBehaviour
     {
         yield return new WaitForSeconds(1.5f);
         Boss.GetComponent<BossSystem>().isAttacking = false;
-        GameManager.gameManager.orb.GetComponent<OrbController>().canHitPlayer = true;
+        GameManager.gameManager.orb.GetComponent<OrbController>().canHitPlayer = GameData.worseModeActivated;
     }
 
 }
