@@ -62,6 +62,7 @@ public class TimeLineRockFall : MonoBehaviour
     IEnumerator InitCoroutine()
     {
         yield return new WaitForSeconds(1.5f);//fade out
+        Boss.GetComponent<BossSystem>().isAttacking = true;
         WallForTimeLine.SetActive(true);
         Boss.GetComponent<BossSystem>().CleanProjectorList();
         Boss.GetComponent<BossSystem>().CleanMysticLineList();
@@ -80,7 +81,7 @@ public class TimeLineRockFall : MonoBehaviour
         yield return new WaitForSeconds(1.5f);
         Boss.GetComponent<BossRotation>().enabled = true;
         Boss.GetComponent<BossSystem>().isAttacking = false;
-        GameManager.gameManager.orb.GetComponent<OrbController>().canHitPlayer = true;
+        GameManager.gameManager.orb.GetComponent<OrbController>().canHitPlayer = GameData.worseModeActivated;
     }
 
 }

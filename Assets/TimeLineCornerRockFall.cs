@@ -19,6 +19,8 @@ public class TimeLineCornerRockFall : MonoBehaviour
     GameObject ElectricPylon1;
     GameObject ElectricPylon2;
 
+    GameObject PlayersContent;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -37,6 +39,7 @@ public class TimeLineCornerRockFall : MonoBehaviour
         Brazier2 = GameObject.Find("Brazier (1)");
         ElectricPylon1 = GameObject.Find("ElectricPylon");
         ElectricPylon2 = GameObject.Find("ElectricPylon (1)");
+        PlayersContent = GameObject.Find("PlayersContent");
     }
 
     public void Initialize()
@@ -84,26 +87,31 @@ public class TimeLineCornerRockFall : MonoBehaviour
     IEnumerator InitCoroutine()
     {
         yield return new WaitForSeconds(1.5f);//fade out
+        Boss.GetComponent<BossSystem>().isAttacking = true;
         Boss.GetComponent<BossSystem>().CleanProjectorList();
-        //Boss.GetComponent<BossSystem>().CleanMysticLineList();
         GameManager.gameManager.orb.GetComponent<OrbController>().canHitPlayer = false;
         GameManager.gameManager.UIManager.gameObject.SetActive(false);
         GameManager.gameManager.blackBands.SetActive(true);
         GameManager.gameManager.player1.GetComponent<CapsuleCollider>().isTrigger = true;
         GameManager.gameManager.player2.GetComponent<CapsuleCollider>().isTrigger = true;
+        PlayersContent.SetActive(false);
 
         yield return new WaitForSeconds(3f);
 
         Destroy(Boss.GetComponent<BossSystem>().shrinkLeft);
         Destroy(Boss.GetComponent<BossSystem>().shrinkRight);
         Boss.GetComponent<BossSystem>().isShrinkMysticLineCreated = false;
+
+        yield return new WaitForSeconds(7.5f);
+        PlayersContent.SetActive(true);
+
     }
 
     IEnumerator End()
     {
         yield return new WaitForSeconds(1.5f);
         Boss.GetComponent<BossSystem>().isAttacking = false;
-        GameManager.gameManager.orb.GetComponent<OrbController>().canHitPlayer = true;
+        GameManager.gameManager.orb.GetComponent<OrbController>().canHitPlayer = GameData.worseModeActivated;
     }
 
 }
