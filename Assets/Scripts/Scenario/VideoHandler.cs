@@ -28,7 +28,7 @@ public class VideoHandler : MonoBehaviour
 
 	private void Update()
 	{
-		if(!isSkiping && (Input.GetKeyDown(KeyCode.Joystick1Button0) || Input.GetKeyDown(KeyCode.Joystick2Button0)))
+		if(!isSkiping && (Input.GetKey(KeyCode.Joystick1Button0) || Input.GetKey(KeyCode.Joystick2Button0) || Input.GetKey(KeyCode.Space) || Input.GetKey(KeyCode.Keypad0)))
 		{
 			StartCoroutine(FadeOut());
 		}

@@ -23647,8 +23647,8 @@ MonoBehaviour:
     probability: 0.5
   - pattern: 6
     probability: 0.5
-  minWaitTime: 2
-  maxWaitTime: 10
+  minWaitTime: 0
+  maxWaitTime: 0
   isAttacking: 0
   targetMask:
     serializedVersion: 2
@@ -23657,10 +23657,10 @@ MonoBehaviour:
   electricConeDamage: 0
   electricConeTimeBetweenFeedbackAndCast: 5
   electricConeChannelingTime: 2
-  electricZoneRadius: 8
+  electricZoneRadius: 12
   electricZoneChannelingTime: 0
-  electricZoneTimeBetweenFeedbackAndCast: 3
-  electricZoneDamage: 0
+  electricZoneTimeBetweenFeedbackAndCast: 1
+  electricZoneDamage: 10
   electricAoeRadius: 10
   electricAoeChannelingTime: 0
   electricAoeTimeBetweenFeedbackAndCast: 3
@@ -23669,16 +23669,19 @@ MonoBehaviour:
     type: 3}
   fireBallDamage: 20
   fireBallDamageExplosion: 10
-  fireBallRangeExplosion: 5
-  fireBallSpeed: 40
+  fireBallRangeExplosion: 8
+  fireBallSpeed: 30
   mysticLinePrefab: {fileID: 7756416073340475419, guid: a76ddd411067b3f44bfff00ce4942087,
     type: 3}
-  mysticLineLineDamage: 0
+  mysticLineLineDamage: 5
   mysticLineHeight: 3
   mysticLineWidth: 1
-  lifeTime: 2
+  lifeTime: 15
   pivotLeft: {fileID: 8916721485997902992}
   pivotRight: {fileID: 6297800936497485568}
+  shrinkLeft: {fileID: 0}
+  shrinkRight: {fileID: 0}
+  isShrinkMysticLineCreated: 0
   shrinkDuration: 2
   limitAngle: 20
   shrinkSpeed: 0.5
@@ -23704,6 +23707,7 @@ MonoBehaviour:
   toleranceCoef: 1.1
   lastHitByP1: 0
   lastHitByP2: 0
+  canHitBoss: 0
 --- !u!114 &5375270481456614056
 MonoBehaviour:
   m_ObjectHideFlags: 0
