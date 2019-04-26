@@ -22,6 +22,8 @@ public class ScenarioHandler : MonoBehaviour
         
         director.Play();
 		director.stopped += WhenEnded;
+
+		StartCoroutine(SkipIntroListener());
 ;
 	}
 
@@ -53,13 +55,23 @@ public class ScenarioHandler : MonoBehaviour
 
 		while(introNotSkiped)
 		{
-			if(Input.GetKey(KeyCode.Joystick1Button7) || Input.GetKey(KeyCode.Joystick2Button7))
+			if(Input.GetKey(KeyCode.Joystick1Button7) || Input.GetKey(KeyCode.Joystick2Button7) || Input.GetKey(KeyCode.Escape))
 			{
 				introNotSkiped = false;
 			}
+			yield return new WaitForEndOfFrame();
 		}
 
-		director.Pause();
-		StartCoroutine(FadeCoroutine("FadeOut"));
+		director.Stop();
+
+		StartCoroutine(GameManager.gameManager.FadeCoroutine("FadeOut"));
+
+		yield return new WaitUntil(() => GameManager.gameManager.isPaused == false);
+
+		StartCoroutine(GameManager.gameManager.FadeCoroutine("FadeIn"));
+
+		yield return new WaitUntil(() => GameManager.gameManager.isPaused == false);
+
+		Destroy(this.gameObject);
 	}
 }
