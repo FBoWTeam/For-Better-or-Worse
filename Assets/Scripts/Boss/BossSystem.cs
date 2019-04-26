@@ -290,6 +290,11 @@ public class BossSystem : MonoBehaviour
                 {
                     Debug.Log("DED");
                     //ded
+                    StopAllCoroutines();
+                    //isAttacking = false;
+                    anim.SetTrigger("Stop");
+                    CleanProjectorList();
+                    GameObject.Find("TimelineDeath").GetComponent<TimeLineDeath>().Initialize();
                 }
                 break;
         }
@@ -482,7 +487,6 @@ public class BossSystem : MonoBehaviour
 
     public IEnumerator Shrink()
     {
-        isAttacking = true;
         yield return new WaitForSeconds(1);
         Vector3 newDirLeft;
         Vector3 newDirRight;
@@ -555,7 +559,6 @@ public class BossSystem : MonoBehaviour
             }
 
         }
-        isAttacking = false;
 
     }
 
