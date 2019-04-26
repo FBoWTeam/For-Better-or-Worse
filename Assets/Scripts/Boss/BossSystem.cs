@@ -491,7 +491,7 @@ public class BossSystem : MonoBehaviour
 
     public IEnumerator Shrink()
     {
-        isAttacking = true;
+        //isAttacking = true;
         yield return new WaitForSeconds(1);
         Vector3 newDirLeft;
         Vector3 newDirRight;
@@ -564,7 +564,7 @@ public class BossSystem : MonoBehaviour
             }
 
         }
-        isAttacking = false;
+        //isAttacking = false;
 
     }
 
