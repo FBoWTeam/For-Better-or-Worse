@@ -168,7 +168,7 @@ public class BossSystem : MonoBehaviour
         player1 = GameManager.gameManager.player1;
         player2 = GameManager.gameManager.player2;
         mysticLinePrefab.GetComponentInChildren<MysticLine>().damage = mysticLineLineDamage;
-        canHitBoss = false;
+        canHitBoss = true;// false;
     }
 
     // Update is called once per frame
@@ -198,6 +198,8 @@ public class BossSystem : MonoBehaviour
         {
             UpdateScaleShrinkMysticLine();
         }
+
+        //Debug.Log("isattacking is " + isAttacking);
 
     }
 
@@ -247,7 +249,7 @@ public class BossSystem : MonoBehaviour
                     GameObject.Find("Rock Lines").GetComponent<TimeLineRockFall>().Initialize();
 
                     StopAllCoroutines();
-                    isAttacking = false;
+                    //isAttacking = false;
                     anim.SetTrigger("Stop");
                 }
                 break;
@@ -259,11 +261,12 @@ public class BossSystem : MonoBehaviour
                     probabilityTable = phase3;
                     nextAttack = Time.time + Random.Range(minWaitTime, maxWaitTime);
                     //infinite mystic line separation / etc
+                    GameObject.Find("TimelineChangePlayers").GetComponent<TimeLineChangePlayers>().Initialize();
 
-                    /*StopAllCoroutines();
-                    isAttacking = false;
+                    StopAllCoroutines();
+                    //isAttacking = false;
                     anim.SetTrigger("Stop");
-                    CleanProjectorList();*/
+                    CleanProjectorList();
                 }
                 break;
             case 3:
@@ -277,10 +280,9 @@ public class BossSystem : MonoBehaviour
                     GameObject.Find("Rock Corners").GetComponent<TimeLineCornerRockFall>().Initialize();
 
                     StopAllCoroutines();
-                    isAttacking = false;
+                    //isAttacking = false;
                     anim.SetTrigger("Stop");
                     CleanProjectorList();
-                    Debug.Log("fin trans");
                 }
                 break;
             case 4:
@@ -438,7 +440,6 @@ public class BossSystem : MonoBehaviour
 
     public IEnumerator ShrinkMysticLinesCoroutine()
     {
-
         //Debug.Log("Shrink MysticLines");
 
         //canalisation + feedbacks
@@ -462,8 +463,7 @@ public class BossSystem : MonoBehaviour
             }
             isShrinkMysticLineCreated = true;
         }
-
-        isAttacking = false;
+        
     }
 
     public void UpdateScaleShrinkMysticLine()

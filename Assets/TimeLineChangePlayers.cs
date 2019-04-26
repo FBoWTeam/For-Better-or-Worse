@@ -3,40 +3,17 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Playables;
 
-public class TimeLineCornerRockFall : MonoBehaviour
+
+public class TimeLineChangePlayers : MonoBehaviour
 {
     PlayableDirector director;
     GameObject Boss;
-    GameObject RockCornerAnimatation;
-    GameObject RockCorner1;
-    GameObject RockCorner2;
-    GameObject RockCorner3;
-    GameObject RockCorner4;
 
-    GameObject Brazier1;
-    GameObject Brazier2;
-    GameObject ElectricPylon1;
-    GameObject ElectricPylon2;
-    
-    public RuntimeAnimatorController RAC;
 
     // Start is called before the first frame update
     void Start()
     {
         Boss = GameObject.Find("Boss");
-        RockCornerAnimatation = GameObject.Find("Rock corner Animation");
-        RockCorner1 = GameObject.Find("Rock corner 1");
-        RockCorner1.SetActive(false);
-        RockCorner2 = GameObject.Find("Rock corner 2");
-        RockCorner2.SetActive(false);
-        RockCorner3 = GameObject.Find("Rock corner 3");
-        RockCorner3.SetActive(false);
-        RockCorner4 = GameObject.Find("Rock corner 4");
-        RockCorner4.SetActive(false);
-        Brazier1 = GameObject.Find("Brazier");
-        Brazier2 = GameObject.Find("Brazier (1)");
-        ElectricPylon1 = GameObject.Find("ElectricPylon");
-        ElectricPylon2 = GameObject.Find("ElectricPylon (1)");
     }
 
     public void Initialize()
@@ -46,15 +23,14 @@ public class TimeLineCornerRockFall : MonoBehaviour
         GameManager.gameManager.player2.GetComponent<PlayerController>().active = false;
         GameManager.gameManager.player1.GetComponent<OrbHitter>().active = false;
         GameManager.gameManager.player2.GetComponent<OrbHitter>().active = false;
-        director = GetComponent<PlayableDirector>();
         Boss.GetComponent<BossRotation>().enabled = false;
-        Boss.GetComponent<Animator>().runtimeAnimatorController = null;
+        director = GetComponent<PlayableDirector>();
         StartCoroutine(InitCoroutine());
 
         director.Play();
         director.stopped += WhenEnded;
     }
-    
+
 
     IEnumerator InitCoroutine()
     {
@@ -73,8 +49,8 @@ public class TimeLineCornerRockFall : MonoBehaviour
         Destroy(Boss.GetComponent<BossSystem>().shrinkRight);
         Boss.GetComponent<BossSystem>().isShrinkMysticLineCreated = false;
 
-        yield return new WaitForSeconds(7.5f);
-
+        yield return new WaitForSeconds(3f);//wait the animation
+        StartCoroutine(Boss.GetComponent<BossSystem>().ShrinkMysticLinesCoroutine());
     }
 
 
@@ -87,31 +63,19 @@ public class TimeLineCornerRockFall : MonoBehaviour
         GameManager.gameManager.player2.GetComponent<PlayerController>().active = true;
         GameManager.gameManager.player1.GetComponent<OrbHitter>().active = true;
         GameManager.gameManager.player2.GetComponent<OrbHitter>().active = true;
-
         GameManager.gameManager.UIManager.gameObject.SetActive(true);
         GameManager.gameManager.blackBands.SetActive(false);
-
-        RockCornerAnimatation.SetActive(false);
-        RockCorner1.SetActive(true);
-        RockCorner2.SetActive(true);
-        RockCorner3.SetActive(true);
-        RockCorner4.SetActive(true);
-        Brazier1.SetActive(false);
-        Brazier2.SetActive(false);
-        ElectricPylon1.SetActive(false);
-        ElectricPylon2.SetActive(false);
-
-        Destroy(GetComponent<PlayableDirector>());
-
+        Boss.SetActive(true);
+        
         StartCoroutine(End());
     }
+
 
     IEnumerator End()
     {
         yield return new WaitForSeconds(1.5f);
-        Boss.GetComponent<Animator>().runtimeAnimatorController = RAC;
+        Boss.GetComponent<BossRotation>().enabled = true;
         Boss.GetComponent<BossSystem>().isAttacking = false;
         GameManager.gameManager.orb.GetComponent<OrbController>().canHitPlayer = GameData.worseModeActivated;
     }
-
 }
