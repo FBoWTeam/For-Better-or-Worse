@@ -10,7 +10,8 @@ public class PressurePlate : MonoBehaviour, IActivable
     public enum PressurePlateType
     {
         Classic,
-        PowerGiver
+        PowerGiver,
+        Trial
     }
 
     public PressurePlateType type;
@@ -29,6 +30,12 @@ public class PressurePlate : MonoBehaviour, IActivable
     private Animator anim;
     public bool powerGiven;
 
+    [Header("Trial")]
+    [DrawIf(new string[] { "type" }, PressurePlateType.Trial)]
+    public bool trialTriggered;
+    [DrawIf(new string[] { "type" }, PressurePlateType.Trial)]
+    public GameObject otherPressurePlate;
+
     private void Start()
     {
         anim = GetComponentInParent<Animator>();
@@ -42,14 +49,21 @@ public class PressurePlate : MonoBehaviour, IActivable
     {
         if (other.CompareTag("Player") && !isActive)
         {
-            if (type == PressurePlateType.PowerGiver)
+            switch (type)
             {
-                GivePower(other.gameObject);
-                this.Activate();
-            }
-            if (type == PressurePlateType.Classic)
-            {
-                this.Activate();
+                case PressurePlateType.Classic:
+                    this.Activate();
+                    break;
+                case PressurePlateType.PowerGiver:
+                    GivePower(other.gameObject);
+                    this.Activate();
+                    break;
+                case PressurePlateType.Trial:
+                    if (!trialTriggered)
+                    {
+                        this.Activate();
+                    }
+                    break;
             }
         }
     }
@@ -79,6 +93,14 @@ public class PressurePlate : MonoBehaviour, IActivable
             for (int i = 0; i < objectToActivate.Length; i++)
             {
                 objectToActivate[i].GetComponent<IActivable>().Activate();
+            }
+        }
+
+        if (type == PressurePlateType.Trial)
+        {
+            if (otherPressurePlate.GetComponent<IActivable>().isActive)
+            {
+                trialTriggered = true;
             }
         }
 
