@@ -178,7 +178,7 @@ public class BossSystem : MonoBehaviour
         player1 = GameManager.gameManager.player1;
         player2 = GameManager.gameManager.player2;
         mysticLinePrefab.GetComponentInChildren<MysticLine>().damage = mysticLineLineDamage;
-        canHitBoss = true;// false;
+        canHitBoss = false;
         rockInstantiated = false;
     }
 
