@@ -211,12 +211,10 @@ public class BossSystem : MonoBehaviour
         int rand = Random.Range(0, 2);
         if (rand == 0)
         {
-            Debug.Log("Aim Player 1");
             aimedPlayer = GameManager.gameManager.player1;
         }
         else
         {
-            Debug.Log("Aim Player 2");
             aimedPlayer = GameManager.gameManager.player2;
         }
     }
@@ -262,10 +260,10 @@ public class BossSystem : MonoBehaviour
                     nextAttack = Time.time + Random.Range(minWaitTime, maxWaitTime);
                     //infinite mystic line separation / etc
 
-                    StopAllCoroutines();
+                    /*StopAllCoroutines();
                     isAttacking = false;
                     anim.SetTrigger("Stop");
-                    CleanProjectorList();
+                    CleanProjectorList();*/
                 }
                 break;
             case 3:
@@ -275,7 +273,6 @@ public class BossSystem : MonoBehaviour
                     Debug.Log("Passage phase 4");
                     probabilityTable = phase4;
                     nextAttack = Time.time + Random.Range(minWaitTime, maxWaitTime);
-                    //transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
                     //fall to ground / level shrink / rock fall activation
                     GameObject.Find("Rock Corners").GetComponent<TimeLineCornerRockFall>().Initialize();
 
@@ -283,9 +280,7 @@ public class BossSystem : MonoBehaviour
                     isAttacking = false;
                     anim.SetTrigger("Stop");
                     CleanProjectorList();
-                    Destroy(shrinkLeft);
-                    Destroy(shrinkRight);
-                    isShrinkMysticLineCreated = false;
+                    Debug.Log("fin trans");
                 }
                 break;
             case 4:
@@ -383,7 +378,7 @@ public class BossSystem : MonoBehaviour
     public IEnumerator MysticLineCoroutine()
     {
         isAttacking = true;
-        Debug.Log("Mystic Line");
+        //Debug.Log("Mystic Line");
 
         //canalisation + feedbacks
         anim.SetTrigger("LineFireBallShrink");
@@ -444,7 +439,7 @@ public class BossSystem : MonoBehaviour
     public IEnumerator ShrinkMysticLinesCoroutine()
     {
 
-        Debug.Log("Shrink MysticLines");
+        //Debug.Log("Shrink MysticLines");
 
         //canalisation + feedbacks
         anim.SetTrigger("LineFireBallShrink");
@@ -494,14 +489,12 @@ public class BossSystem : MonoBehaviour
         float step = shrinkSpeed * Time.deltaTime;
 
         int rand = Random.Range(0, 2);
-        print("Rand : " + rand);
 
         //Forward
         if (rand == 0)
         {
             while (Vector3.Angle(pivotLeft.transform.forward, Quaternion.Euler(0, -limitAngle, 0) * transform.forward) > 0.4 || Vector3.Angle(pivotRight.transform.forward, Quaternion.Euler(0, limitAngle, 0) * transform.forward) > 0.4)
             {
-                print("While1");
                 //print("Angle PivotLeft: " + Vector3.Angle(pivotLeft.transform.forward, Quaternion.Euler(0, -limitAngle, 0) * transform.forward - pivotLeft.transform.position));
                 Vector3 vectorLeft = Quaternion.Euler(0, -limitAngle, 0) * transform.forward;
                 Vector3 vectorRight = Quaternion.Euler(0, limitAngle, 0) * transform.forward;
@@ -516,7 +509,6 @@ public class BossSystem : MonoBehaviour
 
             while (Vector3.Angle(pivotLeft.transform.forward, Quaternion.Euler(0, -90, 0) * transform.forward) > 0.4 || Vector3.Angle(pivotRight.transform.forward, Quaternion.Euler(0, 90, 0) * transform.forward) > 0.4)
             {
-                print("While2");
                 Vector3 vectorLeft = Quaternion.Euler(0, -90, 0) * transform.forward;
                 Vector3 vectorRight = Quaternion.Euler(0, 90, 0) * transform.forward;
 
@@ -535,8 +527,6 @@ public class BossSystem : MonoBehaviour
         {
             while (Vector3.Angle(pivotLeft.transform.forward, Quaternion.Euler(0, limitAngle, 0) * -transform.forward) > 0.4 || Vector3.Angle(pivotRight.transform.forward, Quaternion.Euler(0, -limitAngle, 0) * -transform.forward) > 0.4)
             {
-                print("While3");
-
                 Vector3 vectorLeft = Quaternion.Euler(0, limitAngle, 0) * -transform.forward;
                 Vector3 vectorRight = Quaternion.Euler(0, -limitAngle, 0) * -transform.forward;
                 newDirLeft = Vector3.RotateTowards(pivotLeft.transform.forward, vectorLeft, step, 0.0f);
@@ -551,8 +541,6 @@ public class BossSystem : MonoBehaviour
 
             while (Vector3.Angle(pivotLeft.transform.forward, Quaternion.Euler(0, 90, 0) * -transform.forward) > 0.4 || Vector3.Angle(pivotRight.transform.forward, Quaternion.Euler(0, -90, 0) * -transform.forward) > 0.4)
             {
-                print("While4");
-
                 Vector3 vectorLeft = Quaternion.Euler(0, 90, 0) * -transform.forward;
                 Vector3 vectorRight = Quaternion.Euler(0, -90, 0) * -transform.forward;
 
@@ -626,7 +614,7 @@ public class BossSystem : MonoBehaviour
         isAttacking = true;
 
         //start chaneling anim
-        Debug.Log("channeling electric zone");
+        //Debug.Log("channeling electric zone");
         anim.SetTrigger("Electricity");
         yield return new WaitForSeconds(2.6f);
 
@@ -648,7 +636,7 @@ public class BossSystem : MonoBehaviour
             yield return new WaitForEndOfFrame();
         }
 
-        Debug.Log("casting electric zone");
+        //Debug.Log("casting electric zone");
 
         //check if the players are in the area of effect
         Collider[] playersInRange = Physics.OverlapSphere(electricZoneLocation, electricZoneRadius, targetMask);
@@ -673,7 +661,7 @@ public class BossSystem : MonoBehaviour
         isAttacking = true;
 
         //start chaneling anim
-        Debug.Log("channeling electric cone");
+        //Debug.Log("channeling electric cone");
         anim.SetTrigger("Electricity");
         yield return new WaitForSeconds(2.6f);
 
@@ -706,7 +694,7 @@ public class BossSystem : MonoBehaviour
             yield return new WaitForEndOfFrame();
         }
 
-        Debug.Log("casting electric cone");
+        //Debug.Log("casting electric cone");
 
         //check if players are in the area of effect to apply damages
         Vector3 dirToTarget;
@@ -826,7 +814,7 @@ public class BossSystem : MonoBehaviour
         isAttacking = true;
 
         //start chaneling anim
-        Debug.Log("channeling AOE zone");
+       // Debug.Log("channeling AOE zone");
         anim.SetTrigger("Electricity");
         //wait 75% of the cast time
         yield return new WaitForSeconds(2.8f);
