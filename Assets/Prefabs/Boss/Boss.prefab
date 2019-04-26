@@ -23602,7 +23602,7 @@ Animator:
   m_Controller: {fileID: 9100000, guid: 016e3cbb7e4e4e24590de06495edfaee, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
-  m_ApplyRootMotion: 0
+  m_ApplyRootMotion: 1
   m_LinearVelocityBlending: 0
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
@@ -23624,15 +23624,15 @@ MonoBehaviour:
   hp: 0
   stunTime: 2
   actualPhase: 0
-  phase2Threshold: 0.8
+  phase2Threshold: 0.9
   phase3Threshold: 0.6
-  phase4Threshold: 0.4
+  phase4Threshold: 0.3
   phase1:
   - pattern: 0
     probability: 0.3
   - pattern: 1
     probability: 0.4
-  - pattern: 2
+  - pattern: 6
     probability: 0.3
   phase2:
   - pattern: 3
@@ -23650,9 +23650,9 @@ MonoBehaviour:
     probability: 0.3
   phase4:
   - pattern: 5
-    probability: 0.5
-  - pattern: 6
-    probability: 0.5
+    probability: 0.7
+  - pattern: 2
+    probability: 0.3
   minWaitTime: 0
   maxWaitTime: 0
   isAttacking: 0
@@ -23667,10 +23667,10 @@ MonoBehaviour:
   electricZoneChannelingTime: 0
   electricZoneTimeBetweenFeedbackAndCast: 1
   electricZoneDamage: 10
-  electricAoeRadius: 10
+  electricAoeRadius: 16
   electricAoeChannelingTime: 0
-  electricAoeTimeBetweenFeedbackAndCast: 3
-  electricAoeDamage: 0
+  electricAoeTimeBetweenFeedbackAndCast: 2
+  electricAoeDamage: 10
   fireBallPrefab: {fileID: 5638877437444336277, guid: 144f3450520ae604bac735f48dfaf9e9,
     type: 3}
   fireBallDamage: 20
