@@ -22,6 +22,7 @@ public class OrbHitter : MonoBehaviour
 
 	[Header("[Amortize]")]
 	public bool amortizing;
+    public bool forcedAmortizing;
 	public float amortizeDuration;
 
     void Start()
@@ -42,7 +43,7 @@ public class OrbHitter : MonoBehaviour
     /// <summary>
     /// function that let the players hit and amortize the ball
     /// </summary>
-    void OrbHit()
+    public void OrbHit()
     {
         if (hitTimer > 0.0f)
         {
@@ -74,7 +75,7 @@ public class OrbHitter : MonoBehaviour
                 CheckPowerActivation();
                 GameManager.gameManager.orb.GetComponent<PowerController>().CheckPowerAttribution("hit", player1);
             }
-            if (amortizing && !orbController.amortized)
+            if ((amortizing || forcedAmortizing) && !orbController.amortized)
             {
                 StartCoroutine(AmortizeCoroutine());
                 GameManager.gameManager.orb.GetComponent<PowerController>().CheckPowerAttribution("amortize", player1);
@@ -158,7 +159,7 @@ public class OrbHitter : MonoBehaviour
 	/// coroutine that manage the amortize of the orb
 	/// </summary>
 	/// <returns></returns>
-	IEnumerator AmortizeCoroutine()
+	public IEnumerator AmortizeCoroutine()
     {
         orbController.speed = 0.0f;
         orbController.amortized = true;
