@@ -149,6 +149,9 @@ public class BossSystem : MonoBehaviour
 
     public bool canHitBoss;
 
+    public GameObject rockFall;
+    private bool rockInstantiated;
+
 
     //======================================================================================== AWAKE AND UPDATE
 
@@ -169,6 +172,7 @@ public class BossSystem : MonoBehaviour
         player2 = GameManager.gameManager.player2;
         mysticLinePrefab.GetComponentInChildren<MysticLine>().damage = mysticLineLineDamage;
         canHitBoss = false;
+        rockInstantiated = false;
     }
 
     // Update is called once per frame
@@ -286,6 +290,11 @@ public class BossSystem : MonoBehaviour
                 }
                 break;
             case 4:
+                if (!rockInstantiated)
+                {
+                    rockFall.SetActive(true);
+                    rockInstantiated = true;
+                }
                 if (hp <= 0.0f)
                 {
                     Debug.Log("DED");
@@ -482,7 +491,7 @@ public class BossSystem : MonoBehaviour
 
     public IEnumerator Shrink()
     {
-        isAttacking = true;
+        //isAttacking = true;
         yield return new WaitForSeconds(1);
         Vector3 newDirLeft;
         Vector3 newDirRight;
@@ -555,7 +564,7 @@ public class BossSystem : MonoBehaviour
             }
 
         }
-        isAttacking = false;
+        //isAttacking = false;
 
     }
 
