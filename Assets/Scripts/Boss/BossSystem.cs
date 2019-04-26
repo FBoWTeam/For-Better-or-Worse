@@ -152,6 +152,13 @@ public class BossSystem : MonoBehaviour
     public GameObject rockFall;
     private bool rockInstantiated;
 
+    public GameObject FxElectricityLeft;
+    public GameObject FxFireLeft;
+    public GameObject FxMysticLeft;
+    public GameObject FxElectricityRight;
+    public GameObject FxFireRight;
+    public GameObject FxMysticRight;
+
 
     //======================================================================================== AWAKE AND UPDATE
 
@@ -399,7 +406,11 @@ public class BossSystem : MonoBehaviour
         //canalisation + feedbacks
         anim.SetTrigger("LineFireBallShrink");
 
+        FxMysticLeft.SetActive(true);
+        //FxMysticRight.SetActive(true);
+
         yield return new WaitForSeconds(2.8f);
+        Debug.Log("now");
 
         Vector3 raycastPosition = new Vector3(transform.position.x, 1f, transform.position.z);
         RaycastHit hit;
@@ -426,6 +437,8 @@ public class BossSystem : MonoBehaviour
         if (Physics.Raycast(raycastPosition, direction, out hit, 50, LayerMask.GetMask("Wall")))
         {
             StartCoroutine(CreateMysticLineCoroutine(transform.position, hit.transform.position, hit.distance));
+            FxMysticLeft.SetActive(false);
+            //FxMysticRight.SetActive(false);
         }
 
         Destroy(mysticLineIndicator);
@@ -458,6 +471,10 @@ public class BossSystem : MonoBehaviour
 
         //canalisation + feedbacks
         anim.SetTrigger("LineFireBallShrink");
+
+        FxMysticLeft.SetActive(true);
+        //FxMysticRight.SetActive(true);
+
         yield return new WaitForSeconds(4.2f);
 
         if (!isShrinkMysticLineCreated)
@@ -476,6 +493,9 @@ public class BossSystem : MonoBehaviour
                 shrinkRight.transform.LookAt(hit.transform);
             }
             isShrinkMysticLineCreated = true;
+
+            FxMysticLeft.SetActive(false);
+            //FxMysticRight.SetActive(false);
         }
 
     }
@@ -579,7 +599,14 @@ public class BossSystem : MonoBehaviour
         isAttacking = true;
 
         anim.SetTrigger("LineFireBallShrink");
+
+        FxFireLeft.SetActive(true);
+        FxFireRight.SetActive(true);
+
         yield return new WaitForSeconds(4.2f);
+
+        FxFireLeft.SetActive(false);
+        FxFireRight.SetActive(false);
 
         Vector3 target = aimedPlayer.transform.position;
 
@@ -611,7 +638,7 @@ public class BossSystem : MonoBehaviour
             yield return new WaitForEndOfFrame();
         }
 
-
+        
         yield return new WaitUntil(() => fireBall.willBeDestroyed);
         Destroy(fireBallIndicator);
 
@@ -628,6 +655,9 @@ public class BossSystem : MonoBehaviour
         //start chaneling anim
         //Debug.Log("channeling electric zone");
         anim.SetTrigger("Electricity");
+
+        StartCoroutine(FxElectricity());
+
         yield return new WaitForSeconds(2.6f);
 
         Vector3 electricZoneLocation = aimedPlayer.transform.position;
@@ -675,6 +705,7 @@ public class BossSystem : MonoBehaviour
         //start chaneling anim
         //Debug.Log("channeling electric cone");
         anim.SetTrigger("Electricity");
+        StartCoroutine(FxElectricity());
         yield return new WaitForSeconds(2.6f);
 
         //determining the area where to cast the spell
@@ -828,7 +859,10 @@ public class BossSystem : MonoBehaviour
         //start chaneling anim
        // Debug.Log("channeling AOE zone");
         anim.SetTrigger("Electricity");
-        //wait 75% of the cast time
+
+        StartCoroutine(FxElectricity());
+
+        //wait 75% of the cast time, 2.8s in total
         yield return new WaitForSeconds(2.8f);
 
         //show indicator feedback
@@ -865,6 +899,18 @@ public class BossSystem : MonoBehaviour
 
         nextAttack = Time.time + Random.Range(minWaitTime, maxWaitTime);
         isAttacking = false;
+    }
+
+
+    IEnumerator FxElectricity()
+    {
+        yield return new WaitForSeconds(1.7f);
+        FxElectricityRight.SetActive(true);
+        yield return new WaitForSeconds(1.7f);
+        FxElectricityLeft.SetActive(true);
+        yield return new WaitForSeconds(1.2f);
+        FxElectricityRight.SetActive(false);
+        FxElectricityLeft.SetActive(false);
     }
 
     #endregion
