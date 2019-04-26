@@ -407,7 +407,7 @@ public class BossSystem : MonoBehaviour
         anim.SetTrigger("LineFireBallShrink");
 
         FxMysticLeft.SetActive(true);
-        //FxMysticRight.SetActive(true);
+        FxMysticRight.SetActive(true);
 
         yield return new WaitForSeconds(2.8f);
         Debug.Log("now");
@@ -438,7 +438,7 @@ public class BossSystem : MonoBehaviour
         {
             StartCoroutine(CreateMysticLineCoroutine(transform.position, hit.transform.position, hit.distance));
             FxMysticLeft.SetActive(false);
-            //FxMysticRight.SetActive(false);
+            FxMysticRight.SetActive(false);
         }
 
         Destroy(mysticLineIndicator);
@@ -473,7 +473,7 @@ public class BossSystem : MonoBehaviour
         anim.SetTrigger("LineFireBallShrink");
 
         FxMysticLeft.SetActive(true);
-        //FxMysticRight.SetActive(true);
+        FxMysticRight.SetActive(true);
 
         yield return new WaitForSeconds(4.2f);
 
@@ -495,7 +495,7 @@ public class BossSystem : MonoBehaviour
             isShrinkMysticLineCreated = true;
 
             FxMysticLeft.SetActive(false);
-            //FxMysticRight.SetActive(false);
+            FxMysticRight.SetActive(false);
         }
 
     }
