@@ -147,6 +147,8 @@ public class BossSystem : MonoBehaviour
     [HideInInspector]
     public Coroutine actualFireCoroutine;
 
+    public bool canHitBoss;
+
 
     //======================================================================================== AWAKE AND UPDATE
 
@@ -166,6 +168,7 @@ public class BossSystem : MonoBehaviour
         player1 = GameManager.gameManager.player1;
         player2 = GameManager.gameManager.player2;
         mysticLinePrefab.GetComponentInChildren<MysticLine>().damage = mysticLineLineDamage;
+        canHitBoss = false;
     }
 
     // Update is called once per frame
@@ -675,8 +678,7 @@ public class BossSystem : MonoBehaviour
         //instanciate the circle indicator
         GameObject coneIndicator = Instantiate(coneProjector, transform.position, Quaternion.identity) as GameObject;
         projectorList.Add(coneIndicator);
-        //the instanciated circle indicator is a child of the boss
-        coneIndicator.transform.parent = transform;
+
         float timeStamp = Time.time;
         Color tempColor = Color.blue;
 
@@ -857,28 +859,30 @@ public class BossSystem : MonoBehaviour
 
     public void TakeDamage(int damage)
     {
-        hp -= damage;
-        GameManager.gameManager.orb.GetComponent<OrbController>().hasHitEnemy = true;
-        if (hp <= 0)
+        if (canHitBoss)
         {
-            //update in score manager
-            if (lastHitByP1 && !lastHitByP2)
+            hp -= damage;
+            GameManager.gameManager.orb.GetComponent<OrbController>().hasHitEnemy = true;
+            if (hp <= 0)
             {
-                ScoreManager.scoreManager.bossKilledByP1 = true;
+                //update in score manager
+                if (lastHitByP1 && !lastHitByP2)
+                {
+                    ScoreManager.scoreManager.bossKilledByP1 = true;
+                }
+                else if (!lastHitByP1 && lastHitByP2)
+                {
+                    ScoreManager.scoreManager.bossKilledByP1 = false;
+                }
+                else if (!lastHitByP1 && !lastHitByP2)
+                {
+                    ScoreManager.scoreManager.killsEnvironment++;
+                }
+                StopAllCoroutines();
+                GameData.previousScene = 9;
+                SceneManager.LoadScene(10);
             }
-            else if (!lastHitByP1 && lastHitByP2)
-            {
-                ScoreManager.scoreManager.bossKilledByP1 = false;
-            }
-            else if (!lastHitByP1 && !lastHitByP2)
-            {
-                ScoreManager.scoreManager.killsEnvironment++;
-            }
-            StopAllCoroutines();
-			GameData.previousScene = 9;
-			SceneManager.LoadScene(10);
         }
-
     }
 
     public IEnumerator Stun()
