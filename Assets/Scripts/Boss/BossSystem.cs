@@ -210,8 +210,6 @@ public class BossSystem : MonoBehaviour
             UpdateScaleShrinkMysticLine();
         }
 
-        //Debug.Log("isattacking is " + isAttacking);
-
     }
 
     //======================================================================================== SET FOCUS
@@ -410,7 +408,6 @@ public class BossSystem : MonoBehaviour
         FxMysticRight.SetActive(true);
 
         yield return new WaitForSeconds(2.8f);
-        Debug.Log("now");
 
         Vector3 raycastPosition = new Vector3(transform.position.x, 1f, transform.position.z);
         RaycastHit hit;
