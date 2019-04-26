@@ -171,7 +171,7 @@ public class BossSystem : MonoBehaviour
         player1 = GameManager.gameManager.player1;
         player2 = GameManager.gameManager.player2;
         mysticLinePrefab.GetComponentInChildren<MysticLine>().damage = mysticLineLineDamage;
-        canHitBoss = false;
+        canHitBoss = true;// false;
         rockInstantiated = false;
     }
 
@@ -477,7 +477,7 @@ public class BossSystem : MonoBehaviour
             }
             isShrinkMysticLineCreated = true;
         }
-        
+
     }
 
     public void UpdateScaleShrinkMysticLine()
