@@ -65,8 +65,8 @@ public class UIManager : MonoBehaviour
     [Header("Drop GO")]
     public Camera camera;
     public GameObject drop;
-    public GameObject drop1;
-    public GameObject dropTarget;
+    public float dropSpeed;
+    private bool isDropActive = false;
 
     [Header("Text Quote")]
     public float displayTime;
@@ -204,15 +204,23 @@ public class UIManager : MonoBehaviour
             case 1:
 
                 if (player1)
+                {
                     GetImage(elementalPowerFox).sprite = ImageAssignment(powerSlot);
+                }
                 else
+                {
                     GetImage(elementalPowerRaccoon).sprite = ImageAssignment(powerSlot);
+                }
                 break;
             case 2:
                 if (player1)
+                {
                     GetImage(behaviouralPowerFox).sprite = ImageAssignment(powerSlot);
+                }
                 else
+                {
                     GetImage(behaviouralPowerRaccoon).sprite = ImageAssignment(powerSlot);
+                }
                 break;
         }
     }
@@ -220,7 +228,11 @@ public class UIManager : MonoBehaviour
     public void UpdateDroppedPower(GameManager.PowerType droppedPower)
     {
         orbPower.sprite = ImageAssignment(droppedPower);
-        //DropFeedback();
+
+        if (droppedPower != GameManager.PowerType.None)
+        {
+            StartCoroutine(DropFeedback(drop, GameManager.gameManager.orb.transform, orbPower.transform));
+        }
     }
 
     #endregion
@@ -487,9 +499,6 @@ public class UIManager : MonoBehaviour
         tauntCooldownRaccoon.GetComponent<Image>().fillAmount = 0;
     }
 
-
-
-
     public void SceneToUI(GameObject UIElement, Vector3 target)
     {
         //first you need the RectTransform component of your canvas
@@ -505,13 +514,54 @@ public class UIManager : MonoBehaviour
 
         //now you can set the position of the ui element
         UIElement.GetComponent<RectTransform>().anchoredPosition = WorldObject_ScreenPosition;
-
     }
 
-    private void Update()
+    public IEnumerator DropFeedback(GameObject UIElement, Transform start, Transform end)
     {
-        SceneToUI(drop, GameManager.gameManager.player1.transform.position);
-       //SceneToUI(drop1, GameManager.gameManager.player2.transform.position + new Vector3(0, 1, 0));
+        yield return new WaitWhile(() => isDropActive);
+        if (!isDropActive)
+        {
+            drop.SetActive(true);
+            isDropActive = true;
+            SceneToUI(UIElement, start.position);
+
+            //print(Vector3.Distance(UIElement.transform.position, end));
+
+            while (Vector3.Distance(UIElement.transform.position, end.position) > 0.01)
+            {
+                UIElement.transform.position = Vector3.Lerp(UIElement.transform.position, end.transform.position, dropSpeed);
+                yield return new WaitForEndOfFrame();
+            }
+            isDropActive = false;
+            drop.SetActive(false);
+        }
+        yield return null;
+    }
+
+    public void OrbToPowerSlotFeedback(bool isPlayer1, bool isElemental)
+    {
+        if (isPlayer1)
+        {
+            if (isElemental)
+            {
+                StartCoroutine(DropFeedback(drop, orbPower.transform, elementalPowerFox.transform));
+            }
+            else
+            {
+                StartCoroutine(DropFeedback(drop, orbPower.transform, behaviouralPowerFox.transform));
+            }
+        }
+        else
+        {
+            if (isElemental)
+            {
+                StartCoroutine(DropFeedback(drop, orbPower.transform, elementalPowerRaccoon.transform));
+            }
+            else
+            {
+                StartCoroutine(DropFeedback(drop, orbPower.transform, behaviouralPowerRaccoon.transform));
+            }
+        }
     }
 
     #endregion
