@@ -18,11 +18,6 @@ public class BossRotation : MonoBehaviour
         rotationCoroutine = StartCoroutine(RotationCoroutine());
     }
 
-    private void OnDisable()
-    {
-        StopCoroutine(rotationCoroutine);
-    }
-
 
     IEnumerator RotationCoroutine()
     {

@@ -6,16 +6,19 @@ using UnityEngine.Playables;
 public class TimeLineRockFall : MonoBehaviour
 {
     PlayableDirector director;
+    GameObject WallForTimeLine;
     GameObject Boss;
-    GameObject RockLineAnimation;
+    GameObject RockLineAnimatation;
     GameObject RockLine1;
     GameObject RockLine2;
 
     // Start is called before the first frame update
     void Start()
     {
+        WallForTimeLine = GameObject.Find("Wall Reverse");
+        WallForTimeLine.SetActive(false);
         Boss = GameObject.Find("Boss");
-        RockLineAnimation = GameObject.Find("Rock line Animation");
+        RockLineAnimatation = GameObject.Find("Rock line Animation");
         RockLine1 = GameObject.Find("Rock line 1");
         RockLine1.SetActive(false);
         RockLine2 = GameObject.Find("Rock line 2");
@@ -36,26 +39,10 @@ public class TimeLineRockFall : MonoBehaviour
         director.stopped += WhenEnded;
     }
 
-
-    IEnumerator InitCoroutine()
-    {
-        yield return new WaitForSeconds(1.5f);//fade out
-        Boss.GetComponent<BossSystem>().isAttacking = true;
-        Boss.GetComponent<BossSystem>().CleanProjectorList();
-        Boss.GetComponent<BossSystem>().CleanMysticLineList();
-        GameManager.gameManager.orb.GetComponent<OrbController>().canHitPlayer = false;
-        GameManager.gameManager.UIManager.gameObject.SetActive(false);
-        GameManager.gameManager.blackBands.SetActive(true);
-        GameManager.gameManager.player1.GetComponent<CapsuleCollider>().isTrigger = true;
-        GameManager.gameManager.player2.GetComponent<CapsuleCollider>().isTrigger = true;
-
-        yield return new WaitForSeconds(4f);//wait the animation
-        StartCoroutine(Boss.GetComponent<BossSystem>().ShrinkMysticLinesCoroutine());        
-    }
-
-
     public void WhenEnded(PlayableDirector obj)
     {
+        WallForTimeLine.SetActive(false);
+        Boss.GetComponent<BossRotation>().enabled = true ;
         GameManager.gameManager.player1.GetComponent<CapsuleCollider>().isTrigger = false;
         GameManager.gameManager.player2.GetComponent<CapsuleCollider>().isTrigger = false;
         GameManager.gameManager.isPaused = false;
@@ -66,21 +53,26 @@ public class TimeLineRockFall : MonoBehaviour
         GameManager.gameManager.UIManager.gameObject.SetActive(true);
         GameManager.gameManager.blackBands.SetActive(false);
         Boss.SetActive(true);
-        RockLineAnimation.SetActive(false);
+        Boss.GetComponent<BossSystem>().isAttacking = false;
+        RockLineAnimatation.SetActive(false);
         RockLine1.SetActive(true);
         RockLine2.SetActive(true);
-        Destroy(GetComponent<PlayableDirector>());
-
-        StartCoroutine(End());
     }
 
-
-    IEnumerator End()
+    IEnumerator InitCoroutine()
     {
-        yield return new WaitForSeconds(1.5f);
-        Boss.GetComponent<BossRotation>().enabled = true;
-        Boss.GetComponent<BossSystem>().isAttacking = false;
-        GameManager.gameManager.orb.GetComponent<OrbController>().canHitPlayer = GameData.worseModeActivated;
+        yield return new WaitForSeconds(1.5f);//fade out
+        WallForTimeLine.SetActive(true);
+        Boss.GetComponent<BossSystem>().CleanProjectorList();
+        Boss.GetComponent<BossSystem>().CleanMysticLineList();
+        GameManager.gameManager.orb.GetComponent<OrbController>().canHitPlayer = false;
+        GameManager.gameManager.UIManager.gameObject.SetActive(false);
+        GameManager.gameManager.blackBands.SetActive(true);
+        GameManager.gameManager.player1.GetComponent<CapsuleCollider>().isTrigger = true;
+        GameManager.gameManager.player2.GetComponent<CapsuleCollider>().isTrigger = true;
+
+        yield return new WaitForSeconds(4f);//wait the animation
+        StartCoroutine(Boss.GetComponent<BossSystem>().ShrinkMysticLinesCoroutine());        
     }
 
 }

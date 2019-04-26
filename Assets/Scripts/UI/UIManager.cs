@@ -62,12 +62,6 @@ public class UIManager : MonoBehaviour
     public Sprite darkness;
     public Sprite none;
 
-    [Header("Drop GO")]
-    public Camera camera;
-    public GameObject drop;
-    public float dropSpeed;
-    private bool isDropActive = false;
-
     [Header("Text Quote")]
     public float displayTime;
     public int pourcentageQuote;
@@ -204,23 +198,15 @@ public class UIManager : MonoBehaviour
             case 1:
 
                 if (player1)
-                {
                     GetImage(elementalPowerFox).sprite = ImageAssignment(powerSlot);
-                }
                 else
-                {
                     GetImage(elementalPowerRaccoon).sprite = ImageAssignment(powerSlot);
-                }
                 break;
             case 2:
                 if (player1)
-                {
                     GetImage(behaviouralPowerFox).sprite = ImageAssignment(powerSlot);
-                }
                 else
-                {
                     GetImage(behaviouralPowerRaccoon).sprite = ImageAssignment(powerSlot);
-                }
                 break;
         }
     }
@@ -228,11 +214,6 @@ public class UIManager : MonoBehaviour
     public void UpdateDroppedPower(GameManager.PowerType droppedPower)
     {
         orbPower.sprite = ImageAssignment(droppedPower);
-
-        if (droppedPower != GameManager.PowerType.None)
-        {
-            StartCoroutine(DropFeedback(drop, GameManager.gameManager.orb.transform, orbPower.transform));
-        }
     }
 
     #endregion
@@ -488,6 +469,8 @@ public class UIManager : MonoBehaviour
         }
     }
 
+
+
     public void RespawnReset()
     {
         GetCdImage(elementalPowerFox).fillAmount = 0;
@@ -498,71 +481,5 @@ public class UIManager : MonoBehaviour
         GetCdImage(behaviouralPowerRaccoon).fillAmount = 0;
         tauntCooldownRaccoon.GetComponent<Image>().fillAmount = 0;
     }
-
-    public void SceneToUI(GameObject UIElement, Vector3 target)
-    {
-        //first you need the RectTransform component of your canvas
-        RectTransform CanvasRect = this.GetComponent<RectTransform>();
-
-        //then you calculate the position of the UI element
-        //0,0 for the canvas is at the center of the screen, whereas WorldToViewPortPoint treats the lower left corner as 0,0. Because of this, you need to subtract the height / width of the canvas * 0.5 to get the correct position.
-
-        Vector2 ViewportPosition = camera.WorldToViewportPoint(target);
-        Vector2 WorldObject_ScreenPosition = new Vector2(
-        ((ViewportPosition.x * CanvasRect.sizeDelta.x) - (CanvasRect.sizeDelta.x * 0.5f)),
-        ((ViewportPosition.y * CanvasRect.sizeDelta.y) - (CanvasRect.sizeDelta.y * 0.5f)));
-
-        //now you can set the position of the ui element
-        UIElement.GetComponent<RectTransform>().anchoredPosition = WorldObject_ScreenPosition;
-    }
-
-    public IEnumerator DropFeedback(GameObject UIElement, Transform start, Transform end)
-    {
-        yield return new WaitWhile(() => isDropActive);
-        if (!isDropActive)
-        {
-            drop.SetActive(true);
-            isDropActive = true;
-            SceneToUI(UIElement, start.position);
-
-            //print(Vector3.Distance(UIElement.transform.position, end));
-
-            while (Vector3.Distance(UIElement.transform.position, end.position) > 0.01)
-            {
-                UIElement.transform.position = Vector3.Lerp(UIElement.transform.position, end.transform.position, dropSpeed);
-                yield return new WaitForEndOfFrame();
-            }
-            isDropActive = false;
-            drop.SetActive(false);
-        }
-        yield return null;
-    }
-
-    public void OrbToPowerSlotFeedback(bool isPlayer1, bool isElemental)
-    {
-        if (isPlayer1)
-        {
-            if (isElemental)
-            {
-                StartCoroutine(DropFeedback(drop, orbPower.transform, elementalPowerFox.transform));
-            }
-            else
-            {
-                StartCoroutine(DropFeedback(drop, orbPower.transform, behaviouralPowerFox.transform));
-            }
-        }
-        else
-        {
-            if (isElemental)
-            {
-                StartCoroutine(DropFeedback(drop, orbPower.transform, elementalPowerRaccoon.transform));
-            }
-            else
-            {
-                StartCoroutine(DropFeedback(drop, orbPower.transform, behaviouralPowerRaccoon.transform));
-            }
-        }
-    }
-
     #endregion
 }

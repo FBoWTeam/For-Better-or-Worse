@@ -23602,7 +23602,7 @@ Animator:
   m_Controller: {fileID: 9100000, guid: 016e3cbb7e4e4e24590de06495edfaee, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
-  m_ApplyRootMotion: 1
+  m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
@@ -23620,57 +23620,51 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b6c701f8079d00340a8ae5293ecdf603, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  baseHP: 500
+  baseHP: 1000
   hp: 0
   stunTime: 2
   actualPhase: 0
-  phase2Threshold: 0.9
+  phase2Threshold: 0.8
   phase3Threshold: 0.6
-  phase4Threshold: 0.3
+  phase4Threshold: 0.4
   phase1:
   - pattern: 0
-    probability: 0.3
+    probability: 0.33
   - pattern: 1
-    probability: 0.4
-  - pattern: 6
-    probability: 0.3
+    probability: 0.33
+  - pattern: 2
+    probability: 0.33
   phase2:
   - pattern: 3
-    probability: 0.3
+    probability: 0.5
   - pattern: 4
-    probability: 0.4
-  - pattern: 1
-    probability: 0.3
+    probability: 0.5
   phase3:
-  - pattern: 3
-    probability: 0.3
   - pattern: 4
-    probability: 0.4
-  - pattern: 1
-    probability: 0.3
+    probability: 1
   phase4:
   - pattern: 5
-    probability: 0.7
-  - pattern: 2
-    probability: 0.3
-  minWaitTime: 0
-  maxWaitTime: 0
+    probability: 0.5
+  - pattern: 6
+    probability: 0.5
+  minWaitTime: 2
+  maxWaitTime: 10
   isAttacking: 0
   targetMask:
     serializedVersion: 2
     m_Bits: 1024
   electricConeAngle: 60
-  electricConeDamage: 10
-  electricConeTimeBetweenFeedbackAndCast: 1
-  electricConeChannelingTime: 0
-  electricZoneRadius: 12
+  electricConeDamage: 0
+  electricConeTimeBetweenFeedbackAndCast: 5
+  electricConeChannelingTime: 2
+  electricZoneRadius: 8
   electricZoneChannelingTime: 0
-  electricZoneTimeBetweenFeedbackAndCast: 1
-  electricZoneDamage: 10
-  electricAoeRadius: 16
+  electricZoneTimeBetweenFeedbackAndCast: 3
+  electricZoneDamage: 0
+  electricAoeRadius: 10
   electricAoeChannelingTime: 0
-  electricAoeTimeBetweenFeedbackAndCast: 2
-  electricAoeDamage: 10
+  electricAoeTimeBetweenFeedbackAndCast: 3
+  electricAoeDamage: 0
   fireBallPrefab: {fileID: 5638877437444336277, guid: 144f3450520ae604bac735f48dfaf9e9,
     type: 3}
   fireBallDamage: 20
@@ -23679,18 +23673,15 @@ MonoBehaviour:
   fireBallSpeed: 40
   mysticLinePrefab: {fileID: 7756416073340475419, guid: a76ddd411067b3f44bfff00ce4942087,
     type: 3}
-  mysticLineLineDamage: 5
+  mysticLineLineDamage: 0
   mysticLineHeight: 3
   mysticLineWidth: 1
-  lifeTime: 15
+  lifeTime: 2
   pivotLeft: {fileID: 8916721485997902992}
   pivotRight: {fileID: 6297800936497485568}
-  shrinkLeft: {fileID: 0}
-  shrinkRight: {fileID: 0}
-  isShrinkMysticLineCreated: 0
   shrinkDuration: 2
   limitAngle: 20
-  shrinkSpeed: 0.2
+  shrinkSpeed: 0.5
   mysticLineTimeBetweenFeedbackAndCast: 2
   chargeCastingTime: 0.5
   chargeSpeed: 50
@@ -23713,7 +23704,6 @@ MonoBehaviour:
   toleranceCoef: 1.1
   lastHitByP1: 0
   lastHitByP2: 0
-  canHitBoss: 0
 --- !u!114 &5375270481456614056
 MonoBehaviour:
   m_ObjectHideFlags: 0
