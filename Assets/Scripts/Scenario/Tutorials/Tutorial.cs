@@ -57,7 +57,7 @@ public class Tutorial : MonoBehaviour
                 readyPlayer1 = true;
                 tutorialCanvas.transform.Find("readyIconP1").gameObject.SetActive(true);
             }
-            if (Input.GetKey(KeyCode.Joystick2Button0) || Input.GetKey(KeyCode.Keypad0))
+            if (Input.GetKey(KeyCode.Joystick2Button0) || Input.GetKey(KeyCode.KeypadEnter))
             {
                 readyPlayer2 = true;
                 tutorialCanvas.transform.Find("readyIconP2").gameObject.SetActive(true);

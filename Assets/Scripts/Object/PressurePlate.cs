@@ -45,12 +45,8 @@ public class PressurePlate : MonoBehaviour, IActivable
             if (type == PressurePlateType.PowerGiver)
             {
                 GivePower(other.gameObject);
-                this.Activate();
             }
-            if (type == PressurePlateType.Classic)
-            {
-                this.Activate();
-            }
+            this.Activate();
         }
     }
 
@@ -64,9 +60,17 @@ public class PressurePlate : MonoBehaviour, IActivable
 
     private void GivePower(GameObject other)
     {
-        if (!powerGiven)
+        if (otherPowerGiver.GetComponent<PressurePlate>().powerGiven && !powerGiven && (other.gameObject != otherPowerGiver.GetComponent<PressurePlate>().playerWhoTookPower))
         {
             other.gameObject.GetComponent<PlayerController>().AttributePower(powerToGive);
+            powerGiven = true;
+            playerWhoTookPower = other.gameObject;
+        }
+        else if (!powerGiven && !otherPowerGiver.GetComponent<PressurePlate>().powerGiven)
+        {
+            other.gameObject.GetComponent<PlayerController>().AttributePower(powerToGive);
+            powerGiven = true;
+            playerWhoTookPower = other.gameObject;
         }
     }
 
@@ -81,7 +85,7 @@ public class PressurePlate : MonoBehaviour, IActivable
                 objectToActivate[i].GetComponent<IActivable>().Activate();
             }
         }
-
+        
         if (isActive)
         {
             anim.SetBool("isActivated", true);
@@ -90,24 +94,6 @@ public class PressurePlate : MonoBehaviour, IActivable
         {
             anim.SetBool("isActivated", false);
         }
-
-        if (type == PressurePlateType.PowerGiver && checkObjectActivated())
-        {
-            powerGiven = true;
-        }
-
-    }
-
-    bool checkObjectActivated()
-    {
-        for (int i = 0; i < objectToActivate.Length; i++)
-        {
-            if (!objectToActivate[i].GetComponent<IActivable>().isActive)
-            {
-                return false;
-            }
-        }
-        return true;
     }
 
 }

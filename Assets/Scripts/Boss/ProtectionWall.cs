@@ -10,8 +10,6 @@ public class ProtectionWall : MonoBehaviour
         Plant
     }
 
-    public GameObject protectionSystem;
-
     public WallElement element;
     public int wallDamage;
 
@@ -59,17 +57,6 @@ public class ProtectionWall : MonoBehaviour
         pylonDown++;
         if (pylonDown >= 3)
         {
-            if (element == WallElement.Aquatic)
-            {
-                protectionSystem.GetComponent<ProtectionSystem>().waterWallsDestroyed = true;
-                protectionSystem.GetComponent<ProtectionSystem>().checkProtectionSystemStatus();
-            }
-            else if (element == WallElement.Plant)
-            {
-                protectionSystem.GetComponent<ProtectionSystem>().plantWallsDestroyed = true;
-                protectionSystem.GetComponent<ProtectionSystem>().checkProtectionSystemStatus();
-            }
-            
             Destroy(gameObject);
         }
     }

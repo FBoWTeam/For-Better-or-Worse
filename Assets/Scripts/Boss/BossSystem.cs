@@ -96,13 +96,10 @@ public class BossSystem : MonoBehaviour
     public float lifeTime;
     public GameObject pivotLeft;
     public GameObject pivotRight;
-    [HideInInspector]
-    public GameObject shrinkLeft;
-    [HideInInspector]
-    public GameObject shrinkRight;
-    [HideInInspector]
-    public bool isShrinkMysticLineCreated;
+    private GameObject shrinkLeft;
+    private GameObject shrinkRight;
     private bool isMysticLineCreated;
+    private bool isShrinkMysticLineCreated;
     private bool isShrinking;
     private bool isLeft;
     public float shrinkDuration;
@@ -147,8 +144,6 @@ public class BossSystem : MonoBehaviour
     [HideInInspector]
     public Coroutine actualFireCoroutine;
 
-    public bool canHitBoss;
-
 
     //======================================================================================== AWAKE AND UPDATE
 
@@ -168,7 +163,6 @@ public class BossSystem : MonoBehaviour
         player1 = GameManager.gameManager.player1;
         player2 = GameManager.gameManager.player2;
         mysticLinePrefab.GetComponentInChildren<MysticLine>().damage = mysticLineLineDamage;
-        canHitBoss = false;
     }
 
     // Update is called once per frame
@@ -199,8 +193,6 @@ public class BossSystem : MonoBehaviour
             UpdateScaleShrinkMysticLine();
         }
 
-        //Debug.Log("isattacking is " + isAttacking);
-
     }
 
     //======================================================================================== SET FOCUS
@@ -213,10 +205,12 @@ public class BossSystem : MonoBehaviour
         int rand = Random.Range(0, 2);
         if (rand == 0)
         {
+            Debug.Log("Aim Player 1");
             aimedPlayer = GameManager.gameManager.player1;
         }
         else
         {
+            Debug.Log("Aim Player 2");
             aimedPlayer = GameManager.gameManager.player2;
         }
     }
@@ -245,11 +239,12 @@ public class BossSystem : MonoBehaviour
                     Debug.Log("Passage phase 2");
                     probabilityTable = phase2;
                     nextAttack = Time.time + Random.Range(minWaitTime, maxWaitTime);
+                    transform.localScale = new Vector3(0.75f, 0.75f, 0.75f);
                     //infinite mystic line same side / level shrink
                     GameObject.Find("Rock Lines").GetComponent<TimeLineRockFall>().Initialize();
 
                     StopAllCoroutines();
-                    //isAttacking = false;
+                    isAttacking = false;
                     anim.SetTrigger("Stop");
                 }
                 break;
@@ -261,10 +256,9 @@ public class BossSystem : MonoBehaviour
                     probabilityTable = phase3;
                     nextAttack = Time.time + Random.Range(minWaitTime, maxWaitTime);
                     //infinite mystic line separation / etc
-                    GameObject.Find("TimelineChangePlayers").GetComponent<TimeLineChangePlayers>().Initialize();
 
                     StopAllCoroutines();
-                    //isAttacking = false;
+                    isAttacking = false;
                     anim.SetTrigger("Stop");
                     CleanProjectorList();
                 }
@@ -276,13 +270,16 @@ public class BossSystem : MonoBehaviour
                     Debug.Log("Passage phase 4");
                     probabilityTable = phase4;
                     nextAttack = Time.time + Random.Range(minWaitTime, maxWaitTime);
+                    transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
                     //fall to ground / level shrink / rock fall activation
-                    GameObject.Find("Rock Corners").GetComponent<TimeLineCornerRockFall>().Initialize();
 
                     StopAllCoroutines();
-                    //isAttacking = false;
+                    isAttacking = false;
                     anim.SetTrigger("Stop");
                     CleanProjectorList();
+                    Destroy(shrinkLeft);
+                    Destroy(shrinkRight);
+                    isShrinkMysticLineCreated = false;
                 }
                 break;
             case 4:
@@ -380,7 +377,7 @@ public class BossSystem : MonoBehaviour
     public IEnumerator MysticLineCoroutine()
     {
         isAttacking = true;
-        //Debug.Log("Mystic Line");
+        Debug.Log("Mystic Line");
 
         //canalisation + feedbacks
         anim.SetTrigger("LineFireBallShrink");
@@ -440,7 +437,8 @@ public class BossSystem : MonoBehaviour
 
     public IEnumerator ShrinkMysticLinesCoroutine()
     {
-        //Debug.Log("Shrink MysticLines");
+
+        Debug.Log("Shrink MysticLines");
 
         //canalisation + feedbacks
         anim.SetTrigger("LineFireBallShrink");
@@ -463,7 +461,8 @@ public class BossSystem : MonoBehaviour
             }
             isShrinkMysticLineCreated = true;
         }
-        
+
+        isAttacking = false;
     }
 
     public void UpdateScaleShrinkMysticLine()
@@ -489,12 +488,14 @@ public class BossSystem : MonoBehaviour
         float step = shrinkSpeed * Time.deltaTime;
 
         int rand = Random.Range(0, 2);
+        print("Rand : " + rand);
 
         //Forward
         if (rand == 0)
         {
             while (Vector3.Angle(pivotLeft.transform.forward, Quaternion.Euler(0, -limitAngle, 0) * transform.forward) > 0.4 || Vector3.Angle(pivotRight.transform.forward, Quaternion.Euler(0, limitAngle, 0) * transform.forward) > 0.4)
             {
+                print("While1");
                 //print("Angle PivotLeft: " + Vector3.Angle(pivotLeft.transform.forward, Quaternion.Euler(0, -limitAngle, 0) * transform.forward - pivotLeft.transform.position));
                 Vector3 vectorLeft = Quaternion.Euler(0, -limitAngle, 0) * transform.forward;
                 Vector3 vectorRight = Quaternion.Euler(0, limitAngle, 0) * transform.forward;
@@ -509,6 +510,7 @@ public class BossSystem : MonoBehaviour
 
             while (Vector3.Angle(pivotLeft.transform.forward, Quaternion.Euler(0, -90, 0) * transform.forward) > 0.4 || Vector3.Angle(pivotRight.transform.forward, Quaternion.Euler(0, 90, 0) * transform.forward) > 0.4)
             {
+                print("While2");
                 Vector3 vectorLeft = Quaternion.Euler(0, -90, 0) * transform.forward;
                 Vector3 vectorRight = Quaternion.Euler(0, 90, 0) * transform.forward;
 
@@ -527,6 +529,8 @@ public class BossSystem : MonoBehaviour
         {
             while (Vector3.Angle(pivotLeft.transform.forward, Quaternion.Euler(0, limitAngle, 0) * -transform.forward) > 0.4 || Vector3.Angle(pivotRight.transform.forward, Quaternion.Euler(0, -limitAngle, 0) * -transform.forward) > 0.4)
             {
+                print("While3");
+
                 Vector3 vectorLeft = Quaternion.Euler(0, limitAngle, 0) * -transform.forward;
                 Vector3 vectorRight = Quaternion.Euler(0, -limitAngle, 0) * -transform.forward;
                 newDirLeft = Vector3.RotateTowards(pivotLeft.transform.forward, vectorLeft, step, 0.0f);
@@ -541,6 +545,8 @@ public class BossSystem : MonoBehaviour
 
             while (Vector3.Angle(pivotLeft.transform.forward, Quaternion.Euler(0, 90, 0) * -transform.forward) > 0.4 || Vector3.Angle(pivotRight.transform.forward, Quaternion.Euler(0, -90, 0) * -transform.forward) > 0.4)
             {
+                print("While4");
+
                 Vector3 vectorLeft = Quaternion.Euler(0, 90, 0) * -transform.forward;
                 Vector3 vectorRight = Quaternion.Euler(0, -90, 0) * -transform.forward;
 
@@ -614,7 +620,7 @@ public class BossSystem : MonoBehaviour
         isAttacking = true;
 
         //start chaneling anim
-        //Debug.Log("channeling electric zone");
+        Debug.Log("channeling electric zone");
         anim.SetTrigger("Electricity");
         yield return new WaitForSeconds(2.6f);
 
@@ -636,7 +642,7 @@ public class BossSystem : MonoBehaviour
             yield return new WaitForEndOfFrame();
         }
 
-        //Debug.Log("casting electric zone");
+        Debug.Log("casting electric zone");
 
         //check if the players are in the area of effect
         Collider[] playersInRange = Physics.OverlapSphere(electricZoneLocation, electricZoneRadius, targetMask);
@@ -661,7 +667,7 @@ public class BossSystem : MonoBehaviour
         isAttacking = true;
 
         //start chaneling anim
-        //Debug.Log("channeling electric cone");
+        Debug.Log("channeling electric cone");
         anim.SetTrigger("Electricity");
         yield return new WaitForSeconds(2.6f);
 
@@ -678,7 +684,8 @@ public class BossSystem : MonoBehaviour
         //instanciate the circle indicator
         GameObject coneIndicator = Instantiate(coneProjector, transform.position, Quaternion.identity) as GameObject;
         projectorList.Add(coneIndicator);
-
+        //the instanciated circle indicator is a child of the boss
+        coneIndicator.transform.parent = transform;
         float timeStamp = Time.time;
         Color tempColor = Color.blue;
 
@@ -694,7 +701,7 @@ public class BossSystem : MonoBehaviour
             yield return new WaitForEndOfFrame();
         }
 
-        //Debug.Log("casting electric cone");
+        Debug.Log("casting electric cone");
 
         //check if players are in the area of effect to apply damages
         Vector3 dirToTarget;
@@ -814,7 +821,7 @@ public class BossSystem : MonoBehaviour
         isAttacking = true;
 
         //start chaneling anim
-       // Debug.Log("channeling AOE zone");
+        Debug.Log("channeling AOE zone");
         anim.SetTrigger("Electricity");
         //wait 75% of the cast time
         yield return new WaitForSeconds(2.8f);
@@ -859,30 +866,28 @@ public class BossSystem : MonoBehaviour
 
     public void TakeDamage(int damage)
     {
-        if (canHitBoss)
+        hp -= damage;
+        GameManager.gameManager.orb.GetComponent<OrbController>().hasHitEnemy = true;
+        if (hp <= 0)
         {
-            hp -= damage;
-            GameManager.gameManager.orb.GetComponent<OrbController>().hasHitEnemy = true;
-            if (hp <= 0)
+            //update in score manager
+            if (lastHitByP1 && !lastHitByP2)
             {
-                //update in score manager
-                if (lastHitByP1 && !lastHitByP2)
-                {
-                    ScoreManager.scoreManager.bossKilledByP1 = true;
-                }
-                else if (!lastHitByP1 && lastHitByP2)
-                {
-                    ScoreManager.scoreManager.bossKilledByP1 = false;
-                }
-                else if (!lastHitByP1 && !lastHitByP2)
-                {
-                    ScoreManager.scoreManager.killsEnvironment++;
-                }
-                StopAllCoroutines();
-                GameData.previousScene = 9;
-                SceneManager.LoadScene(10);
+                ScoreManager.scoreManager.bossKilledByP1 = true;
             }
+            else if (!lastHitByP1 && lastHitByP2)
+            {
+                ScoreManager.scoreManager.bossKilledByP1 = false;
+            }
+            else if (!lastHitByP1 && !lastHitByP2)
+            {
+                ScoreManager.scoreManager.killsEnvironment++;
+            }
+            StopAllCoroutines();
+			GameData.previousScene = 9;
+			SceneManager.LoadScene(10);
         }
+
     }
 
     public IEnumerator Stun()
