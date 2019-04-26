@@ -149,6 +149,9 @@ public class BossSystem : MonoBehaviour
 
     public bool canHitBoss;
 
+    public GameObject rockFall;
+    private bool rockInstantiated;
+
 
     //======================================================================================== AWAKE AND UPDATE
 
@@ -169,6 +172,7 @@ public class BossSystem : MonoBehaviour
         player2 = GameManager.gameManager.player2;
         mysticLinePrefab.GetComponentInChildren<MysticLine>().damage = mysticLineLineDamage;
         canHitBoss = false;
+        rockInstantiated = false;
     }
 
     // Update is called once per frame
@@ -198,6 +202,8 @@ public class BossSystem : MonoBehaviour
         {
             UpdateScaleShrinkMysticLine();
         }
+
+        //Debug.Log("isattacking is " + isAttacking);
 
     }
 
@@ -247,7 +253,7 @@ public class BossSystem : MonoBehaviour
                     GameObject.Find("Rock Lines").GetComponent<TimeLineRockFall>().Initialize();
 
                     StopAllCoroutines();
-                    isAttacking = false;
+                    //isAttacking = false;
                     anim.SetTrigger("Stop");
                 }
                 break;
@@ -259,11 +265,12 @@ public class BossSystem : MonoBehaviour
                     probabilityTable = phase3;
                     nextAttack = Time.time + Random.Range(minWaitTime, maxWaitTime);
                     //infinite mystic line separation / etc
+                    GameObject.Find("TimelineChangePlayers").GetComponent<TimeLineChangePlayers>().Initialize();
 
-                    /*StopAllCoroutines();
-                    isAttacking = false;
+                    StopAllCoroutines();
+                    //isAttacking = false;
                     anim.SetTrigger("Stop");
-                    CleanProjectorList();*/
+                    CleanProjectorList();
                 }
                 break;
             case 3:
@@ -277,13 +284,17 @@ public class BossSystem : MonoBehaviour
                     GameObject.Find("Rock Corners").GetComponent<TimeLineCornerRockFall>().Initialize();
 
                     StopAllCoroutines();
-                    isAttacking = false;
+                    //isAttacking = false;
                     anim.SetTrigger("Stop");
                     CleanProjectorList();
-                    Debug.Log("fin trans");
                 }
                 break;
             case 4:
+                if (!rockInstantiated)
+                {
+                    rockFall.SetActive(true);
+                    rockInstantiated = true;
+                }
                 if (hp <= 0.0f)
                 {
                     Debug.Log("DED");
@@ -438,7 +449,6 @@ public class BossSystem : MonoBehaviour
 
     public IEnumerator ShrinkMysticLinesCoroutine()
     {
-
         //Debug.Log("Shrink MysticLines");
 
         //canalisation + feedbacks
@@ -462,8 +472,7 @@ public class BossSystem : MonoBehaviour
             }
             isShrinkMysticLineCreated = true;
         }
-
-        isAttacking = false;
+        
     }
 
     public void UpdateScaleShrinkMysticLine()
@@ -482,7 +491,7 @@ public class BossSystem : MonoBehaviour
 
     public IEnumerator Shrink()
     {
-        isAttacking = true;
+        //isAttacking = true;
         yield return new WaitForSeconds(1);
         Vector3 newDirLeft;
         Vector3 newDirRight;
@@ -555,7 +564,7 @@ public class BossSystem : MonoBehaviour
             }
 
         }
-        isAttacking = false;
+        //isAttacking = false;
 
     }
 

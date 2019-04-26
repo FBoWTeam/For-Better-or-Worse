@@ -7,7 +7,6 @@ public class TimeLineCornerRockFall : MonoBehaviour
 {
     PlayableDirector director;
     GameObject Boss;
-    //Vector3 posBoss;
     GameObject RockCornerAnimatation;
     GameObject RockCorner1;
     GameObject RockCorner2;
@@ -25,7 +24,6 @@ public class TimeLineCornerRockFall : MonoBehaviour
     void Start()
     {
         Boss = GameObject.Find("Boss");
-        //posBoss = Boss.transform.position;
         RockCornerAnimatation = GameObject.Find("Rock corner Animation");
         RockCorner1 = GameObject.Find("Rock corner 1");
         RockCorner1.SetActive(false);
@@ -43,9 +41,6 @@ public class TimeLineCornerRockFall : MonoBehaviour
 
     public void Initialize()
     {
-        //Boss.transform.localScale = new Vector3(0.75f, 0.75f, 0.75f);
-        /*Debug.Log(posBoss);
-        Boss.transform.position = posBoss;*/
         GameManager.gameManager.isPaused = true;
         GameManager.gameManager.player1.GetComponent<PlayerController>().active = false;
         GameManager.gameManager.player2.GetComponent<PlayerController>().active = false;
@@ -74,7 +69,6 @@ public class TimeLineCornerRockFall : MonoBehaviour
 
         yield return new WaitForSeconds(3f);
 
-        Debug.Log("destroy shrink");
         Destroy(Boss.GetComponent<BossSystem>().shrinkLeft);
         Destroy(Boss.GetComponent<BossSystem>().shrinkRight);
         Boss.GetComponent<BossSystem>().isShrinkMysticLineCreated = false;
