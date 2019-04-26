@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 public class BossCanvas : MonoBehaviour
 {
-	public BossSystem boss;
+	BossSystem boss;
 
 	Image healthRemainingBar;
 
@@ -14,6 +14,7 @@ public class BossCanvas : MonoBehaviour
 	void Start()
 	{
 		healthRemainingBar = transform.GetChild(0).GetChild(0).GetComponent<Image>();
+		boss = GetComponentInParent<BossSystem>();
 	}
 
 	// Update is called once per frame
