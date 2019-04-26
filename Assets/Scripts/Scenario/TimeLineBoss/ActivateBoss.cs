@@ -10,5 +10,6 @@ public class ActivateBoss : MonoBehaviour
     private void OnEnable()
     {
         boss.GetComponent<BossSystem>().enabled = true;
+        boss.transform.localScale = new Vector3(1, 1, 1);
     }
 }
