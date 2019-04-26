@@ -144,6 +144,11 @@ public class BossSystem : MonoBehaviour
     [HideInInspector]
     public Coroutine actualFireCoroutine;
 
+    public bool canHitBoss;
+
+    public GameObject rockFall;
+    private bool rockInstantiated;
+
 
     //======================================================================================== AWAKE AND UPDATE
 
@@ -163,6 +168,8 @@ public class BossSystem : MonoBehaviour
         player1 = GameManager.gameManager.player1;
         player2 = GameManager.gameManager.player2;
         mysticLinePrefab.GetComponentInChildren<MysticLine>().damage = mysticLineLineDamage;
+        canHitBoss = false;
+        rockInstantiated = false;
     }
 
     // Update is called once per frame
@@ -283,6 +290,11 @@ public class BossSystem : MonoBehaviour
                 }
                 break;
             case 4:
+                if (!rockInstantiated)
+                {
+                    rockFall.SetActive(true);
+                    rockInstantiated = true;
+                }
                 if (hp <= 0.0f)
                 {
                     Debug.Log("DED");
