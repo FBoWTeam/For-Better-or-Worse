@@ -151,20 +151,7 @@ public class ScoreManager : MonoBehaviour
     }
 
 
-    public float CalculateJungle_1Score()
-    {
-
-
-
-
-        float timeScore = 1 / (0.00007f * completionTime);
-        float bonus = timeScore + maxCombo + (statusAilmentApplied + enemyMirrorBroken + killsP1 + killsP2) / 2;
-        float malus = (damageTakenP1 + damageTakenP2) / 50 + (orbHitMissedP1 + orbHitMissedP2) / 10 + numberOfDeaths * 5;
-        float result = bonus - malus;
-        return result;
-    }
-
-    public float CalculateJungle_2Score()
+    public float CalculateJungle1Score()
     {
         float timeScore = 1 / (0.00007f * completionTime);
         float bonus = timeScore + maxCombo + (statusAilmentApplied + enemyMirrorBroken + killsP1 + killsP2) / 2;
@@ -172,7 +159,6 @@ public class ScoreManager : MonoBehaviour
         float result = bonus - malus;
         return result;
     }
-
 
     public float CalculateArenaScore()
     {
