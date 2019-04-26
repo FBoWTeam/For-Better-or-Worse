@@ -228,9 +228,11 @@ public class UIManager : MonoBehaviour
     public void UpdateDroppedPower(GameManager.PowerType droppedPower)
     {
         orbPower.sprite = ImageAssignment(droppedPower);
-        StartCoroutine(DropFeedback(drop, GameManager.gameManager.orb.transform, orbPower.transform));
-        //StartCoroutine(DropFeedback(drop, orbPower.transform, elementalPowerFox.transform));
 
+        if (droppedPower != GameManager.PowerType.None)
+        {
+            StartCoroutine(DropFeedback(drop, GameManager.gameManager.orb.transform, orbPower.transform));
+        }
     }
 
     #endregion
@@ -516,9 +518,9 @@ public class UIManager : MonoBehaviour
 
     public IEnumerator DropFeedback(GameObject UIElement, Transform start, Transform end)
     {
+        yield return new WaitWhile(() => isDropActive);
         if (!isDropActive)
         {
-            print("DROP");
             drop.SetActive(true);
             isDropActive = true;
             SceneToUI(UIElement, start.position);
@@ -531,6 +533,7 @@ public class UIManager : MonoBehaviour
                 yield return new WaitForEndOfFrame();
             }
             isDropActive = false;
+            drop.SetActive(false);
         }
         yield return null;
     }
@@ -560,25 +563,6 @@ public class UIManager : MonoBehaviour
             }
         }
     }
-
-    //public enfant FaireLAmour(Individu ind1, ind2)
-    //{
-    //    float enceinte = Random.Range(0, 2);
-    //    if (!enceinte)
-    //    {
-    //        print("tranquille");
-    //    }
-    //    else
-    //    {
-    //        return enfant;
-    //    }
-    //}
-
-    //private void Update()
-    //{
-    //    SceneToUI(drop, GameManager.gameManager.orb.transform.position);
-    //    SceneToUI(drop1, GameManager.gameManager.player2.transform.position + new Vector3(0, 1, 0));
-    //}
 
     #endregion
 }
