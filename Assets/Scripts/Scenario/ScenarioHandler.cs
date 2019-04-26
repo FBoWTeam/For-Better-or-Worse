@@ -46,4 +46,20 @@ public class ScenarioHandler : MonoBehaviour
         GameManager.gameManager.orb.GetComponent<OrbController>().canHitPlayer = GameData.worseModeActivated;
         Destroy(this.gameObject);
 	}
+
+	IEnumerator SkipIntroListener()
+	{
+		bool introNotSkiped = true;
+
+		while(introNotSkiped)
+		{
+			if(Input.GetKey(KeyCode.Joystick1Button7) || Input.GetKey(KeyCode.Joystick2Button7))
+			{
+				introNotSkiped = false;
+			}
+		}
+
+		director.Pause();
+		StartCoroutine(FadeCoroutine("FadeOut"));
+	}
 }
