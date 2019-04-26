@@ -23624,8 +23624,8 @@ MonoBehaviour:
   hp: 0
   stunTime: 2
   actualPhase: 0
-  phase2Threshold: 0.9
-  phase3Threshold: 0.6
+  phase2Threshold: 0.95
+  phase3Threshold: 0.5
   phase4Threshold: 0.3
   phase1:
   - pattern: 0
@@ -23642,12 +23642,10 @@ MonoBehaviour:
   - pattern: 1
     probability: 0.3
   phase3:
-  - pattern: 3
+  - pattern: 6
     probability: 0.3
-  - pattern: 4
-    probability: 0.4
   - pattern: 1
-    probability: 0.3
+    probability: 0.7
   phase4:
   - pattern: 5
     probability: 0.7
@@ -23714,6 +23712,7 @@ MonoBehaviour:
   lastHitByP1: 0
   lastHitByP2: 0
   canHitBoss: 0
+  rockFall: {fileID: 0}
 --- !u!114 &5375270481456614056
 MonoBehaviour:
   m_ObjectHideFlags: 0
