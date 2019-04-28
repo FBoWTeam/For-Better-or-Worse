@@ -62,7 +62,6 @@ public class ArenaSystem : MonoBehaviour
     public List<GameObject> arenaCanvas;
     public GameObject countdownArena;
 
-
     private void Start()
     {
         waveIndex = 0;
@@ -84,8 +83,11 @@ public class ArenaSystem : MonoBehaviour
 
 
     IEnumerator CountDown()
-    {
-        countdownArena.SetActive(true);
+	{
+		ArenaThemeManager themeManager = GameObject.Find("BGM").GetComponent<ArenaThemeManager>();
+		themeManager.Activate();
+		yield return new WaitForSeconds(1f);
+		countdownArena.SetActive(true);
         countdownArena.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "5";
         yield return new WaitForSeconds(1f);
         countdownArena.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "4";
@@ -97,7 +99,8 @@ public class ArenaSystem : MonoBehaviour
         countdownArena.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "1";
         yield return new WaitForSeconds(1f);
         countdownArena.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "";
-        StartArena();
+		themeManager.launchTheme = true;
+		StartArena();
     }
 
     void StartArena()
