@@ -21,8 +21,11 @@ public class CameraFollow : MonoBehaviour
 	// Update is called once per frame
 	void FixedUpdate()
     {
-		Move();
-		Zoom();
+		if(!GameManager.gameManager.isPaused)
+		{
+			Move();
+			Zoom();
+		}
     }
 
 	/// <summary>

@@ -29,7 +29,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 5144532162252485742}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1600900332
 MonoBehaviour:
@@ -53,13 +53,24 @@ PrefabInstance:
     - target: {fileID: 5122035605714211132, guid: fc0d6d153be4f464b93ec3f833d86706,
         type: 3}
       propertyPath: m_Name
-      value: IntroScenario
+      value: IntroScenario JungleVariant
       objectReference: {fileID: 0}
     - target: {fileID: 5122035605714211132, guid: fc0d6d153be4f464b93ec3f833d86706,
         type: 3}
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 5122035605714211133, guid: fc0d6d153be4f464b93ec3f833d86706,
+        type: 3}
+      propertyPath: dialogs.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5122035605714211133, guid: fc0d6d153be4f464b93ec3f833d86706,
+        type: 3}
+      propertyPath: dialogs.Array.data[0]
+      value: 
+      objectReference: {fileID: 11400000, guid: 309f42642692fa94e923547c132e92f7,
+        type: 2}
     - target: {fileID: 5122035605714211135, guid: fc0d6d153be4f464b93ec3f833d86706,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -203,17 +214,21 @@ PrefabInstance:
       propertyPath: m_SceneBindings.Array.data[6].value
       value: 
       objectReference: {fileID: 1600900331}
-    - target: {fileID: 5122035605714211133, guid: fc0d6d153be4f464b93ec3f833d86706,
+    - target: {fileID: 2421678214248788784, guid: fc0d6d153be4f464b93ec3f833d86706,
         type: 3}
-      propertyPath: dialogs.Array.size
-      value: 1
+      propertyPath: m_RootOrder
+      value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 5122035605714211133, guid: fc0d6d153be4f464b93ec3f833d86706,
+    - target: {fileID: 7363889174227797102, guid: fc0d6d153be4f464b93ec3f833d86706,
         type: 3}
-      propertyPath: dialogs.Array.data[0]
+      propertyPath: m_textInfo.textComponent
       value: 
-      objectReference: {fileID: 11400000, guid: 309f42642692fa94e923547c132e92f7,
-        type: 2}
+      objectReference: {fileID: 7368424111039537471}
+    - target: {fileID: 8146510424092109062, guid: fc0d6d153be4f464b93ec3f833d86706,
+        type: 3}
+      propertyPath: texts.Array.data[0]
+      value: 
+      objectReference: {fileID: 7368424111039537471}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: fc0d6d153be4f464b93ec3f833d86706, type: 3}
 --- !u!4 &5144532162252485742 stripped
@@ -232,5 +247,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e99d3467ca3bd5e429790b792ab9715d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &7368424111039537471 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7363889174227797102, guid: fc0d6d153be4f464b93ec3f833d86706,
+    type: 3}
+  m_PrefabInstance: {fileID: 31574126864770385}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 

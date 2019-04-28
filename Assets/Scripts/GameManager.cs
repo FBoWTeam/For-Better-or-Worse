@@ -104,16 +104,24 @@ public class GameManager : MonoBehaviour
         blackBands = GameObject.Find("BlackBands");
         tutorials = GameObject.Find("Tutorials");
         tutorials.SetActive(false);
-        if (GameObject.Find("IntroScenario") != null)
+		GameObject introScenario = GameObject.Find("IntroScenario");
+		if (introScenario != null)
         {
-            UIManager.gameObject.SetActive(false);
-            player1.GetComponent<PlayerController>().active = false;
-            player2.GetComponent<PlayerController>().active = false;
-            player1.GetComponent<OrbHitter>().active = false;
-            player2.GetComponent<OrbHitter>().active = false;
-            GameObject.Find("IntroScenario").GetComponent<ScenarioHandler>().Initialize();
+			if(GameData.introSkiped)
+			{
+				Destroy(introScenario);
+			}
+			else
+			{
+				UIManager.gameObject.SetActive(false);
+				player1.GetComponent<PlayerController>().active = false;
+				player2.GetComponent<PlayerController>().active = false;
+				player1.GetComponent<OrbHitter>().active = false;
+				player2.GetComponent<OrbHitter>().active = false;
+				GameObject.Find("IntroScenario").GetComponent<ScenarioHandler>().Initialize();
+			}
         }
-        else
+        if(introScenario == null || GameData.introSkiped)
         {
             GameObject.Find("DialogSystem").SetActive(false);
             blackBands.SetActive(false);
@@ -302,6 +310,7 @@ public class GameManager : MonoBehaviour
 
         StartCoroutine(FadeCoroutine("FadeOut"));
         yield return new WaitUntil(() => isPaused == false);
+		yield return new WaitForSeconds(1.0f);
 
         if (arena)
         {
@@ -312,10 +321,10 @@ public class GameManager : MonoBehaviour
         {
             isPaused = true;
 
-            player1.transform.position = actualCheckpoint.transform.GetChild(0).position - 5 * Camera.main.transform.right;
-            player2.transform.position = actualCheckpoint.transform.GetChild(0).position + 5 * Camera.main.transform.right;
+            player1.transform.position = actualCheckpoint.transform.GetChild(0).position + new Vector3(-5, 0, 0);
+			player2.transform.position = actualCheckpoint.transform.GetChild(0).position + new Vector3(5, 0, 0);
 
-            damageTakenP1 = 0;
+			damageTakenP1 = 0;
             damageTakenP2 = 0;
             shieldP1 = 0;
             shieldP2 = 0;
