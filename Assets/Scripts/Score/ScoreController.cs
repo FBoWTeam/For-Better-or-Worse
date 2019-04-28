@@ -26,7 +26,7 @@ public class ScoreController : MonoBehaviour
 				buttonB.SetActive(true);
 			}
 
-            if (Input.GetKeyDown(KeyCode.Joystick1Button0) || Input.GetKeyDown(KeyCode.Joystick2Button0))
+            if (Input.GetKeyDown(KeyCode.Joystick1Button0) || Input.GetKeyDown(KeyCode.Space))
             {
                 if (ScoreManager.scoreManager.gameMode == ScoreManager.GameMode.Story)
                 {
@@ -44,7 +44,7 @@ public class ScoreController : MonoBehaviour
             }
 
             //Button B
-            else if (Input.GetKeyDown(KeyCode.Joystick1Button1) || Input.GetKeyDown(KeyCode.Joystick2Button1))
+            else if (Input.GetKeyDown(KeyCode.Joystick1Button1) || Input.GetKeyDown(KeyCode.Space))
             {
 				if (ScoreManager.scoreManager.gameMode == ScoreManager.GameMode.Arena)
 				{
