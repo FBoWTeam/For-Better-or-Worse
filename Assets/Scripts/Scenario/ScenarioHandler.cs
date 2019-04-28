@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Playables;
+using UnityEngine.SceneManagement;
 
 public class ScenarioHandler : MonoBehaviour
 {
@@ -46,7 +47,10 @@ public class ScenarioHandler : MonoBehaviour
         GameManager.gameManager.player1.GetComponent<OrbHitter>().active = true;
         GameManager.gameManager.player2.GetComponent<OrbHitter>().active = true;
         GameManager.gameManager.orb.GetComponent<OrbController>().canHitPlayer = GameData.worseModeActivated;
-        Destroy(this.gameObject);
+		if (!GameData.introSkiped)
+		{
+			Destroy(this.gameObject);
+		}
 	}
 
 	IEnumerator SkipIntroListener()
@@ -62,16 +66,12 @@ public class ScenarioHandler : MonoBehaviour
 			yield return new WaitForEndOfFrame();
 		}
 
+		GameData.introSkiped = true;
 		director.Stop();
 
 		StartCoroutine(GameManager.gameManager.FadeCoroutine("FadeOut"));
-
 		yield return new WaitUntil(() => GameManager.gameManager.isPaused == false);
 
-		StartCoroutine(GameManager.gameManager.FadeCoroutine("FadeIn"));
-
-		yield return new WaitUntil(() => GameManager.gameManager.isPaused == false);
-
-		Destroy(this.gameObject);
+		SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
 	}
 }

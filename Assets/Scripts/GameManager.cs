@@ -104,16 +104,24 @@ public class GameManager : MonoBehaviour
         blackBands = GameObject.Find("BlackBands");
         tutorials = GameObject.Find("Tutorials");
         tutorials.SetActive(false);
-        if (GameObject.Find("IntroScenario") != null)
+		GameObject introScenario = GameObject.Find("IntroScenario");
+		if (introScenario != null)
         {
-            UIManager.gameObject.SetActive(false);
-            player1.GetComponent<PlayerController>().active = false;
-            player2.GetComponent<PlayerController>().active = false;
-            player1.GetComponent<OrbHitter>().active = false;
-            player2.GetComponent<OrbHitter>().active = false;
-            GameObject.Find("IntroScenario").GetComponent<ScenarioHandler>().Initialize();
+			if(GameData.introSkiped)
+			{
+				Destroy(introScenario);
+			}
+			else
+			{
+				UIManager.gameObject.SetActive(false);
+				player1.GetComponent<PlayerController>().active = false;
+				player2.GetComponent<PlayerController>().active = false;
+				player1.GetComponent<OrbHitter>().active = false;
+				player2.GetComponent<OrbHitter>().active = false;
+				GameObject.Find("IntroScenario").GetComponent<ScenarioHandler>().Initialize();
+			}
         }
-        else
+        if(introScenario == null || GameData.introSkiped)
         {
             GameObject.Find("DialogSystem").SetActive(false);
             blackBands.SetActive(false);
