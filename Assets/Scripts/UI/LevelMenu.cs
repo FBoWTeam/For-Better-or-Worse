@@ -95,25 +95,19 @@ public class LevelMenu : MonoBehaviour
         {
             if (curentPosIndex == destPosIndex)
             {
-                if ((Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.DownArrow)
-                     || Input.GetAxis("DeformP1X") > Input.GetAxis("DeformP1Z")
-                     || Input.GetAxis("HorizontalP1") > Input.GetAxis("VerticalP1"))
-                    && destPIIndex < indexPI.Count - 1)
+                if ((Input.GetAxis("HorizontalP1") > Input.GetAxis("VerticalP1")) && destPIIndex < indexPI.Count - 1)
                 {
                     destPIIndex++;
                     destPosIndex = indexPI[destPIIndex];
                 }
                 
-                if ((Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.UpArrow)
-                     || Input.GetAxis("DeformP1X") < Input.GetAxis("DeformP1Z")
-                     || Input.GetAxis("HorizontalP1") < Input.GetAxis("VerticalP1"))
-                    && destPIIndex > 0)
+                if ((Input.GetAxis("HorizontalP1") < Input.GetAxis("VerticalP1")) && destPIIndex > 0)
                 {
                     destPIIndex--;
                     destPosIndex = indexPI[destPIIndex];
                 }
 
-                if (Input.GetKeyDown(KeyCode.Joystick1Button0) || Input.GetKeyDown(KeyCode.Joystick2Button0) || Input.GetKeyDown(KeyCode.Return))
+                if (Input.GetKeyDown(KeyCode.Joystick1Button0) || Input.GetKeyDown(KeyCode.Space))
                 {
                     switch (curentPIIndex)
                     {
@@ -136,7 +130,7 @@ public class LevelMenu : MonoBehaviour
                     }
                 }
 
-                if (Input.GetKeyDown(KeyCode.Joystick1Button1) || Input.GetKeyDown(KeyCode.Joystick2Button1) || Input.GetKeyDown(KeyCode.Backspace) || Input.GetKeyDown(KeyCode.Escape))
+                if (Input.GetKeyDown(KeyCode.Joystick1Button1) || Input.GetKeyDown(KeyCode.Escape))
                 {
 					StartCoroutine(FadeOut(2));
 				}

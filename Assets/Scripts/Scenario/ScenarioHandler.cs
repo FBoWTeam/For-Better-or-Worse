@@ -19,8 +19,11 @@ public class ScenarioHandler : MonoBehaviour
 	public void Initialize()
 	{
 		director = GetComponent<PlayableDirector>();
+
 		skipCanvas = transform.GetChild(0).gameObject;
 		skipCanvas.SetActive(false);
+		GameData.introSkiped = false;
+
 		dialogSystem = GameObject.Find("DialogSystem").GetComponent<DialogSystem>();
 		dialogSystem.gameObject.SetActive(false);
 		actualDialog = 0;

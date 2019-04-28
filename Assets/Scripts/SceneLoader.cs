@@ -104,11 +104,20 @@ public class SceneLoader : MonoBehaviour, IActivable
 
     IEnumerator PlayerTeleportation()
     {
-        yield return new WaitForSeconds(0.5f);
-        StartCoroutine(GameManager.gameManager.FadeCoroutine("FadeIn"));
-        yield return new WaitUntil(() => GameManager.gameManager.isPaused == false);
-        GameManager.gameManager.player1.transform.position = nextLocation.transform.position + new Vector3(-5, 0, 0);
-        GameManager.gameManager.player2.transform.position = nextLocation.transform.position + new Vector3(5, 0, 0);
+		loading = true;
+
+		yield return new WaitForSeconds(0.25f);
+		StartCoroutine(GameManager.gameManager.FadeCoroutine("FadeOut"));
+		yield return new WaitUntil(() => GameManager.gameManager.isPaused == false);
+
+		yield return new WaitForSeconds(0.5f);
+		GameManager.gameManager.player1.transform.position = nextLocation.transform.position + new Vector3(-5, 0, 0);
+		GameManager.gameManager.player2.transform.position = nextLocation.transform.position + new Vector3(5, 0, 0);
+		GameObject.Find("CameraAndUI Variant Arena").transform.position = nextLocation.transform.position;
+
+		yield return new WaitForSeconds(0.5f);
+		StartCoroutine(GameManager.gameManager.FadeCoroutine("FadeIn"));
+		yield return new WaitUntil(() => GameManager.gameManager.isPaused == false);
     }
 
     public void Activate()

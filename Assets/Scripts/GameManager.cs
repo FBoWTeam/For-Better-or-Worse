@@ -310,6 +310,7 @@ public class GameManager : MonoBehaviour
 
         StartCoroutine(FadeCoroutine("FadeOut"));
         yield return new WaitUntil(() => isPaused == false);
+		yield return new WaitForSeconds(1.0f);
 
         if (arena)
         {
@@ -320,10 +321,10 @@ public class GameManager : MonoBehaviour
         {
             isPaused = true;
 
-            player1.transform.position = actualCheckpoint.transform.GetChild(0).position - 5 * Camera.main.transform.right;
-            player2.transform.position = actualCheckpoint.transform.GetChild(0).position + 5 * Camera.main.transform.right;
+            player1.transform.position = actualCheckpoint.transform.GetChild(0).position + new Vector3(-5, 0, 0);
+			player2.transform.position = actualCheckpoint.transform.GetChild(0).position + new Vector3(5, 0, 0);
 
-            damageTakenP1 = 0;
+			damageTakenP1 = 0;
             damageTakenP2 = 0;
             shieldP1 = 0;
             shieldP2 = 0;
