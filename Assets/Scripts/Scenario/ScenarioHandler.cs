@@ -14,9 +14,13 @@ public class ScenarioHandler : MonoBehaviour
 	int actualDialog;
 	Dialog dialogToDisplay;
 
+	GameObject skipCanvas;
+
 	public void Initialize()
 	{
 		director = GetComponent<PlayableDirector>();
+		skipCanvas = transform.GetChild(0).gameObject;
+		skipCanvas.SetActive(false);
 		dialogSystem = GameObject.Find("DialogSystem").GetComponent<DialogSystem>();
 		dialogSystem.gameObject.SetActive(false);
 		actualDialog = 0;
@@ -55,19 +59,33 @@ public class ScenarioHandler : MonoBehaviour
 
 	IEnumerator SkipIntroListener()
 	{
-		bool introNotSkiped = true;
-
-		while(introNotSkiped)
+		bool introSkiped = false;
+		while(!introSkiped)
 		{
 			if(Input.GetKey(KeyCode.Joystick1Button7) || Input.GetKey(KeyCode.Joystick2Button7) || Input.GetKey(KeyCode.Escape))
 			{
-				introNotSkiped = false;
+				introSkiped = true;
+				skipCanvas.SetActive(true);
+			}
+			yield return new WaitForEndOfFrame();
+		}
+
+		yield return new WaitForSeconds(0.5f);
+
+		bool introSkipedTwice = false;
+		while (!introSkipedTwice)
+		{
+			if (Input.GetKey(KeyCode.Joystick1Button7) || Input.GetKey(KeyCode.Joystick2Button7) || Input.GetKey(KeyCode.Escape))
+			{
+				introSkipedTwice = true;
 			}
 			yield return new WaitForEndOfFrame();
 		}
 
 		GameData.introSkiped = true;
 		director.Stop();
+		skipCanvas.SetActive(false);
+		GameManager.gameManager.UIManager.gameObject.SetActive(false);
 
 		StartCoroutine(GameManager.gameManager.FadeCoroutine("FadeOut"));
 		yield return new WaitUntil(() => GameManager.gameManager.isPaused == false);
