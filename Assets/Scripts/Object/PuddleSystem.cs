@@ -386,12 +386,29 @@ public class PuddleSystem : MonoBehaviour
                 }
             }
         }
+        for (int i = 0; i < objectsInPuddle.Count; i++)
+        {
+            if (objectsInPuddle[i].CompareTag("Enemy") && objectsInPuddle[i].GetComponent<Enemy>().actualFireCoroutine != null)
+            {
+                objectsInPuddle[i].GetComponent<Enemy>().StopCoroutine(objectsInPuddle[i].GetComponent<Enemy>().actualFireCoroutine);
+                objectsInPuddle[i].transform.Find("FX/fire").gameObject.SetActive(false);
+            }
+            else if (objectsInPuddle[i].CompareTag("Player") && objectsInPuddle[i].GetComponent<PlayerController>().actualBurnCoroutine != null)
+            {
+                objectsInPuddle[i].GetComponent<PlayerController>().StopCoroutine(objectsInPuddle[i].GetComponent<PlayerController>().actualBurnCoroutine);
+                objectsInPuddle[i].transform.Find("FX/fire").gameObject.SetActive(false);
+            }
+        }
+
     }
 
 
     void OnExitWater(GameObject target)
     {
-        objectsInPuddle.Remove(target.gameObject);
+        if (target.CompareTag("Enemy") || target.CompareTag("Player"))
+        {
+            objectsInPuddle.Remove(target.gameObject);
+        }
     }
 
     IEnumerator ReturnToWater(float timeToWater)
@@ -417,6 +434,14 @@ public class PuddleSystem : MonoBehaviour
         if (target.CompareTag("Player") || target.CompareTag("Enemy"))
         {
             objectsInPuddle.Add(target);
+            if (target.CompareTag("Player"))
+            {
+                target.transform.Find("FX/fire").gameObject.SetActive(true);
+            }
+            else if (target.CompareTag("Enemy"))
+            {
+                target.transform.Find("FX/fire").gameObject.SetActive(true);
+            }
         }
     }
 
@@ -442,12 +467,22 @@ public class PuddleSystem : MonoBehaviour
             {
                 if (target.CompareTag("Player"))
                 {
+                    PlayerController playerController = target.GetComponent<PlayerController>();
+                    if (playerController.actualBurnCoroutine != null)
+                    {
+                        playerController.StopCoroutine(playerController.actualBurnCoroutine);
+                    }
                     //start the coroutine on the playercontroller monobehavior to keep the coroutine running even if the fire puddle is destroyed
-                    target.GetComponent<PlayerController>().StartCoroutine(Burn(target));
+                    playerController.actualBurnCoroutine = playerController.StartCoroutine(Burn(target));
                 }
                 if (target.CompareTag("Enemy"))
                 {
-                    target.GetComponent<EnemyMovement>().StartCoroutine(Burn(target));
+                    Enemy enemy = target.GetComponent<Enemy>();
+                    if (enemy.actualFireCoroutine != null)
+                    {
+                        enemy.StopCoroutine(enemy.actualFireCoroutine);
+                    }
+                    enemy.actualFireCoroutine = enemy.StartCoroutine(Burn(target));
                 }
             }
         }
@@ -477,6 +512,7 @@ public class PuddleSystem : MonoBehaviour
                 yield return new WaitForSeconds(1f);
                 currentDamage += tickDamage;
             }
+            target.transform.Find("FX/fire").gameObject.SetActive(false);
         }
         else if (target.CompareTag("Enemy"))
         {
@@ -489,7 +525,9 @@ public class PuddleSystem : MonoBehaviour
                 yield return new WaitForSeconds(1f);
                 currentDamage += tickDamage;
             }
+            target.transform.Find("FX/fire").gameObject.SetActive(false);
         }
+        
     }
     #endregion
 
