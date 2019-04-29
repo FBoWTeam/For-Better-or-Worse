@@ -314,18 +314,6 @@ public class GameManager : MonoBehaviour
         yield return new WaitUntil(() => isPaused == false);
 		yield return new WaitForSeconds(1.0f);
 
-        PlayerController player1Controller = player1.GetComponent<PlayerController>();
-        PlayerController player2Controller = player2.GetComponent<PlayerController>();
-
-        if (player1Controller.actualBurnCoroutine != null)
-        {
-            player1Controller.StopCoroutine(player1Controller.actualBurnCoroutine);
-        }
-        if (player1Controller.actualBurnCoroutine != null)
-        {
-            player1Controller.StopCoroutine(player1Controller.actualBurnCoroutine);
-        }
-
         if (arena)
         {
             GameData.previousScene = SceneManager.GetActiveScene().buildIndex;

@@ -42,9 +42,6 @@ public class PlayerController : MonoBehaviour
     [HideInInspector]
     public Coroutine actualTauntCoroutine;
 
-    [HideInInspector]
-    public Coroutine actualBurnCoroutine;
-
     void Awake()
     {
         rb = GetComponent<Rigidbody>();
@@ -304,11 +301,8 @@ public class PlayerController : MonoBehaviour
     public IEnumerator FreezeCoroutine(float freezeTimer)
     {
         isFrozen = true;
-        GameObject iceFx = gameObject.transform.Find("FX/ice").gameObject;
-        iceFx.SetActive(true);
         yield return new WaitForSeconds(freezeTimer);
         isFrozen = false;
-        iceFx.SetActive(false);
     }
 
     /*
