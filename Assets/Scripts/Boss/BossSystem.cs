@@ -258,7 +258,7 @@ public class BossSystem : MonoBehaviour
                     GameObject.Find("Rock Lines").GetComponent<TimeLineRockFall>().Initialize();
 
                     StopAllCoroutines();
-                    //isAttacking = false;
+                    DeactivateFXHand();
                     anim.SetTrigger("Stop");
                 }
                 break;
@@ -273,7 +273,7 @@ public class BossSystem : MonoBehaviour
                     GameObject.Find("TimelineChangePlayers").GetComponent<TimeLineChangePlayers>().Initialize();
 
                     StopAllCoroutines();
-                    //isAttacking = false;
+                    DeactivateFXHand();
                     anim.SetTrigger("Stop");
                     CleanProjectorList();
                 }
@@ -289,7 +289,7 @@ public class BossSystem : MonoBehaviour
                     GameObject.Find("Rock Corners").GetComponent<TimeLineCornerRockFall>().Initialize();
 
                     StopAllCoroutines();
-                    //isAttacking = false;
+                    DeactivateFXHand();
                     anim.SetTrigger("Stop");
                     CleanProjectorList();
                 }
@@ -305,7 +305,7 @@ public class BossSystem : MonoBehaviour
                     Debug.Log("DED");
                     //ded
                     StopAllCoroutines();
-                    //isAttacking = false;
+                    DeactivateFXHand();
                     anim.SetTrigger("Stop");
                     CleanProjectorList();
                     GameObject.Find("TimelineDeath").GetComponent<TimeLineDeath>().Initialize();
@@ -331,6 +331,16 @@ public class BossSystem : MonoBehaviour
             Destroy(myst);
         }
         mysticLineList.Clear();
+    }
+
+    public void DeactivateFXHand()
+    {
+        FxElectricityLeft.SetActive(false);
+        FxElectricityRight.SetActive(false);
+        FxFireLeft.SetActive(false);
+        FxFireRight.SetActive(false);
+        FxMysticLeft.SetActive(false);
+        FxMysticRight.SetActive(false);
     }
 
 

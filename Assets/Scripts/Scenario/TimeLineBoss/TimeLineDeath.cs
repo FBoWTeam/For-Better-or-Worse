@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Playables;
+using UnityEngine.SceneManagement;
 
 
 public class TimeLineDeath : MonoBehaviour
@@ -16,7 +17,16 @@ public class TimeLineDeath : MonoBehaviour
 
     public void Initialize()
     {
+        GameManager.gameManager.orb.GetComponent<OrbController>().canHitPlayer = false;
+
+        director = GetComponent<PlayableDirector>();
         director.Play();
+        director.stopped += WhenEnded;
     }
 
+    public void WhenEnded(PlayableDirector obj)
+    {
+        GameData.previousScene = 9;
+        SceneManager.LoadScene(10);
+    }
 }
