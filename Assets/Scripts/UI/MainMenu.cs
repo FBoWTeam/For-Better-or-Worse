@@ -38,6 +38,7 @@ public class MainMenu : MonoBehaviour
 	{
 		if (active)
 		{
+			GameData.previousScene = 2;
 			GameData.nextSceneToLoad = 12;
 			StartCoroutine(FadeOut(4));
 		}

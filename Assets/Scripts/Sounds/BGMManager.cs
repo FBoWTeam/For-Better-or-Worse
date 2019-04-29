@@ -7,8 +7,6 @@ public class BGMManager : MonoBehaviour
 {
 	static BGMManager manager;
 
-	public int lastScene;
-
     void Awake()
     {
 		if (manager == null)
@@ -24,16 +22,18 @@ public class BGMManager : MonoBehaviour
 
 	private void Update()
 	{
-		if(SceneManager.GetActiveScene().buildIndex == 11)
+		switch(SceneManager.GetActiveScene().buildIndex)
 		{
-			manager = null;
-			Destroy(this.gameObject);
-		}
-		if (SceneManager.GetActiveScene().buildIndex == lastScene)
-		{
-			manager = null;
-			SceneManager.MoveGameObjectToScene(this.gameObject, SceneManager.GetActiveScene());
-			Destroy(this);
+			case 5:
+			case 7:
+			case 8:
+			case 9:
+			case 11:
+			case 10:
+			case 12:
+				manager = null;
+				Destroy(this.gameObject);
+				break;
 		}
 	}
 }
