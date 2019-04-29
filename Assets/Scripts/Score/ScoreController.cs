@@ -46,7 +46,14 @@ public class ScoreController : MonoBehaviour
 						//Button A
 						Destroy(ScoreManager.scoreManager.gameObject);
 						Destroy(ScoreManager.scoreManager);
-						StartCoroutine(FadeOut(3));
+						if(GameData.previousScene == 9)
+						{
+							StartCoroutine(FadeOut(11));
+						}
+						else
+						{
+							StartCoroutine(FadeOut(3));
+						}
 					}
 					else
 					{

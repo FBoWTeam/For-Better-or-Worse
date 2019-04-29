@@ -24,6 +24,8 @@ public class GameManager : MonoBehaviour
 
     public bool arena;
 
+	public bool boss;
+
     public bool isPaused;
 
     [Header("[Distance Limits]")]
@@ -317,6 +319,11 @@ public class GameManager : MonoBehaviour
             GameData.previousScene = SceneManager.GetActiveScene().buildIndex;
             SceneManager.LoadScene(15);
         }
+		else if (boss)
+		{
+			GameData.introSkiped = true;
+			SceneManager.LoadScene(9);
+		}
         else
         {
             isPaused = true;

@@ -112,18 +112,22 @@ public class LevelMenu : MonoBehaviour
                     switch (curentPIIndex)
                     {
                         case 0:
+							GameData.previousScene = 5;
 							GameData.nextSceneToLoad = 5;
 							StartCoroutine(FadeOut(4));
 							break;
                         case 1:
+							GameData.previousScene = 7;
 							GameData.nextSceneToLoad = 7;
 							StartCoroutine(FadeOut(4));
 							break;
                         case 2:
+							GameData.previousScene = 8;
 							GameData.nextSceneToLoad = 8;
 							StartCoroutine(FadeOut(4));
 							break;
                         case 3:
+							GameData.previousScene = 9;
 							GameData.nextSceneToLoad = 9;
 							StartCoroutine(FadeOut(4));
 							break;
