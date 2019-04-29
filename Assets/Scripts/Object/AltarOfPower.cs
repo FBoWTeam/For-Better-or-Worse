@@ -10,23 +10,9 @@ public class AltarOfPower : MonoBehaviour, IActivable
     
     PowerController controller;
 
-    public enum AltarType
-    {
-        Classic,
-        AltarBoss
-    }
-
-    public AltarType type;
-
-    Animator anim;
-
     private void Start()
     {
         controller = GameManager.gameManager.orb.GetComponent<PowerController>();
-        if (type == AltarType.AltarBoss)
-        {
-            anim = GetComponentInParent<Animator>();
-        }
     }
 
     private void OnTriggerEnter(Collider other)
@@ -50,12 +36,6 @@ public class AltarOfPower : MonoBehaviour, IActivable
     {
         if (controller.droppedPower == GameManager.PowerType.None)
         {
-            if (type == AltarType.AltarBoss)
-            {
-                anim.SetTrigger("MoveDown");
-            }
-            
-
             controller.droppedPower = powerToGive;
             controller.reflectedDrop = false;
             GameManager.gameManager.UIManager.UpdateDroppedPower(powerToGive);
