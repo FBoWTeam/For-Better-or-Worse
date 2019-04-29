@@ -79,6 +79,10 @@ public class PauseMenu : MonoBehaviour
         gameIsPaused = true;
     }
 
+    void ChangeDifficulty()
+    {
+        GameData.worseModeActivated = (GameData.worseModeActivated) ? false : true;
+    }
     public void LoadMenu()
     {
         //Debug.Log("Menu");
