@@ -9,6 +9,7 @@ public class TimeLineChangePlayers : MonoBehaviour
     PlayableDirector director;
     GameObject Boss;
     GameObject bossHealthBar;
+    public float angleMysticLine;
 
 
     // Start is called before the first frame update
@@ -51,10 +52,8 @@ public class TimeLineChangePlayers : MonoBehaviour
         Destroy(Boss.GetComponent<BossSystem>().shrinkLeft);
         Destroy(Boss.GetComponent<BossSystem>().shrinkRight);
         Boss.GetComponent<BossSystem>().isShrinkMysticLineCreated = false;
-        /*Boss.GetComponent<BossSystem>().pivotLeft.transform.rotation = Quaternion.LookRotation(new Vector3(-90f,0f, -90f));
-        Boss.GetComponent<BossSystem>().pivotRight.transform.rotation = Quaternion.LookRotation(new Vector3(-90f, 0f, -90f));*/
-        Boss.GetComponent<BossSystem>().pivotLeft.transform.localRotation = Quaternion.Euler(new Vector3(0f, -90f, 0f));
-        Boss.GetComponent<BossSystem>().pivotRight.transform.localRotation = Quaternion.Euler(new Vector3(0f, 90f, 0f));
+        Boss.GetComponent<BossSystem>().pivotLeft.transform.localRotation = Quaternion.Euler(new Vector3(0f, -(angleMysticLine + 90), 0f));
+        Boss.GetComponent<BossSystem>().pivotRight.transform.localRotation = Quaternion.Euler(new Vector3(0f, angleMysticLine + 90, 0f));
 
         yield return new WaitForSeconds(3f);//wait the animation
         StartCoroutine(Boss.GetComponent<BossSystem>().ShrinkMysticLinesCoroutine());
