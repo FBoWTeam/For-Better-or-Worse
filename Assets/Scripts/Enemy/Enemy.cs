@@ -247,16 +247,19 @@ public class Enemy : MonoBehaviour
 
     public IEnumerator DarknessCoroutine(float darknessTimer)
     {
-        if (actualFreezeCoroutine != null)
+        if (actualDarknessCoroutine != null)
         {
             StopCoroutine(actualDarknessCoroutine);
         }
+        GameObject darknessFx = gameObject.transform.Find("FX/darkness").gameObject;
+        darknessFx.SetActive(true);
 
         yield return new WaitForEndOfFrame();
 
         isWeaken = true;
         yield return new WaitForSecondsRealtime(darknessTimer);
         isWeaken = false;
+        darknessFx.SetActive(false);
     }
 
     public IEnumerator FireDamage(GameObject target, int totalDamage, float duration)
