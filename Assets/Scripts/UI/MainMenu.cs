@@ -43,6 +43,14 @@ public class MainMenu : MonoBehaviour
 		}
 	}
 
+	public void LoadCredits()
+	{
+		if (active)
+		{
+			StartCoroutine(FadeOut(11));
+		}
+	}
+
 	public void OnQuitButtonClick()
 	{
 		if (active)

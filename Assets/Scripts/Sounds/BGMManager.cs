@@ -24,6 +24,11 @@ public class BGMManager : MonoBehaviour
 
 	private void Update()
 	{
+		if(SceneManager.GetActiveScene().buildIndex == 11)
+		{
+			manager = null;
+			Destroy(this.gameObject);
+		}
 		if (SceneManager.GetActiveScene().buildIndex == lastScene)
 		{
 			manager = null;
