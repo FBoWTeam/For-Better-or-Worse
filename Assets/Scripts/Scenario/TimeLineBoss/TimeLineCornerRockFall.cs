@@ -25,7 +25,7 @@ public class TimeLineCornerRockFall : MonoBehaviour
     void Start()
     {
         Boss = GameObject.Find("Boss");
-        bossHealthBar = GameObject.Find("Bosshealtbar");
+        bossHealthBar = GameObject.Find("Bosshealthbar");
         RockCornerAnimatation = GameObject.Find("Rock corner Animation");
         RockCorner1 = GameObject.Find("Rock corner 1");
         RockCorner1.SetActive(false);

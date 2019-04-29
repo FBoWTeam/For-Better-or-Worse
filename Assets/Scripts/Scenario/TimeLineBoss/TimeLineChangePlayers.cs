@@ -16,7 +16,7 @@ public class TimeLineChangePlayers : MonoBehaviour
     void Start()
     {
         Boss = GameObject.Find("Boss");
-        bossHealthBar = GameObject.Find("Bosshealtbar");
+        bossHealthBar = GameObject.Find("Bosshealthbar");
     }
 
     public void Initialize()
