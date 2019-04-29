@@ -71,6 +71,7 @@ public class TimeLineRockFall : MonoBehaviour
         GameManager.gameManager.player2.GetComponent<OrbHitter>().active = true;
         GameManager.gameManager.UIManager.gameObject.SetActive(true);
         GameManager.gameManager.blackBands.SetActive(false);
+        bossHealthBar.SetActive(true);
         Boss.SetActive(true);
         RockLineAnimation.SetActive(false);
         RockLine1.SetActive(true);

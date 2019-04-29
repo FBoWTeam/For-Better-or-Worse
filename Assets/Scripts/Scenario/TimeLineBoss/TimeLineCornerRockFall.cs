@@ -93,6 +93,7 @@ public class TimeLineCornerRockFall : MonoBehaviour
 
         GameManager.gameManager.UIManager.gameObject.SetActive(true);
         GameManager.gameManager.blackBands.SetActive(false);
+        bossHealthBar.SetActive(true);
 
         RockCornerAnimatation.SetActive(false);
         RockCorner1.SetActive(true);
