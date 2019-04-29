@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Playables;
+using UnityEngine.SceneManagement;
 
 public class ScenarioHandler : MonoBehaviour
 {
@@ -13,15 +14,24 @@ public class ScenarioHandler : MonoBehaviour
 	int actualDialog;
 	Dialog dialogToDisplay;
 
+	GameObject skipCanvas;
+
 	public void Initialize()
 	{
 		director = GetComponent<PlayableDirector>();
+
+		skipCanvas = transform.GetChild(0).gameObject;
+		skipCanvas.SetActive(false);
+		GameData.introSkiped = false;
+
 		dialogSystem = GameObject.Find("DialogSystem").GetComponent<DialogSystem>();
 		dialogSystem.gameObject.SetActive(false);
 		actualDialog = 0;
         
         director.Play();
 		director.stopped += WhenEnded;
+
+		StartCoroutine(SkipIntroListener());
 ;
 	}
 
@@ -44,6 +54,45 @@ public class ScenarioHandler : MonoBehaviour
         GameManager.gameManager.player1.GetComponent<OrbHitter>().active = true;
         GameManager.gameManager.player2.GetComponent<OrbHitter>().active = true;
         GameManager.gameManager.orb.GetComponent<OrbController>().canHitPlayer = GameData.worseModeActivated;
-        Destroy(this.gameObject);
+		if (!GameData.introSkiped)
+		{
+			Destroy(this.gameObject);
+		}
+	}
+
+	IEnumerator SkipIntroListener()
+	{
+		bool introSkiped = false;
+		while(!introSkiped)
+		{
+			if(Input.GetKey(KeyCode.Joystick1Button7) || Input.GetKey(KeyCode.Joystick2Button7) || Input.GetKey(KeyCode.Escape))
+			{
+				introSkiped = true;
+				skipCanvas.SetActive(true);
+			}
+			yield return new WaitForEndOfFrame();
+		}
+
+		yield return new WaitForSeconds(0.5f);
+
+		bool introSkipedTwice = false;
+		while (!introSkipedTwice)
+		{
+			if (Input.GetKey(KeyCode.Joystick1Button7) || Input.GetKey(KeyCode.Joystick2Button7) || Input.GetKey(KeyCode.Escape))
+			{
+				introSkipedTwice = true;
+			}
+			yield return new WaitForEndOfFrame();
+		}
+
+		GameData.introSkiped = true;
+		director.Stop();
+		skipCanvas.SetActive(false);
+		GameManager.gameManager.UIManager.gameObject.SetActive(false);
+
+		StartCoroutine(GameManager.gameManager.FadeCoroutine("FadeOut"));
+		yield return new WaitUntil(() => GameManager.gameManager.isPaused == false);
+
+		SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
 	}
 }

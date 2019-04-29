@@ -95,48 +95,46 @@ public class LevelMenu : MonoBehaviour
         {
             if (curentPosIndex == destPosIndex)
             {
-                if ((Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.DownArrow)
-                     || Input.GetAxis("DeformP1X") > Input.GetAxis("DeformP1Z")
-                     || Input.GetAxis("HorizontalP1") > Input.GetAxis("VerticalP1"))
-                    && destPIIndex < indexPI.Count - 1)
+                if ((Input.GetAxis("HorizontalP1") > Input.GetAxis("VerticalP1")) && destPIIndex < indexPI.Count - 1)
                 {
                     destPIIndex++;
                     destPosIndex = indexPI[destPIIndex];
                 }
                 
-                if ((Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.UpArrow)
-                     || Input.GetAxis("DeformP1X") < Input.GetAxis("DeformP1Z")
-                     || Input.GetAxis("HorizontalP1") < Input.GetAxis("VerticalP1"))
-                    && destPIIndex > 0)
+                if ((Input.GetAxis("HorizontalP1") < Input.GetAxis("VerticalP1")) && destPIIndex > 0)
                 {
                     destPIIndex--;
                     destPosIndex = indexPI[destPIIndex];
                 }
 
-                if (Input.GetKeyDown(KeyCode.Joystick1Button0) || Input.GetKeyDown(KeyCode.Joystick2Button0) || Input.GetKeyDown(KeyCode.Return))
+                if (Input.GetKeyDown(KeyCode.Joystick1Button0) || Input.GetKeyDown(KeyCode.Space))
                 {
                     switch (curentPIIndex)
                     {
                         case 0:
+							GameData.previousScene = 5;
 							GameData.nextSceneToLoad = 5;
 							StartCoroutine(FadeOut(4));
 							break;
                         case 1:
+							GameData.previousScene = 7;
 							GameData.nextSceneToLoad = 7;
 							StartCoroutine(FadeOut(4));
 							break;
                         case 2:
+							GameData.previousScene = 8;
 							GameData.nextSceneToLoad = 8;
 							StartCoroutine(FadeOut(4));
 							break;
                         case 3:
+							GameData.previousScene = 9;
 							GameData.nextSceneToLoad = 9;
 							StartCoroutine(FadeOut(4));
 							break;
                     }
                 }
 
-                if (Input.GetKeyDown(KeyCode.Joystick1Button1) || Input.GetKeyDown(KeyCode.Joystick2Button1) || Input.GetKeyDown(KeyCode.Backspace) || Input.GetKeyDown(KeyCode.Escape))
+                if (Input.GetKeyDown(KeyCode.Joystick1Button1) || Input.GetKeyDown(KeyCode.Escape))
                 {
 					StartCoroutine(FadeOut(2));
 				}

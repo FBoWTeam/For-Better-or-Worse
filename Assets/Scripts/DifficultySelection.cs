@@ -19,6 +19,7 @@ public class DifficultySelection : MonoBehaviour
 		if(active)
 		{
 			GameData.worseModeActivated = worseActivated;
+			GameObject.Find("ThemeBGM").GetComponent<Animation>().Play();
 			StartCoroutine(FadeOut(GameData.nextSceneToLoad));
 		}
 	}
@@ -29,12 +30,31 @@ public class DifficultySelection : MonoBehaviour
 		yield return new WaitForSeconds(0.1f);
 		yield return new WaitUntil(() => fader.isPlaying == false);
 		active = true;
+		StartCoroutine(CancelListener());
+	}
+
+	IEnumerator CancelListener()
+	{
+		while (true)
+		{
+			if (Input.GetKey(KeyCode.Joystick1Button1) || Input.GetKey(KeyCode.Escape))
+			{
+				if(GameData.previousScene == 2)
+				{
+					StartCoroutine(FadeOut(GameData.previousScene));
+				}
+				else
+				{
+					StartCoroutine(FadeOut(3));
+				}
+			}
+			yield return new WaitForEndOfFrame();
+		}
 	}
 
 	IEnumerator FadeOut(int sceneToLoad)
 	{
 		active = false;
-		GameObject.Find("ThemeBGM").GetComponent<Animation>().Play();
 		fader.clip = fader.GetClip("FadeOut");
 		fader.Play();
 		yield return new WaitForSeconds(0.1f);
