@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using TMPro;
 
 
 public class PauseMenu : MonoBehaviour
@@ -12,6 +13,10 @@ public class PauseMenu : MonoBehaviour
     [Header("Main Components")]
     public GameObject mainMenu;
     public GameObject guide;
+
+    [Header("Difficulty")]
+    public TextMeshProUGUI difficultyText;
+    public TextMeshProUGUI difficultyExplicationText;
 
     [Header("Mapping")]
     public Image mappingImage;
