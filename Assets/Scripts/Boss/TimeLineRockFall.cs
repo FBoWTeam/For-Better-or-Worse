@@ -17,7 +17,7 @@ public class TimeLineRockFall : MonoBehaviour
     void Start()
     {
         Boss = GameObject.Find("Boss");
-        bossHealthBar = GameObject.Find("Bosshealtbar");
+        bossHealthBar = GameObject.Find("Bosshealthbar");
         PlayersContent = GameObject.Find("PlayersContent");
         RockLineAnimation = GameObject.Find("Rock line Animation");
         RockLine1 = GameObject.Find("Rock line 1");
