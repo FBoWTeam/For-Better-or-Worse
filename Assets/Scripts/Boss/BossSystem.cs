@@ -942,10 +942,10 @@ public class BossSystem : MonoBehaviour
                 else if (!lastHitByP1 && !lastHitByP2)
                 {
                     ScoreManager.scoreManager.killsEnvironment++;
-                }
+                }/*
                 StopAllCoroutines();
                 GameData.previousScene = 9;
-                SceneManager.LoadScene(10);
+                SceneManager.LoadScene(10);*/
             }
         }
     }

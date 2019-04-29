@@ -42,6 +42,9 @@ public class PlayerController : MonoBehaviour
     [HideInInspector]
     public Coroutine actualTauntCoroutine;
 
+    [HideInInspector]
+    public Coroutine actualBurnCoroutine;
+
     void Awake()
     {
         rb = GetComponent<Rigidbody>();
