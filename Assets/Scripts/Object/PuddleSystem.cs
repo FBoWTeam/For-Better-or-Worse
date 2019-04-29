@@ -324,12 +324,16 @@ public class PuddleSystem : MonoBehaviour
             if (target.CompareTag("Enemy"))
             {
                 target.GetComponent<Enemy>().TakeDamage(electricDamage);
-                //StartCoroutine(GameManager.gameManager.orb.GetComponent<PowerController>().ElectricZappingCoroutine(transform.position + Vector3.up, null, true));
+                GameObject electricityFx = target.transform.Find("FX/electricity").gameObject;
+                electricityFx.SetActive(false);
+                electricityFx.SetActive(true);
             }
             else if (target.CompareTag("Player"))
             {
+                GameObject electricityFx = target.transform.Find("FX/electricity").gameObject;
                 GameManager.gameManager.TakeDamage(target, electricDamage, Vector3.zero, false);
-                //StartCoroutine(GameManager.gameManager.orb.GetComponent<PowerController>().ElectricZappingCoroutine(transform.position + Vector3.up, null, false));
+                electricityFx.SetActive(false);
+                electricityFx.SetActive(true);
             }
         }
         else if (target.CompareTag("Enemy") || target.CompareTag("Player"))
