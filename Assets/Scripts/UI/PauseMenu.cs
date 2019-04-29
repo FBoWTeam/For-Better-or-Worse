@@ -33,6 +33,17 @@ public class PauseMenu : MonoBehaviour
         {
             mappingImage.sprite = mappingVF;
         }
+
+        if (GameData.worseModeActivated)
+        {
+            difficultyText.SetText("menu.pause.bouton6");
+            difficultyExplicationText.SetText("menu.niveaux.difficulte5");
+        }
+        else
+        {
+            difficultyText.SetText("menu.pause.bouton5");
+            difficultyExplicationText.SetText("menu.niveaux.difficulte3");
+        }
     }
 
     // Update is called once per frame
