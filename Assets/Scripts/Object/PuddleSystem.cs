@@ -388,15 +388,23 @@ public class PuddleSystem : MonoBehaviour
         }
         for (int i = 0; i < objectsInPuddle.Count; i++)
         {
-            if (objectsInPuddle[i].CompareTag("Enemy") && objectsInPuddle[i].GetComponent<Enemy>().actualFireCoroutine != null)
+            if (objectsInPuddle[i].CompareTag("Enemy"))
             {
-                objectsInPuddle[i].GetComponent<Enemy>().StopCoroutine(objectsInPuddle[i].GetComponent<Enemy>().actualFireCoroutine);
-                objectsInPuddle[i].transform.Find("FX/fire").gameObject.SetActive(false);
+                if (objectsInPuddle[i].GetComponent<Enemy>().actualFireCoroutine != null)
+                {
+                    objectsInPuddle[i].GetComponent<Enemy>().StopCoroutine(objectsInPuddle[i].GetComponent<Enemy>().actualFireCoroutine);
+                    objectsInPuddle[i].transform.Find("FX/fire").gameObject.SetActive(false);
+                }
+
             }
-            else if (objectsInPuddle[i].CompareTag("Player") && objectsInPuddle[i].GetComponent<PlayerController>().actualBurnCoroutine != null)
+            else if (objectsInPuddle[i].CompareTag("Player"))
             {
-                objectsInPuddle[i].GetComponent<PlayerController>().StopCoroutine(objectsInPuddle[i].GetComponent<PlayerController>().actualBurnCoroutine);
-                objectsInPuddle[i].transform.Find("FX/fire").gameObject.SetActive(false);
+                if (objectsInPuddle[i].GetComponent<PlayerController>().actualBurnCoroutine != null)
+                {
+                    objectsInPuddle[i].GetComponent<PlayerController>().StopCoroutine(objectsInPuddle[i].GetComponent<PlayerController>().actualBurnCoroutine);
+                    objectsInPuddle[i].transform.Find("FX/fire").gameObject.SetActive(false);
+                }
+
             }
         }
 

@@ -234,11 +234,14 @@ public class Enemy : MonoBehaviour
         {
             StopCoroutine(actualFreezeCoroutine);
         }
+        GameObject iceFx = gameObject.transform.Find("FX/ice").gameObject;
+        iceFx.SetActive(true);
         enemyMovement.agent.isStopped = true;
         isFrozen = true;
         yield return new WaitForSeconds(freezeTimer);
         enemyMovement.agent.isStopped = false;
         isFrozen = false;
+        iceFx.SetActive(false);
     }
 
 
