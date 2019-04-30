@@ -320,10 +320,12 @@ public class GameManager : MonoBehaviour
         if (player1Controller.actualBurnCoroutine != null)
         {
             player1Controller.StopCoroutine(player1Controller.actualBurnCoroutine);
+            player1.transform.Find("FX/fire").gameObject.SetActive(false);
         }
         if (player1Controller.actualBurnCoroutine != null)
         {
             player1Controller.StopCoroutine(player1Controller.actualBurnCoroutine);
+            player2.transform.Find("FX/fire").gameObject.SetActive(false);
         }
 
         if (arena)
