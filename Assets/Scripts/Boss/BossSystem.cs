@@ -355,11 +355,6 @@ public class BossSystem : MonoBehaviour
         FxMysticLeft.SetActive(false);
         FxMysticRight.SetActive(false);
     }
-<<<<<<< HEAD
-=======
-
->>>>>>> parent of dbab6b20... Merge branch 'Develop' of https://github.com/FBoWTeam/For-Better-or-Worse into Develop
-
 
     //======================================================================================== RANDOM PATTERN
 

@@ -10,19 +10,13 @@ public class TimeLineDeath : MonoBehaviour
     PlayableDirector director;
     GameObject Boss;
     public GameObject deathPoof;
-<<<<<<< HEAD
     GameObject bossHealthBar;
-=======
->>>>>>> parent of dbab6b20... Merge branch 'Develop' of https://github.com/FBoWTeam/For-Better-or-Worse into Develop
 
     // Start is called before the first frame update
     void Start()
     {
         Boss = GameObject.Find("Boss");
-<<<<<<< HEAD
         bossHealthBar = GameObject.Find("Bosshealthbar");
-=======
->>>>>>> parent of dbab6b20... Merge branch 'Develop' of https://github.com/FBoWTeam/For-Better-or-Worse into Develop
     }
 
     public void Initialize()
@@ -30,10 +24,7 @@ public class TimeLineDeath : MonoBehaviour
         GameManager.gameManager.orb.GetComponent<OrbController>().canHitPlayer = false;
 
         StartCoroutine(DeathPoofBoss());
-<<<<<<< HEAD
         bossHealthBar.SetActive(false);
-=======
->>>>>>> parent of dbab6b20... Merge branch 'Develop' of https://github.com/FBoWTeam/For-Better-or-Worse into Develop
 
         director = GetComponent<PlayableDirector>();
         director.Play();
