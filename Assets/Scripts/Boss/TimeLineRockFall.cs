@@ -8,6 +8,7 @@ public class TimeLineRockFall : MonoBehaviour
     PlayableDirector director;
     GameObject Boss;
     GameObject bossHealthBar;
+    GameObject PlayersContent;
     GameObject RockLineAnimation;
     GameObject RockLine1;
     GameObject RockLine2;
@@ -17,6 +18,7 @@ public class TimeLineRockFall : MonoBehaviour
     {
         Boss = GameObject.Find("Boss");
         bossHealthBar = GameObject.Find("Bosshealthbar");
+        PlayersContent = GameObject.Find("PlayersContent");
         RockLineAnimation = GameObject.Find("Rock line Animation");
         RockLine1 = GameObject.Find("Rock line 1");
         RockLine1.SetActive(false);
