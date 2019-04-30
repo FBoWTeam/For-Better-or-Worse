@@ -154,7 +154,8 @@ public class BossSystem : MonoBehaviour
     public bool canHitBoss;
 
     public GameObject rockFall;
-    private bool rockInstantiated;
+    [HideInInspector]
+    public bool rockInstantiated;
 
     public GameObject FxElectricityLeft;
     public GameObject FxFireLeft;
@@ -307,12 +308,12 @@ public class BossSystem : MonoBehaviour
                     CleanProjectorList();
                 }
                 break;
-            case 4:
+            case 4:/*
                 if (!rockInstantiated)
                 {
                     rockFall.SetActive(true);
                     rockInstantiated = true;
-                }
+                }*/
                 if (hp <= 0.0f)
                 {
                     Debug.Log("DED");
