@@ -8,12 +8,14 @@ public class TimeLineChangePlayers : MonoBehaviour
 {
     PlayableDirector director;
     GameObject Boss;
+    GameObject bossHealthBar;
 
 
     // Start is called before the first frame update
     void Start()
     {
         Boss = GameObject.Find("Boss");
+        bossHealthBar = GameObject.Find("Bosshealthbar");
     }
 
     public void Initialize()
@@ -40,6 +42,7 @@ public class TimeLineChangePlayers : MonoBehaviour
         GameManager.gameManager.orb.GetComponent<OrbController>().canHitPlayer = false;
         GameManager.gameManager.UIManager.gameObject.SetActive(false);
         GameManager.gameManager.blackBands.SetActive(true);
+        bossHealthBar.SetActive(false);
         GameManager.gameManager.player1.GetComponent<CapsuleCollider>().isTrigger = true;
         GameManager.gameManager.player2.GetComponent<CapsuleCollider>().isTrigger = true;
 
@@ -69,6 +72,7 @@ public class TimeLineChangePlayers : MonoBehaviour
         GameManager.gameManager.player2.GetComponent<OrbHitter>().active = true;
         GameManager.gameManager.UIManager.gameObject.SetActive(true);
         GameManager.gameManager.blackBands.SetActive(false);
+        bossHealthBar.SetActive(true);
         Boss.SetActive(true);
         
         StartCoroutine(End());

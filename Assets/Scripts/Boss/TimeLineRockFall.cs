@@ -7,6 +7,7 @@ public class TimeLineRockFall : MonoBehaviour
 {
     PlayableDirector director;
     GameObject Boss;
+    GameObject bossHealthBar;
     GameObject RockLineAnimation;
     GameObject RockLine1;
     GameObject RockLine2;
@@ -15,6 +16,7 @@ public class TimeLineRockFall : MonoBehaviour
     void Start()
     {
         Boss = GameObject.Find("Boss");
+        bossHealthBar = GameObject.Find("Bosshealthbar");
         RockLineAnimation = GameObject.Find("Rock line Animation");
         RockLine1 = GameObject.Find("Rock line 1");
         RockLine1.SetActive(false);
@@ -46,6 +48,7 @@ public class TimeLineRockFall : MonoBehaviour
         GameManager.gameManager.orb.GetComponent<OrbController>().canHitPlayer = false;
         GameManager.gameManager.UIManager.gameObject.SetActive(false);
         GameManager.gameManager.blackBands.SetActive(true);
+        bossHealthBar.SetActive(false);
         GameManager.gameManager.player1.GetComponent<CapsuleCollider>().isTrigger = true;
         GameManager.gameManager.player2.GetComponent<CapsuleCollider>().isTrigger = true;
 
@@ -65,6 +68,7 @@ public class TimeLineRockFall : MonoBehaviour
         GameManager.gameManager.player2.GetComponent<OrbHitter>().active = true;
         GameManager.gameManager.UIManager.gameObject.SetActive(true);
         GameManager.gameManager.blackBands.SetActive(false);
+        bossHealthBar.SetActive(true);
         Boss.SetActive(true);
         RockLineAnimation.SetActive(false);
         RockLine1.SetActive(true);
