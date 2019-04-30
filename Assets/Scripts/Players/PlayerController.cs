@@ -39,13 +39,11 @@ public class PlayerController : MonoBehaviour
 
 	Animator animator;
 
-
-    public GameObject selectedBehavioralFx;
-    public GameObject selectedElementalFx;
-
-
     [HideInInspector]
     public Coroutine actualTauntCoroutine;
+
+    [HideInInspector]
+    public Coroutine actualBurnCoroutine;
 
     void Awake()
     {
@@ -170,8 +168,8 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     public void GetCurrentPower()
     {
-        bool elementalPower = player1 ? Input.GetKeyDown(KeyCode.Joystick1Button3) || Input.GetKeyDown(KeyCode.Joystick1Button1) || Input.GetKeyDown(KeyCode.A) : Input.GetKeyDown(KeyCode.Joystick2Button3) || Input.GetKeyDown(KeyCode.Joystick2Button1) || Input.GetKeyDown(KeyCode.RightShift);
-        bool behaviouralPower = player1 ? Input.GetKeyDown(KeyCode.Joystick1Button2) || Input.GetKeyDown(KeyCode.Joystick1Button0) || Input.GetKeyDown(KeyCode.E) : Input.GetKeyDown(KeyCode.Joystick2Button2) || Input.GetKeyDown(KeyCode.Joystick2Button0) || Input.GetKeyDown(KeyCode.RightControl);
+        bool elementalPower = player1 ? Input.GetKeyDown(KeyCode.Joystick1Button3) || Input.GetKeyDown(KeyCode.Joystick1Button1) : Input.GetKeyDown(KeyCode.Joystick2Button3) || Input.GetKeyDown(KeyCode.Joystick2Button1);
+        bool behaviouralPower = player1 ? Input.GetKeyDown(KeyCode.Joystick1Button2) || Input.GetKeyDown(KeyCode.Joystick1Button0) : Input.GetKeyDown(KeyCode.Joystick2Button2) || Input.GetKeyDown(KeyCode.Joystick2Button0);
         
         
         if (elementalPower && elementalPowerSlot != GameManager.PowerType.None)
@@ -181,19 +179,11 @@ public class PlayerController : MonoBehaviour
             {
                 if (orbHitter.powerToApply != elementalPowerSlot)
                 {
-                    if (!GameManager.isElemental(orbHitter.powerToApply))
-                    {
-                        selectedBehavioralFx.GetComponent<ParticleSystem>().Stop();
-                    }
                     orbHitter.powerToApply = elementalPowerSlot;
-                    //activer fx
-                    selectedElementalFx.GetComponent<ParticleSystem>().Play();
                 }
                 else
                 {
                     orbHitter.powerToApply = GameManager.PowerType.None;
-                    //desactiver fx
-                    selectedElementalFx.GetComponent<ParticleSystem>().Stop();
                 }
             }
         }
@@ -204,19 +194,11 @@ public class PlayerController : MonoBehaviour
             {
                 if (orbHitter.powerToApply != behaviouralPowerSlot)
                 {
-                    if (GameManager.isElemental(orbHitter.powerToApply))
-                    {
-                        selectedElementalFx.GetComponent<ParticleSystem>().Stop();
-                    }
                     orbHitter.powerToApply = behaviouralPowerSlot;
-                    //activer fx
-                    selectedBehavioralFx.GetComponent<ParticleSystem>().Play();
                 }
                 else
                 {
                     orbHitter.powerToApply = GameManager.PowerType.None;
-                    //desactiver fx
-                    selectedBehavioralFx.GetComponent<ParticleSystem>().Stop();
                 }
             }
         }
@@ -322,8 +304,11 @@ public class PlayerController : MonoBehaviour
     public IEnumerator FreezeCoroutine(float freezeTimer)
     {
         isFrozen = true;
+        GameObject iceFx = gameObject.transform.Find("FX/ice").gameObject;
+        iceFx.SetActive(true);
         yield return new WaitForSeconds(freezeTimer);
         isFrozen = false;
+        iceFx.SetActive(false);
     }
 
     /*
