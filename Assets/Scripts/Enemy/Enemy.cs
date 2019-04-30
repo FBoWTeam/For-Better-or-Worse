@@ -234,26 +234,32 @@ public class Enemy : MonoBehaviour
         {
             StopCoroutine(actualFreezeCoroutine);
         }
+        GameObject iceFx = gameObject.transform.Find("FX/ice").gameObject;
+        iceFx.SetActive(true);
         enemyMovement.agent.isStopped = true;
         isFrozen = true;
         yield return new WaitForSeconds(freezeTimer);
         enemyMovement.agent.isStopped = false;
         isFrozen = false;
+        iceFx.SetActive(false);
     }
 
 
     public IEnumerator DarknessCoroutine(float darknessTimer)
     {
-        if (actualFreezeCoroutine != null)
+        if (actualDarknessCoroutine != null)
         {
             StopCoroutine(actualDarknessCoroutine);
         }
+        GameObject darknessFx = gameObject.transform.Find("FX/darkness").gameObject;
+        darknessFx.SetActive(true);
 
         yield return new WaitForEndOfFrame();
 
         isWeaken = true;
         yield return new WaitForSecondsRealtime(darknessTimer);
         isWeaken = false;
+        darknessFx.SetActive(false);
     }
 
     public IEnumerator FireDamage(GameObject target, int totalDamage, float duration)

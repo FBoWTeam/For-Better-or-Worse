@@ -10,15 +10,11 @@ public class EnemyShot : MonoBehaviour
     private Vector3 shootDirection;
     private int damage;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-    }
 
     void FixedUpdate()
     {
-        //this.GetComponent<Rigidbody>().AddForce(shootDirection * speed);
         this.GetComponent<Rigidbody>().velocity = shootDirection * speed;
+        gameObject.transform.LookAt(shootDirection * 1000000);
     }
 
     public void Initialise(Vector3 _target, int _damage, float _speed)

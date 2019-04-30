@@ -215,8 +215,6 @@ public class BossSystem : MonoBehaviour
             UpdateScaleShrinkMysticLine();
         }
 
-        //Debug.Log("isattacking is " + isAttacking);
-
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -358,7 +356,6 @@ public class BossSystem : MonoBehaviour
         FxMysticRight.SetActive(false);
     }
 
-
     //======================================================================================== RANDOM PATTERN
 
     /// <summary>
@@ -432,7 +429,6 @@ public class BossSystem : MonoBehaviour
         FxMysticRight.SetActive(true);
 
         yield return new WaitForSeconds(2.8f);
-        Debug.Log("now");
 
         Vector3 raycastPosition = new Vector3(transform.position.x, 1f, transform.position.z);
         RaycastHit hit;
@@ -959,10 +955,10 @@ public class BossSystem : MonoBehaviour
                 else if (!lastHitByP1 && !lastHitByP2)
                 {
                     ScoreManager.scoreManager.killsEnvironment++;
-                }
+                }/*
                 StopAllCoroutines();
                 GameData.previousScene = 9;
-                SceneManager.LoadScene(10);
+                SceneManager.LoadScene(10);*/
             }
         }
     }
