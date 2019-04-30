@@ -52,7 +52,7 @@ public class ScoreManager : MonoBehaviour
 
     private int numberOfPlayer;
 
-    float timeStamp;
+    public float timeStamp;
     public float score;
 
     void Awake()
@@ -169,9 +169,18 @@ public class ScoreManager : MonoBehaviour
         return result;
     }
 
+    public float CalculateBossScore()
+    {
+        float timeScore = 1 / (0.00007f * completionTime);
+        float bonus = timeScore + maxCombo + (statusAilmentApplied);
+        float malus = (damageTakenP1 + damageTakenP2) / 10 + (orbHitMissedP1 + orbHitMissedP2) / 10;
+        float result = bonus - malus;
+        return result;
+    }
+
     public float CalculateArenaScore()
     {
-        return 0f;
+        return totalWave;
     }
 
 }
