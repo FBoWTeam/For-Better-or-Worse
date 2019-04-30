@@ -137,8 +137,11 @@ public class OrbHitter : MonoBehaviour
         {
 			string mode = GetComponent<PlayerController>().player1 ? "player1" : "player2";
 			orbController.GetComponent<PowerController>().ActivatePower(powerToApply, mode);
+
+            gameObject.GetComponent<PlayerController>().selectedBehavioralFx.GetComponent<ParticleSystem>().Stop();
+            gameObject.GetComponent<PlayerController>().selectedElementalFx.GetComponent<ParticleSystem>().Stop();
             powerToApply = GameManager.PowerType.None;
-        }        
+        }
     }
 
 	/// <summary>
