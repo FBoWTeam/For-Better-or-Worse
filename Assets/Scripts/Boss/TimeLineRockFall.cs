@@ -7,11 +7,11 @@ public class TimeLineRockFall : MonoBehaviour
 {
     PlayableDirector director;
     GameObject Boss;
+    GameObject bossHealthBar;
+    GameObject PlayersContent;
     GameObject RockLineAnimation;
     GameObject RockLine1;
     GameObject RockLine2;
-    GameObject PlayersContent;
-    GameObject bossHealthBar;
 
     // Start is called before the first frame update
     void Start()

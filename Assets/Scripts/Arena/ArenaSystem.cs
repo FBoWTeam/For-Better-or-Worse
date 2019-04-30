@@ -159,6 +159,11 @@ public class ArenaSystem : MonoBehaviour
                         yield return new WaitForEndOfFrame();
                     }
                     waveIndex++;
+
+
+                    ScoreManager.scoreManager.totalWave++;
+
+
                     if (waveIndex < waveList.Count)
                     {
                         GameManager.gameManager.UIManager.UpdateWave(ScoreManager.scoreManager.totalWave + waveIndex + 1);
@@ -173,12 +178,9 @@ public class ArenaSystem : MonoBehaviour
             if (waveIndex >= waveList.Count)
             {
                 arenaCleared = true;
-
-                //update total wave cleared
-                ScoreManager.scoreManager.totalWave += waveIndex + 1;
             }
         }
-        ScoreManager.scoreManager.Save();
+
         sceneLoader.GetComponent<IActivable>().Activate();
     }
 
@@ -203,10 +205,7 @@ public class ArenaSystem : MonoBehaviour
             bonusChance += increaseChanceValue;
         }
     }
-
-
-
-
+    
     //check if the wave given in parameter is cleared by checking if the list in empty
     private bool waveCleared()
     {
