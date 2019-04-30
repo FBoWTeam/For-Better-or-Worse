@@ -40,32 +40,43 @@ public class ScoreDisplayer : MonoBehaviour
 
     [DrawIf(new string[] { "scoreMode" }, ScoreMode.Story)]
     public GameObject starCanvas;
+    
 
     private void Start()
     {
-		switch (GameData.previousScene)
+
+        ScoreManager.scoreManager.completionTime = Time.time - ScoreManager.scoreManager.timeStamp;
+
+        switch (GameData.previousScene)
 		{
 			case 6:
 				levelName.GetComponent<TextMeshProUGUI>().text = I18n.Translate("menu.score.texte1");
-				break;
+                ScoreManager.scoreManager.score = ScoreManager.scoreManager.CalculatePrologueScore();
+                break;
 			case 7:
 				levelName.GetComponent<TextMeshProUGUI>().text = I18n.Translate("menu.score.texte2");
-				break;
+                ScoreManager.scoreManager.score = ScoreManager.scoreManager.CalculateJungle1Score();
+                break;
 			case 8:
 				levelName.GetComponent<TextMeshProUGUI>().text = I18n.Translate("menu.score.texte3");
-				break;
+                ScoreManager.scoreManager.score = ScoreManager.scoreManager.CalculateJungle2Score();
+                break;
 			case 9:
 				levelName.GetComponent<TextMeshProUGUI>().text = I18n.Translate("menu.score.texte4");
-				break;
+                ScoreManager.scoreManager.score = ScoreManager.scoreManager.CalculateBossScore();
+                break;
 			case 12:
 				levelName.GetComponent<TextMeshProUGUI>().text = I18n.Translate("menu.score.texte15");
-				break;
+                ScoreManager.scoreManager.score = ScoreManager.scoreManager.CalculateArenaScore();
+                break;
 			case 13:
 				levelName.GetComponent<TextMeshProUGUI>().text = I18n.Translate("menu.score.texte16");
-				break;
+                ScoreManager.scoreManager.score = ScoreManager.scoreManager.CalculateArenaScore();
+                break;
 			case 14:
 				levelName.GetComponent<TextMeshProUGUI>().text = I18n.Translate("menu.score.texte17");
-				break;
+                ScoreManager.scoreManager.score = ScoreManager.scoreManager.CalculateArenaScore();
+                break;
 			default:
 				levelName.GetComponent<TextMeshProUGUI>().text = "not a normal scene";
 				break;
