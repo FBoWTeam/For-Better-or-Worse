@@ -27,5 +27,11 @@ public class PrologueBGM : MonoBehaviour
 			manager = null;
 			Destroy(this.gameObject);
 		}
-	}
+
+        if (SceneManager.GetActiveScene().buildIndex == 2)
+        {
+            manager = null;
+            Destroy(this.gameObject);
+        }
+    }
 }
