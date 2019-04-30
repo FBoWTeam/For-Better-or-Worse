@@ -113,6 +113,10 @@ public class BossSystem : MonoBehaviour
     List<GameObject> mysticLineList = new List<GameObject>();
 
     [Header("[Charge Params]")]
+    public int collisionDamage;
+    public int chargeDamage;
+    private int originalDamage;
+
     public float chargeCastingTime;
     public float chargeSpeed;
     public float chargeOffset;
@@ -171,6 +175,7 @@ public class BossSystem : MonoBehaviour
         isMysticLineCreated = false;
         isShrinkMysticLineCreated = false;
         anim = GetComponent<Animator>();
+        originalDamage = collisionDamage;
     }
 
     private void Start()
@@ -210,6 +215,16 @@ public class BossSystem : MonoBehaviour
             UpdateScaleShrinkMysticLine();
         }
 
+        //Debug.Log("isattacking is " + isAttacking);
+
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Player"))
+        {
+            GameManager.gameManager.TakeDamage(collision.gameObject, collisionDamage, collision.contacts[0].point, true);
+        }
     }
 
     //======================================================================================== SET FOCUS
@@ -258,7 +273,7 @@ public class BossSystem : MonoBehaviour
                     GameObject.Find("Rock Lines").GetComponent<TimeLineRockFall>().Initialize();
 
                     StopAllCoroutines();
-                    DeactivateFXHand();
+                    //isAttacking = false;
                     anim.SetTrigger("Stop");
                 }
                 break;
@@ -273,7 +288,7 @@ public class BossSystem : MonoBehaviour
                     GameObject.Find("TimelineChangePlayers").GetComponent<TimeLineChangePlayers>().Initialize();
 
                     StopAllCoroutines();
-                    DeactivateFXHand();
+                    //isAttacking = false;
                     anim.SetTrigger("Stop");
                     CleanProjectorList();
                 }
@@ -289,7 +304,7 @@ public class BossSystem : MonoBehaviour
                     GameObject.Find("Rock Corners").GetComponent<TimeLineCornerRockFall>().Initialize();
 
                     StopAllCoroutines();
-                    DeactivateFXHand();
+                    //isAttacking = false;
                     anim.SetTrigger("Stop");
                     CleanProjectorList();
                 }
@@ -305,7 +320,7 @@ public class BossSystem : MonoBehaviour
                     Debug.Log("DED");
                     //ded
                     StopAllCoroutines();
-                    DeactivateFXHand();
+                    //isAttacking = false;
                     anim.SetTrigger("Stop");
                     CleanProjectorList();
                     GameObject.Find("TimelineDeath").GetComponent<TimeLineDeath>().Initialize();
@@ -331,16 +346,6 @@ public class BossSystem : MonoBehaviour
             Destroy(myst);
         }
         mysticLineList.Clear();
-    }
-
-    public void DeactivateFXHand()
-    {
-        FxElectricityLeft.SetActive(false);
-        FxElectricityRight.SetActive(false);
-        FxFireLeft.SetActive(false);
-        FxFireRight.SetActive(false);
-        FxMysticLeft.SetActive(false);
-        FxMysticRight.SetActive(false);
     }
 
 
@@ -418,6 +423,7 @@ public class BossSystem : MonoBehaviour
         FxMysticRight.SetActive(true);
 
         yield return new WaitForSeconds(2.8f);
+        Debug.Log("now");
 
         Vector3 raycastPosition = new Vector3(transform.position.x, 1f, transform.position.z);
         RaycastHit hit;
@@ -778,6 +784,7 @@ public class BossSystem : MonoBehaviour
     public IEnumerator ChargeCoroutine()
     {
         isAttacking = true;
+        collisionDamage = chargeDamage;
 
         Vector3 target = aimedPlayer.transform.position;
         Vector3 posStart = transform.position;
@@ -851,6 +858,7 @@ public class BossSystem : MonoBehaviour
 
         Destroy(chargeIndicator);
 
+        collisionDamage = originalDamage;
         yield return new WaitForSeconds(0.7f);//wait for the end animation
 
         nextAttack = Time.time + Random.Range(minWaitTime, maxWaitTime);
@@ -942,10 +950,10 @@ public class BossSystem : MonoBehaviour
                 else if (!lastHitByP1 && !lastHitByP2)
                 {
                     ScoreManager.scoreManager.killsEnvironment++;
-                }/*
+                }
                 StopAllCoroutines();
                 GameData.previousScene = 9;
-                SceneManager.LoadScene(10);*/
+                SceneManager.LoadScene(10);
             }
         }
     }
