@@ -42,6 +42,7 @@ public class TimeLineRockFall : MonoBehaviour
     IEnumerator InitCoroutine()
     {
         yield return new WaitForSeconds(1.5f);//fade out
+        PlayersContent.transform.position += new Vector3(0.0f, 0.0f, -7.0f);
         Boss.GetComponent<BossSystem>().isAttacking = true;
         Boss.GetComponent<BossSystem>().CleanProjectorList();
         Boss.GetComponent<BossSystem>().CleanMysticLineList();
