@@ -10,11 +10,13 @@ public class TimeLineDeath : MonoBehaviour
     PlayableDirector director;
     GameObject Boss;
     public GameObject deathPoof;
+    GameObject bossHealthBar;
 
     // Start is called before the first frame update
     void Start()
     {
         Boss = GameObject.Find("Boss");
+        bossHealthBar = GameObject.Find("Bosshealthbar");
     }
 
     public void Initialize()
@@ -22,6 +24,7 @@ public class TimeLineDeath : MonoBehaviour
         GameManager.gameManager.orb.GetComponent<OrbController>().canHitPlayer = false;
 
         StartCoroutine(DeathPoofBoss());
+        bossHealthBar.SetActive(false);
 
         director = GetComponent<PlayableDirector>();
         director.Play();
