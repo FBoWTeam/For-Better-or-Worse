@@ -14,6 +14,10 @@ public class PauseMenu : MonoBehaviour
     public GameObject mainMenu;
     public GameObject guide;
 
+    [Header("Main Components")]
+    public GameObject mappingPanel;
+    public GameObject powerPanel;
+
     [Header("Difficulty")]
     public TextMeshProUGUI difficultyText;
     public TextMeshProUGUI difficultyExplicationText;
@@ -34,16 +38,7 @@ public class PauseMenu : MonoBehaviour
             mappingImage.sprite = mappingVF;
         }
 
-        if (GameData.worseModeActivated)
-        {
-            difficultyText.SetText("menu.pause.bouton6");
-            difficultyExplicationText.SetText("menu.niveaux.difficulte5");
-        }
-        else
-        {
-            difficultyText.SetText("menu.pause.bouton5");
-            difficultyExplicationText.SetText("menu.niveaux.difficulte3");
-        }
+        CheckDifficulty();
     }
 
     // Update is called once per frame
@@ -51,7 +46,7 @@ public class PauseMenu : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.Joystick1Button7) || Input.GetKeyDown(KeyCode.Joystick2Button7))
         {
-            if (gameIsPaused)
+            if (GameManager.gameManager.isPaused)
             {
                 Resume();
             }
@@ -70,18 +65,52 @@ public class PauseMenu : MonoBehaviour
     public void Resume()
     {
         Time.timeScale = 1f;
-        gameIsPaused = false;
+        GameManager.gameManager.isPaused = false;
     }
 
     void Pause()
     {
         Time.timeScale = 0f;
-        gameIsPaused = true;
+        GameManager.gameManager.isPaused = true;
     }
 
-    void ChangeDifficulty()
+    public void OpenGuide()
+    {
+        mainMenu.SetActive(false);
+        guide.SetActive(true);
+    }
+
+    public void ChangeDifficulty()
     {
         GameData.worseModeActivated = (GameData.worseModeActivated) ? false : true;
+
+        CheckDifficulty();
+    }
+
+    public void CheckDifficulty()
+    {
+        if (GameData.worseModeActivated)
+        {
+            difficultyText.SetText(I18n.Translate("menu.pause.bouton6"));
+            difficultyExplicationText.SetText(I18n.Translate("menu.niveaux.difficulte5"));
+        }
+        else
+        {
+            difficultyText.SetText(I18n.Translate("menu.pause.bouton5"));
+            difficultyExplicationText.SetText(I18n.Translate("menu.niveaux.difficulte3"));
+        }
+    }
+
+    public void OpenMappingPanel()
+    {
+        powerPanel.SetActive(false);
+        mappingPanel.SetActive(true);
+    }
+
+    public void OpenPowerPanel()
+    {
+        mappingPanel.SetActive(false);
+        powerPanel.SetActive(true);
     }
     public void LoadMenu()
     {
