@@ -83,7 +83,9 @@ public class Brazier : MonoBehaviour, IActivable
 
     IEnumerator ReActivateArenaBrazier()
     {
+        GetComponent<CapsuleCollider>().enabled = false;
         yield return new WaitForSeconds(reActivationTime);
+        GetComponent<CapsuleCollider>().enabled = true;
         this.Activate();
     }
 
