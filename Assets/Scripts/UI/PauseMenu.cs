@@ -30,7 +30,7 @@ public class PauseMenu : MonoBehaviour
     public Sprite mappingVF;
     public Sprite mappingVA;
 
-    private void Awake()
+    private void Start()
     {
         if (GameData.english)
         {
@@ -40,18 +40,17 @@ public class PauseMenu : MonoBehaviour
         {
             mappingImage.sprite = mappingVF;
         }
-
         CheckDifficulty();
     }
 
     // Update is called once per frame
     void Update()
     {
+        print(GameManager.gameManager.isPaused);
         if (Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.Joystick1Button7))
         {
             if (!pauseMenuActive)
             {
-                print("ACTIVE");
                 Time.timeScale = 0;
                 pauseMenuActive = true;
                 GameManager.gameManager.isPaused = true;
@@ -82,13 +81,15 @@ public class PauseMenu : MonoBehaviour
                 eS.SetSelectedGameObject(mainMenuFirstSelected);
             }
 
-            if ((Input.GetAxis("HorizontalP1") > 0.5f) && !powerPanel.activeSelf)
+            if (((Input.GetAxis("HorizontalP1") > 0.5f) && !powerPanel.activeSelf) || Input.GetKeyDown(KeyCode.RightArrow))
             {
+                //print("Right");
                 mappingPanel.SetActive(false);
                 powerPanel.SetActive(true);
             }
-            else if ((Input.GetAxis("HorizontalP1") < 0.5f) && !mappingPanel.activeSelf)
+            else if (((Input.GetAxis("HorizontalP1") < -0.5f) && !mappingPanel.activeSelf) || Input.GetKeyDown(KeyCode.LeftArrow))
             {
+                //sprint("Left");
                 powerPanel.SetActive(false);
                 mappingPanel.SetActive(true);
             }
@@ -115,7 +116,7 @@ public class PauseMenu : MonoBehaviour
     public void ChangeDifficulty()
     {
         GameData.worseModeActivated = (GameData.worseModeActivated) ? false : true;
-
+        GameManager.gameManager.orb.GetComponent<OrbController>().canHitPlayer = GameData.worseModeActivated;
         CheckDifficulty();
     }
 
@@ -146,7 +147,16 @@ public class PauseMenu : MonoBehaviour
     }
     public void LoadMenu()
     {
-        //Debug.Log("Menu");
+        StartCoroutine(LoadMenuCoroutine());
+    }
+
+    IEnumerator LoadMenuCoroutine()
+    {
+        print("LOAD");
+        mainMenu.SetActive(false);
+        StartCoroutine(GameManager.gameManager.FadeCoroutine("FadeIn"));
+        yield return new WaitUntil(() => GameManager.gameManager.isPaused == true);
+        Time.timeScale = 1;
         SceneManager.LoadScene(2);
     }
 }
