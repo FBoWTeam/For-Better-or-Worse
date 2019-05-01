@@ -91,7 +91,9 @@ public class Enemy : MonoBehaviour
 
 
 
-    #endregion
+	#endregion
+
+	public SoundEmitter soundEmitter;
 
     // Start is called before the first frame update
     void Start()
@@ -191,6 +193,7 @@ public class Enemy : MonoBehaviour
         GameManager.gameManager.orb.GetComponent<OrbController>().hasHitEnemy = true;
         if (hp <= 0)
         {
+			soundEmitter.PlaySound(1);
             //update in score manager
             if (lastHitByP1 && !lastHitByP2)
             {

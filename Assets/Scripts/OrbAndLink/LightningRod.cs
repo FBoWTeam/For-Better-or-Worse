@@ -11,6 +11,8 @@ public class LightningRod : MonoBehaviour
 
 	public GameObject target;
 
+	public SoundEmitter soundEmitter;
+
 	void Start()
 	{
 		line = GetComponent<LineRenderer>();

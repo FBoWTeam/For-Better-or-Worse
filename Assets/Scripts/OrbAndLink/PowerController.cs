@@ -809,10 +809,11 @@ public class PowerController : MonoBehaviour
 			{
 				rod.transform.position = actualPos;
 				rod.target = nearestObject;
+				rod.soundEmitter.PlaySound(0);
                 if (isEnemy)
-                {
-                    nearestObject.GetComponent<Enemy>().TakeDamage(zapDamageEnemy);
-                }
+				{
+					nearestObject.GetComponent<Enemy>().TakeDamage(zapDamageEnemy);
+				}
                 else
                 {
                     GameManager.gameManager.TakeDamage(nearestObject, zapDamagePlayer, Vector3.zero, false);
