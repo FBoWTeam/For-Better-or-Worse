@@ -22,7 +22,6 @@ public class ScenarioHandler : MonoBehaviour
 
 		skipCanvas = transform.GetChild(0).gameObject;
 		skipCanvas.SetActive(false);
-		GameData.introSkiped = false;
 
 		dialogSystem = GameObject.Find("DialogSystem").GetComponent<DialogSystem>();
 		dialogSystem.gameObject.SetActive(false);
