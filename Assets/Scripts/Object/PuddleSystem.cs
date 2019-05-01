@@ -106,8 +106,9 @@ public class PuddleSystem : MonoBehaviour
                 GetComponent<MeshRenderer>().material = acidMaterial;
                 break;
             case GameManager.PuddleType.Water:
-                GetComponent<MeshRenderer>().material = waterMaterial;
-                break;
+                //GetComponent<MeshRenderer>().material = waterMaterial;
+                transform.GetChild(0).gameObject.SetActive(true);
+                break; 
             case GameManager.PuddleType.Flammable:
                 GetComponent<MeshRenderer>().material = flammableMaterial;
                 if (onFire)
@@ -116,7 +117,8 @@ public class PuddleSystem : MonoBehaviour
                 }
                 break;
             case GameManager.PuddleType.Mud:
-                GetComponent<MeshRenderer>().material = mudMaterial;
+                //GetComponent<MeshRenderer>().material = mudMaterial;
+                transform.GetChild(4).gameObject.SetActive(true);
                 break;
         }
     }
@@ -354,7 +356,9 @@ public class PuddleSystem : MonoBehaviour
                 }
                 frozen = true;
 
-                GetComponent<MeshRenderer>().material = frozenWaterMaterial;
+                //GetComponent<MeshRenderer>().material = frozenWaterMaterial;
+                transform.GetChild(0).gameObject.SetActive(false);
+                transform.GetChild(1).gameObject.SetActive(true);
 
                 for (int i = 0; i < objectsInPuddle.Count; i++)
                 {
@@ -373,10 +377,11 @@ public class PuddleSystem : MonoBehaviour
 
             else if (target.GetComponent<PowerController>().elementalPower == GameManager.PowerType.Electric && !electrified && !frozen)
             {
-                electrified = true;
+                electrified = true;/*
                 transform.GetChild(0).GetComponent<Collider>().enabled = false;
-                transform.GetChild(0).GetComponent<Collider>().enabled = true;
+                transform.GetChild(0).GetComponent<Collider>().enabled = true;*/
                 GetComponent<MeshRenderer>().material = ElectrifiedWaterMaterial;
+                transform.GetChild(3).gameObject.SetActive(true);
                 electrifiedWaterCoroutine = StartCoroutine(ReturnToWater(electrifiedWaterLifeTime));
             }
 
@@ -386,10 +391,13 @@ public class PuddleSystem : MonoBehaviour
                 if (frozen)
                 {
                     frozen = false;
-                    GetComponent<MeshRenderer>().material = waterMaterial;
+                    //GetComponent<MeshRenderer>().material = waterMaterial;
+                    transform.GetChild(1).gameObject.SetActive(false);
+                    transform.GetChild(0).gameObject.SetActive(true);
                 }
             }
         }
+
         for (int i = 0; i < objectsInPuddle.Count; i++)
         {
             if (objectsInPuddle[i].CompareTag("Enemy"))
@@ -435,6 +443,9 @@ public class PuddleSystem : MonoBehaviour
             electrified = false;
         }
         GetComponent<MeshRenderer>().material = waterMaterial;
+        transform.GetChild(1).gameObject.SetActive(false);
+        transform.GetChild(3).gameObject.SetActive(false);
+        transform.GetChild(0).gameObject.SetActive(true);
     }
 
     #endregion
