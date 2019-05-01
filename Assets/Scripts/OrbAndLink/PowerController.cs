@@ -179,7 +179,9 @@ public class PowerController : MonoBehaviour
     public float darknessTimer;//duration of the state weaken on the ennemi
     [DrawIf(new string[] { "editingPower" }, GameManager.PowerType.Darkness)]
     public int darknessDamage;//bonus damage when an weaken ennemi get hit bby the orb
-    #endregion
+	#endregion
+
+	public SoundEmitter soundEmitter;
 
 
     private void Start()
@@ -328,6 +330,7 @@ public class PowerController : MonoBehaviour
 
     void ActivateLargeOrb()
     {
+		soundEmitter.PlaySound(6);
         behaviouralPower = GameManager.PowerType.LargeOrb;
         //transform.localScale = new Vector3(maxScale, maxScale, maxScale);
         //transform.GetChild(0).GetComponent<MeshRenderer>().material = normalMaterial;
@@ -372,6 +375,7 @@ public class PowerController : MonoBehaviour
 
     void ActivateVortex()
     {
+		soundEmitter.PlaySound(5);
         behaviouralPower = GameManager.PowerType.Vortex;
 		behaviouralDurationCoroutine = StartCoroutine(VortexPower());
         //transform.GetChild(0).GetComponent<MeshRenderer>().material = vortexMaterial;
@@ -445,6 +449,7 @@ public class PowerController : MonoBehaviour
 
     void ActivateLeechLife()
     {
+		soundEmitter.PlaySound(7);
         behaviouralPower = GameManager.PowerType.LeechLife;
         //transform.GetChild(0).GetComponent<MeshRenderer>().material = leechLifeMaterial;
 
@@ -487,6 +492,7 @@ public class PowerController : MonoBehaviour
 
     void ActivateSlug()
     {
+		soundEmitter.PlaySound(4);
         behaviouralPower = GameManager.PowerType.Slug;
 		behaviouralDurationCoroutine = StartCoroutine(InstanciateSlug());
         //transform.GetChild(0).GetComponent<MeshRenderer>().material = slugMaterial;
@@ -560,6 +566,7 @@ public class PowerController : MonoBehaviour
 
     void ActivateIce()
     {
+		soundEmitter.PlaySound(3);
         elementalPower = GameManager.PowerType.Ice;
         //GetComponent<MeshRenderer>().material = iceMaterial;
         VFX.transform.GetChild(4).gameObject.transform.GetChild(0).gameObject.SetActive(VFX.transform.GetChild(0).gameObject.transform.GetChild(0).gameObject.activeSelf);
@@ -623,6 +630,7 @@ public class PowerController : MonoBehaviour
 
     void ActivateFire(bool forced)
     {
+		soundEmitter.PlaySound(0);
         elementalPower = GameManager.PowerType.Fire;
         //GetComponent<MeshRenderer>().material = fireMaterial;
         VFX.transform.GetChild(2).gameObject.transform.GetChild(0).gameObject.SetActive(VFX.transform.GetChild(0).gameObject.transform.GetChild(0).gameObject.activeSelf);
@@ -696,6 +704,7 @@ public class PowerController : MonoBehaviour
 
     void ActivateElectric()
     {
+		soundEmitter.PlaySound(1);
         elementalPower = GameManager.PowerType.Electric;
         //GetComponent<MeshRenderer>().material = electricMaterial;
         VFX.transform.GetChild(3).gameObject.transform.GetChild(0).gameObject.SetActive(VFX.transform.GetChild(0).gameObject.transform.GetChild(0).gameObject.activeSelf);
@@ -830,6 +839,7 @@ public class PowerController : MonoBehaviour
 
     void ActivateDarkness()
     {
+		soundEmitter.PlaySound(2);
         elementalPower = GameManager.PowerType.Darkness;
         //GetComponent<MeshRenderer>().material = darknessMaterial;
         VFX.transform.GetChild(1).gameObject.transform.GetChild(0).gameObject.SetActive(VFX.transform.GetChild(0).gameObject.transform.GetChild(0).gameObject.activeSelf);
