@@ -260,6 +260,20 @@ public class PuddleSystem : MonoBehaviour
                 }
             }
         }
+        if (puddleType == GameManager.PuddleType.Mud)
+        {
+            for (int i = 0; i < objectsInPuddle.Count; i++)
+            {
+                if (objectsInPuddle[i].CompareTag("Player"))
+                {
+                    objectsInPuddle[i].GetComponent<PlayerController>().RestoreSpeed();
+                }
+                if (objectsInPuddle[i].CompareTag("Enemy"))
+                {
+                    objectsInPuddle[i].GetComponent<EnemyMovement>().RestoreSpeed();
+                }
+            }
+        }
     }
 
 
@@ -348,6 +362,7 @@ public class PuddleSystem : MonoBehaviour
     {
         if (target.CompareTag("Orb"))
         {
+            
             if (target.GetComponent<PowerController>().elementalPower == GameManager.PowerType.Ice && !frozen)
             {
                 if (electrifiedWaterCoroutine != null)
@@ -377,10 +392,11 @@ public class PuddleSystem : MonoBehaviour
 
             else if (target.GetComponent<PowerController>().elementalPower == GameManager.PowerType.Electric && !electrified && !frozen)
             {
+                Debug.Log("elec");
                 electrified = true;/*
                 transform.GetChild(0).GetComponent<Collider>().enabled = false;
                 transform.GetChild(0).GetComponent<Collider>().enabled = true;*/
-                GetComponent<MeshRenderer>().material = ElectrifiedWaterMaterial;
+                //GetComponent<MeshRenderer>().material = ElectrifiedWaterMaterial;
                 transform.GetChild(3).gameObject.SetActive(true);
                 electrifiedWaterCoroutine = StartCoroutine(ReturnToWater(electrifiedWaterLifeTime));
             }
@@ -442,7 +458,7 @@ public class PuddleSystem : MonoBehaviour
         {
             electrified = false;
         }
-        GetComponent<MeshRenderer>().material = waterMaterial;
+        //GetComponent<MeshRenderer>().material = waterMaterial;
         transform.GetChild(1).gameObject.SetActive(false);
         transform.GetChild(3).gameObject.SetActive(false);
         transform.GetChild(0).gameObject.SetActive(true);
@@ -566,6 +582,10 @@ public class PuddleSystem : MonoBehaviour
         {
             target.GetComponent<EnemyMovement>().SlowSpeed(mudSlowAmount);
         }
+        if (target.CompareTag("Player") || target.CompareTag("Enemy"))
+        {
+            objectsInPuddle.Add(target);
+        }
     }
 
     void OnStayMud(GameObject target)
@@ -585,6 +605,10 @@ public class PuddleSystem : MonoBehaviour
         if (target.CompareTag("Enemy"))
         {
             target.GetComponent<EnemyMovement>().RestoreSpeed();
+        }
+        if (target.CompareTag("Player") || target.CompareTag("Enemy"))
+        {
+            objectsInPuddle.Remove(target);
         }
     }
     #endregion
