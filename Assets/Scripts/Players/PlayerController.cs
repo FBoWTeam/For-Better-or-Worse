@@ -48,6 +48,8 @@ public class PlayerController : MonoBehaviour
     [HideInInspector]
     public Coroutine actualBurnCoroutine;
 
+	public SoundEmitter soundEmitter;
+
     void Awake()
     {
         rb = GetComponent<Rigidbody>();
@@ -134,6 +136,7 @@ public class PlayerController : MonoBehaviour
             || (!player1 && (Input.GetKeyDown(KeyCode.Joystick2Button4) 
             || Input.GetKeyDown(KeyCode.Keypad0)))) && canTaunt)
         {
+			soundEmitter.PlaySound(1);
             Taunt();
             StartCoroutine(TauntCoolDown(tauntCooldown));
 			StartCoroutine(GameManager.gameManager.UIManager.TauntCooldownSystem(player1, tauntCooldown));
@@ -180,6 +183,7 @@ public class PlayerController : MonoBehaviour
             if ((player1 && GameManager.gameManager.orb.GetComponent<PowerController>().canBeActivatedByPlayer1[(int)elementalPowerSlot - 1])
                 || (!player1 && GameManager.gameManager.orb.GetComponent<PowerController>().canBeActivatedByPlayer2[(int)elementalPowerSlot - 1]))
             {
+				soundEmitter.PlaySound(5);
                 if (orbHitter.powerToApply != elementalPowerSlot)
                 {
                     if (!GameManager.isElemental(orbHitter.powerToApply))
@@ -197,13 +201,18 @@ public class PlayerController : MonoBehaviour
                     selectedElementalFx.GetComponent<ParticleSystem>().Stop();
                 }
             }
+			else
+			{
+				soundEmitter.PlaySound(6);
+			}
         }
         if (behaviouralPower && behaviouralPowerSlot != GameManager.PowerType.None)
         {
             if ((player1 && GameManager.gameManager.orb.GetComponent<PowerController>().canBeActivatedByPlayer1[(int)behaviouralPowerSlot - 1])
                 || (!player1 && GameManager.gameManager.orb.GetComponent<PowerController>().canBeActivatedByPlayer2[(int)behaviouralPowerSlot - 1]))
             {
-                if (orbHitter.powerToApply != behaviouralPowerSlot)
+				soundEmitter.PlaySound(5);
+				if (orbHitter.powerToApply != behaviouralPowerSlot)
                 {
                     if (GameManager.isElemental(orbHitter.powerToApply))
                     {
@@ -220,6 +229,10 @@ public class PlayerController : MonoBehaviour
                     selectedBehavioralFx.GetComponent<ParticleSystem>().Stop();
                 }
             }
+			else
+			{
+				soundEmitter.PlaySound(6);
+			}
         }
         
         ApplyFXTail(orbHitter.powerToApply);
@@ -257,6 +270,7 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     public void AttributePower(GameManager.PowerType newPower)
     {
+		soundEmitter.PlaySound(4);
 		if (GameManager.isElemental(newPower))
 		{
 			elementalPowerSlot = newPower;
