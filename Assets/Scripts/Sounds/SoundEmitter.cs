@@ -50,7 +50,7 @@ public class SoundEmitter : MonoBehaviour
 		source.volume = sound.baseVolume;
 		if (!sound.omnipresentSound)
 		{
-			getVolumeCoefficient(sound.maxDistance);
+			source.volume *= getVolumeCoefficient(sound.maxDistance);
 		}
 
 		source.Play();
@@ -74,7 +74,7 @@ public class SoundEmitter : MonoBehaviour
 	float getVolumeCoefficient(float maxDist)
 	{
 		float distance = getNearestPlayerDistance();
-		float coefficient = distance / maxDist;
+		float coefficient = (-distance / maxDist) + 1.0f;
 		Mathf.Clamp01(coefficient);
 
 		return coefficient;

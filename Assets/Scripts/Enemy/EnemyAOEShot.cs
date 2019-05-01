@@ -15,6 +15,8 @@ public class EnemyAOEShot: MonoBehaviour {
     private GameObject puddle;
     public float YThreshold = 0.1999999f;
 
+	public SoundEmitter soundEmitter;
+
     private void Awake() {
         body = GetComponent<Rigidbody>();
         body.useGravity = false;
@@ -33,6 +35,7 @@ public class EnemyAOEShot: MonoBehaviour {
             body.constraints = RigidbodyConstraints.FreezeAll;
             GetComponent<MeshRenderer>().enabled = false;
 
+			soundEmitter.PlaySound(0);
             GameObject pdle = Instantiate(puddle, transform.position, Quaternion.identity, transform);
             pdle.transform.localScale = new Vector3(effectRadius * 2, pdle.transform.localScale.y, 2 * effectRadius);
 

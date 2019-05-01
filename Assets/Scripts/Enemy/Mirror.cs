@@ -8,6 +8,8 @@ public class Mirror : MonoBehaviour
     public float knockbackForce;
     public int mirrorHealth;
 
+	public SoundEmitter soundEmitter;
+
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Orb"))
@@ -19,12 +21,18 @@ public class Mirror : MonoBehaviour
                 controller.toPlayer2 = !controller.toPlayer2;
                 if (mirrorHealth <= 0)
                 {
+					soundEmitter.PlaySound(1);
                     DestroyShield();
                 }
+				else
+				{
+					soundEmitter.PlaySound(0);
+				}
             }
             else
             {
-                OrbController controller = GameManager.gameManager.orb.GetComponent<OrbController>();
+				soundEmitter.PlaySound(0);
+				OrbController controller = GameManager.gameManager.orb.GetComponent<OrbController>();
                 controller.toPlayer2 = !controller.toPlayer2;
             }
 
