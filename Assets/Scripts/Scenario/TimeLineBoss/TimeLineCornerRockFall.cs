@@ -105,6 +105,8 @@ public class TimeLineCornerRockFall : MonoBehaviour
         ElectricPylon1.SetActive(false);
         ElectricPylon2.SetActive(false);
 
+        Boss.GetComponent<BossSystem>().rockFall.SetActive(true);
+
         Destroy(GetComponent<PlayableDirector>());
 
         StartCoroutine(End());
