@@ -1,20 +1,30 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SoundEmmiter : MonoBehaviour
+public class SoundEmitter : MonoBehaviour
 {
-	[HideInInspector]
-	public AudioClip soundToPlay;
-	public float volumeCoefficient;
-	public float maxDistance;
+	[Serializable]
+	public class PlayableSound
+	{
+		public AudioClip sound;
+		public bool continuousSound;
+		public float maxDistance;
+		[HideInInspector]
+		public bool playing;
+	}
 
-	public bool continuousSound;
+	public List<PlayableSound> sounds;
+	List<AudioSource> audioSources;
 
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
-        
+        foreach(PlayableSound sound in sounds)
+		{
+			audioSources.Add(gameObject.AddComponent(typeof(AudioSource)) as AudioSource);
+		}
     }
 
     // Update is called once per frame
@@ -23,11 +33,18 @@ public class SoundEmmiter : MonoBehaviour
 
     }
 
-	public void updateVolumeCoefficient()
+	public void PlaySound()
+	{
+
+	}
+
+	public float getVolumeCoefficient(int soundID)
 	{
 		float distance = getNearestPlayerDistance();
-		volumeCoefficient = distance / maxDistance;
-		Mathf.Clamp01(volumeCoefficient);
+		float coefficient = distance / sounds[soundID].maxDistance;
+		Mathf.Clamp01(coefficient);
+
+		return coefficient;
 	}
 
 	public float getNearestPlayerDistance()
