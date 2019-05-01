@@ -125,7 +125,8 @@ public class GameManager : MonoBehaviour
         }
         if(introScenario == null || GameData.introSkiped)
         {
-            GameObject.Find("DialogSystem").SetActive(false);
+			GameData.introSkiped = false;
+			GameObject.Find("DialogSystem").SetActive(false);
             blackBands.SetActive(false);
             player1.GetComponent<PlayerController>().active = true;
             player2.GetComponent<PlayerController>().active = true;
