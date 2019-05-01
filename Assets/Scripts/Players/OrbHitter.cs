@@ -25,6 +25,8 @@ public class OrbHitter : MonoBehaviour
     public bool forcedAmortizing;
 	public float amortizeDuration;
 
+	public SoundEmitter soundEmitter;
+
     void Start()
     {
         orbController = GameManager.gameManager.orb.GetComponent<OrbController>();
@@ -58,6 +60,7 @@ public class OrbHitter : MonoBehaviour
             bool player1 = GetComponent<PlayerController>().player1;
 			if (hitting && ((player1 && !orbController.toPlayer2) || (!player1 && orbController.toPlayer2)))
             {
+				soundEmitter.PlaySound(3);
 				StopCoroutine(HitCoroutine());
 				hitting = false;
 				hitTimer = hitCooldown;
@@ -152,6 +155,7 @@ public class OrbHitter : MonoBehaviour
 	{
 		hitting = true;
         GetComponent<Animator>().SetTrigger("Hit");
+		soundEmitter.PlaySound(0);
 
 		yield return new WaitForSeconds(hitDuration);
 		hitting = false;
@@ -167,6 +171,7 @@ public class OrbHitter : MonoBehaviour
         orbController.speed = 0.0f;
         orbController.amortized = true;
         orbController.speed = orbController.minSpeed;
+		soundEmitter.PlaySound(2);
 
         //update in score manager
         if (orbController.combo > 0)

@@ -19,7 +19,7 @@ public class SoundEmitter : MonoBehaviour
 	}
 
 	public List<PlayableSound> sounds;
-	public List<AudioSource> audioSources;
+	List<AudioSource> audioSources;
 
     // Start is called before the first frame update
     void Awake()
@@ -27,7 +27,7 @@ public class SoundEmitter : MonoBehaviour
 		audioSources = new List<AudioSource>(GetComponents<AudioSource>());
     }
 
-	private void Update()
+	void Update()
 	{
 		for(int i=0; i<sounds.Count; i++)
 		{
@@ -71,7 +71,7 @@ public class SoundEmitter : MonoBehaviour
 		sound.playing = false;
 	}
 
-	public float getVolumeCoefficient(float maxDist)
+	float getVolumeCoefficient(float maxDist)
 	{
 		float distance = getNearestPlayerDistance();
 		float coefficient = distance / maxDist;
@@ -80,7 +80,7 @@ public class SoundEmitter : MonoBehaviour
 		return coefficient;
 	}
 
-	public float getNearestPlayerDistance()
+	float getNearestPlayerDistance()
 	{
 		float Player1Dist = Vector3.Distance(transform.position, GameManager.gameManager.player1.transform.position);
 		float Player2Dist = Vector3.Distance(transform.position, GameManager.gameManager.player2.transform.position);
