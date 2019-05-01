@@ -45,12 +45,15 @@ public class SoundEmitter : MonoBehaviour
 		AudioSource source = audioSources[soundID];
 		PlayableSound sound = sounds[soundID];
 
-		source.clip = sound.clip;
-
-		source.volume = sound.baseVolume;
-		if (!sound.omnipresentSound)
+		if (!sound.playing)
 		{
-			source.volume *= getVolumeCoefficient(sound.maxDistance);
+			source.clip = sound.clip;
+
+			source.volume = sound.baseVolume;
+			if (!sound.omnipresentSound)
+			{
+				source.volume *= getVolumeCoefficient(sound.maxDistance);
+			}
 		}
 
 		source.Play();

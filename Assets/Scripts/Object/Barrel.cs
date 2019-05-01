@@ -13,6 +13,8 @@ public class Barrel : MonoBehaviour, IActivable
 
     public GameObject explosionEffect;
 
+	public SoundEmitter soundEmitter;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -28,8 +30,9 @@ public class Barrel : MonoBehaviour, IActivable
     }
 
     IEnumerator TimeBeforeActivationCoroutine()
-    {
-        transform.GetChild(0).gameObject.SetActive(true);
+	{
+		soundEmitter.PlaySound(0);
+		transform.GetChild(0).gameObject.SetActive(true);
         yield return new WaitForSeconds(TimeBeforeActivation);
 
         this.Activate();
@@ -37,6 +40,7 @@ public class Barrel : MonoBehaviour, IActivable
 
     public void Activate()
     {
+		soundEmitter.PlaySound(1);
         isActive = true;
 
         Vector3 explosionPos = transform.position;
