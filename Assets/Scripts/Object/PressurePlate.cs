@@ -36,6 +36,8 @@ public class PressurePlate : MonoBehaviour, IActivable
     [DrawIf(new string[] { "type" }, PressurePlateType.Trial)]
     public GameObject otherPressurePlate;
 
+	public SoundEmitter soundEmitter;
+
     private void Start()
     {
         anim = GetComponentInParent<Animator>();
@@ -106,11 +108,13 @@ public class PressurePlate : MonoBehaviour, IActivable
 
         if (isActive)
         {
+			soundEmitter.PlaySound(0);
             anim.SetBool("isActivated", true);
         }
         else
-        {
-            anim.SetBool("isActivated", false);
+		{
+			soundEmitter.PlaySound(0);
+			anim.SetBool("isActivated", false);
         }
 
         if (type == PressurePlateType.PowerGiver && checkObjectActivated())

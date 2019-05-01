@@ -28,6 +28,8 @@ public class Door : MonoBehaviour, IActivable
     [Tooltip("list of activated objects needed to open the door")]
     public List<GameObject> objectsConditions;
 
+	public SoundEmitter soundEmitter;
+
     /// <summary>
     /// opens the door
     /// </summary>
@@ -53,8 +55,9 @@ public class Door : MonoBehaviour, IActivable
     public void Deactivate()
     {
         if (isActive == true)
-        {
-            GetComponentInParent<Animation>().Play("DoorClose");
+		{
+			soundEmitter.PlaySound(0);
+			GetComponentInParent<Animation>().Play("DoorClose");
         }
         isActive = false;
     }
@@ -64,8 +67,9 @@ public class Door : MonoBehaviour, IActivable
         if (CheckValidObjects())
         {
             if (isActive == false)
-            {
-                GetComponentInParent<Animation>().Play("DoorOpen");
+			{
+				soundEmitter.PlaySound(0);
+				GetComponentInParent<Animation>().Play("DoorOpen");
             }
             isActive = true;
         }
@@ -77,6 +81,7 @@ public class Door : MonoBehaviour, IActivable
         {
             if (isActive == false)
             {
+				soundEmitter.PlaySound(0);
                 GetComponentInParent<Animation>().Play("DoorOpen");
             }
             isActive = true;
@@ -85,6 +90,7 @@ public class Door : MonoBehaviour, IActivable
         {
             if (isActive == true)
             {
+				soundEmitter.PlaySound(0);
                 GetComponentInParent<Animation>().Play("DoorClose");
             }
             isActive = false;
@@ -97,10 +103,11 @@ public class Door : MonoBehaviour, IActivable
         {
             doorCurrentCharge = doorMaxCharge;
             if (isActive == false && CheckValidObjects())
-            {
-                GetComponentInParent<Animation>().Play("DoorOpen");
+			{
+				soundEmitter.PlaySound(0);
+				GetComponentInParent<Animation>().Play("DoorOpen");
                 isActive = true;
-                for (int i = 0; i < transform.childCount; i++)
+                for (int i = 0; i < 2; i++)
                 {
                     transform.GetChild(i).gameObject.SetActive(false);
                 }
@@ -114,7 +121,8 @@ public class Door : MonoBehaviour, IActivable
     {
         if (other.CompareTag("Orb") && doorType == DoorType.Electric && other.gameObject.GetComponent<PowerController>().elementalPower == GameManager.PowerType.Electric)
         {
-            doorCurrentCharge += chargingAmount;
+			soundEmitter.PlaySound(1);
+			doorCurrentCharge += chargingAmount;
             this.Activate();
         }
     }

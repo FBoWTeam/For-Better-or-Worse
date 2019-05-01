@@ -13,6 +13,8 @@ public class InteractableWalls : MonoBehaviour, IActivable
 
     private Animator anim;
 
+	public SoundEmitter soundEmitter;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -31,13 +33,15 @@ public class InteractableWalls : MonoBehaviour, IActivable
         {
             if (isActive == false)
             {
+				soundEmitter.PlaySound(0);
                 anim.SetBool("isDown", true);
                 isActive = true;
                 isDown = true;
             }
             else if (isActive == true)
-            {
-                anim.SetBool("isDown", false);
+			{
+				soundEmitter.PlaySound(0);
+				anim.SetBool("isDown", false);
                 isActive = false;
                 isDown = false;
             }

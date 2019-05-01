@@ -29,6 +29,8 @@ public class Capstan : MonoBehaviour, IActivable
 
     private Animator anim;
 
+	public SoundEmitter soundEmitter;
+
     private void Start()
     {
         anim = GetComponentInParent<Animator>();
@@ -77,6 +79,7 @@ public class Capstan : MonoBehaviour, IActivable
         {
             if (orbOnTheRight == false && targetAngle < maxAngle)
             {
+				soundEmitter.PlaySound(0);
                 targetAngle += 180;
             }
             /*
