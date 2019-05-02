@@ -14,6 +14,8 @@ public class ScoreController : MonoBehaviour
 	public float timeBeforeActiveControl;
     private float timer;
 
+	public SoundEmitter soundEmitter;
+
 	public void Awake()
 	{
 		active = false;
@@ -41,6 +43,7 @@ public class ScoreController : MonoBehaviour
 
 				if (Input.GetKeyDown(KeyCode.Joystick1Button0) || Input.GetKeyDown(KeyCode.Space))
 				{
+					soundEmitter.PlaySound(0);
 					if (ScoreManager.scoreManager.gameMode == ScoreManager.GameMode.Story)
 					{
 						//Button A
@@ -68,6 +71,7 @@ public class ScoreController : MonoBehaviour
 				{
 					if (ScoreManager.scoreManager.gameMode == ScoreManager.GameMode.Arena)
 					{
+						soundEmitter.PlaySound(0);
 						Destroy(ScoreManager.scoreManager.gameObject);
 						Destroy(ScoreManager.scoreManager);
 						StartCoroutine(FadeOut(2));

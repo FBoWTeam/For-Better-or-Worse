@@ -8,6 +8,8 @@ public class DifficultySelection : MonoBehaviour
 	public Animation fader;
 	bool active;
 
+	public SoundEmitter soundEmitter;
+
 	public void Awake()
 	{
 		active = false;
@@ -18,6 +20,7 @@ public class DifficultySelection : MonoBehaviour
     {
 		if(active)
 		{
+			soundEmitter.PlaySound(0);
 			GameData.worseModeActivated = worseActivated;
 			GameObject.Find("ThemeBGM").GetComponent<Animation>().Play();
 			StartCoroutine(FadeOut(GameData.nextSceneToLoad));
@@ -39,7 +42,8 @@ public class DifficultySelection : MonoBehaviour
 		{
 			if (Input.GetKey(KeyCode.Joystick1Button1) || Input.GetKey(KeyCode.Escape))
 			{
-				if(GameData.previousScene == 2)
+				soundEmitter.PlaySound(0);
+				if (GameData.previousScene == 2)
 				{
 					StartCoroutine(FadeOut(GameData.previousScene));
 				}

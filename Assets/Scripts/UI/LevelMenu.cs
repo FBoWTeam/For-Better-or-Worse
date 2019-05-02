@@ -18,6 +18,8 @@ public class LevelMenu : MonoBehaviour
 
     public bool isMoving;
 
+	public SoundEmitter soundEmitter;
+
 	public void Awake()
 	{
 		active = false;
@@ -108,8 +110,9 @@ public class LevelMenu : MonoBehaviour
                 }
 
                 if (Input.GetKeyDown(KeyCode.Joystick1Button0) || Input.GetKeyDown(KeyCode.Space))
-                {
-                    switch (curentPIIndex)
+				{
+					soundEmitter.PlaySound(0);
+					switch (curentPIIndex)
                     {
                         case 0:
 							GameData.previousScene = 5;
@@ -135,7 +138,8 @@ public class LevelMenu : MonoBehaviour
                 }
 
                 if (Input.GetKeyDown(KeyCode.Joystick1Button1) || Input.GetKeyDown(KeyCode.Escape))
-                {
+				{
+					soundEmitter.PlaySound(0);
 					StartCoroutine(FadeOut(2));
 				}
 

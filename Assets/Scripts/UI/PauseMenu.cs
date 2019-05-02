@@ -30,6 +30,8 @@ public class PauseMenu : MonoBehaviour
     public Sprite mappingVF;
     public Sprite mappingVA;
 
+	public SoundEmitter soundEmitter;
+
     private void Start()
     {
         if (GameData.english)
@@ -47,10 +49,11 @@ public class PauseMenu : MonoBehaviour
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.Joystick1Button7))
-        {
-            if (!pauseMenuActive)
-            {
-                Time.timeScale = 0;
+		{
+			if (!pauseMenuActive)
+			{
+				soundEmitter.PlaySound(0);
+				Time.timeScale = 0;
                 pauseMenuActive = true;
                 GameManager.gameManager.isPaused = true;
                 GameManager.gameManager.UIManager.gameObject.SetActive(false);
@@ -59,7 +62,7 @@ public class PauseMenu : MonoBehaviour
             }
             else if (pauseMenuActive)
             {
-                if (guide.activeSelf)
+				if (guide.activeSelf)
                 {
                     mappingPanel.SetActive(false);
                     powerPanel.SetActive(false);
@@ -72,32 +75,36 @@ public class PauseMenu : MonoBehaviour
         if (pauseMenuActive && guide.activeSelf)
         {
             if (Input.GetKeyDown(KeyCode.Backspace) || Input.GetKeyDown(KeyCode.Joystick1Button1))
-            {
-                mappingPanel.SetActive(false);
+			{
+				soundEmitter.PlaySound(0);
+				mappingPanel.SetActive(false);
                 powerPanel.SetActive(false);
                 guide.SetActive(false);
                 mainMenu.SetActive(true);
                 eS.SetSelectedGameObject(mainMenuFirstSelected);
             }
 
-            if (((Input.GetAxis("HorizontalP1") > 0.5f) && !powerPanel.activeSelf) || Input.GetKeyDown(KeyCode.RightArrow))
+            if (((Input.GetAxis("HorizontalP1") >= 0.5f) && !powerPanel.activeSelf) || Input.GetKeyDown(KeyCode.RightArrow))
             {
-                //print("Right");
-                mappingPanel.SetActive(false);
+				//print("Right");
+				soundEmitter.PlaySound(0);
+				mappingPanel.SetActive(false);
                 powerPanel.SetActive(true);
             }
-            else if (((Input.GetAxis("HorizontalP1") < -0.5f) && !mappingPanel.activeSelf) || Input.GetKeyDown(KeyCode.LeftArrow))
+            else if (((Input.GetAxis("HorizontalP1") <= -0.5f) && !mappingPanel.activeSelf) || Input.GetKeyDown(KeyCode.LeftArrow))
             {
-                //sprint("Left");
-                powerPanel.SetActive(false);
+				//sprint("Left");
+				soundEmitter.PlaySound(0);
+				powerPanel.SetActive(false);
                 mappingPanel.SetActive(true);
             }
         }
     }
 
     public void Resume()
-    {
-        mainMenu.SetActive(false);
+	{
+		soundEmitter.PlaySound(0);
+		mainMenu.SetActive(false);
         guide.SetActive(false);
         GameManager.gameManager.UIManager.gameObject.SetActive(true);
         GameManager.gameManager.isPaused = false;
@@ -106,15 +113,17 @@ public class PauseMenu : MonoBehaviour
     }
 
     public void OpenGuide()
-    {
-        mainMenu.SetActive(false);
+	{
+		soundEmitter.PlaySound(0);
+		mainMenu.SetActive(false);
         guide.SetActive(true);
         mappingPanel.SetActive(true);
     }
 
     public void ChangeDifficulty()
-    {
-        GameData.worseModeActivated = (GameData.worseModeActivated) ? false : true;
+	{
+		soundEmitter.PlaySound(0);
+		GameData.worseModeActivated = (GameData.worseModeActivated) ? false : true;
         GameManager.gameManager.orb.GetComponent<OrbController>().canHitPlayer = GameData.worseModeActivated;
         CheckDifficulty();
     }
@@ -134,19 +143,22 @@ public class PauseMenu : MonoBehaviour
     }
 
     public void OpenMappingPanel()
-    {
-        powerPanel.SetActive(false);
+	{
+		soundEmitter.PlaySound(0);
+		powerPanel.SetActive(false);
         mappingPanel.SetActive(true);
     }
 
     public void OpenPowerPanel()
-    {
-        mappingPanel.SetActive(false);
+	{
+		soundEmitter.PlaySound(0);
+		mappingPanel.SetActive(false);
         powerPanel.SetActive(true);
     }
     public void LoadMenu()
-    {
-        StartCoroutine(LoadMenuCoroutine());
+	{
+		soundEmitter.PlaySound(0);
+		StartCoroutine(LoadMenuCoroutine());
     }
 
     IEnumerator LoadMenuCoroutine()

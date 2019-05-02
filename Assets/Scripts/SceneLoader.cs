@@ -33,6 +33,8 @@ public class SceneLoader : MonoBehaviour, IActivable
 
     public bool isActive { get; set; }
 
+	public SoundEmitter soundEmitter;
+
     // Update is called once per frame
     void Update()
     {
@@ -106,6 +108,7 @@ public class SceneLoader : MonoBehaviour, IActivable
     {
 		loading = true;
 
+		soundEmitter.PlaySound(0);
 		yield return new WaitForSeconds(0.25f);
 		StartCoroutine(GameManager.gameManager.FadeCoroutine("FadeOut"));
 		yield return new WaitUntil(() => GameManager.gameManager.isPaused == false);
