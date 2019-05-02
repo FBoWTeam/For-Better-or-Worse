@@ -67,19 +67,21 @@ public class BossSystem : MonoBehaviour
     public int electricConeDamage;
     public float electricConeTimeBetweenFeedbackAndCast;
     public float electricConeChannelingTime;
+    public GameObject elecCone;
 
     [Header("[Electric Zone Params]")]
     public float electricZoneRadius;
     public float electricZoneChannelingTime;
     public float electricZoneTimeBetweenFeedbackAndCast;
     public int electricZoneDamage;
-
+    public GameObject elecCircle;
 
     [Header("[Electric AOE Params]")]
     public float electricAoeRadius;
     public float electricAoeChannelingTime;
     public float electricAoeTimeBetweenFeedbackAndCast;
     public int electricAoeDamage;
+    public GameObject bigElecCircle;
 
 
     [Header("[FireBall Params]")]
@@ -707,6 +709,8 @@ public class BossSystem : MonoBehaviour
 		//check if the players are in the area of effect
 		Collider[] playersInRange = Physics.OverlapSphere(electricZoneLocation, electricZoneRadius, targetMask);
 
+        Instantiate(elecCircle, electricZoneLocation, Quaternion.identity);
+
         //apply damage to the players in the area of effect
         for (int i = 0; i < playersInRange.Length; i++)
         {
@@ -769,6 +773,8 @@ public class BossSystem : MonoBehaviour
         dirToTarget = (player1.transform.position - bossPos).normalized;
         dirToTarget.y = 0;
 
+        float angleFx = Vector3.SignedAngle(Vector3.forward, minRange, Vector3.up);
+        Instantiate(elecCone, transform.position, Quaternion.Euler(0f,angleFx,0f));
 
         if (Vector3.Angle(targetVector, dirToTarget) < electricConeAngle / 2)
         {
@@ -922,6 +928,8 @@ public class BossSystem : MonoBehaviour
 
 		//check if the players are in the area of effect
 		Collider[] playersInRange = Physics.OverlapSphere(transform.position, electricAoeRadius, targetMask);
+
+        Instantiate(bigElecCircle, transform.position, Quaternion.identity);
 
         //apply damage to the players in the area of effect
         for (int i = 0; i < playersInRange.Length; i++)
