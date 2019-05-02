@@ -303,6 +303,10 @@ public class GameManager : MonoBehaviour
         fader.GetComponent<Animator>().SetTrigger(fadeName);
         yield return new WaitForSeconds(fader.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).length);
         GameManager.gameManager.isPaused = false;
+		if(fadeName == "FadeIn")
+		{
+			orb.GetComponent<OrbController>().FreezeOrb(0.5f);
+		}
     }
 
     IEnumerator deathCoroutine()
