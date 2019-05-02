@@ -414,6 +414,25 @@ public class PuddleSystem : MonoBehaviour
             }
         }
 
+        if (electrified)
+        {
+            if (target.CompareTag("Enemy"))
+            {
+                target.GetComponent<Enemy>().TakeDamage(electricDamage);
+                GameObject electricityFx = target.transform.Find("FX/electricity").gameObject;
+                electricityFx.SetActive(false);
+                electricityFx.SetActive(true);
+            }
+            else if (target.CompareTag("Player"))
+            {
+                GameObject electricityFx = target.transform.Find("FX/electricity").gameObject;
+                GameManager.gameManager.TakeDamage(target, electricDamage, Vector3.zero, false);
+                electricityFx.SetActive(false);
+                electricityFx.SetActive(true);
+            }
+        }
+
+
         for (int i = 0; i < objectsInPuddle.Count; i++)
         {
             if (objectsInPuddle[i].CompareTag("Enemy"))
