@@ -154,7 +154,7 @@ public class ScoreManager : MonoBehaviour
     public float CalculateJungle1Score()
     {
         float timeScore = 1 / (0.00005f * completionTime);
-        float bonus = timeScore + maxCombo + (statusAilmentApplied + enemyMirrorBroken + killsP1 + killsP2) / 2;
+        float bonus = timeScore + maxCombo + (statusAilmentApplied + enemyMirrorBroken + killsP1 + killsP2) / 4;
         float malus = (damageTakenP1 + damageTakenP2) / 50 + (orbHitMissedP1 + orbHitMissedP2) / 10 + numberOfDeaths * 5;
         float result = bonus - malus;
         return result;
