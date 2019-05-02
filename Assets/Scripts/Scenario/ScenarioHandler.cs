@@ -53,6 +53,8 @@ public class ScenarioHandler : MonoBehaviour
         GameManager.gameManager.player1.GetComponent<OrbHitter>().active = true;
         GameManager.gameManager.player2.GetComponent<OrbHitter>().active = true;
         GameManager.gameManager.orb.GetComponent<OrbController>().canHitPlayer = GameData.worseModeActivated;
+        GameManager.gameManager.isCutScene = false;
+
 		if (!GameData.introSkiped)
 		{
 			Destroy(this.gameObject);
