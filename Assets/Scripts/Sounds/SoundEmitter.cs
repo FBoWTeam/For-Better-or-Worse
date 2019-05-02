@@ -40,8 +40,12 @@ public class SoundEmitter : MonoBehaviour
 		}
 	}
 
-	public void PlaySound(int soundID)
+	public void PlaySound(int soundID, bool willBeDestroyed=false)
 	{
+		if(willBeDestroyed)
+		{
+			transform.parent = null;
+		}
 		AudioSource source = audioSources[soundID];
 		PlayableSound sound = sounds[soundID];
 
@@ -61,6 +65,11 @@ public class SoundEmitter : MonoBehaviour
 		if(sound.continuousSound)
 		{
 			sound.playing = true;
+		}
+
+		if (willBeDestroyed)
+		{
+			Destroy(this.gameObject, sound.clip.length);
 		}
 	}
 

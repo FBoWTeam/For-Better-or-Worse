@@ -58,8 +58,9 @@ public class ProtectionWall : MonoBehaviour
         pylonDown++;
 		soundEmitter.PlaySound(0);
 		if (pylonDown >= 3)
-        {
-            if (element == WallElement.Aquatic)
+		{
+			soundEmitter.PlaySound(0, true);
+			if (element == WallElement.Aquatic)
             {
                 protectionSystem.GetComponent<ProtectionSystem>().waterWallsDestroyed = true;
                 protectionSystem.GetComponent<ProtectionSystem>().checkProtectionSystemStatus();

@@ -53,7 +53,7 @@ public class Rock : MonoBehaviour
             yield return new WaitForEndOfFrame();
         }
 
-		soundEmitter.PlaySound(0);
+		soundEmitter.PlaySound(0, true);
         Instantiate(rockPoof, transform.position, Quaternion.identity);
 
         Destroy(circleIndicator);

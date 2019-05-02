@@ -40,7 +40,7 @@ public class Barrel : MonoBehaviour, IActivable
 
     public void Activate()
     {
-		soundEmitter.PlaySound(1);
+		soundEmitter.PlaySound(1, true);
         isActive = true;
 
         Vector3 explosionPos = transform.position;

@@ -193,7 +193,7 @@ public class Enemy : MonoBehaviour
         GameManager.gameManager.orb.GetComponent<OrbController>().hasHitEnemy = true;
         if (hp <= 0)
         {
-			soundEmitter.PlaySound(1);
+			soundEmitter.PlaySound(1, true);
             //update in score manager
             if (lastHitByP1 && !lastHitByP2)
             {

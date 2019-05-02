@@ -21,7 +21,7 @@ public class Mirror : MonoBehaviour
                 controller.toPlayer2 = !controller.toPlayer2;
                 if (mirrorHealth <= 0)
                 {
-					soundEmitter.PlaySound(1);
+					soundEmitter.PlaySound(1, true);
                     DestroyShield();
                 }
 				else

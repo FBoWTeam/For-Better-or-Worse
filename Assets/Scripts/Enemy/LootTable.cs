@@ -23,7 +23,7 @@ public class LootTable : MonoBehaviour
 
 		if (Random.Range(0.0f, 1.0f) <= chanceOfPowerDrop && GameManager.gameManager.orb.GetComponent<PowerController>().droppedPower == GameManager.PowerType.None)
 		{
-			soundEmitter.PlaySound(2);
+			soundEmitter.PlaySound(2, true);
 			PowerController controller = GameManager.gameManager.orb.GetComponent<PowerController>();
 			controller.droppedPower = droppedPower;
 			controller.reflectedDrop = false;
