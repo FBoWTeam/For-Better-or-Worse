@@ -180,7 +180,7 @@ public class ScoreManager : MonoBehaviour
 
     public float CalculateArenaScore()
     {
-        return totalWave;
+        return totalWave + 1;
     }
 
 }
