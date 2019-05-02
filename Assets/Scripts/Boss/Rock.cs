@@ -11,6 +11,8 @@ public class Rock : MonoBehaviour
     public int rockDamage;
     public GameObject rockPoof;
 
+	public SoundEmitter soundEmitter;
+
     private void Start()
     {
         StartCoroutine(Fall());
@@ -51,6 +53,7 @@ public class Rock : MonoBehaviour
             yield return new WaitForEndOfFrame();
         }
 
+		soundEmitter.PlaySound(0, true);
         Instantiate(rockPoof, transform.position, Quaternion.identity);
 
         Destroy(circleIndicator);

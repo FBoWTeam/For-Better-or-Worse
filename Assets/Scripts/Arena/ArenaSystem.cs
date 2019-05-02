@@ -62,6 +62,8 @@ public class ArenaSystem : MonoBehaviour
     public List<GameObject> arenaCanvas;
     public GameObject countdownArena;
 
+	public SoundEmitter soundEmitter;
+
     private void Start()
     {
         waveIndex = 0;
@@ -87,6 +89,7 @@ public class ArenaSystem : MonoBehaviour
 		ArenaThemeManager themeManager = GameObject.Find("BGM").GetComponent<ArenaThemeManager>();
 		themeManager.Activate();
 		yield return new WaitForSeconds(1f);
+		soundEmitter.PlaySound(0);
 		countdownArena.SetActive(true);
         countdownArena.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "5";
         yield return new WaitForSeconds(1f);
@@ -109,7 +112,8 @@ public class ArenaSystem : MonoBehaviour
         {
             arenaCanvas[i].SetActive(true);
         }
-        StartCoroutine(WaveSystem());
+		soundEmitter.PlaySound(1);
+		StartCoroutine(WaveSystem());
         GameManager.gameManager.UIManager.UpdateWave(waveIndex + 1);
     }
     
@@ -159,9 +163,9 @@ public class ArenaSystem : MonoBehaviour
                         yield return new WaitForEndOfFrame();
                     }
                     waveIndex++;
-
-
-                    ScoreManager.scoreManager.totalWave++;
+					
+					soundEmitter.PlaySound(1);
+					ScoreManager.scoreManager.totalWave++;
 
 
                     if (waveIndex < waveList.Count)
@@ -193,7 +197,8 @@ public class ArenaSystem : MonoBehaviour
                 timer += Time.deltaTime;
             }
             timer = 0;
-            GameObject boss = Instantiate(bonusWave, spawnList[spawnNumer].position, Quaternion.identity).gameObject;
+			soundEmitter.PlaySound(2);
+			GameObject boss = Instantiate(bonusWave, spawnList[spawnNumer].position, Quaternion.identity).gameObject;
             foreach (Enemy enemy in boss.GetComponentsInChildren<Enemy>())
             {
                 remainingEnemiesList.Add(enemy.gameObject);

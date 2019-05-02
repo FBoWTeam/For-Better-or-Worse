@@ -26,7 +26,8 @@ public class ElectricPylon : MonoBehaviour, IActivable
     public List<GameObject> objectsConditions;
 
     private Animator anim;
-    
+
+	public SoundEmitter soundEmitter;
 
     // Start is called before the first frame update
     void Start()
@@ -81,7 +82,8 @@ public class ElectricPylon : MonoBehaviour, IActivable
         {
             gameObject.GetComponent<Renderer>().material.color = Color.yellow;
             isActive = true;
-            if (type == ElectricPylonType.ArenaElectricPylon)
+			StartCoroutine(EmitSoundCoroutine());
+			if (type == ElectricPylonType.ArenaElectricPylon)
             {
                 //anim.SetBool("isActive", true);
             }
@@ -118,4 +120,14 @@ public class ElectricPylon : MonoBehaviour, IActivable
         }
         return true;
     }
+
+	IEnumerator EmitSoundCoroutine()
+	{
+		while (isActive)
+		{
+			float waitTime = Random.Range(0.5f, 2.0f);
+			yield return new WaitForSeconds(waitTime);
+			soundEmitter.PlaySound(0);
+		}
+	}
 }

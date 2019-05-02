@@ -8,6 +8,8 @@ public class LanguageMenu : MonoBehaviour
 	public Animation fader;
 	bool active;
 
+	public SoundEmitter soundEmitter;
+
 	public void Awake()
 	{
 		active = false;
@@ -18,6 +20,7 @@ public class LanguageMenu : MonoBehaviour
 	{
 		if(active)
 		{
+			soundEmitter.PlaySound(0);
 			if (french)
 			{
 				GameData.english = false;

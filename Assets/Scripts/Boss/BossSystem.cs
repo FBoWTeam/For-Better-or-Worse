@@ -163,6 +163,7 @@ public class BossSystem : MonoBehaviour
     public GameObject FxFireRight;
     public GameObject FxMysticRight;
 
+	public SoundEmitter soundEmitter;
 
     //======================================================================================== AWAKE AND UPDATE
 
@@ -446,6 +447,8 @@ public class BossSystem : MonoBehaviour
             yield return new WaitForEndOfFrame();
         }
 
+		soundEmitter.PlaySound(0);
+
         if (Physics.Raycast(raycastPosition, direction, out hit, 50, LayerMask.GetMask("Wall")))
         {
             StartCoroutine(CreateMysticLineCoroutine(transform.position, hit.transform.position, hit.distance));
@@ -634,6 +637,8 @@ public class BossSystem : MonoBehaviour
             travelTime = fireBall.Launch(target + new Vector3(0f, 1.5f, 0f), fireBallStartingPoint);//offset so the fireball aims for the body of the player and not his/her feet
         }
 
+		soundEmitter.PlaySound(1);
+
         //show indicator feedback
         //instanciate the fireball indicator
         GameObject fireBallIndicator = Instantiate(fireBallProjector, target + new Vector3(0f, 1.5f, 0f), Quaternion.identity) as GameObject;
@@ -653,6 +658,7 @@ public class BossSystem : MonoBehaviour
         
         yield return new WaitUntil(() => fireBall.willBeDestroyed);
         Destroy(fireBallIndicator);
+		soundEmitter.PlaySound(2);
 
         nextAttack = Time.time + Random.Range(minWaitTime, maxWaitTime);
         isAttacking = false;
@@ -690,10 +696,11 @@ public class BossSystem : MonoBehaviour
             yield return new WaitForEndOfFrame();
         }
 
-        //Debug.Log("casting electric zone");
+		//Debug.Log("casting electric zone");
+		soundEmitter.PlaySound(3);
 
-        //check if the players are in the area of effect
-        Collider[] playersInRange = Physics.OverlapSphere(electricZoneLocation, electricZoneRadius, targetMask);
+		//check if the players are in the area of effect
+		Collider[] playersInRange = Physics.OverlapSphere(electricZoneLocation, electricZoneRadius, targetMask);
 
         //apply damage to the players in the area of effect
         for (int i = 0; i < playersInRange.Length; i++)
@@ -749,10 +756,11 @@ public class BossSystem : MonoBehaviour
             yield return new WaitForEndOfFrame();
         }
 
-        //Debug.Log("casting electric cone");
+		//Debug.Log("casting electric cone");
+		soundEmitter.PlaySound(3);
 
-        //check if players are in the area of effect to apply damages
-        Vector3 dirToTarget;
+		//check if players are in the area of effect to apply damages
+		Vector3 dirToTarget;
         dirToTarget = (player1.transform.position - bossPos).normalized;
         dirToTarget.y = 0;
 
@@ -822,11 +830,8 @@ public class BossSystem : MonoBehaviour
 
         chargeIndicator.GetComponentInChildren<Projector>().aspectRatio = vectCharge.magnitude / 18f;
 
-
         float timeStamp = Time.time;
         Color tempColor = Color.red;
-
-        anim.SetBool("IsDashing", true);
 
         while (Time.time - timeStamp < chargeCastingTime)
         {
@@ -834,9 +839,12 @@ public class BossSystem : MonoBehaviour
             tempColor.a = 0.25f + ((Time.time - timeStamp) / electricAoeTimeBetweenFeedbackAndCast) / 2;
             chargeIndicator.transform.GetChild(0).gameObject.GetComponent<Projector>().material.color = tempColor;
             yield return new WaitForEndOfFrame();
-        }
+		}
 
-        float t = 0f;
+		anim.SetBool("IsDashing", true);
+		soundEmitter.PlaySound(4);
+
+		float t = 0f;
         while (t < 1)
         {
             transform.position = Vector3.Lerp(posStart, newTarget, t);
@@ -897,10 +905,10 @@ public class BossSystem : MonoBehaviour
             yield return new WaitForEndOfFrame();
         }
 
+		soundEmitter.PlaySound(3);
 
-
-        //check if the players are in the area of effect
-        Collider[] playersInRange = Physics.OverlapSphere(transform.position, electricAoeRadius, targetMask);
+		//check if the players are in the area of effect
+		Collider[] playersInRange = Physics.OverlapSphere(transform.position, electricAoeRadius, targetMask);
 
         //apply damage to the players in the area of effect
         for (int i = 0; i < playersInRange.Length; i++)
@@ -959,6 +967,7 @@ public class BossSystem : MonoBehaviour
 
     public IEnumerator Stun()
     {
+		soundEmitter.PlaySound(5);
         isStuned = true;
         yield return new WaitForSeconds(stunTime);
         isStuned = false;

@@ -20,6 +20,8 @@ public class MainMenu : MonoBehaviour
 	public GameObject QuitMenuCanvas;
 	public GameObject QuitMenuFirstSelected;
 
+	public SoundEmitter soundEmitter;
+
 	public void Awake()
 	{
 		active = false;
@@ -30,6 +32,7 @@ public class MainMenu : MonoBehaviour
 	{
 		if (active)
 		{
+			soundEmitter.PlaySound(0);
 			StartCoroutine(FadeOut(3));
 		}
 	}
@@ -38,6 +41,7 @@ public class MainMenu : MonoBehaviour
 	{
 		if (active)
 		{
+			soundEmitter.PlaySound(0);
 			GameData.previousScene = 2;
 			GameData.nextSceneToLoad = 12;
 			StartCoroutine(FadeOut(4));
@@ -48,6 +52,7 @@ public class MainMenu : MonoBehaviour
 	{
 		if (active)
 		{
+			soundEmitter.PlaySound(0);
 			StartCoroutine(FadeOut(11));
 		}
 	}
@@ -56,6 +61,7 @@ public class MainMenu : MonoBehaviour
 	{
 		if (active)
 		{
+			soundEmitter.PlaySound(0);
 			MainMenuCanvas.SetActive(false);
 			QuitMenuCanvas.SetActive(true);
 			eS.SetSelectedGameObject(QuitMenuFirstSelected);
@@ -66,6 +72,7 @@ public class MainMenu : MonoBehaviour
 	{
 		if (active)
 		{
+			soundEmitter.PlaySound(0);
 			QuitMenuCanvas.SetActive(false);
 			MainMenuCanvas.SetActive(true);
 			eS.SetSelectedGameObject(MainMenuFirstSelected);
@@ -76,6 +83,7 @@ public class MainMenu : MonoBehaviour
 	{
 		if(active)
 		{
+			soundEmitter.PlaySound(0);
 			Application.Quit();
 			//UnityEditor.EditorApplication.isPlaying = false;
 		}

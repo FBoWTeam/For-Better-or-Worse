@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class OrbController : MonoBehaviour
 {
+	bool active = true;
+	float activeTimestamp;
+
     [Header("[Orb speed Statistics]")]
     public float speed;
     public float minSpeed;
@@ -65,19 +68,29 @@ public class OrbController : MonoBehaviour
 
     void FixedUpdate()
     {
-		if (!amortized && !GameManager.gameManager.isPaused)
+		if (active)
 		{
-			SetFixedSpeedCoefficient();
-			speed = Mathf.Clamp(speed, minSpeed, maxSpeed);
-            if (Vector3.Distance(GameManager.gameManager.player1.transform.position, GameManager.gameManager.player2.transform.position) > GameManager.gameManager.maxDistance - 0.1f)
-            {
-                fixedSpeedCoefficient = 1;
-            }
-			float fixedSpeed = speed * fixedSpeedCoefficient * hitSpeedCoefficient;
+			if (!amortized && !GameManager.gameManager.isPaused)
+			{
+				SetFixedSpeedCoefficient();
+				speed = Mathf.Clamp(speed, minSpeed, maxSpeed);
+				if (Vector3.Distance(GameManager.gameManager.player1.transform.position, GameManager.gameManager.player2.transform.position) > GameManager.gameManager.maxDistance - 0.1f)
+				{
+					fixedSpeedCoefficient = 1;
+				}
+				float fixedSpeed = speed * fixedSpeedCoefficient * hitSpeedCoefficient;
 
-			step = (fixedSpeed / BezierCurve.GetPlayersDistance()) * Time.fixedDeltaTime;
-			progression = toPlayer2 ? progression + step : progression - step;
-			progression = Mathf.Clamp01(progression);
+				step = (fixedSpeed / BezierCurve.GetPlayersDistance()) * Time.fixedDeltaTime;
+				progression = toPlayer2 ? progression + step : progression - step;
+				progression = Mathf.Clamp01(progression);
+			}
+		}
+		else
+		{
+			if(Time.time >= activeTimestamp)
+			{
+				active = true;
+			}
 		}
 		transform.position = BezierCurve.CalculateCubicBezierPoint(progression);
 
@@ -219,7 +232,27 @@ public class OrbController : MonoBehaviour
         {
             GetComponent<PowerController>().onBossHit(other.gameObject);
         }
-    }
+	}
+
+	public IEnumerator HitBoostCoroutine()
+	{
+		hitSpeedCoefficient = speedBoostCoefficient;
+		float drain = (speedBoostCoefficient - 1.0f) / boostDrainDuration;
+
+		while (hitSpeedCoefficient > 1.0f)
+		{
+			hitSpeedCoefficient -= drain * Time.deltaTime;
+			yield return new WaitForEndOfFrame();
+		}
+
+		hitSpeedCoefficient = 1.0f;
+	}
+
+	public void FreezeOrb(float duration)
+	{
+		active = false;
+		activeTimestamp = Time.time + duration;
+	}
 
 	public void RespawnReset()
 	{
@@ -236,19 +269,4 @@ public class OrbController : MonoBehaviour
 		hasHitEnemy = false;
 		progression = 0.5f;
 	}
-
-	public IEnumerator HitBoostCoroutine()
-	{
-		hitSpeedCoefficient = speedBoostCoefficient;
-		float drain = (speedBoostCoefficient - 1.0f) / boostDrainDuration;
-
-		while(hitSpeedCoefficient > 1.0f)
-		{
-			hitSpeedCoefficient -= drain * Time.deltaTime;
-			yield return new WaitForEndOfFrame();
-		}
-
-		hitSpeedCoefficient = 1.0f;
-	}
-
 }

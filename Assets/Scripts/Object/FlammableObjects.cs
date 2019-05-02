@@ -14,6 +14,8 @@ public class FlammableObjects : MonoBehaviour, IActivable
 
     public bool isActive { get; set; }
 
+	public SoundEmitter soundEmitter;
+
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Orb"))
@@ -35,6 +37,7 @@ public class FlammableObjects : MonoBehaviour, IActivable
 
     public void Activate()
     {
+		soundEmitter.PlaySound(0);
         isActive = true;
         isBurning = true;
 		transform.GetChild(0).gameObject.SetActive(true);
