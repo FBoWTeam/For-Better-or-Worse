@@ -141,41 +141,41 @@ public class ScoreManager : MonoBehaviour
     }
 
 
-    public float CalculatePrologueScore()
+    public int CalculatePrologueScore()
     {
         float timeScore = 1 / (0.00007f * completionTime);
         float bonus = timeScore + maxCombo + (statusAilmentApplied + enemyMirrorBroken + killsP1 + killsP2) / 2;
         float malus = (damageTakenP1 + damageTakenP2) / 50 + (orbHitMissedP1 + orbHitMissedP2) / 10 + numberOfDeaths * 5;
         float result = bonus - malus;
-        return result;
+        return (int)result * 10000;
     }
 
 
-    public float CalculateJungle1Score()
+    public int CalculateJungle1Score()
     {
         float timeScore = 1 / (0.00005f * completionTime);
         float bonus = timeScore + maxCombo + (statusAilmentApplied + enemyMirrorBroken + killsP1 + killsP2) / 4;
         float malus = (damageTakenP1 + damageTakenP2) / 50 + (orbHitMissedP1 + orbHitMissedP2) / 10 + numberOfDeaths * 5;
         float result = bonus - malus;
-        return result;
+        return (int)result * 10000;
     }
 
-    public float CalculateJungle2Score()
+    public int CalculateJungle2Score()
     {
         float timeScore = 1 / (0.00007f * completionTime);
-        float bonus = timeScore + maxCombo + (statusAilmentApplied + enemyMirrorBroken + killsP1 + killsP2) / 2;
+        float bonus = timeScore + maxCombo + (statusAilmentApplied + enemyMirrorBroken + killsP1 + killsP2) / 3;
         float malus = (damageTakenP1 + damageTakenP2) / 50 + (orbHitMissedP1 + orbHitMissedP2) / 10 + numberOfDeaths * 5;
         float result = bonus - malus;
-        return result;
+        return (int)result * 10000;
     }
 
-    public float CalculateBossScore()
+    public int CalculateBossScore()
     {
         float timeScore = 1 / (0.00007f * completionTime);
         float bonus = timeScore + maxCombo + (statusAilmentApplied);
         float malus = (damageTakenP1 + damageTakenP2) / 10 + (orbHitMissedP1 + orbHitMissedP2) / 10;
         float result = bonus - malus;
-        return result;
+        return (int)result * 10000;
     }
 
     public int CalculateArenaScore()
