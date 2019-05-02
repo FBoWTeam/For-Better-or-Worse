@@ -33,9 +33,8 @@ public class TimeLineDeath : MonoBehaviour
 
     IEnumerator DeathPoofBoss()
     {
-        yield return new WaitForSeconds(3.5f);
+        yield return new WaitForSeconds(4.75f);
         Instantiate(deathPoof, Boss.transform.position, Quaternion.identity);
-        Debug.Log("death poof");
     }
 
 

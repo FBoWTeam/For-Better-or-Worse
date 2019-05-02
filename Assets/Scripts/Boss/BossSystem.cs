@@ -314,6 +314,7 @@ public class BossSystem : MonoBehaviour
                     dead = true;
                     StopAllCoroutines();
                     DeactivateFXHand();
+                    anim.SetBool("IsDashing", false);
                     anim.SetTrigger("Stop");
                     CleanProjectorList();
                     GameObject.Find("TimelineDeath").GetComponent<TimeLineDeath>().Initialize();
