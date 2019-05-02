@@ -154,7 +154,8 @@ public class OrbHitter : MonoBehaviour
 	IEnumerator HitCoroutine()
 	{
 		hitting = true;
-        GetComponent<Animator>().SetTrigger("Hit");
+		GetComponent<Animation>().Play();
+		//GetComponent<Animator>().SetTrigger("Hit");
 		soundEmitter.PlaySound(0);
 
 		yield return new WaitForSeconds(hitDuration);
