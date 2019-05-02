@@ -24,9 +24,12 @@ public class GameManager : MonoBehaviour
 
     public bool arena;
 
-	public bool boss;
+    public bool boss;
 
     public bool isPaused;
+
+    [HideInInspector]
+    public bool isCutScene = false;
 
     [Header("[Distance Limits]")]
     public float minDistance;
@@ -106,27 +109,28 @@ public class GameManager : MonoBehaviour
         blackBands = GameObject.Find("BlackBands");
         tutorials = GameObject.Find("Tutorials");
         tutorials.SetActive(false);
-		GameObject introScenario = GameObject.Find("IntroScenario");
-		if (introScenario != null)
+        GameObject introScenario = GameObject.Find("IntroScenario");
+        if (introScenario != null)
         {
-			if(GameData.introSkiped)
-			{
-				Destroy(introScenario);
-			}
-			else
-			{
-				UIManager.gameObject.SetActive(false);
-				player1.GetComponent<PlayerController>().active = false;
-				player2.GetComponent<PlayerController>().active = false;
-				player1.GetComponent<OrbHitter>().active = false;
-				player2.GetComponent<OrbHitter>().active = false;
-				GameObject.Find("IntroScenario").GetComponent<ScenarioHandler>().Initialize();
-			}
+            if (GameData.introSkiped)
+            {
+                Destroy(introScenario);
+            }
+            else
+            {
+                isCutScene = true;
+                UIManager.gameObject.SetActive(false);
+                player1.GetComponent<PlayerController>().active = false;
+                player2.GetComponent<PlayerController>().active = false;
+                player1.GetComponent<OrbHitter>().active = false;
+                player2.GetComponent<OrbHitter>().active = false;
+                GameObject.Find("IntroScenario").GetComponent<ScenarioHandler>().Initialize();
+            }
         }
-        if(introScenario == null || GameData.introSkiped)
+        if (introScenario == null || GameData.introSkiped)
         {
-			GameData.introSkiped = false;
-			GameObject.Find("DialogSystem").SetActive(false);
+            GameData.introSkiped = false;
+            GameObject.Find("DialogSystem").SetActive(false);
             blackBands.SetActive(false);
             player1.GetComponent<PlayerController>().active = true;
             player2.GetComponent<PlayerController>().active = true;
@@ -303,10 +307,10 @@ public class GameManager : MonoBehaviour
         fader.GetComponent<Animator>().SetTrigger(fadeName);
         yield return new WaitForSeconds(fader.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).length);
         GameManager.gameManager.isPaused = false;
-		if(fadeName == "FadeIn")
-		{
-			orb.GetComponent<OrbController>().FreezeOrb(0.5f);
-		}
+        if (fadeName == "FadeIn")
+        {
+            orb.GetComponent<OrbController>().FreezeOrb(0.5f);
+        }
     }
 
     IEnumerator deathCoroutine()
@@ -317,7 +321,7 @@ public class GameManager : MonoBehaviour
 
         StartCoroutine(FadeCoroutine("FadeOut"));
         yield return new WaitUntil(() => isPaused == false);
-		yield return new WaitForSeconds(1.0f);
+        yield return new WaitForSeconds(1.0f);
 
         PlayerController player1Controller = player1.GetComponent<PlayerController>();
         PlayerController player2Controller = player2.GetComponent<PlayerController>();
@@ -338,19 +342,19 @@ public class GameManager : MonoBehaviour
             GameData.previousScene = SceneManager.GetActiveScene().buildIndex;
             SceneManager.LoadScene(15);
         }
-		else if (boss)
-		{
-			GameData.introSkiped = true;
-			SceneManager.LoadScene(9);
-		}
+        else if (boss)
+        {
+            GameData.introSkiped = true;
+            SceneManager.LoadScene(9);
+        }
         else
         {
             isPaused = true;
 
             player1.transform.position = actualCheckpoint.transform.GetChild(0).position + new Vector3(-5, 0, 0);
-			player2.transform.position = actualCheckpoint.transform.GetChild(0).position + new Vector3(5, 0, 0);
+            player2.transform.position = actualCheckpoint.transform.GetChild(0).position + new Vector3(5, 0, 0);
 
-			damageTakenP1 = 0;
+            damageTakenP1 = 0;
             damageTakenP2 = 0;
             shieldP1 = 0;
             shieldP2 = 0;
