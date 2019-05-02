@@ -63,7 +63,7 @@ public class UIManager : MonoBehaviour
     public Sprite none;
 
     [Header("Drop GO")]
-    public Camera camera;
+    public Camera cam;
     public GameObject drop;
     public float dropSpeed;
     private bool isDropActive = false;
@@ -343,7 +343,6 @@ public class UIManager : MonoBehaviour
 
     IEnumerator startCooldown(float cd, Image image)
     {
-
         image.fillAmount = 0.999f;
         while (image.fillAmount != 1)
         {
@@ -511,7 +510,7 @@ public class UIManager : MonoBehaviour
         //then you calculate the position of the UI element
         //0,0 for the canvas is at the center of the screen, whereas WorldToViewPortPoint treats the lower left corner as 0,0. Because of this, you need to subtract the height / width of the canvas * 0.5 to get the correct position.
 
-        Vector2 ViewportPosition = camera.WorldToViewportPoint(target);
+        Vector2 ViewportPosition = cam.WorldToViewportPoint(target);
         Vector2 WorldObject_ScreenPosition = new Vector2(
         ((ViewportPosition.x * CanvasRect.sizeDelta.x) - (CanvasRect.sizeDelta.x * 0.5f)),
         ((ViewportPosition.y * CanvasRect.sizeDelta.y) - (CanvasRect.sizeDelta.y * 0.5f)));
