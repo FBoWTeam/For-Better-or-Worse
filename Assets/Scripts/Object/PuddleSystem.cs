@@ -40,6 +40,8 @@ public class PuddleSystem : MonoBehaviour
     [DrawIf(new string[] { "editingPuddleType" }, GameManager.PuddleType.Water)]
     public int electricDamage;
     [DrawIf(new string[] { "editingPuddleType" }, GameManager.PuddleType.Water)]
+    public bool damageAlreadyDone;
+    [DrawIf(new string[] { "editingPuddleType" }, GameManager.PuddleType.Water)]
     public bool frozen;
     [DrawIf(new string[] { "editingPuddleType" }, GameManager.PuddleType.Water)]
     public int frozenWaterLifeTime;
@@ -370,8 +372,7 @@ public class PuddleSystem : MonoBehaviour
                     StopCoroutine(electrifiedWaterCoroutine);
                 }
                 frozen = true;
-
-                //GetComponent<MeshRenderer>().material = frozenWaterMaterial;
+                
                 transform.GetChild(0).gameObject.SetActive(false);
                 transform.GetChild(1).gameObject.SetActive(true);
 
@@ -392,11 +393,11 @@ public class PuddleSystem : MonoBehaviour
 
             else if (target.GetComponent<PowerController>().elementalPower == GameManager.PowerType.Electric && !electrified && !frozen)
             {
-                Debug.Log("elec");
-                electrified = true;/*
-                transform.GetChild(0).GetComponent<Collider>().enabled = false;
-                transform.GetChild(0).GetComponent<Collider>().enabled = true;*/
-                //GetComponent<MeshRenderer>().material = ElectrifiedWaterMaterial;
+                electrified = true;
+                damageAlreadyDone = false;
+                
+                transform.GetChild(2).GetComponent<Collider>().enabled = false;
+                transform.GetChild(2).GetComponent<Collider>().enabled = true;
                 transform.GetChild(3).gameObject.SetActive(true);
                 electrifiedWaterCoroutine = StartCoroutine(ReturnToWater(electrifiedWaterLifeTime));
             }
@@ -413,24 +414,7 @@ public class PuddleSystem : MonoBehaviour
                 }
             }
         }
-
-        if (electrified)
-        {
-            if (target.CompareTag("Enemy"))
-            {
-                target.GetComponent<Enemy>().TakeDamage(electricDamage);
-                GameObject electricityFx = target.transform.Find("FX/electricity").gameObject;
-                electricityFx.SetActive(false);
-                electricityFx.SetActive(true);
-            }
-            else if (target.CompareTag("Player"))
-            {
-                GameObject electricityFx = target.transform.Find("FX/electricity").gameObject;
-                GameManager.gameManager.TakeDamage(target, electricDamage, Vector3.zero, false);
-                electricityFx.SetActive(false);
-                electricityFx.SetActive(true);
-            }
-        }
+        
 
 
         for (int i = 0; i < objectsInPuddle.Count; i++)
