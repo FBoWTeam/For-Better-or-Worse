@@ -1127,13 +1127,13 @@ public class PowerController : MonoBehaviour
 				switch(mode)
 				{
 					case "hit":
+					case "miss":
 						player.AttributePower(droppedPower);
 						droppedPower = GameManager.PowerType.None;
 						//UpdateUI
 						GameManager.gameManager.UIManager.UpdateDroppedPower(droppedPower);
 						break;
 					case "amortize":
-					case "miss":
 						if(reflectedDrop)
 						{
 							player.AttributePower(droppedPower);

@@ -282,8 +282,9 @@ public class PlayerController : MonoBehaviour
 			behaviouralPowerSlot = newPower;
 			GameManager.gameManager.UIManager.UpdatePowerSlot(2, player1, newPower);
             GameManager.gameManager.UIManager.OrbToPowerSlotFeedback(player1, false);
-        }
-    }
+		}
+		GameManager.gameManager.orb.GetComponent<PowerController>().reflectedDrop = false;
+	}
 
     private void OnDrawGizmos()
     {
