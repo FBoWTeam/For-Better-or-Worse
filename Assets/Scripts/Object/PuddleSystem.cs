@@ -294,6 +294,10 @@ public class PuddleSystem : MonoBehaviour
         {
             target.GetComponent<PlayerController>().SlowSpeed(slugSlowAmount);
         }
+        if (target.CompareTag("Player") || target.CompareTag("Enemy"))
+        {
+            objectsInPuddle.Add(target);
+        }
     }
 
     void OnExitSlug(GameObject target)
