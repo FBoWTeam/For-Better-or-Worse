@@ -254,12 +254,24 @@ public class PuddleSystem : MonoBehaviour
             {
                 if (objectsInPuddle[i].CompareTag("Enemy"))
                 {
-                    objectsInPuddle[i].GetComponent<EnemyMovement>().StartCoroutine(Burn(objectsInPuddle[i]));
-                }
+					Enemy enemy = objectsInPuddle[i].GetComponent<Enemy>();
+					if (enemy.actualFireCoroutine != null)
+					{
+						enemy.StopCoroutine(enemy.actualFireCoroutine);
+					}
+					//start the coroutine on the playercontroller monobehavior to keep the coroutine running even if the fire puddle is destroyed
+					enemy.actualFireCoroutine = enemy.StartCoroutine(Burn(objectsInPuddle[i]));
+				}
                 else if (objectsInPuddle[i].CompareTag("Player"))
                 {
-                    objectsInPuddle[i].GetComponent<PlayerController>().StartCoroutine(Burn(objectsInPuddle[i]));
-                }
+					PlayerController controler = objectsInPuddle[i].GetComponent<PlayerController>();
+					if (controler.actualBurnCoroutine != null)
+					{
+						controler.StopCoroutine(controler.actualBurnCoroutine);
+					}
+					//start the coroutine on the playercontroller monobehavior to keep the coroutine running even if the fire puddle is destroyed
+					controler.actualBurnCoroutine = controler.StartCoroutine(Burn(objectsInPuddle[i]));
+				}
             }
         }
         if (puddleType == GameManager.PuddleType.Mud || puddleType == GameManager.PuddleType.Slug)
