@@ -33,6 +33,9 @@ public class TimeLineDeath : MonoBehaviour
 
     IEnumerator DeathPoofBoss()
     {
+        yield return new WaitForSeconds(0.75f);
+        Boss.GetComponent<BossSystem>().FxStealLeft.SetActive(true);
+        Boss.GetComponent<BossSystem>().FxStealRight.SetActive(true);
         yield return new WaitForSeconds(4.75f);
         Instantiate(deathPoof, Boss.transform.position, Quaternion.identity);
     }
