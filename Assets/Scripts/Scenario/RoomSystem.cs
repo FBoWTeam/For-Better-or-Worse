@@ -34,18 +34,14 @@ public class RoomSystem : MonoBehaviour, IActivable
 
     private bool instantiateWait;
 
+    private void Awake()
+    {
+        StartCoroutine(WaitCoroutine());
+    }
+
     void Update()
     {
-        if (!instantiateWait)
-        {
-            float timeStamp = 0;
-            while (timeStamp < 2.5f)
-            {
-                timeStamp += Time.deltaTime;
-            }
-            instantiateWait = true;
-        }
-        else
+        if (instantiateWait)
         {
             CleanNullInEnemyList();
             if (!roomCleared && enemies.Count == 0)
@@ -60,6 +56,17 @@ public class RoomSystem : MonoBehaviour, IActivable
                 }
             }
         }
+    }
+
+    IEnumerator WaitCoroutine()
+    {
+        float timeStamp = 0;
+        while (timeStamp < 2.5f)
+        {
+            timeStamp += Time.deltaTime;
+            yield return new WaitForEndOfFrame();
+        }
+        instantiateWait = true;
     }
 
     public void Activate()
