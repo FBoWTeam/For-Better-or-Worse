@@ -21,6 +21,7 @@ public class TimeLineDeath : MonoBehaviour
 
     public void Initialize()
     {
+        GameManager.gameManager.isCutScene = true;
         GameManager.gameManager.orb.GetComponent<OrbController>().canHitPlayer = false;
 
         StartCoroutine(DeathPoofBoss());
@@ -43,6 +44,7 @@ public class TimeLineDeath : MonoBehaviour
 
     public void WhenEnded(PlayableDirector obj)
     {
+        GameManager.gameManager.isCutScene = false;
         GameData.previousScene = 9;
         SceneManager.LoadScene(10);
     }
