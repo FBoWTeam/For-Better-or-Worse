@@ -147,7 +147,7 @@ public class ScoreManager : MonoBehaviour
         float bonus = timeScore + maxCombo + (statusAilmentApplied + enemyMirrorBroken + killsP1 + killsP2) / 2;
         float malus = (damageTakenP1 + damageTakenP2) / 50 + (orbHitMissedP1 + orbHitMissedP2) / 10 + numberOfDeaths * 5;
         float result = bonus - malus;
-        return (int)result * 10000;
+        return (int)result;
     }
 
 
@@ -157,7 +157,7 @@ public class ScoreManager : MonoBehaviour
         float bonus = timeScore + maxCombo + (statusAilmentApplied + enemyMirrorBroken + killsP1 + killsP2) / 4;
         float malus = (damageTakenP1 + damageTakenP2) / 50 + (orbHitMissedP1 + orbHitMissedP2) / 10 + numberOfDeaths * 5;
         float result = bonus - malus;
-        return (int)result * 10000;
+        return (int)result;
     }
 
     public int CalculateJungle2Score()
@@ -166,7 +166,7 @@ public class ScoreManager : MonoBehaviour
         float bonus = timeScore + maxCombo + (statusAilmentApplied + enemyMirrorBroken + killsP1 + killsP2) / 3;
         float malus = (damageTakenP1 + damageTakenP2) / 50 + (orbHitMissedP1 + orbHitMissedP2) / 10 + numberOfDeaths * 5;
         float result = bonus - malus;
-        return (int)result * 10000;
+        return (int)result;
     }
 
     public int CalculateBossScore()
@@ -175,7 +175,7 @@ public class ScoreManager : MonoBehaviour
         float bonus = timeScore + maxCombo + (statusAilmentApplied);
         float malus = (damageTakenP1 + damageTakenP2) / 10 + (orbHitMissedP1 + orbHitMissedP2) / 10;
         float result = bonus - malus;
-        return (int)result * 10000;
+        return (int)result;
     }
 
     public int CalculateArenaScore()
