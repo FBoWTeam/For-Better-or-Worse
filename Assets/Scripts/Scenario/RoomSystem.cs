@@ -39,7 +39,7 @@ public class RoomSystem : MonoBehaviour, IActivable
         if (!instantiateWait)
         {
             float timeStamp = 0;
-            while (timeStamp < 1.0f)
+            while (timeStamp < 2.5f)
             {
                 timeStamp += Time.deltaTime;
             }
