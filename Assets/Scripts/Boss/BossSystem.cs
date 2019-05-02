@@ -999,11 +999,15 @@ public class BossSystem : MonoBehaviour
         int tickDamage = Mathf.RoundToInt(totalDamage / duration);
         int curentDamage = 0;
 
+        GameObject fireFx = transform.Find("FX/fire").gameObject;
+        
+
         BossSystem bossSystem = target.GetComponent<BossSystem>();
 
         if (bossSystem != null)
         {
-            //activer les fx de feu sur le boss
+            fireFx.SetActive(true);
+            fireFx.GetComponent<ParticleSystem>().Play();
         }
 
         while (curentDamage < totalDamage)
@@ -1019,7 +1023,8 @@ public class BossSystem : MonoBehaviour
 
         if (bossSystem != null)
         {
-            //désactiver les fx de feu sur le boss
+            fireFx.GetComponent<ParticleSystem>().Stop();
+            fireFx.SetActive(false);
         }
     }
 

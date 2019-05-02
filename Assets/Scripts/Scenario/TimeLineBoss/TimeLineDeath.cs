@@ -38,6 +38,8 @@ public class TimeLineDeath : MonoBehaviour
         Boss.GetComponent<BossSystem>().FxStealLeft.SetActive(true);
         Boss.GetComponent<BossSystem>().FxStealRight.SetActive(true);
         yield return new WaitForSeconds(4.75f);
+        Boss.GetComponent<BossSystem>().FxStealLeft.SetActive(false);
+        Boss.GetComponent<BossSystem>().FxStealRight.SetActive(false);
         Instantiate(deathPoof, Boss.transform.position, Quaternion.identity);
     }
 
