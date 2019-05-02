@@ -178,7 +178,7 @@ public class ScoreManager : MonoBehaviour
         return result;
     }
 
-    public float CalculateArenaScore()
+    public int CalculateArenaScore()
     {
         return totalWave + 1;
     }

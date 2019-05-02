@@ -71,6 +71,7 @@ public class ArenaSystem : MonoBehaviour
         timer = 0f;
         remainingEnemiesList = new List<GameObject>();
         increaseChanceValue = 100f / ((waveList.Count - threshold));
+        ScoreManager.scoreManager.totalWave = 1;
     }
 
 
