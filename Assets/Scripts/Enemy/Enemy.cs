@@ -129,6 +129,10 @@ public class Enemy : MonoBehaviour
                 Debug.DrawRay(this.transform.position, this.transform.forward * lengthView, Color.magenta);
             }
         }
+		else
+		{
+			enemyMovement.agent.SetDestination(transform.position);
+		}
     }
 
     #region Focus Methods

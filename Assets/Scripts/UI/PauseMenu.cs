@@ -55,10 +55,10 @@ public class PauseMenu : MonoBehaviour
                 if (!pauseMenuActive)
                 {
                     soundEmitter.PlaySound(0);
-                    Time.timeScale = 0;
+                    Time.timeScale = 0.0f;
                     pauseMenuActive = true;
                     GameManager.gameManager.isPaused = true;
-                    GameManager.gameManager.UIManager.gameObject.SetActive(false);
+					GameManager.gameManager.UIManager.gameObject.SetActive(false);
                     mainMenu.SetActive(true);
                     eS.SetSelectedGameObject(mainMenuFirstSelected);
                 }
@@ -111,8 +111,8 @@ public class PauseMenu : MonoBehaviour
         guide.SetActive(false);
         GameManager.gameManager.UIManager.gameObject.SetActive(true);
         GameManager.gameManager.isPaused = false;
-        pauseMenuActive = false;
-        Time.timeScale = 1;
+		pauseMenuActive = false;
+        Time.timeScale = 1.0f;
     }
 
     public void OpenGuide()
