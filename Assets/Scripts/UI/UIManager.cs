@@ -533,7 +533,6 @@ public class UIManager : MonoBehaviour
 
             while (Vector3.Distance(UIElement.transform.position, end.position) > 0.01 && !isFastDropToPowerSlot)
             {
-                print("DROP");
                 UIElement.transform.position = Vector3.Lerp(UIElement.transform.position, end.transform.position, dropSpeed);
                 yield return new WaitForEndOfFrame();
             }
