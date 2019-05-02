@@ -112,7 +112,7 @@ public class ScoreDisplayer : MonoBehaviour
         {
             numberOfDeath.GetComponent<TextMeshProUGUI>().text = ScoreManager.scoreManager.numberOfDeaths.ToString();
             float finalScoreValue = ScoreManager.scoreManager.score;
-            finalScore.GetComponent<TextMeshProUGUI>().text = (finalScoreValue).ToString();
+            finalScore.GetComponent<TextMeshProUGUI>().text = (finalScoreValue * 10000).ToString();
 
             if (finalScoreValue > 90)
             {
