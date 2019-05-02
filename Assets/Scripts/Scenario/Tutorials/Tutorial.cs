@@ -14,12 +14,18 @@ public class Tutorial : MonoBehaviour
 
     [Header("Text & Image")]
     public Sprite tutorialImage;
-    public Sprite tutorialButton;
-    public string tutorialTitleKey;
-    public string tutorialTextKey;
+	public string tutorialTitleKey;
+	public string tutorialTextKey;
+	public Sprite tutorialButton1;
+	public string tutorialTextButton1Key;
+	public Sprite tutorialButton2;
+	public string tutorialTextButton2Key;
+
+	public Sprite normalReadyButton;
+	public Sprite pressedReadyButton;
 
 
-    private void OnTriggerEnter(Collider other)
+	private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))
         {
@@ -45,30 +51,34 @@ public class Tutorial : MonoBehaviour
         tutorialCanvas.SetActive(true);
 
         tutorialCanvas.transform.Find("tutorialImage").GetComponent<Image>().sprite = tutorialImage;
-        tutorialCanvas.transform.Find("tutorialButton").GetComponent<Image>().sprite = tutorialButton;
         tutorialCanvas.transform.Find("tutorialTitle").GetComponent<TextMeshProUGUI>().text = I18n.Translate(tutorialTitleKey);
         tutorialCanvas.transform.Find("tutorialText").GetComponent<TextMeshProUGUI>().text = I18n.Translate(tutorialTextKey);
+		tutorialCanvas.transform.Find("tutorialButton1").GetComponent<Image>().sprite = tutorialButton1;
+		tutorialCanvas.transform.Find("tutorialTextButton1").GetComponent<TextMeshProUGUI>().text = I18n.Translate(tutorialTextButton1Key);
+		tutorialCanvas.transform.Find("tutorialButton2").GetComponent<Image>().sprite = tutorialButton2;
+		tutorialCanvas.transform.Find("tutorialTextButton2").GetComponent<TextMeshProUGUI>().text = I18n.Translate(tutorialTextButton2Key);
 
+		tutorialCanvas.transform.Find("tutorialReadyP1").GetComponent<Image>().sprite = normalReadyButton;
+		tutorialCanvas.transform.Find("tutorialReadyP2").GetComponent<Image>().sprite = normalReadyButton;
 
-        while (readyPlayer1 == false || readyPlayer2 == false)
+		while (readyPlayer1 == false || readyPlayer2 == false)
         {
             if (Input.GetKey(KeyCode.Joystick1Button0) || Input.GetKey(KeyCode.Space))
             {
                 readyPlayer1 = true;
-                tutorialCanvas.transform.Find("readyIconP1").gameObject.SetActive(true);
-            }
+				tutorialCanvas.transform.Find("tutorialReadyP1").GetComponent<Image>().sprite = pressedReadyButton;
+			}
             if (Input.GetKey(KeyCode.Joystick2Button0) || Input.GetKey(KeyCode.Keypad0))
             {
                 readyPlayer2 = true;
-                tutorialCanvas.transform.Find("readyIconP2").gameObject.SetActive(true);
-            }
+				tutorialCanvas.transform.Find("tutorialReadyP2").GetComponent<Image>().sprite = pressedReadyButton;
+			}
             yield return new WaitForEndOfFrame();
         }
 
-        tutorialCanvas.transform.Find("readyIconP1").gameObject.SetActive(false);
-        tutorialCanvas.transform.Find("readyIconP2").gameObject.SetActive(false);
         tutorialCanvas.SetActive(false);
         GameManager.gameManager.isPaused = false;
+		GameManager.gameManager.orb.GetComponent<OrbController>().FreezeOrb(0.5f);
 
         Destroy(gameObject);
     }
