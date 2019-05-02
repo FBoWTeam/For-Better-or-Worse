@@ -27,7 +27,6 @@ public class TimeLineEndPrologue : MonoBehaviour
 
     public void WhenEnded(PlayableDirector obj)
     {
-        Debug.Log("End Prologue");
         GameManager.gameManager.player1.GetComponent<CapsuleCollider>().isTrigger = false;
         GameManager.gameManager.player2.GetComponent<CapsuleCollider>().isTrigger = false;
         GameManager.gameManager.isPaused = false;
