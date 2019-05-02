@@ -166,7 +166,7 @@ public class BossSystem : MonoBehaviour
     public GameObject FxFireRight;
     public GameObject FxMysticRight;
     public GameObject FxStealRight;
-    GameObject fireFx = GameObject.Find("FX/fire").gameObject;
+    GameObject fireFx;
 
     public SoundEmitter soundEmitter;
 
@@ -182,6 +182,7 @@ public class BossSystem : MonoBehaviour
         isShrinkMysticLineCreated = false;
         anim = GetComponent<Animator>();
         originalDamage = collisionDamage;
+        fireFx = GameObject.Find("Boss/FX/fire").gameObject;
     }
 
     private void Start()

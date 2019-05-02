@@ -11,12 +11,14 @@ public class TimeLineDeath : MonoBehaviour
     GameObject Boss;
     public GameObject deathPoof;
     GameObject bossHealthBar;
+    GameObject rockFall;
 
     // Start is called before the first frame update
     void Start()
     {
         Boss = GameObject.Find("Boss");
         bossHealthBar = GameObject.Find("Bosshealthbar");
+        rockFall = GameObject.Find("RockFall");
     }
 
     public void Initialize()
@@ -37,6 +39,7 @@ public class TimeLineDeath : MonoBehaviour
         yield return new WaitForSeconds(0.75f);
         Boss.GetComponent<BossSystem>().FxStealLeft.SetActive(true);
         Boss.GetComponent<BossSystem>().FxStealRight.SetActive(true);
+        rockFall.SetActive(false);
         yield return new WaitForSeconds(4.75f);
         Boss.GetComponent<BossSystem>().FxStealLeft.SetActive(false);
         Boss.GetComponent<BossSystem>().FxStealRight.SetActive(false);
