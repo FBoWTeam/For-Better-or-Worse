@@ -4,15 +4,18 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.EventSystems;
 
 
 public class PauseMenu : MonoBehaviour
 {
-    public static bool gameIsPaused = false;
+    bool pauseMenuActive = false;
 
     [Header("Main Components")]
     public GameObject mainMenu;
     public GameObject guide;
+    public GameObject mainMenuFirstSelected;
+    public EventSystem eS;
 
     [Header("Main Components")]
     public GameObject mappingPanel;
@@ -27,7 +30,7 @@ public class PauseMenu : MonoBehaviour
     public Sprite mappingVF;
     public Sprite mappingVA;
 
-    private void Awake()
+    private void Start()
     {
         if (GameData.english)
         {
@@ -37,53 +40,83 @@ public class PauseMenu : MonoBehaviour
         {
             mappingImage.sprite = mappingVF;
         }
-
         CheckDifficulty();
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.Joystick1Button7) || Input.GetKeyDown(KeyCode.Joystick2Button7))
+        //print(GameManager.gameManager.isPaused);
+        if (Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.Joystick1Button7))
         {
-            if (GameManager.gameManager.isPaused)
+            if (!pauseMenuActive)
             {
-                Resume();
+                Time.timeScale = 0;
+                pauseMenuActive = true;
+                GameManager.gameManager.isPaused = true;
+                GameManager.gameManager.UIManager.gameObject.SetActive(false);
+                mainMenu.SetActive(true);
+                eS.SetSelectedGameObject(mainMenuFirstSelected);
             }
-            else
+            else if (pauseMenuActive)
             {
-                Pause();
+                if (guide.activeSelf)
+                {
+                    mappingPanel.SetActive(false);
+                    powerPanel.SetActive(false);
+                }
+
+                Resume();
             }
         }
 
-        if (guide.activeSelf)
+        if (pauseMenuActive && guide.activeSelf)
         {
+            if (Input.GetKeyDown(KeyCode.Backspace) || Input.GetKeyDown(KeyCode.Joystick1Button1))
+            {
+                mappingPanel.SetActive(false);
+                powerPanel.SetActive(false);
+                guide.SetActive(false);
+                mainMenu.SetActive(true);
+                eS.SetSelectedGameObject(mainMenuFirstSelected);
+            }
 
+            if (((Input.GetAxis("HorizontalP1") > 0.5f) && !powerPanel.activeSelf) || Input.GetKeyDown(KeyCode.RightArrow))
+            {
+                //print("Right");
+                mappingPanel.SetActive(false);
+                powerPanel.SetActive(true);
+            }
+            else if (((Input.GetAxis("HorizontalP1") < -0.5f) && !mappingPanel.activeSelf) || Input.GetKeyDown(KeyCode.LeftArrow))
+            {
+                //sprint("Left");
+                powerPanel.SetActive(false);
+                mappingPanel.SetActive(true);
+            }
         }
     }
 
     public void Resume()
     {
-        Time.timeScale = 1f;
+        mainMenu.SetActive(false);
+        guide.SetActive(false);
+        GameManager.gameManager.UIManager.gameObject.SetActive(true);
         GameManager.gameManager.isPaused = false;
-    }
-
-    void Pause()
-    {
-        Time.timeScale = 0f;
-        GameManager.gameManager.isPaused = true;
+        pauseMenuActive = false;
+        Time.timeScale = 1;
     }
 
     public void OpenGuide()
     {
         mainMenu.SetActive(false);
         guide.SetActive(true);
+        mappingPanel.SetActive(true);
     }
 
     public void ChangeDifficulty()
     {
         GameData.worseModeActivated = (GameData.worseModeActivated) ? false : true;
-
+        GameManager.gameManager.orb.GetComponent<OrbController>().canHitPlayer = GameData.worseModeActivated;
         CheckDifficulty();
     }
 
@@ -114,7 +147,16 @@ public class PauseMenu : MonoBehaviour
     }
     public void LoadMenu()
     {
-        //Debug.Log("Menu");
+        StartCoroutine(LoadMenuCoroutine());
+    }
+
+    IEnumerator LoadMenuCoroutine()
+    {
+        print("LOAD");
+        mainMenu.SetActive(false);
+        StartCoroutine(GameManager.gameManager.FadeCoroutine("FadeIn"));
+        yield return new WaitUntil(() => GameManager.gameManager.isPaused == true);
+        Time.timeScale = 1;
         SceneManager.LoadScene(2);
     }
 }

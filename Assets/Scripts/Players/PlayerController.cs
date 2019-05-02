@@ -163,7 +163,8 @@ public class PlayerController : MonoBehaviour
             }
         }
     }
-           
+
+    
 
     /// <summary>
     /// gets the current power that is going to be apllied on the orb by checking the input
