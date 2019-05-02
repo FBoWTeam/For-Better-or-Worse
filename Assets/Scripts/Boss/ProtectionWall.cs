@@ -15,10 +15,9 @@ public class ProtectionWall : MonoBehaviour
     public WallElement element;
     public int wallDamage;
 
-
-
     private int pylonDown;
 
+	public SoundEmitter soundEmitter;
 
     private void OnCollisionEnter(Collision collision)
     {
@@ -57,7 +56,8 @@ public class ProtectionWall : MonoBehaviour
     public void DestroyWalls()
     {
         pylonDown++;
-        if (pylonDown >= 3)
+		soundEmitter.PlaySound(0);
+		if (pylonDown >= 3)
         {
             if (element == WallElement.Aquatic)
             {
