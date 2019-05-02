@@ -67,6 +67,7 @@ public class UIManager : MonoBehaviour
     public GameObject drop;
     public float dropSpeed;
     private bool isDropActive = false;
+    private bool isFastDropToPowerSlot = false;
 
     [Header("Text Quote")]
     public float displayTime;
@@ -384,21 +385,21 @@ public class UIManager : MonoBehaviour
     #region Arena
     public void UpdateWave(int nb)
     {
-		wave.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = I18n.Translate("menu.ingame.texte2");
-		wave.transform.GetChild(1).GetComponent<TextMeshProUGUI>().text = nb.ToString();
+        wave.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = I18n.Translate("menu.ingame.texte2");
+        wave.transform.GetChild(1).GetComponent<TextMeshProUGUI>().text = nb.ToString();
     }
 
     public void UpdateSubWave(int nb)
-	{
-		subwave.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = I18n.Translate("menu.ingame.texte3");
-		subwave.transform.GetChild(1).GetComponent<TextMeshProUGUI>().text = nb.ToString();
+    {
+        subwave.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = I18n.Translate("menu.ingame.texte3");
+        subwave.transform.GetChild(1).GetComponent<TextMeshProUGUI>().text = nb.ToString();
     }
 
     public IEnumerator AnnouceWave(int nb)
     {
         waveAnnouncer.SetActive(true);
-		waveAnnouncer.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = I18n.Translate("menu.ingame.texte2");
-		waveAnnouncer.transform.GetChild(1).GetComponent<TextMeshProUGUI>().text = nb.ToString();
+        waveAnnouncer.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = I18n.Translate("menu.ingame.texte2");
+        waveAnnouncer.transform.GetChild(1).GetComponent<TextMeshProUGUI>().text = nb.ToString();
         yield return new WaitForSeconds(2f);
         waveAnnouncer.SetActive(false);
     }
@@ -530,11 +531,12 @@ public class UIManager : MonoBehaviour
 
             //print(Vector3.Distance(UIElement.transform.position, end));
 
-            while (Vector3.Distance(UIElement.transform.position, end.position) > 0.01)
+            while (Vector3.Distance(UIElement.transform.position, end.position) > 0.01 && !isFastDropToPowerSlot)
             {
                 UIElement.transform.position = Vector3.Lerp(UIElement.transform.position, end.transform.position, dropSpeed);
                 yield return new WaitForEndOfFrame();
             }
+            isFastDropToPowerSlot = false;
             isDropActive = false;
             drop.SetActive(false);
         }
@@ -543,26 +545,27 @@ public class UIManager : MonoBehaviour
 
     public void OrbToPowerSlotFeedback(bool isPlayer1, bool isElemental)
     {
+        isFastDropToPowerSlot = true;
         if (isPlayer1)
         {
             if (isElemental)
             {
-                StartCoroutine(DropFeedback(drop, orbPower.transform, elementalPowerFox.transform));
+                StartCoroutine(DropFeedback(drop, drop.transform, elementalPowerFox.transform));
             }
             else
             {
-                StartCoroutine(DropFeedback(drop, orbPower.transform, behaviouralPowerFox.transform));
+                StartCoroutine(DropFeedback(drop, drop.transform, behaviouralPowerFox.transform));
             }
         }
         else
         {
             if (isElemental)
             {
-                StartCoroutine(DropFeedback(drop, orbPower.transform, elementalPowerRaccoon.transform));
+                StartCoroutine(DropFeedback(drop, drop.transform, elementalPowerRaccoon.transform));
             }
             else
             {
-                StartCoroutine(DropFeedback(drop, orbPower.transform, behaviouralPowerRaccoon.transform));
+                StartCoroutine(DropFeedback(drop, drop.transform, behaviouralPowerRaccoon.transform));
             }
         }
     }

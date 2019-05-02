@@ -166,8 +166,9 @@ public class BossSystem : MonoBehaviour
     public GameObject FxFireRight;
     public GameObject FxMysticRight;
     public GameObject FxStealRight;
+    GameObject fireFx;
 
-	public SoundEmitter soundEmitter;
+    public SoundEmitter soundEmitter;
 
     //======================================================================================== AWAKE AND UPDATE
 
@@ -181,6 +182,7 @@ public class BossSystem : MonoBehaviour
         isShrinkMysticLineCreated = false;
         anim = GetComponent<Animator>();
         originalDamage = collisionDamage;
+        fireFx = GameObject.Find("Boss/FX/fire").gameObject;
     }
 
     private void Start()
@@ -276,7 +278,7 @@ public class BossSystem : MonoBehaviour
                     GameObject.Find("Rock Lines").GetComponent<TimeLineRockFall>().Initialize();
 
                     StopAllCoroutines();
-                    DeactivateFXHand();
+                    DeactivateFX();
                     anim.SetTrigger("Stop");
                 }
                 break;
@@ -291,7 +293,7 @@ public class BossSystem : MonoBehaviour
                     GameObject.Find("TimelineChangePlayers").GetComponent<TimeLineChangePlayers>().Initialize();
 
                     StopAllCoroutines();
-                    DeactivateFXHand();
+                    DeactivateFX();
                     anim.SetTrigger("Stop");
                     CleanProjectorList();
                 }
@@ -307,7 +309,7 @@ public class BossSystem : MonoBehaviour
                     GameObject.Find("Rock Corners").GetComponent<TimeLineCornerRockFall>().Initialize();
 
                     StopAllCoroutines();
-                    DeactivateFXHand();
+                    DeactivateFX();
                     anim.SetTrigger("Stop");
                     CleanProjectorList();
                 }
@@ -317,7 +319,7 @@ public class BossSystem : MonoBehaviour
                 {
                     dead = true;
                     StopAllCoroutines();
-                    DeactivateFXHand();
+                    DeactivateFX();
                     anim.SetBool("IsDashing", false);
                     anim.SetTrigger("Stop");
                     CleanProjectorList();
@@ -346,7 +348,7 @@ public class BossSystem : MonoBehaviour
         mysticLineList.Clear();
     }
 
-    public void DeactivateFXHand()
+    public void DeactivateFX()
     {
         FxElectricityLeft.SetActive(false);
         FxElectricityRight.SetActive(false);
@@ -356,6 +358,7 @@ public class BossSystem : MonoBehaviour
         FxMysticRight.SetActive(false);
         FxStealLeft.SetActive(false);
         FxStealRight.SetActive(false);
+        fireFx.SetActive(false);
     }
 
     //======================================================================================== RANDOM PATTERN
@@ -999,11 +1002,14 @@ public class BossSystem : MonoBehaviour
         int tickDamage = Mathf.RoundToInt(totalDamage / duration);
         int curentDamage = 0;
 
+        
+
         BossSystem bossSystem = target.GetComponent<BossSystem>();
 
         if (bossSystem != null)
         {
-            //activer les fx de feu sur le boss
+            fireFx.SetActive(true);
+            fireFx.GetComponent<ParticleSystem>().Play();
         }
 
         while (curentDamage < totalDamage)
@@ -1019,7 +1025,8 @@ public class BossSystem : MonoBehaviour
 
         if (bossSystem != null)
         {
-            //désactiver les fx de feu sur le boss
+            fireFx.GetComponent<ParticleSystem>().Stop();
+            fireFx.SetActive(false);
         }
     }
 

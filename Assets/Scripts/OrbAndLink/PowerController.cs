@@ -1054,6 +1054,10 @@ public class PowerController : MonoBehaviour
             case GameManager.PowerType.Electric:
                 //update in score manager
                 ScoreManager.scoreManager.statusAilmentApplied++;
+                GameObject elecFx = bossSystem.gameObject.transform.Find("FX/electricity").gameObject;
+                Debug.Log(elecFx != null);
+                elecFx.SetActive(true);
+                elecFx.GetComponent<ParticleSystem>().Play();
 
                 StartCoroutine(ElectricZappingCoroutine(transform.position, target, true));
                 damageTaken += electricDamage;
