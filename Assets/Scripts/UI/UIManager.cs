@@ -373,7 +373,7 @@ public class UIManager : MonoBehaviour
         }
         else if (nb >= 2)
         {
-            combo.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "Combo !";
+            combo.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = I18n.Translate("menu.ingame.texte1");
             combo.transform.GetChild(1).GetComponent<TextMeshProUGUI>().text = "x" + nb;
         }
 
@@ -384,18 +384,21 @@ public class UIManager : MonoBehaviour
     #region Arena
     public void UpdateWave(int nb)
     {
-        wave.transform.GetChild(1).GetComponent<TextMeshProUGUI>().text = nb.ToString();
+		wave.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = I18n.Translate("menu.ingame.texte2");
+		wave.transform.GetChild(1).GetComponent<TextMeshProUGUI>().text = nb.ToString();
     }
 
     public void UpdateSubWave(int nb)
-    {
-        subwave.transform.GetChild(1).GetComponent<TextMeshProUGUI>().text = nb.ToString();
+	{
+		subwave.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = I18n.Translate("menu.ingame.texte3");
+		subwave.transform.GetChild(1).GetComponent<TextMeshProUGUI>().text = nb.ToString();
     }
 
     public IEnumerator AnnouceWave(int nb)
     {
         waveAnnouncer.SetActive(true);
-        waveAnnouncer.transform.GetChild(1).GetComponent<TextMeshProUGUI>().text = nb.ToString();
+		waveAnnouncer.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = I18n.Translate("menu.ingame.texte2");
+		waveAnnouncer.transform.GetChild(1).GetComponent<TextMeshProUGUI>().text = nb.ToString();
         yield return new WaitForSeconds(2f);
         waveAnnouncer.SetActive(false);
     }
