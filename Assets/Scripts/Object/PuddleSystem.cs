@@ -262,7 +262,7 @@ public class PuddleSystem : MonoBehaviour
                 }
             }
         }
-        if (puddleType == GameManager.PuddleType.Mud)
+        if (puddleType == GameManager.PuddleType.Mud || puddleType == GameManager.PuddleType.Slug)
         {
             for (int i = 0; i < objectsInPuddle.Count; i++)
             {
