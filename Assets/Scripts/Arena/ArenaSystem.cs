@@ -71,6 +71,7 @@ public class ArenaSystem : MonoBehaviour
         timer = 0f;
         remainingEnemiesList = new List<GameObject>();
         increaseChanceValue = 100f / ((waveList.Count - threshold));
+        ScoreManager.scoreManager.totalWave = 1;
     }
 
 
@@ -170,8 +171,8 @@ public class ArenaSystem : MonoBehaviour
 
                     if (waveIndex < waveList.Count)
                     {
-                        GameManager.gameManager.UIManager.UpdateWave(ScoreManager.scoreManager.totalWave + waveIndex + 1);
-                        GameManager.gameManager.UIManager.StartCoroutine(GameManager.gameManager.UIManager.AnnouceWave(waveIndex + 1));
+                        GameManager.gameManager.UIManager.UpdateWave(ScoreManager.scoreManager.totalWave + 1);
+                        GameManager.gameManager.UIManager.StartCoroutine(GameManager.gameManager.UIManager.AnnouceWave(ScoreManager.scoreManager.totalWave + 1));
                     }
                     subWaveIndex = 0;
                     GameManager.gameManager.UIManager.UpdateSubWave(subWaveIndex + 1);

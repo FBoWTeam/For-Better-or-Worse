@@ -9,7 +9,7 @@ public class Tutorial : MonoBehaviour
 {
     public bool isCinematicTutorial;
 
-    [Header("Canvas")]
+    [HideInInspector]
     public GameObject tutorialCanvas;
 
     [Header("Text & Image")]
@@ -25,7 +25,14 @@ public class Tutorial : MonoBehaviour
 	public Sprite pressedReadyButton;
 
 
-	private void OnTriggerEnter(Collider other)
+    
+
+    private void Awake()
+    {
+        tutorialCanvas = GameManager.gameManager.tutorials;
+    }
+
+    private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))
         {
@@ -35,6 +42,8 @@ public class Tutorial : MonoBehaviour
 
     private void OnEnable()
     {
+        tutorialCanvas = GameManager.gameManager.tutorials;
+
         if (isCinematicTutorial)
         {
             StartCoroutine(TutorialCoroutine());
