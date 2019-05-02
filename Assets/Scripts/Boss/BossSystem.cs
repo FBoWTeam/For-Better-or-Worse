@@ -36,6 +36,7 @@ public class BossSystem : MonoBehaviour
     public int hp;
     public float stunTime;
     private bool isStuned;
+    bool dead;
 
     public int actualPhase;
     [Range(0.0f, 1.0f)]
@@ -154,8 +155,6 @@ public class BossSystem : MonoBehaviour
     public bool canHitBoss;
 
     public GameObject rockFall;
-    [HideInInspector]
-    public bool rockInstantiated;
 
     public GameObject FxElectricityLeft;
     public GameObject FxFireLeft;
@@ -186,7 +185,7 @@ public class BossSystem : MonoBehaviour
         player2 = GameManager.gameManager.player2;
         mysticLinePrefab.GetComponentInChildren<MysticLine>().damage = mysticLineLineDamage;
         canHitBoss = false;
-        rockInstantiated = false;
+        dead = false;
     }
 
     // Update is called once per frame
@@ -309,18 +308,13 @@ public class BossSystem : MonoBehaviour
                     CleanProjectorList();
                 }
                 break;
-            case 4:/*
-                if (!rockInstantiated)
+            case 4:
+                if (hp <= 0.0f && !dead)
                 {
-                    rockFall.SetActive(true);
-                    rockInstantiated = true;
-                }*/
-                if (hp <= 0.0f)
-                {
-                    Debug.Log("DED");
-                    //ded
+                    dead = true;
                     StopAllCoroutines();
                     DeactivateFXHand();
+                    anim.SetBool("IsDashing", false);
                     anim.SetTrigger("Stop");
                     CleanProjectorList();
                     GameObject.Find("TimelineDeath").GetComponent<TimeLineDeath>().Initialize();
