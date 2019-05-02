@@ -40,7 +40,11 @@ public class ScoreDisplayer : MonoBehaviour
 
     [DrawIf(new string[] { "scoreMode" }, ScoreMode.Story)]
     public GameObject starCanvas;
-    
+
+    [Header("Hide for the boss")]
+    public List<GameObject> gameObjectToHide;
+
+
 
     private void Start()
     {
@@ -48,40 +52,44 @@ public class ScoreDisplayer : MonoBehaviour
         ScoreManager.scoreManager.completionTime = Time.time - ScoreManager.scoreManager.timeStamp;
 
         switch (GameData.previousScene)
-		{
-			case 6:
-				levelName.GetComponent<TextMeshProUGUI>().text = I18n.Translate("menu.score.texte1");
+        {
+            case 6:
+                levelName.GetComponent<TextMeshProUGUI>().text = I18n.Translate("menu.score.texte1");
                 ScoreManager.scoreManager.score = ScoreManager.scoreManager.CalculatePrologueScore();
                 break;
-			case 7:
-				levelName.GetComponent<TextMeshProUGUI>().text = I18n.Translate("menu.score.texte2");
+            case 7:
+                levelName.GetComponent<TextMeshProUGUI>().text = I18n.Translate("menu.score.texte2");
                 ScoreManager.scoreManager.score = ScoreManager.scoreManager.CalculateJungle1Score();
                 break;
-			case 8:
-				levelName.GetComponent<TextMeshProUGUI>().text = I18n.Translate("menu.score.texte3");
+            case 8:
+                levelName.GetComponent<TextMeshProUGUI>().text = I18n.Translate("menu.score.texte3");
                 ScoreManager.scoreManager.score = ScoreManager.scoreManager.CalculateJungle2Score();
                 break;
-			case 9:
-				levelName.GetComponent<TextMeshProUGUI>().text = I18n.Translate("menu.score.texte4");
+            case 9:
+                levelName.GetComponent<TextMeshProUGUI>().text = I18n.Translate("menu.score.texte4");
                 ScoreManager.scoreManager.score = ScoreManager.scoreManager.CalculateBossScore();
+                foreach (GameObject go in gameObjectToHide)
+                {
+                    go.SetActive(false);
+                }
                 break;
-			case 12:
-				levelName.GetComponent<TextMeshProUGUI>().text = I18n.Translate("menu.score.texte15");
+            case 12:
+                levelName.GetComponent<TextMeshProUGUI>().text = I18n.Translate("menu.score.texte15");
                 ScoreManager.scoreManager.score = ScoreManager.scoreManager.CalculateArenaScore();
                 break;
-			case 13:
-				levelName.GetComponent<TextMeshProUGUI>().text = I18n.Translate("menu.score.texte16");
+            case 13:
+                levelName.GetComponent<TextMeshProUGUI>().text = I18n.Translate("menu.score.texte16");
                 ScoreManager.scoreManager.score = ScoreManager.scoreManager.CalculateArenaScore();
                 break;
-			case 14:
-				levelName.GetComponent<TextMeshProUGUI>().text = I18n.Translate("menu.score.texte17");
+            case 14:
+                levelName.GetComponent<TextMeshProUGUI>().text = I18n.Translate("menu.score.texte17");
                 ScoreManager.scoreManager.score = ScoreManager.scoreManager.CalculateArenaScore();
                 break;
-			default:
-				levelName.GetComponent<TextMeshProUGUI>().text = "not a normal scene";
-				break;
-		}
-        
+            default:
+                levelName.GetComponent<TextMeshProUGUI>().text = "not a normal scene";
+                break;
+        }
+
 
         killsP1.GetComponent<TextMeshProUGUI>().text = ScoreManager.scoreManager.killsP1.ToString();
         damageTakenP1.GetComponent<TextMeshProUGUI>().text = ScoreManager.scoreManager.damageTakenP1.ToString();
@@ -129,7 +137,7 @@ public class ScoreDisplayer : MonoBehaviour
         }
         else
         {
-            finalScore.GetComponent<TextMeshProUGUI>().text =  ScoreManager.scoreManager.totalWave.ToString();
+            finalScore.GetComponent<TextMeshProUGUI>().text = ScoreManager.scoreManager.totalWave.ToString();
         }
-	}
+    }
 }
