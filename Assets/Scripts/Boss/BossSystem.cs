@@ -159,9 +159,11 @@ public class BossSystem : MonoBehaviour
     public GameObject FxElectricityLeft;
     public GameObject FxFireLeft;
     public GameObject FxMysticLeft;
+    public GameObject FxStealLeft;
     public GameObject FxElectricityRight;
     public GameObject FxFireRight;
     public GameObject FxMysticRight;
+    public GameObject FxStealRight;
 
 	public SoundEmitter soundEmitter;
 
@@ -350,6 +352,8 @@ public class BossSystem : MonoBehaviour
         FxFireRight.SetActive(false);
         FxMysticLeft.SetActive(false);
         FxMysticRight.SetActive(false);
+        FxStealLeft.SetActive(false);
+        FxStealRight.SetActive(false);
     }
 
     //======================================================================================== RANDOM PATTERN
@@ -794,6 +798,9 @@ public class BossSystem : MonoBehaviour
         isAttacking = true;
         collisionDamage = chargeDamage;
 
+        FxStealLeft.SetActive(true);
+        FxStealRight.SetActive(true);
+
         Vector3 target = aimedPlayer.transform.position;
         Vector3 posStart = transform.position;
 
@@ -853,6 +860,8 @@ public class BossSystem : MonoBehaviour
             yield return new WaitForEndOfFrame();
         }
 
+        
+
         anim.SetBool("IsDashing", false);
         anim.SetBool("DashWillStun", willBeStun);
 
@@ -868,6 +877,9 @@ public class BossSystem : MonoBehaviour
 
         collisionDamage = originalDamage;
         yield return new WaitForSeconds(0.7f);//wait for the end animation
+
+        FxStealLeft.SetActive(false);
+        FxStealRight.SetActive(false);
 
         nextAttack = Time.time + Random.Range(minWaitTime, maxWaitTime);
         isAttacking = false;
