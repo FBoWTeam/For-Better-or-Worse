@@ -8,10 +8,23 @@ public class Rock : MonoBehaviour
     public float fallSpeed;
     public GameObject circleProjector;
     public float rockRadius;
+    public int rockDamage;
+    public GameObject rockPoof;
+
+	public SoundEmitter soundEmitter;
 
     private void Start()
     {
         StartCoroutine(Fall());
+    }
+
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Player"))
+        {
+            GameManager.gameManager.TakeDamage(collision.gameObject, rockDamage, collision.contacts[0].point, true);
+        }
     }
 
 
@@ -39,7 +52,10 @@ public class Rock : MonoBehaviour
             transform.Translate(Vector3.down * fallSpeed * Time.deltaTime);
             yield return new WaitForEndOfFrame();
         }
-        
+
+		soundEmitter.PlaySound(0, true);
+        Instantiate(rockPoof, transform.position, Quaternion.identity);
+
         Destroy(circleIndicator);
         Destroy(gameObject);
     }

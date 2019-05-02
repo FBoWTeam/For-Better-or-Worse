@@ -7,36 +7,43 @@ using UnityEngine.SceneManagement;
 public class GameManager : MonoBehaviour
 {
     public static GameManager gameManager;
-	[HideInInspector]
-	public GameObject player1;
-	[HideInInspector]
-	public GameObject player2;
-	[HideInInspector]
-	public GameObject orb;
-	[HideInInspector]
-	public UIManager UIManager;
-	[HideInInspector]
-	public GameObject fader;
+    [HideInInspector]
+    public GameObject player1;
+    [HideInInspector]
+    public GameObject player2;
+    [HideInInspector]
+    public GameObject orb;
+    [HideInInspector]
+    public UIManager UIManager;
+    [HideInInspector]
+    public GameObject fader;
     [HideInInspector]
     public GameObject blackBands;
     [HideInInspector]
-	public GameObject tutorials;
+    public GameObject tutorials;
+
+    public bool arena;
+
+    public bool boss;
 
     public bool isPaused;
 
-	[Header("[Distance Limits]")]
-	public float minDistance;
-	public float maxDistance;
+    [HideInInspector]
+    public bool isCutScene = false;
 
-	[Header("[Hps]")]
-	public int hp;
-	public int damageTakenP1;
-	public int damageTakenP2;
-	public int shieldP1;
-	public int shieldP2;
-	public float knockBackForce;
-	public bool restartWhenDead;
-	bool respawning = false;
+    [Header("[Distance Limits]")]
+    public float minDistance;
+    public float maxDistance;
+
+    [Header("[Hps]")]
+    public int hp;
+    public int damageTakenP1;
+    public int damageTakenP2;
+    public int shieldP1;
+    public int shieldP2;
+    public float knockBackForce;
+    public bool canDie;
+    bool respawning = false;
 
     [Header("[HealingOrbs]")]
     public GameObject normalHealingOrbPrefab;
@@ -80,6 +87,7 @@ public class GameManager : MonoBehaviour
         Mud
     }
 
+
     // Start is called before the first frame update
     void Awake()
     {
@@ -92,39 +100,48 @@ public class GameManager : MonoBehaviour
             Destroy(this.gameObject);
         }
 
-        I18n.LoadLang("fr_FR");
         player1 = GameObject.Find("Player1");
         player2 = GameObject.Find("Player2");
         orb = GameObject.Find("Orb");
         UIManager = GameObject.Find("UI").GetComponent<UIManager>();
-		UIManager.InitDictionary();
+        UIManager.InitDictionary();
         fader = GameObject.Find("Fader");
         blackBands = GameObject.Find("BlackBands");
         tutorials = GameObject.Find("Tutorials");
-		tutorials.SetActive(false);
-		if (GameObject.Find("IntroScenario") != null)
-		{
-			UIManager.gameObject.SetActive(false);
-			player1.GetComponent<PlayerController>().active = false;
-			player2.GetComponent<PlayerController>().active = false;
-			player1.GetComponent<OrbHitter>().active = false;
-			player2.GetComponent<OrbHitter>().active = false;
-			GameObject.Find("IntroScenario").GetComponent<ScenarioHandler>().Initialize();
-		}
-		else
-		{
-			GameObject.Find("DialogSystem").SetActive(false);
-			blackBands.SetActive(false);
-			player1.GetComponent<PlayerController>().active = true;
-			player2.GetComponent<PlayerController>().active = true;
-			player1.GetComponent<OrbHitter>().active = true;
-			player2.GetComponent<OrbHitter>().active = true;
-			StartCoroutine(FadeCoroutine("FadeIn"));
-		}
+        tutorials.SetActive(false);
+        GameObject introScenario = GameObject.Find("IntroScenario");
+        if (introScenario != null)
+        {
+            if (GameData.introSkiped)
+            {
+                Destroy(introScenario);
+            }
+            else
+            {
+                isCutScene = true;
+                UIManager.gameObject.SetActive(false);
+                player1.GetComponent<PlayerController>().active = false;
+                player2.GetComponent<PlayerController>().active = false;
+                player1.GetComponent<OrbHitter>().active = false;
+                player2.GetComponent<OrbHitter>().active = false;
+                GameObject.Find("IntroScenario").GetComponent<ScenarioHandler>().Initialize();
+            }
+        }
+        if (introScenario == null || GameData.introSkiped)
+        {
+            GameData.introSkiped = false;
+            GameObject.Find("DialogSystem").SetActive(false);
+            blackBands.SetActive(false);
+            player1.GetComponent<PlayerController>().active = true;
+            player2.GetComponent<PlayerController>().active = true;
+            player1.GetComponent<OrbHitter>().active = true;
+            player2.GetComponent<OrbHitter>().active = true;
+            StartCoroutine(FadeCoroutine("FadeIn"));
+        }
 
-		damageTakenP1 = 0;
-		damageTakenP2 = 0;
-	}
+        damageTakenP1 = 0;
+        damageTakenP2 = 0;
+    }
 
     /// <summary>
     /// Handle taking damage from an Ennemy or other things
@@ -170,7 +187,7 @@ public class GameManager : MonoBehaviour
                 }
                 damageTakenP2 += damage;
             }
-            if ((damageTakenP1 + damageTakenP2 >= hp) && restartWhenDead && !respawning)
+            if ((damageTakenP1 + damageTakenP2 >= hp) && canDie && !respawning)
             {
                 StartCoroutine(deathCoroutine());
             }
@@ -290,50 +307,82 @@ public class GameManager : MonoBehaviour
         fader.GetComponent<Animator>().SetTrigger(fadeName);
         yield return new WaitForSeconds(fader.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).length);
         GameManager.gameManager.isPaused = false;
+        if (fadeName == "FadeIn")
+        {
+            orb.GetComponent<OrbController>().FreezeOrb(0.5f);
+        }
     }
 
     IEnumerator deathCoroutine()
     {
-		respawning = true;
+        respawning = true;
         //update in score manager
         ScoreManager.scoreManager.numberOfDeaths++;
 
         StartCoroutine(FadeCoroutine("FadeOut"));
         yield return new WaitUntil(() => isPaused == false);
+        yield return new WaitForSeconds(1.0f);
 
-        isPaused = true;
+        PlayerController player1Controller = player1.GetComponent<PlayerController>();
+        PlayerController player2Controller = player2.GetComponent<PlayerController>();
 
-        player1.transform.position = actualCheckpoint.transform.GetChild(0).position - 5 * Camera.main.transform.right;
-        player2.transform.position = actualCheckpoint.transform.GetChild(0).position + 5 * Camera.main.transform.right;
+        if (player1Controller.actualBurnCoroutine != null)
+        {
+            player1Controller.StopCoroutine(player1Controller.actualBurnCoroutine);
+            player1.transform.Find("FX/fire").gameObject.SetActive(false);
+        }
+        if (player1Controller.actualBurnCoroutine != null)
+        {
+            player1Controller.StopCoroutine(player1Controller.actualBurnCoroutine);
+            player2.transform.Find("FX/fire").gameObject.SetActive(false);
+        }
 
-        damageTakenP1 = 0;
-        damageTakenP2 = 0;
-        shieldP1 = 0;
-        shieldP2 = 0;
-        UIManager.UpdateHealthBar();
+        if (arena)
+        {
+            GameData.previousScene = SceneManager.GetActiveScene().buildIndex;
+            SceneManager.LoadScene(15);
+        }
+        else if (boss)
+        {
+            GameData.introSkiped = true;
+            SceneManager.LoadScene(9);
+        }
+        else
+        {
+            isPaused = true;
 
-        player1.GetComponent<PlayerController>().elementalPowerSlot = respawnPowerRecord.player1ElementalPower;
-        player1.GetComponent<PlayerController>().behaviouralPowerSlot = respawnPowerRecord.player1BehaviouralPower;
-        player2.GetComponent<PlayerController>().elementalPowerSlot = respawnPowerRecord.player2ElementalPower;
-        player2.GetComponent<PlayerController>().behaviouralPowerSlot = respawnPowerRecord.player2BehaviouralPower;
-        UIManager.UpdatePowerSlot(1, true, respawnPowerRecord.player1ElementalPower);
-        UIManager.UpdatePowerSlot(2, true, respawnPowerRecord.player1BehaviouralPower);
-        UIManager.UpdatePowerSlot(1, false, respawnPowerRecord.player2ElementalPower);
-        UIManager.UpdatePowerSlot(2, false, respawnPowerRecord.player2BehaviouralPower);
+            player1.transform.position = actualCheckpoint.transform.GetChild(0).position + new Vector3(-5, 0, 0);
+            player2.transform.position = actualCheckpoint.transform.GetChild(0).position + new Vector3(5, 0, 0);
 
-        player1.GetComponent<PlayerController>().RespawnReset();
-        player2.GetComponent<PlayerController>().RespawnReset();
-        player1.GetComponent<OrbHitter>().RespawnReset();
-        player2.GetComponent<OrbHitter>().RespawnReset();
-        orb.GetComponent<OrbController>().RespawnReset();
-        orb.GetComponent<PowerController>().RespawnReset();
-        UIManager.RespawnReset();
+            damageTakenP1 = 0;
+            damageTakenP2 = 0;
+            shieldP1 = 0;
+            shieldP2 = 0;
+            UIManager.UpdateHealthBar();
 
-        actualCheckpoint.RespawnContent();
+            player1.GetComponent<PlayerController>().elementalPowerSlot = respawnPowerRecord.player1ElementalPower;
+            player1.GetComponent<PlayerController>().behaviouralPowerSlot = respawnPowerRecord.player1BehaviouralPower;
+            player2.GetComponent<PlayerController>().elementalPowerSlot = respawnPowerRecord.player2ElementalPower;
+            player2.GetComponent<PlayerController>().behaviouralPowerSlot = respawnPowerRecord.player2BehaviouralPower;
+            UIManager.UpdatePowerSlot(1, true, respawnPowerRecord.player1ElementalPower);
+            UIManager.UpdatePowerSlot(2, true, respawnPowerRecord.player1BehaviouralPower);
+            UIManager.UpdatePowerSlot(1, false, respawnPowerRecord.player2ElementalPower);
+            UIManager.UpdatePowerSlot(2, false, respawnPowerRecord.player2BehaviouralPower);
 
-        StartCoroutine(FadeCoroutine("FadeIn"));
+            player1.GetComponent<PlayerController>().RespawnReset();
+            player2.GetComponent<PlayerController>().RespawnReset();
+            player1.GetComponent<OrbHitter>().RespawnReset();
+            player2.GetComponent<OrbHitter>().RespawnReset();
+            orb.GetComponent<OrbController>().RespawnReset();
+            orb.GetComponent<PowerController>().RespawnReset();
+            UIManager.RespawnReset();
 
-		respawning = false;
+            actualCheckpoint.RespawnContent();
+
+            StartCoroutine(FadeCoroutine("FadeIn"));
+
+            respawning = false;
+        }
     }
 
 

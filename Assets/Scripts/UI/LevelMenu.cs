@@ -6,123 +6,143 @@ using UnityEngine.SceneManagement;
 
 public class LevelMenu : MonoBehaviour
 {
+	public Animation fader;
+	bool active;
 
-    List<Vector3> pos = new List<Vector3>();
+	public List<GameObject> pos = new List<GameObject>();
     List<int> indexPI = new List<int>();
-    public int curentPosIndex;
-    public int curentPIIndex;
-    public int destPosIndex;
-    public int destPIIndex;
+    int curentPosIndex;
+    int curentPIIndex;
+    int destPosIndex;
+    int destPIIndex;
 
     public bool isMoving;
 
-    // Start is called before the first frame update
-    void Start()
+	public SoundEmitter soundEmitter;
+
+	public void Awake()
+	{
+		active = false;
+		StartCoroutine(FadeIn());
+	}
+
+	// Start is called before the first frame update
+	void Start()
     {
         curentPIIndex = 0;
         destPIIndex = 0;
         curentPosIndex = 0;
         destPosIndex = 0;
         isMoving = false;
-
-        pos.Add(new Vector3(260 , 555, 0));//0-tower
-        pos.Add(new Vector3(345 , 555, 0));
-        pos.Add(new Vector3(385 , 495, 0));
-        pos.Add(new Vector3(470 , 495, 0));//3-fire
-        pos.Add(new Vector3(580, 485, 0));//4-lake
-        pos.Add(new Vector3(642 , 455, 0));//5-croco
-        pos.Add(new Vector3(700 , 460, 0));
-        pos.Add(new Vector3(780 , 525, 0));//7-cave
-        pos.Add(new Vector3(855 , 525, 0));//8-rune
-        pos.Add(new Vector3(825 , 455, 0));//9-jag
-
-        /*pos.Add(new Vector3(320 , 425, 0));
-        pos.Add(new Vector3(375 , 355, 0));
-        pos.Add(new Vector3(450 , 255, 0));//12-tree
-        pos.Add(new Vector3(490 , 155, 0));
-        pos.Add(new Vector3(425 , 135, 0));//14-rock
-        pos.Add(new Vector3(370 , 65, 0));
-        pos.Add(new Vector3(300 , 55, 0));//16-eagle
-        pos.Add(new Vector3(205 , 65, 0));
-        pos.Add(new Vector3(160 , 105, 0));//18-moutain
-        pos.Add(new Vector3(200 , 160, 0));
-        pos.Add(new Vector3(160 , 195, 0));
-        pos.Add(new Vector3(50 , -90, 0));//21-
-        pos.Add(new Vector3(80 , -145, 0));
-        pos.Add(new Vector3(30 , -135, 0));//23-bear
-        pos.Add(new Vector3(-30 , -180, 0));
-        pos.Add(new Vector3(0 , -250, 0));
-        pos.Add(new Vector3(-60 ,-265, 0));//26-houses
-        pos.Add(new Vector3(-135 ,-260 , 0));
-        pos.Add(new Vector3(-135 ,-215 , 0));
-        pos.Add(new Vector3(-115 ,-165 , 0));
-        pos.Add(new Vector3(-170 ,-100 , 0));//30-fishing rod
-        pos.Add(new Vector3(-215 ,-185 , 0));//31-dog
-        pos.Add(new Vector3(-320 ,-190 , 0));
-        pos.Add(new Vector3(-330 ,-155 , 0));//33-palm tree
-        pos.Add(new Vector3(-335 ,-120 , 0));
-        pos.Add(new Vector3(-390 ,-125 , 0));
-        pos.Add(new Vector3(-425 ,-165 , 0));
-        pos.Add(new Vector3(-460 ,-135 , 0));//37-temple
-        pos.Add(new Vector3(-495 ,-85 , 0));//38-round*/
-
+        
         indexPI.Add(0);
-        //indexPI.Add(3);
-        //indexPI.Add(4);
-        //indexPI.Add(5);
         indexPI.Add(7);
         indexPI.Add(8);
         indexPI.Add(9);
-        /*indexPI.Add(12);
-        indexPI.Add(14);
-        indexPI.Add(16);
-        indexPI.Add(18);
-        indexPI.Add(21);
-        indexPI.Add(23);
-        indexPI.Add(26);
-        indexPI.Add(30);
-        indexPI.Add(31);
-        indexPI.Add(33);
-        indexPI.Add(37);
-        indexPI.Add(38);*/
 
-        transform.position = pos[0];
+		switch(GameData.previousScene)
+		{
+			case 2:
+				curentPIIndex = 0;
+				destPIIndex = 0;
+				curentPosIndex = 0;
+				destPosIndex = 0;
+				transform.position = pos[0].transform.position;
+				break;
+			case 6:
+				curentPIIndex = 0;
+				destPIIndex = 0;
+				curentPosIndex = 0;
+				destPosIndex = 0;
+				transform.position = pos[0].transform.position;
+				break;
+			case 7:
+				curentPIIndex = 1;
+				destPIIndex = 1;
+				curentPosIndex = 7;
+				destPosIndex = 7;
+				transform.position = pos[7].transform.position;
+				break;
+			case 8:
+				curentPIIndex = 2;
+				destPIIndex = 2;
+				curentPosIndex = 8;
+				destPosIndex = 8;
+				transform.position = pos[8].transform.position;
+				break;
+			case 9:
+				curentPIIndex = 3;
+				destPIIndex = 3;
+				curentPosIndex = 9;
+				destPosIndex = 9;
+				transform.position = pos[9].transform.position;
+				break;
+			default:
+				curentPIIndex = 0;
+				destPIIndex = 0;
+				curentPosIndex = 0;
+				destPosIndex = 0;
+				transform.position = pos[0].transform.position;
+				break;
+		}
+
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (!isMoving)
+        //Debug.Log(transform.position);
+        if (!isMoving && active)
         {
             if (curentPosIndex == destPosIndex)
             {
-                if ((Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.DownArrow)
-                     || Input.GetAxis("DeformP1X") > Input.GetAxis("DeformP1Z")
-                     || Input.GetAxis("HorizontalP1") > Input.GetAxis("VerticalP1"))
-                    && destPIIndex < indexPI.Count - 1)
+                if ((Input.GetAxis("HorizontalP1") > Input.GetAxis("VerticalP1")) && destPIIndex < indexPI.Count - 1)
                 {
                     destPIIndex++;
                     destPosIndex = indexPI[destPIIndex];
                 }
                 
-                if ((Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.UpArrow)
-                     || Input.GetAxis("DeformP1X") < Input.GetAxis("DeformP1Z")
-                     || Input.GetAxis("HorizontalP1") < Input.GetAxis("VerticalP1"))
-                    && destPIIndex > 0)
+                if ((Input.GetAxis("HorizontalP1") < Input.GetAxis("VerticalP1")) && destPIIndex > 0)
                 {
                     destPIIndex--;
                     destPosIndex = indexPI[destPIIndex];
                 }
 
-                if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.Joystick1Button0))
-                {
-                    if (curentPIIndex == 0)
-                        SceneManager.LoadScene("Prologue");
-                    if (curentPIIndex == 1)
-                        SceneManager.LoadScene("Jungle");
-                    if (curentPIIndex == 2)
-                        SceneManager.LoadScene("Boss");
+                if (Input.GetKeyDown(KeyCode.Joystick1Button0) || Input.GetKeyDown(KeyCode.Space))
+				{
+					soundEmitter.PlaySound(0);
+					switch (curentPIIndex)
+                    {
+                        case 0:
+							GameData.previousScene = 5;
+							GameData.nextSceneToLoad = 5;
+							StartCoroutine(FadeOut(4));
+							break;
+                        case 1:
+							GameData.previousScene = 7;
+							GameData.nextSceneToLoad = 7;
+							StartCoroutine(FadeOut(4));
+							break;
+                        case 2:
+							GameData.previousScene = 8;
+							GameData.nextSceneToLoad = 8;
+							StartCoroutine(FadeOut(4));
+							break;
+                        case 3:
+							GameData.previousScene = 9;
+							GameData.nextSceneToLoad = 9;
+							StartCoroutine(FadeOut(4));
+							break;
+                    }
                 }
+
+                if (Input.GetKeyDown(KeyCode.Joystick1Button1) || Input.GetKeyDown(KeyCode.Escape))
+				{
+					soundEmitter.PlaySound(0);
+					StartCoroutine(FadeOut(2));
+				}
+
             }
 
             if (curentPosIndex < destPosIndex)
@@ -136,7 +156,7 @@ public class LevelMenu : MonoBehaviour
                 StartCoroutine(GoToPreviousPos());
                 curentPIIndex = destPIIndex;
             }
-                        
+            
         }
     }
 
@@ -148,7 +168,7 @@ public class LevelMenu : MonoBehaviour
 
         while(t<1)
         {
-            transform.position = Vector3.Lerp(pos[curentPosIndex], pos[curentPosIndex + 1], t);
+			transform.position = Vector3.Lerp(pos[curentPosIndex].transform.position, pos[curentPosIndex + 1].transform.position, t);
             t += 0.02f;
             yield return new WaitForSecondsRealtime(0.01f);
         }
@@ -165,8 +185,9 @@ public class LevelMenu : MonoBehaviour
 
         while (t < 1)
         {
-            transform.position = Vector3.Lerp(pos[curentPosIndex], pos[curentPosIndex - 1], t);
-            t += 0.02f;
+			transform.position = Vector3.Lerp(pos[curentPosIndex].transform.position, pos[curentPosIndex - 1].transform.position, t);
+
+			t += 0.02f;
             yield return new WaitForSecondsRealtime(0.01f);
         }
 
@@ -174,5 +195,21 @@ public class LevelMenu : MonoBehaviour
         isMoving = false;
     }
 
+	IEnumerator FadeIn()
+	{
+		fader.Play();
+		yield return new WaitForSeconds(0.1f);
+		yield return new WaitUntil(() => fader.isPlaying == false);
+		active = true;
+	}
 
+	IEnumerator FadeOut(int sceneToLoad)
+	{
+		active = false;
+		fader.clip = fader.GetClip("FadeOut");
+		fader.Play();
+		yield return new WaitForSeconds(0.1f);
+		yield return new WaitUntil(() => fader.isPlaying == false);
+		SceneManager.LoadScene(sceneToLoad);
+	}
 }

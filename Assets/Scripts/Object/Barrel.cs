@@ -11,17 +11,14 @@ public class Barrel : MonoBehaviour, IActivable
     public float powerForce;
     public float TimeBeforeActivation;
 
+    public GameObject explosionEffect;
+
+	public SoundEmitter soundEmitter;
 
     // Start is called before the first frame update
     void Start()
     {
         isActive = false;        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 
     private void OnTriggerEnter(Collider other)
@@ -33,7 +30,9 @@ public class Barrel : MonoBehaviour, IActivable
     }
 
     IEnumerator TimeBeforeActivationCoroutine()
-    {
+	{
+		soundEmitter.PlaySound(0);
+		transform.GetChild(0).gameObject.SetActive(true);
         yield return new WaitForSeconds(TimeBeforeActivation);
 
         this.Activate();
@@ -41,6 +40,7 @@ public class Barrel : MonoBehaviour, IActivable
 
     public void Activate()
     {
+		soundEmitter.PlaySound(1, true);
         isActive = true;
 
         Vector3 explosionPos = transform.position;
@@ -69,8 +69,8 @@ public class Barrel : MonoBehaviour, IActivable
                 }
             }
         }
-
-        Destroy(gameObject);//the barrel explodes ans is destroyed
+        Instantiate(explosionEffect, transform.position + Vector3.up, Quaternion.Euler(new Vector3(90, 0, 0)));
+        Destroy(gameObject);
 
     }
 }

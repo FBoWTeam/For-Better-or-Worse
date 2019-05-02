@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class ArenaSystem : MonoBehaviour
@@ -56,6 +57,12 @@ public class ArenaSystem : MonoBehaviour
 
     //enemies currently alive in the arena
     private List<GameObject> remainingEnemiesList;
+    
+
+    public List<GameObject> arenaCanvas;
+    public GameObject countdownArena;
+
+	public SoundEmitter soundEmitter;
 
     private void Start()
     {
@@ -63,12 +70,54 @@ public class ArenaSystem : MonoBehaviour
         subWaveIndex = 0;
         timer = 0f;
         remainingEnemiesList = new List<GameObject>();
-        StartCoroutine(WaveSystem());
         increaseChanceValue = 100f / ((waveList.Count - threshold));
-        GameManager.gameManager.UIManager.UpdateWave(waveIndex + 1);
+        ScoreManager.scoreManager.totalWave = 1;
     }
 
 
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Player"))
+        {
+            StartCoroutine(CountDown());
+            GetComponent<BoxCollider>().enabled = false;
+        }
+    }
+
+
+    IEnumerator CountDown()
+	{
+		ArenaThemeManager themeManager = GameObject.Find("BGM").GetComponent<ArenaThemeManager>();
+		themeManager.Activate();
+		yield return new WaitForSeconds(1f);
+		soundEmitter.PlaySound(0);
+		countdownArena.SetActive(true);
+        countdownArena.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "5";
+        yield return new WaitForSeconds(1f);
+        countdownArena.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "4";
+        yield return new WaitForSeconds(1f);
+        countdownArena.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "3";
+        yield return new WaitForSeconds(1f);
+        countdownArena.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "2";
+        yield return new WaitForSeconds(1f);
+        countdownArena.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "1";
+        yield return new WaitForSeconds(1f);
+        countdownArena.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "";
+		themeManager.launchTheme = true;
+		StartArena();
+    }
+
+    void StartArena()
+    {
+        for (int i = 0; i < arenaCanvas.Count; i++)
+        {
+            arenaCanvas[i].SetActive(true);
+        }
+		soundEmitter.PlaySound(1);
+		StartCoroutine(WaveSystem());
+        GameManager.gameManager.UIManager.UpdateWave(waveIndex + 1);
+    }
+    
     IEnumerator WaveSystem()
     {
         if (waveList.Count <= 0)
@@ -115,9 +164,15 @@ public class ArenaSystem : MonoBehaviour
                         yield return new WaitForEndOfFrame();
                     }
                     waveIndex++;
+					
+					soundEmitter.PlaySound(1);
+					ScoreManager.scoreManager.totalWave++;
+
+
                     if (waveIndex < waveList.Count)
                     {
-                        GameManager.gameManager.UIManager.UpdateWave(waveIndex + 1);
+                        GameManager.gameManager.UIManager.UpdateWave(ScoreManager.scoreManager.totalWave + 1);
+                        GameManager.gameManager.UIManager.StartCoroutine(GameManager.gameManager.UIManager.AnnouceWave(ScoreManager.scoreManager.totalWave + 1));
                     }
                     subWaveIndex = 0;
                     GameManager.gameManager.UIManager.UpdateSubWave(subWaveIndex + 1);
@@ -130,7 +185,7 @@ public class ArenaSystem : MonoBehaviour
                 arenaCleared = true;
             }
         }
-        ScoreManager.scoreManager.Save();
+
         sceneLoader.GetComponent<IActivable>().Activate();
     }
 
@@ -143,7 +198,8 @@ public class ArenaSystem : MonoBehaviour
                 timer += Time.deltaTime;
             }
             timer = 0;
-            GameObject boss = Instantiate(bonusWave, spawnList[spawnNumer].position, Quaternion.identity).gameObject;
+			soundEmitter.PlaySound(2);
+			GameObject boss = Instantiate(bonusWave, spawnList[spawnNumer].position, Quaternion.identity).gameObject;
             foreach (Enemy enemy in boss.GetComponentsInChildren<Enemy>())
             {
                 remainingEnemiesList.Add(enemy.gameObject);
@@ -155,10 +211,7 @@ public class ArenaSystem : MonoBehaviour
             bonusChance += increaseChanceValue;
         }
     }
-
-
-
-
+    
     //check if the wave given in parameter is cleared by checking if the list in empty
     private bool waveCleared()
     {

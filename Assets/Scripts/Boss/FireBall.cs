@@ -10,8 +10,10 @@ public class FireBall : MonoBehaviour
     int damageExplosion;
     float rangeExplosion;
     public int fireBallHeight;
+    public GameObject explosion;
 
     public bool isDestroyed;
+    public bool willBeDestroyed;
 
     float gravity = 35f;//-9.81f;
 
@@ -28,12 +30,13 @@ public class FireBall : MonoBehaviour
     {
         body = GetComponent<Rigidbody>();
         isDestroyed = false;
+        willBeDestroyed = false;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if(transform.position.y <= 1f)
+        if(transform.position.y <= 1f && !willBeDestroyed)//1f
         {
             if ((transform.position - GameManager.gameManager.player1.transform.position).magnitude < rangeExplosion)
             {
@@ -45,8 +48,12 @@ public class FireBall : MonoBehaviour
                 GameManager.gameManager.TakeDamage(GameManager.gameManager.player2, damageExplosion, transform.position, true);
             }
 
-            isDestroyed = true;
-            Destroy(gameObject);
+            StartCoroutine(DestroyFireBall());
+        }
+
+        if (transform.position.y <= -2f)//1f
+        {
+            body.velocity = Vector3.zero;
         }
     }
 
@@ -60,8 +67,8 @@ public class FireBall : MonoBehaviour
 
     public float Launch(Vector3 target, Vector3 fireBallStartingPoint)
     {
-        Physics.gravity = Vector3.up * -gravity;
-        body.useGravity = true;
+        /*Physics.gravity = Vector3.up * -gravity;
+        body.useGravity = true;*/
         body.velocity = ComputeThrowVelocity(target, fireBallStartingPoint).Item1;
         return ComputeThrowVelocity(target, fireBallStartingPoint).Item2;
     }
@@ -80,6 +87,7 @@ public class FireBall : MonoBehaviour
         Vector3 velocityY = Vector3.up * Mathf.Sqrt(2 * gravity * fireBallHeight);
         Vector3 velocityXZ = dirXZ / time;
         Vector3 velocity = velocityXZ + velocityY * Mathf.Sign(gravity);
+        velocity += Vector3.up * -13.5f;
         return new Tuple<Vector3, float>(velocity, time);
     }
     
@@ -88,9 +96,16 @@ public class FireBall : MonoBehaviour
         if(other.CompareTag("Player"))
         {
             GameManager.gameManager.TakeDamage(other.gameObject, damage, transform.position, true);
-            StopAllCoroutines();
-            isDestroyed = true;
-            Destroy(gameObject);
         }
+    }
+    
+    IEnumerator DestroyFireBall()
+    {
+        willBeDestroyed = true;
+        Instantiate(explosion, transform.position, Quaternion.identity);
+
+        yield return new WaitForSeconds(1f);
+        isDestroyed = true;
+        Destroy(gameObject);
     }
 }

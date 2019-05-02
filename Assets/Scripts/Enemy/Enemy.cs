@@ -76,6 +76,9 @@ public class Enemy : MonoBehaviour
     [HideInInspector]
     public Coroutine actualDarknessCoroutine;
 
+    [HideInInspector]
+    public Coroutine actualFireCoroutine;
+
     Animator animator;
 
     public bool lastHitByP1;
@@ -83,7 +86,14 @@ public class Enemy : MonoBehaviour
     [HideInInspector]
     public bool isAttacking;
 
-    #endregion
+	public GameObject VFX;
+	public GameObject deathPoofPrefab;
+
+
+
+	#endregion
+
+	public SoundEmitter soundEmitter;
 
     // Start is called before the first frame update
     void Start()
@@ -183,6 +193,7 @@ public class Enemy : MonoBehaviour
         GameManager.gameManager.orb.GetComponent<OrbController>().hasHitEnemy = true;
         if (hp <= 0)
         {
+			soundEmitter.PlaySound(1, true);
             //update in score manager
             if (lastHitByP1 && !lastHitByP2)
             {
@@ -197,6 +208,7 @@ public class Enemy : MonoBehaviour
                 ScoreManager.scoreManager.killsEnvironment++;
             }
 
+			Instantiate(deathPoofPrefab, transform.position, Quaternion.identity);
             GetComponent<LootTable>().LootEnemy();
             enemyMovement.agent.isStopped = true;
             StopAllCoroutines();
@@ -225,25 +237,60 @@ public class Enemy : MonoBehaviour
         {
             StopCoroutine(actualFreezeCoroutine);
         }
+        GameObject iceFx = gameObject.transform.Find("FX/ice").gameObject;
+        iceFx.SetActive(true);
         enemyMovement.agent.isStopped = true;
         isFrozen = true;
         yield return new WaitForSeconds(freezeTimer);
         enemyMovement.agent.isStopped = false;
         isFrozen = false;
+        iceFx.SetActive(false);
     }
 
 
     public IEnumerator DarknessCoroutine(float darknessTimer)
     {
-        if (actualFreezeCoroutine != null)
+        if (actualDarknessCoroutine != null)
         {
             StopCoroutine(actualDarknessCoroutine);
         }
+        GameObject darknessFx = gameObject.transform.Find("FX/darkness").gameObject;
+        darknessFx.SetActive(true);
 
         yield return new WaitForEndOfFrame();
 
         isWeaken = true;
         yield return new WaitForSecondsRealtime(darknessTimer);
         isWeaken = false;
+        darknessFx.SetActive(false);
+    }
+
+    public IEnumerator FireDamage(GameObject target, int totalDamage, float duration)
+    {
+        int tickDamage = Mathf.RoundToInt(totalDamage / duration);
+        int curentDamage = 0;
+
+        Enemy enemy = target.GetComponent<Enemy>();
+
+        if (enemy != null)
+        {
+            target.GetComponent<Enemy>().VFX.transform.GetChild(0).gameObject.SetActive(true);
+        }
+        
+        while (curentDamage < totalDamage)
+        {
+            if (enemy != null)
+            {
+                enemy.TakeDamage(tickDamage);
+            }
+
+            yield return new WaitForSeconds(1f);
+            curentDamage += tickDamage;
+        }
+
+        if (enemy != null)
+        {
+            target.GetComponent<Enemy>().VFX.transform.GetChild(0).gameObject.SetActive(false);
+        }
     }
 }

@@ -102,8 +102,9 @@ public class EnemySkill : MonoBehaviour
     float nextAttack = 0f;
     float gravity = -9.81f;
     public Transform shotPosition;
-    #endregion
+	#endregion
 
+	public SoundEmitter soundEmitter;
 
     //Dammage player on collision
     private void OnCollisionEnter(Collision collision)
@@ -139,19 +140,21 @@ public class EnemySkill : MonoBehaviour
             switch (skill)
             {
                 case Skill.Impact:
+					soundEmitter.PlaySound(0);
                     StartCoroutine(Impact());
                     nextAttack = Time.time + impactCooldown;
                     break;
                 case Skill.AOE:
-                    //DOT while in range
-                    GameManager.gameManager.TakeDamage(target, damage, transform.position, true);
+					//DOT while in range
+					GameManager.gameManager.TakeDamage(target, damage, transform.position, true);
                     GameManager.gameManager.UIManager.QuoteOnDamage("enemy", target);
                     nextAttack = Time.time + aoeCooldown;
                     break;
                 case Skill.Ranged:
-                    if (isVisible(transform.position, target.transform.position))
-                    {
-                        StartCoroutine(Shoot(bulletPrefab, shotPosition, target.transform, damage));
+					if (isVisible(transform.position, target.transform.position))
+					{
+						soundEmitter.PlaySound(0);
+						StartCoroutine(Shoot(bulletPrefab, shotPosition, target.transform, damage));
                         nextAttack = Time.time + fireRate;
                     }
                     break;
@@ -166,8 +169,8 @@ public class EnemySkill : MonoBehaviour
                     {
                         DrawThrowPath(ComputeThrowVelocity(newTarget, pos), pos, Color.green);
                     }
-
-                    Throw(aoeProjectilePrefab, pos, newTarget, damage, puddle);
+					soundEmitter.PlaySound(0);
+					Throw(aoeProjectilePrefab, pos, newTarget, damage, puddle);
                     nextAttack = Time.time + throwRate;
                     break;
                 case Skill.Root:

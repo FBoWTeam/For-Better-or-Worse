@@ -179,7 +179,9 @@ public class PowerController : MonoBehaviour
     public float darknessTimer;//duration of the state weaken on the ennemi
     [DrawIf(new string[] { "editingPower" }, GameManager.PowerType.Darkness)]
     public int darknessDamage;//bonus damage when an weaken ennemi get hit bby the orb
-    #endregion
+	#endregion
+
+	public SoundEmitter soundEmitter;
 
 
     private void Start()
@@ -189,6 +191,7 @@ public class PowerController : MonoBehaviour
 
 		orbController = gameObject.GetComponent<OrbController>();
         VFX = transform.GetChild(0).gameObject;
+        
     }
 
 	#region Activation and Deactivation Functions
@@ -327,6 +330,7 @@ public class PowerController : MonoBehaviour
 
     void ActivateLargeOrb()
     {
+		soundEmitter.PlaySound(6);
         behaviouralPower = GameManager.PowerType.LargeOrb;
         //transform.localScale = new Vector3(maxScale, maxScale, maxScale);
         //transform.GetChild(0).GetComponent<MeshRenderer>().material = normalMaterial;
@@ -371,6 +375,7 @@ public class PowerController : MonoBehaviour
 
     void ActivateVortex()
     {
+		soundEmitter.PlaySound(5);
         behaviouralPower = GameManager.PowerType.Vortex;
 		behaviouralDurationCoroutine = StartCoroutine(VortexPower());
         //transform.GetChild(0).GetComponent<MeshRenderer>().material = vortexMaterial;
@@ -444,6 +449,7 @@ public class PowerController : MonoBehaviour
 
     void ActivateLeechLife()
     {
+		soundEmitter.PlaySound(7);
         behaviouralPower = GameManager.PowerType.LeechLife;
         //transform.GetChild(0).GetComponent<MeshRenderer>().material = leechLifeMaterial;
 
@@ -486,6 +492,7 @@ public class PowerController : MonoBehaviour
 
     void ActivateSlug()
     {
+		soundEmitter.PlaySound(4);
         behaviouralPower = GameManager.PowerType.Slug;
 		behaviouralDurationCoroutine = StartCoroutine(InstanciateSlug());
         //transform.GetChild(0).GetComponent<MeshRenderer>().material = slugMaterial;
@@ -559,6 +566,7 @@ public class PowerController : MonoBehaviour
 
     void ActivateIce()
     {
+		soundEmitter.PlaySound(3);
         elementalPower = GameManager.PowerType.Ice;
         //GetComponent<MeshRenderer>().material = iceMaterial;
         VFX.transform.GetChild(4).gameObject.transform.GetChild(0).gameObject.SetActive(VFX.transform.GetChild(0).gameObject.transform.GetChild(0).gameObject.activeSelf);
@@ -622,6 +630,7 @@ public class PowerController : MonoBehaviour
 
     void ActivateFire(bool forced)
     {
+		soundEmitter.PlaySound(0);
         elementalPower = GameManager.PowerType.Fire;
         //GetComponent<MeshRenderer>().material = fireMaterial;
         VFX.transform.GetChild(2).gameObject.transform.GetChild(0).gameObject.SetActive(VFX.transform.GetChild(0).gameObject.transform.GetChild(0).gameObject.activeSelf);
@@ -686,26 +695,7 @@ public class PowerController : MonoBehaviour
         isActivatedByBrazier = false;
 	}
 
-    IEnumerator FireDamage(GameObject target, int totalDamage, float duration)
-    {
-        int tickDamage = Mathf.RoundToInt(totalDamage / duration);
-        int curentDamage = 0;
 
-		while (curentDamage < totalDamage)
-		{
-            if (target.GetComponent<Enemy>() != null)
-            {
-                target.GetComponent<Enemy>().TakeDamage(tickDamage);
-            }
-            else if (target.GetComponent<BossSystem>() != null)
-            {
-                target.GetComponent<BossSystem>().TakeDamage(tickDamage);
-            }
-			
-			yield return new WaitForSeconds(1f);
-			curentDamage += tickDamage;
-		}
-	}
 
     #endregion
 
@@ -714,6 +704,7 @@ public class PowerController : MonoBehaviour
 
     void ActivateElectric()
     {
+		soundEmitter.PlaySound(1);
         elementalPower = GameManager.PowerType.Electric;
         //GetComponent<MeshRenderer>().material = electricMaterial;
         VFX.transform.GetChild(3).gameObject.transform.GetChild(0).gameObject.SetActive(VFX.transform.GetChild(0).gameObject.transform.GetChild(0).gameObject.activeSelf);
@@ -818,10 +809,11 @@ public class PowerController : MonoBehaviour
 			{
 				rod.transform.position = actualPos;
 				rod.target = nearestObject;
+				rod.soundEmitter.PlaySound(0);
                 if (isEnemy)
-                {
-                    nearestObject.GetComponent<Enemy>().TakeDamage(zapDamageEnemy);
-                }
+				{
+					nearestObject.GetComponent<Enemy>().TakeDamage(zapDamageEnemy);
+				}
                 else
                 {
                     GameManager.gameManager.TakeDamage(nearestObject, zapDamagePlayer, Vector3.zero, false);
@@ -848,6 +840,7 @@ public class PowerController : MonoBehaviour
 
     void ActivateDarkness()
     {
+		soundEmitter.PlaySound(2);
         elementalPower = GameManager.PowerType.Darkness;
         //GetComponent<MeshRenderer>().material = darknessMaterial;
         VFX.transform.GetChild(1).gameObject.transform.GetChild(0).gameObject.SetActive(VFX.transform.GetChild(0).gameObject.transform.GetChild(0).gameObject.activeSelf);
@@ -917,13 +910,13 @@ public class PowerController : MonoBehaviour
 				break;
 			case "player1":
 				canBeActivatedByPlayer1[(int)power - 1] = false;
-				GameManager.gameManager.UIManager.Cooldown(power, cooldown, true);
+				StartCoroutine(GameManager.gameManager.UIManager.Cooldown(power, cooldown, true));
 				yield return new WaitForSeconds(cooldown);
 				canBeActivatedByPlayer1[(int)power - 1] = true;
 				break;
 			case "player2":
 				canBeActivatedByPlayer2[(int)power - 1] = false;
-				GameManager.gameManager.UIManager.Cooldown(power, cooldown, false);
+				StartCoroutine(GameManager.gameManager.UIManager.Cooldown(power, cooldown, false));
 				yield return new WaitForSeconds(cooldown);
 				canBeActivatedByPlayer2[(int)power - 1] = true;
 				break;
@@ -968,12 +961,12 @@ public class PowerController : MonoBehaviour
                 //update in score manager
                 ScoreManager.scoreManager.statusAilmentApplied++;
 
-                if (actualFireDOTCoroutine != null)
-					StopCoroutine(actualFireDOTCoroutine);
+                if (enemy.actualFireCoroutine != null)
+					StopCoroutine(enemy.actualFireCoroutine);
 				if(isActivatedByBrazier)
-					actualFireDOTCoroutine = StartCoroutine(FireDamage(enemy.gameObject, fireTicksDamageBrazier, fireTickDurationBrazier));
+                    enemy.actualFireCoroutine = enemy.StartCoroutine(enemy.FireDamage(enemy.gameObject, fireTicksDamageBrazier, fireTickDurationBrazier));
 				else
-					actualFireDOTCoroutine = StartCoroutine(FireDamage(enemy.gameObject, fireTicksDamage, fireTickDuration));
+                    enemy.actualFireCoroutine = enemy.StartCoroutine(enemy.FireDamage(enemy.gameObject, fireTicksDamage, fireTickDuration));
                 damageTaken += fireDamage;
                 break;
             case GameManager.PowerType.Electric:
@@ -1049,18 +1042,22 @@ public class PowerController : MonoBehaviour
                 //update in score manager
                 ScoreManager.scoreManager.statusAilmentApplied++;
 
-                if (actualFireDOTCoroutine != null)
-                    StopCoroutine(actualFireDOTCoroutine);
+                if (bossSystem.actualFireCoroutine != null)
+                    StopCoroutine(bossSystem.actualFireCoroutine);
                 if (isActivatedByBrazier)
-                    actualFireDOTCoroutine = StartCoroutine(FireDamage(bossSystem.gameObject, fireTicksDamageBrazier, fireTickDurationBrazier));
+                    bossSystem.actualFireCoroutine = bossSystem.StartCoroutine(bossSystem.FireDamage(bossSystem.gameObject, fireTicksDamageBrazier, fireTickDurationBrazier));
                 else
-                    actualFireDOTCoroutine = StartCoroutine(FireDamage(bossSystem.gameObject, fireTicksDamage, fireTickDuration));
+                    bossSystem.actualFireCoroutine = bossSystem.StartCoroutine(bossSystem.FireDamage(bossSystem.gameObject, fireTicksDamage, fireTickDuration));
                 damageTaken += fireDamage;
                 break;
 
             case GameManager.PowerType.Electric:
                 //update in score manager
                 ScoreManager.scoreManager.statusAilmentApplied++;
+                GameObject elecFx = bossSystem.gameObject.transform.Find("FX/electricity").gameObject;
+                Debug.Log(elecFx != null);
+                elecFx.SetActive(true);
+                elecFx.GetComponent<ParticleSystem>().Play();
 
                 StartCoroutine(ElectricZappingCoroutine(transform.position, target, true));
                 damageTaken += electricDamage;
@@ -1134,13 +1131,13 @@ public class PowerController : MonoBehaviour
 				switch(mode)
 				{
 					case "hit":
+					case "miss":
 						player.AttributePower(droppedPower);
 						droppedPower = GameManager.PowerType.None;
 						//UpdateUI
 						GameManager.gameManager.UIManager.UpdateDroppedPower(droppedPower);
 						break;
 					case "amortize":
-					case "miss":
 						if(reflectedDrop)
 						{
 							player.AttributePower(droppedPower);

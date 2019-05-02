@@ -10,7 +10,8 @@ public class PressurePlate : MonoBehaviour, IActivable
     public enum PressurePlateType
     {
         Classic,
-        PowerGiver
+        PowerGiver,
+        Trial
     }
 
     public PressurePlateType type;
@@ -29,6 +30,14 @@ public class PressurePlate : MonoBehaviour, IActivable
     private Animator anim;
     public bool powerGiven;
 
+    [Header("Trial")]
+    [DrawIf(new string[] { "type" }, PressurePlateType.Trial)]
+    public bool trialTriggered;
+    [DrawIf(new string[] { "type" }, PressurePlateType.Trial)]
+    public GameObject otherPressurePlate;
+
+	public SoundEmitter soundEmitter;
+
     private void Start()
     {
         anim = GetComponentInParent<Animator>();
@@ -42,11 +51,22 @@ public class PressurePlate : MonoBehaviour, IActivable
     {
         if (other.CompareTag("Player") && !isActive)
         {
-            if (type == PressurePlateType.PowerGiver)
+            switch (type)
             {
-                GivePower(other.gameObject);
+                case PressurePlateType.Classic:
+                    this.Activate();
+                    break;
+                case PressurePlateType.PowerGiver:
+                    GivePower(other.gameObject);
+                    this.Activate();
+                    break;
+                case PressurePlateType.Trial:
+                    if (!trialTriggered)
+                    {
+                        this.Activate();
+                    }
+                    break;
             }
-            this.Activate();
         }
     }
 
@@ -60,17 +80,9 @@ public class PressurePlate : MonoBehaviour, IActivable
 
     private void GivePower(GameObject other)
     {
-        if (otherPowerGiver.GetComponent<PressurePlate>().powerGiven && !powerGiven && (other.gameObject != otherPowerGiver.GetComponent<PressurePlate>().playerWhoTookPower))
+        if (!powerGiven)
         {
             other.gameObject.GetComponent<PlayerController>().AttributePower(powerToGive);
-            powerGiven = true;
-            playerWhoTookPower = other.gameObject;
-        }
-        else if (!powerGiven && !otherPowerGiver.GetComponent<PressurePlate>().powerGiven)
-        {
-            other.gameObject.GetComponent<PlayerController>().AttributePower(powerToGive);
-            powerGiven = true;
-            playerWhoTookPower = other.gameObject;
         }
     }
 
@@ -85,15 +97,43 @@ public class PressurePlate : MonoBehaviour, IActivable
                 objectToActivate[i].GetComponent<IActivable>().Activate();
             }
         }
-        
+
+        if (type == PressurePlateType.Trial)
+        {
+            if (otherPressurePlate.GetComponent<IActivable>().isActive)
+            {
+                trialTriggered = true;
+            }
+        }
+
         if (isActive)
         {
+			soundEmitter.PlaySound(0);
             anim.SetBool("isActivated", true);
         }
         else
-        {
-            anim.SetBool("isActivated", false);
+		{
+			soundEmitter.PlaySound(0);
+			anim.SetBool("isActivated", false);
         }
+
+        if (type == PressurePlateType.PowerGiver && checkObjectActivated())
+        {
+            powerGiven = true;
+        }
+
+    }
+
+    bool checkObjectActivated()
+    {
+        for (int i = 0; i < objectToActivate.Length; i++)
+        {
+            if (!objectToActivate[i].GetComponent<IActivable>().isActive)
+            {
+                return false;
+            }
+        }
+        return true;
     }
 
 }

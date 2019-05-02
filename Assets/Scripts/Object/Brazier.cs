@@ -33,6 +33,8 @@ public class Brazier : MonoBehaviour, IActivable
 
     private Animator anim;
 
+	public SoundEmitter soundEmitter;
+
     private void Start()
     {
         anim = GetComponentInParent<Animator>();
@@ -57,7 +59,7 @@ public class Brazier : MonoBehaviour, IActivable
                     this.Activate();
                 }
                 //if the brazier is active and the orb isn't, set the orb on fire
-                else if (isActive && powerController.elementalPower != GameManager.PowerType.Fire && activatedByOrb)
+                else if (isActive && activatedByOrb)
                 {
                     powerController.ActivatePower(GameManager.PowerType.Fire, "forced");
                     powerController.isActivatedByBrazier = true;
@@ -66,7 +68,7 @@ public class Brazier : MonoBehaviour, IActivable
 
             if (type == BrazierType.ArenaBrazier)
             {
-                if (isActive && powerController.elementalPower != GameManager.PowerType.Fire)
+                if (isActive)
                 {
                     powerController.ActivatePower(GameManager.PowerType.Fire, "forced");
                     powerController.isActivatedByBrazier = true;
@@ -83,7 +85,9 @@ public class Brazier : MonoBehaviour, IActivable
 
     IEnumerator ReActivateArenaBrazier()
     {
+        GetComponent<CapsuleCollider>().enabled = false;
         yield return new WaitForSeconds(reActivationTime);
+        GetComponent<CapsuleCollider>().enabled = true;
         this.Activate();
     }
 
@@ -92,11 +96,13 @@ public class Brazier : MonoBehaviour, IActivable
     {
         if (CheckValidObjects())
         {
+			soundEmitter.PlaySound(0);
             ActivateFireParticles();
             isActive = true;
             if (type == BrazierType.ArenaBrazier)
-            {
-                anim.SetBool("isUp", true);
+			{
+				soundEmitter.PlaySound(2);
+				anim.SetBool("isUp", true);
             }
             onFire = true;
             if (objectToActivate.Count != 0)
@@ -113,8 +119,10 @@ public class Brazier : MonoBehaviour, IActivable
     {
         if (type == BrazierType.ArenaBrazier)
         {
-            anim.SetBool("isUp", false);
+			soundEmitter.PlaySound(1);
+			anim.SetBool("isUp", false);
         }
+		soundEmitter.StopSound(0);
         DeactivateFireParticles();
         isActive = false;
         onFire = false;
@@ -139,7 +147,7 @@ public class Brazier : MonoBehaviour, IActivable
     //function used to activate the fire particles
     void ActivateFireParticles()
     {
-        for (int i = 0; i < transform.childCount; i++)
+        for (int i = 0; i < 3; i++)
         {
             transform.GetChild(i).gameObject.SetActive(true);
         }
@@ -147,7 +155,7 @@ public class Brazier : MonoBehaviour, IActivable
 
     void DeactivateFireParticles()
     {
-        for (int i = 0; i < transform.childCount; i++)
+        for (int i = 0; i < 3; i++)
         {
             transform.GetChild(i).gameObject.SetActive(false);
         }

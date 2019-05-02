@@ -11,11 +11,16 @@ public class BossRotation : MonoBehaviour
     public float minRotationTime;
     public float maxRotationTime;
     Coroutine rotationCoroutine;
-    
+
     private void OnEnable()
     {
         bossSystem = gameObject.GetComponent<BossSystem>();
         rotationCoroutine = StartCoroutine(RotationCoroutine());
+    }
+
+    private void OnDisable()
+    {
+        StopCoroutine(rotationCoroutine);
     }
 
 

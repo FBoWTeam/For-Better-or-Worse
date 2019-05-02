@@ -133,7 +133,6 @@ public class EnemyMovement : MonoBehaviour
         }
         else if (Vector3.Distance(Enemy.aimPlayer.transform.position, transform.position) <= distanceBeforeFleeing)
         {
-            print("run");
             //EnemyEscape(nearestPlayer.Item1, enemySkill.range);
         }
         else

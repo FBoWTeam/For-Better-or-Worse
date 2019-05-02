@@ -39,8 +39,16 @@ public class PlayerController : MonoBehaviour
 
 	Animator animator;
 
+    public GameObject selectedBehavioralFx;
+    public GameObject selectedElementalFx;
+
     [HideInInspector]
     public Coroutine actualTauntCoroutine;
+
+    [HideInInspector]
+    public Coroutine actualBurnCoroutine;
+
+	public SoundEmitter soundEmitter;
 
     void Awake()
     {
@@ -128,9 +136,10 @@ public class PlayerController : MonoBehaviour
             || (!player1 && (Input.GetKeyDown(KeyCode.Joystick2Button4) 
             || Input.GetKeyDown(KeyCode.Keypad0)))) && canTaunt)
         {
+			soundEmitter.PlaySound(1);
             Taunt();
             StartCoroutine(TauntCoolDown(tauntCooldown));
-			GameManager.gameManager.UIManager.TauntCooldownSystem(player1, tauntCooldown);
+			StartCoroutine(GameManager.gameManager.UIManager.TauntCooldownSystem(player1, tauntCooldown));
         }
 
     }
@@ -157,7 +166,8 @@ public class PlayerController : MonoBehaviour
             }
         }
     }
-           
+
+    
 
     /// <summary>
     /// gets the current power that is going to be apllied on the orb by checking the input
@@ -165,39 +175,64 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     public void GetCurrentPower()
     {
-        bool elementalPower = player1 ? Input.GetKeyDown(KeyCode.Joystick1Button3) || Input.GetKeyDown(KeyCode.Joystick1Button1) : Input.GetKeyDown(KeyCode.Joystick2Button3) || Input.GetKeyDown(KeyCode.Joystick2Button1);
-        bool behaviouralPower = player1 ? Input.GetKeyDown(KeyCode.Joystick1Button2) || Input.GetKeyDown(KeyCode.Joystick1Button0) : Input.GetKeyDown(KeyCode.Joystick2Button2) || Input.GetKeyDown(KeyCode.Joystick2Button0);
-        
-        
+        bool elementalPower = player1 ? Input.GetKeyDown(KeyCode.Joystick1Button3) || Input.GetKeyDown(KeyCode.Joystick1Button1) || Input.GetKeyDown(KeyCode.A) : Input.GetKeyDown(KeyCode.Joystick2Button3) || Input.GetKeyDown(KeyCode.Joystick2Button1) || Input.GetKeyDown(KeyCode.RightShift);
+        bool behaviouralPower = player1 ? Input.GetKeyDown(KeyCode.Joystick1Button2) || Input.GetKeyDown(KeyCode.Joystick1Button0) || Input.GetKeyDown(KeyCode.E) : Input.GetKeyDown(KeyCode.Joystick2Button2) || Input.GetKeyDown(KeyCode.Joystick2Button0) || Input.GetKeyDown(KeyCode.RightControl);
+
         if (elementalPower && elementalPowerSlot != GameManager.PowerType.None)
         {
             if ((player1 && GameManager.gameManager.orb.GetComponent<PowerController>().canBeActivatedByPlayer1[(int)elementalPowerSlot - 1])
                 || (!player1 && GameManager.gameManager.orb.GetComponent<PowerController>().canBeActivatedByPlayer2[(int)elementalPowerSlot - 1]))
             {
+				soundEmitter.PlaySound(5);
                 if (orbHitter.powerToApply != elementalPowerSlot)
                 {
+                    if (!GameManager.isElemental(orbHitter.powerToApply))
+                    {
+                        selectedBehavioralFx.GetComponent<ParticleSystem>().Stop();
+                    }
                     orbHitter.powerToApply = elementalPowerSlot;
+                    //activer fx
+                    selectedElementalFx.GetComponent<ParticleSystem>().Play();
                 }
                 else
                 {
                     orbHitter.powerToApply = GameManager.PowerType.None;
+                    //desactiver fx
+                    selectedElementalFx.GetComponent<ParticleSystem>().Stop();
                 }
             }
+			else
+			{
+				soundEmitter.PlaySound(6);
+			}
         }
         if (behaviouralPower && behaviouralPowerSlot != GameManager.PowerType.None)
         {
             if ((player1 && GameManager.gameManager.orb.GetComponent<PowerController>().canBeActivatedByPlayer1[(int)behaviouralPowerSlot - 1])
                 || (!player1 && GameManager.gameManager.orb.GetComponent<PowerController>().canBeActivatedByPlayer2[(int)behaviouralPowerSlot - 1]))
             {
-                if (orbHitter.powerToApply != behaviouralPowerSlot)
+				soundEmitter.PlaySound(5);
+				if (orbHitter.powerToApply != behaviouralPowerSlot)
                 {
+                    if (GameManager.isElemental(orbHitter.powerToApply))
+                    {
+                        selectedElementalFx.GetComponent<ParticleSystem>().Stop();
+                    }
                     orbHitter.powerToApply = behaviouralPowerSlot;
+                    //activer fx
+                    selectedBehavioralFx.GetComponent<ParticleSystem>().Play();
                 }
                 else
                 {
                     orbHitter.powerToApply = GameManager.PowerType.None;
+                    //desactiver fx
+                    selectedBehavioralFx.GetComponent<ParticleSystem>().Stop();
                 }
             }
+			else
+			{
+				soundEmitter.PlaySound(6);
+			}
         }
         
         ApplyFXTail(orbHitter.powerToApply);
@@ -206,9 +241,9 @@ public class PlayerController : MonoBehaviour
 
     void ApplyFXTail(GameManager.PowerType power)
     {
-        if(power.CompareTo(GameManager.PowerType.Darkness) == 0)
+        if (power.CompareTo(GameManager.PowerType.Darkness) == 0)
             VFXTail.transform.GetChild(0).gameObject.SetActive(true);
-        else if(power.CompareTo(GameManager.PowerType.Fire) == 0)
+        else if (power.CompareTo(GameManager.PowerType.Fire) == 0)
             VFXTail.transform.GetChild(1).gameObject.SetActive(true);
         else if (power.CompareTo(GameManager.PowerType.Electric) == 0)
             VFXTail.transform.GetChild(2).gameObject.SetActive(true);
@@ -220,9 +255,11 @@ public class PlayerController : MonoBehaviour
             VFXTail.transform.GetChild(5).gameObject.SetActive(true);
         else if (power.CompareTo(GameManager.PowerType.Slug) == 0)
             VFXTail.transform.GetChild(6).gameObject.SetActive(true);
+        else if (power.CompareTo(GameManager.PowerType.LargeOrb) == 0)
+            VFXTail.transform.GetChild(7).gameObject.SetActive(true);
         else if (power.CompareTo(GameManager.PowerType.None) == 0)
         {
-            for (int i = 0; i < 7; i++)
+            for (int i = 0; i < VFXTail.transform.childCount; i++)
             {
                 VFXTail.transform.GetChild(i).gameObject.SetActive(false);
             }
@@ -235,17 +272,21 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     public void AttributePower(GameManager.PowerType newPower)
     {
+		soundEmitter.PlaySound(4);
 		if (GameManager.isElemental(newPower))
 		{
 			elementalPowerSlot = newPower;
 			GameManager.gameManager.UIManager.UpdatePowerSlot(1, player1, newPower);
-		}
-		else
+            GameManager.gameManager.UIManager.OrbToPowerSlotFeedback(player1, true);
+        }
+        else
 		{
 			behaviouralPowerSlot = newPower;
 			GameManager.gameManager.UIManager.UpdatePowerSlot(2, player1, newPower);
+            GameManager.gameManager.UIManager.OrbToPowerSlotFeedback(player1, false);
 		}
-    }
+		GameManager.gameManager.orb.GetComponent<PowerController>().reflectedDrop = false;
+	}
 
     private void OnDrawGizmos()
     {
@@ -299,8 +340,11 @@ public class PlayerController : MonoBehaviour
     public IEnumerator FreezeCoroutine(float freezeTimer)
     {
         isFrozen = true;
+        GameObject iceFx = gameObject.transform.Find("FX/ice").gameObject;
+        iceFx.SetActive(true);
         yield return new WaitForSeconds(freezeTimer);
         isFrozen = false;
+        iceFx.SetActive(false);
     }
 
     /*
