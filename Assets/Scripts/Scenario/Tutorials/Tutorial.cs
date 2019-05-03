@@ -54,7 +54,6 @@ public class Tutorial : MonoBehaviour
     IEnumerator TutorialCoroutine()
     {
         GameManager.gameManager.isPaused = true;
-		Time.timeScale = 0.0f;
         bool readyPlayer1 = false;
         bool readyPlayer2 = false;
 
@@ -88,7 +87,6 @@ public class Tutorial : MonoBehaviour
 
         tutorialCanvas.SetActive(false);
         GameManager.gameManager.isPaused = false;
-		Time.timeScale = 1.0f;
 		GameManager.gameManager.orb.GetComponent<OrbController>().FreezeOrb(0.5f);
 
         Destroy(gameObject);
