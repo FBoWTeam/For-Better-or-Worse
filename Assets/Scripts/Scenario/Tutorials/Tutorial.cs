@@ -27,7 +27,7 @@ public class Tutorial : MonoBehaviour
 
     
 
-    private void Awake()
+    private void Start()
     {
         tutorialCanvas = GameManager.gameManager.tutorials;
     }
@@ -42,17 +42,17 @@ public class Tutorial : MonoBehaviour
 
     private void OnEnable()
     {
-        tutorialCanvas = GameManager.gameManager.tutorials;
-
         if (isCinematicTutorial)
         {
-            StartCoroutine(TutorialCoroutine());
+			tutorialCanvas = GameManager.gameManager.tutorials;
+			StartCoroutine(TutorialCoroutine());
         }
     }
 
 
     IEnumerator TutorialCoroutine()
     {
+		Debug.Log("bonjour");
         GameManager.gameManager.isPaused = true;
         bool readyPlayer1 = false;
         bool readyPlayer2 = false;
