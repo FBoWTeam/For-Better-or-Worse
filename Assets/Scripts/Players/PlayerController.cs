@@ -363,7 +363,7 @@ public class PlayerController : MonoBehaviour
         eK.isCasting = false;
 
         GameManager.gameManager.TakeDamage(targetPlayer, damage, pos, false);
-        GameManager.gameManager.UIManager.QuoteOnDamage("enemy", targetPlayer);
+        //GameManager.gameManager.UIManager.QuoteOnDamage("enemy", targetPlayer);
         isRoot = true;
         RootBranch branch = Instantiate(rootBranchPrefab).GetComponent<RootBranch>();
         branch.targetPlayer = targetPlayer;

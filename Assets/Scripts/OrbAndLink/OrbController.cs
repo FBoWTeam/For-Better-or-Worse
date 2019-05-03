@@ -197,7 +197,7 @@ public class OrbController : MonoBehaviour
             if (canHitPlayer == true)
             {
                 GameManager.gameManager.TakeDamage(other.gameObject, gameObject.GetComponent<PowerController>().baseDamage, other.transform.position, true);
-                GameManager.gameManager.UIManager.QuoteOnDamage("orb", other.gameObject);
+                //GameManager.gameManager.UIManager.QuoteOnDamage("orb", other.gameObject);
             }
 
             //update in score manager

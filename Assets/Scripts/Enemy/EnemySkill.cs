@@ -112,7 +112,7 @@ public class EnemySkill : MonoBehaviour
         if (collision.gameObject.CompareTag("Player"))
         {
             GameManager.gameManager.TakeDamage(collision.gameObject, damage, transform.position, true);
-            GameManager.gameManager.UIManager.QuoteOnDamage("enemy", collision.gameObject);
+            //GameManager.gameManager.UIManager.QuoteOnDamage("enemy", collision.gameObject);
         }
     }
 
@@ -147,7 +147,7 @@ public class EnemySkill : MonoBehaviour
                 case Skill.AOE:
 					//DOT while in range
 					GameManager.gameManager.TakeDamage(target, damage, transform.position, true);
-                    GameManager.gameManager.UIManager.QuoteOnDamage("enemy", target);
+                    //GameManager.gameManager.UIManager.QuoteOnDamage("enemy", target);
                     nextAttack = Time.time + aoeCooldown;
                     break;
                 case Skill.Ranged:

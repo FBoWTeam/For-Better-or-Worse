@@ -79,7 +79,7 @@ public class TriggerSystem : MonoBehaviour
 
     private void TriggerDialog()
     {
-        if (player1Text != "")
+        /*if (player1Text != "")
         {
             GameManager.gameManager.UIManager.UpdateDialogBox1(player1Text, displayTime);
         }
@@ -87,7 +87,7 @@ public class TriggerSystem : MonoBehaviour
         if (player2Text != "")
         {
             GameManager.gameManager.UIManager.UpdateDialogBox2(player2Text, displayTime);
-        }
+        }*/
     }
 
     private void TriggerObjects()

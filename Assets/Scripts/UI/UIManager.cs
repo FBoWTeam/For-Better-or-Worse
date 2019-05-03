@@ -123,7 +123,7 @@ public class UIManager : MonoBehaviour
     #endregion
 
     #region Dialog Methods
-
+	/*
     /// <summary>
     /// In this case, the method check if dialog are display and removed them for the player 1
     /// </summary>
@@ -180,7 +180,7 @@ public class UIManager : MonoBehaviour
         }
         Invoke("UpdateDialogBox2", displayTime);
     }
-
+	*/
     #endregion
 
     #region PowerSlot Methods
@@ -438,13 +438,13 @@ public class UIManager : MonoBehaviour
     #endregion
 
 
-
+	/*
     /// <summary>
     /// Call the UpdateDialogBox randomly when a player get hit by anything
     /// </summary>
     public void QuoteOnDamage(string damageDealer, GameObject targetPlayer)
     {
-        if (Random.Range(1, 101)/*return an integer between 1(inclusive) and 101(exclusive)*/ <= pourcentageQuote)
+        if (Random.Range(1, 101) <= pourcentageQuote)
         {
             if (damageDealer == "enemy")
             {
@@ -497,7 +497,7 @@ public class UIManager : MonoBehaviour
                 }
             }
         }
-    }
+    }*/
 
     public void RespawnReset()
     {
