@@ -61,8 +61,8 @@ public class PlayerController : MonoBehaviour
     {
         //Update UI (for development)
         speed = initialSpeed;
-        GameManager.gameManager.UIManager.UpdatePowerSlot(1, player1, elementalPowerSlot);
-        GameManager.gameManager.UIManager.UpdatePowerSlot(2, player1, behaviouralPowerSlot);
+        GameManager.gameManager.UIManager.UpdatePowerSlot(player1, elementalPowerSlot);
+        GameManager.gameManager.UIManager.UpdatePowerSlot(player1, behaviouralPowerSlot);
     }
 
     void Update()
@@ -276,13 +276,13 @@ public class PlayerController : MonoBehaviour
 		if (GameManager.isElemental(newPower))
 		{
 			elementalPowerSlot = newPower;
-			GameManager.gameManager.UIManager.UpdatePowerSlot(1, player1, newPower);
+			GameManager.gameManager.UIManager.UpdatePowerSlot(player1, newPower);
             GameManager.gameManager.UIManager.OrbToPowerSlotFeedback(player1, true);
         }
         else
 		{
 			behaviouralPowerSlot = newPower;
-			GameManager.gameManager.UIManager.UpdatePowerSlot(2, player1, newPower);
+			GameManager.gameManager.UIManager.UpdatePowerSlot(player1, newPower);
             GameManager.gameManager.UIManager.OrbToPowerSlotFeedback(player1, false);
 		}
 		GameManager.gameManager.orb.GetComponent<PowerController>().reflectedDrop = false;

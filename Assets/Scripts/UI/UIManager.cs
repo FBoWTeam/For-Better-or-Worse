@@ -36,14 +36,18 @@ public class UIManager : MonoBehaviour
     public GameObject behaviouralPowerFox;
     public GameObject elementalReadyFox;
     public GameObject behaviouralReadyFox;
+	Coroutine actualElementalCooldownFox;
+	Coroutine actualBehaviouralCooldownFox;
 
-    [Header("Raccoon Powers")]
+	[Header("Raccoon Powers")]
     public GameObject elementalPowerRaccoon;
     public GameObject behaviouralPowerRaccoon;
     public GameObject elementalReadyRaccoon;
     public GameObject behaviouralReadyRaccoon;
+	Coroutine actualElementalCooldownRaccoon;
+	Coroutine actualBehaviouralCooldownRaccoon;
 
-    [Header("Taunt")]
+	[Header("Taunt")]
     public GameObject tauntCooldownFox;
     public GameObject tauntCooldownRaccoon;
     public GameObject tauntReadyFox;
@@ -85,19 +89,9 @@ public class UIManager : MonoBehaviour
     public List<string> player2TextsOrbHit;//quotes of the player 2 when hit by an enemy
     public List<string> player2TextsOtherOrbHit;//quotes of the player 2 when player 1 is hit by the orb
 
-    [HideInInspector]
-    Dictionary<int, GameManager.PowerType> busySlot;
-
     #endregion
 
     #region All Methods
-
-    public void InitDictionary()
-    {
-        busySlot = new Dictionary<int, GameManager.PowerType>(2);
-        busySlot.Add(1, GameManager.PowerType.None);
-        busySlot.Add(2, GameManager.PowerType.None);
-    }
 
     public IEnumerator TauntCooldownSystem(bool player1, float tauntCooldown)
     {
@@ -197,33 +191,63 @@ public class UIManager : MonoBehaviour
     /// <param name="slot">use to know the slot to update</param>
     /// <param name="player1">use to know the player affected</param>
     /// <param name="powerSlot">refers to the new powerType obtained</param>
-    public void UpdatePowerSlot(int slot, bool player1, GameManager.PowerType powerSlot)
+    public void UpdatePowerSlot(bool player1, GameManager.PowerType power)
     {
-        busySlot[slot] = powerSlot;
-        switch (slot)
-        {
-            case 1:
+		if(GameManager.isElemental(power))
+		{
+			if(player1)
+			{
+				if(GetImage(elementalPowerFox).sprite != ImageAssignment(power))
+				{
+					if (actualElementalCooldownFox != null)
+					{
+						StopCoroutine(actualElementalCooldownFox);
+						GetCdImage(elementalPowerFox).fillAmount = 0.0f;
+					}
+				}
+				GetImage(elementalPowerFox).sprite = ImageAssignment(power);
 
-                if (player1)
-                {
-                    GetImage(elementalPowerFox).sprite = ImageAssignment(powerSlot);
-                }
-                else
-                {
-                    GetImage(elementalPowerRaccoon).sprite = ImageAssignment(powerSlot);
-                }
-                break;
-            case 2:
-                if (player1)
-                {
-                    GetImage(behaviouralPowerFox).sprite = ImageAssignment(powerSlot);
-                }
-                else
-                {
-                    GetImage(behaviouralPowerRaccoon).sprite = ImageAssignment(powerSlot);
-                }
-                break;
-        }
+			}
+			else
+			{
+				if (GetImage(elementalPowerRaccoon).sprite != ImageAssignment(power))
+				{
+					if (actualElementalCooldownRaccoon != null)
+					{
+						StopCoroutine(actualElementalCooldownRaccoon);
+						GetCdImage(elementalPowerRaccoon).fillAmount = 0.0f;
+					}
+				}
+				GetImage(elementalPowerRaccoon).sprite = ImageAssignment(power);
+			}
+		}
+		else
+		{
+			if (player1)
+			{
+				if (GetImage(behaviouralPowerFox).sprite != ImageAssignment(power))
+				{
+					if (actualBehaviouralCooldownFox != null)
+					{
+						StopCoroutine(actualBehaviouralCooldownFox);
+						GetCdImage(behaviouralPowerFox).fillAmount = 0.0f;
+					}
+				}
+				GetImage(behaviouralPowerFox).sprite = ImageAssignment(power);
+			}
+			else
+			{
+				if (GetImage(behaviouralPowerRaccoon).sprite != ImageAssignment(power))
+				{
+					if (actualBehaviouralCooldownRaccoon != null)
+					{
+						StopCoroutine(actualBehaviouralCooldownRaccoon);
+						GetCdImage(behaviouralPowerRaccoon).fillAmount = 0.0f;
+					}
+				}
+				GetImage(behaviouralPowerRaccoon).sprite = ImageAssignment(power);
+			}
+		}
     }
 
     public void UpdateDroppedPower(GameManager.PowerType droppedPower)
@@ -279,66 +303,50 @@ public class UIManager : MonoBehaviour
     /// </summary>
     /// <param name="power"></param>
     /// <param name="cd"></param>
-    public IEnumerator Cooldown(GameManager.PowerType power, float cd, bool player1)
+    public IEnumerator PowerCooldownSystem(bool player1, GameManager.PowerType power, float cd)
     {
-        // lancer start cooldown sur les ( p1 et p2) slot assigner au power
-
-        int slot = getSlotByPower(power);
-        if (slot > -1)
-        {
-            switch (slot)
-            {
-                case 1:
-                    if (player1)
-                    {
-                        yield return StartCoroutine(startCooldown(cd, GetCdImage(elementalPowerFox)));
-                        elementalReadyFox.GetComponent<ParticleSystem>().Play();
-                    }
-                    else
-                    {
-                        yield return StartCoroutine(startCooldown(cd, GetCdImage(elementalPowerRaccoon)));
-                        elementalReadyRaccoon.GetComponent<ParticleSystem>().Play();
-                    }
-                    break;
-                case 2:
-                    if (player1)
-                    {
-                        yield return StartCoroutine(startCooldown(cd, GetCdImage(behaviouralPowerFox)));
-                        behaviouralReadyFox.GetComponent<ParticleSystem>().Play();
-                    }
-                    else
-                    {
-                        yield return StartCoroutine(startCooldown(cd, GetCdImage(behaviouralPowerRaccoon)));
-                        behaviouralReadyRaccoon.GetComponent<ParticleSystem>().Play();
-                    }
-                    break;
-                default:
-                    break;
-            }
-        }
-        else
-        {
-            Debug.LogError("NO SLOT FOUND FOR THIS POWER");
-        }
-
-        yield return null;
-    }
-
-    int getSlotByPower(GameManager.PowerType power)
-    {
-
-        if (busySlot.ContainsValue(power))
-        {
-            foreach (KeyValuePair<int, GameManager.PowerType> item in busySlot)
-            {
-                if (item.Value == power)
-                {
-                    return item.Key;
-                }
-            }
-        }
-
-        return -1;
+		if (GameManager.isElemental(power))
+		{
+			if (player1)
+			{
+				if(actualElementalCooldownFox != null)
+				{
+					StopCoroutine(actualElementalCooldownFox);
+				}
+				yield return actualElementalCooldownFox = StartCoroutine(startCooldown(cd, GetCdImage(elementalPowerFox)));
+				elementalReadyFox.GetComponent<ParticleSystem>().Play();
+			}
+			else
+			{
+				if (actualElementalCooldownRaccoon != null)
+				{
+					StopCoroutine(actualElementalCooldownRaccoon);
+				}
+				yield return actualElementalCooldownRaccoon = StartCoroutine(startCooldown(cd, GetCdImage(elementalPowerRaccoon)));
+				elementalReadyRaccoon.GetComponent<ParticleSystem>().Play();
+			}
+		}
+		else
+		{
+			if (player1)
+			{
+				if (actualBehaviouralCooldownFox != null)
+				{
+					StopCoroutine(actualBehaviouralCooldownFox);
+				}
+				yield return actualBehaviouralCooldownFox = StartCoroutine(startCooldown(cd, GetCdImage(behaviouralPowerFox)));
+				behaviouralReadyFox.GetComponent<ParticleSystem>().Play();
+			}
+			else
+			{
+				if (actualBehaviouralCooldownRaccoon != null)
+				{
+					StopCoroutine(actualBehaviouralCooldownRaccoon);
+				}
+				yield return actualBehaviouralCooldownRaccoon = StartCoroutine(startCooldown(cd, GetCdImage(behaviouralPowerRaccoon)));
+				behaviouralReadyRaccoon.GetComponent<ParticleSystem>().Play();
+			}
+		}
     }
 
     IEnumerator startCooldown(float cd, Image image)
@@ -522,9 +530,10 @@ public class UIManager : MonoBehaviour
     public IEnumerator DropFeedback(GameObject UIElement, Transform start, Transform end)
     {
         yield return new WaitWhile(() => isDropActive);
-        if (!isDropActive)
-        {
-            drop.SetActive(true);
+		
+		if (!isDropActive)
+		{
+			drop.SetActive(true);
             isDropActive = true;
             SceneToUI(UIElement, start.position);
 

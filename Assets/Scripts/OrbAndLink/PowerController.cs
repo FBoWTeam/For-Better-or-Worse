@@ -910,13 +910,13 @@ public class PowerController : MonoBehaviour
 				break;
 			case "player1":
 				canBeActivatedByPlayer1[(int)power - 1] = false;
-				StartCoroutine(GameManager.gameManager.UIManager.Cooldown(power, cooldown, true));
+				StartCoroutine(GameManager.gameManager.UIManager.PowerCooldownSystem(true, power, cooldown));
 				yield return new WaitForSeconds(cooldown);
 				canBeActivatedByPlayer1[(int)power - 1] = true;
 				break;
 			case "player2":
 				canBeActivatedByPlayer2[(int)power - 1] = false;
-				StartCoroutine(GameManager.gameManager.UIManager.Cooldown(power, cooldown, false));
+				StartCoroutine(GameManager.gameManager.UIManager.PowerCooldownSystem(false, power, cooldown));
 				yield return new WaitForSeconds(cooldown);
 				canBeActivatedByPlayer2[(int)power - 1] = true;
 				break;

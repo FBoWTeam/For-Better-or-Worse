@@ -104,7 +104,6 @@ public class GameManager : MonoBehaviour
         player2 = GameObject.Find("Player2");
         orb = GameObject.Find("Orb");
         UIManager = GameObject.Find("UI").GetComponent<UIManager>();
-        UIManager.InitDictionary();
         fader = GameObject.Find("Fader");
         blackBands = GameObject.Find("BlackBands");
         tutorials = GameObject.Find("Tutorials");
@@ -364,10 +363,10 @@ public class GameManager : MonoBehaviour
             player1.GetComponent<PlayerController>().behaviouralPowerSlot = respawnPowerRecord.player1BehaviouralPower;
             player2.GetComponent<PlayerController>().elementalPowerSlot = respawnPowerRecord.player2ElementalPower;
             player2.GetComponent<PlayerController>().behaviouralPowerSlot = respawnPowerRecord.player2BehaviouralPower;
-            UIManager.UpdatePowerSlot(1, true, respawnPowerRecord.player1ElementalPower);
-            UIManager.UpdatePowerSlot(2, true, respawnPowerRecord.player1BehaviouralPower);
-            UIManager.UpdatePowerSlot(1, false, respawnPowerRecord.player2ElementalPower);
-            UIManager.UpdatePowerSlot(2, false, respawnPowerRecord.player2BehaviouralPower);
+            UIManager.UpdatePowerSlot(true, respawnPowerRecord.player1ElementalPower);
+            UIManager.UpdatePowerSlot(true, respawnPowerRecord.player1BehaviouralPower);
+            UIManager.UpdatePowerSlot(false, respawnPowerRecord.player2ElementalPower);
+            UIManager.UpdatePowerSlot(false, respawnPowerRecord.player2BehaviouralPower);
 
             player1.GetComponent<PlayerController>().RespawnReset();
             player2.GetComponent<PlayerController>().RespawnReset();
