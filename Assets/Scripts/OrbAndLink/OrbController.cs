@@ -268,5 +268,6 @@ public class OrbController : MonoBehaviour
 		amortized = false;
 		hasHitEnemy = false;
 		progression = 0.5f;
+		FreezeOrb(0.5f);
 	}
 }

@@ -320,7 +320,6 @@ public class GameManager : MonoBehaviour
 
         StartCoroutine(FadeCoroutine("FadeOut"));
         yield return new WaitUntil(() => isPaused == false);
-        yield return new WaitForSeconds(1.0f);
 
         PlayerController player1Controller = player1.GetComponent<PlayerController>();
         PlayerController player2Controller = player2.GetComponent<PlayerController>();
@@ -352,8 +351,9 @@ public class GameManager : MonoBehaviour
 
             player1.transform.position = actualCheckpoint.transform.GetChild(0).position + new Vector3(-5, 0, 0);
             player2.transform.position = actualCheckpoint.transform.GetChild(0).position + new Vector3(5, 0, 0);
+			Camera.main.transform.parent.position = actualCheckpoint.transform.GetChild(0).position;
 
-            damageTakenP1 = 0;
+			damageTakenP1 = 0;
             damageTakenP2 = 0;
             shieldP1 = 0;
             shieldP2 = 0;

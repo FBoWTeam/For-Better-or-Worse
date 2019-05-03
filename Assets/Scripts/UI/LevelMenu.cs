@@ -34,9 +34,12 @@ public class LevelMenu : MonoBehaviour
         curentPosIndex = 0;
         destPosIndex = 0;
         isMoving = false;
-        
-        indexPI.Add(0);
-        indexPI.Add(7);
+
+		indexPI.Add(0);
+		indexPI.Add(3);
+		indexPI.Add(4);
+		indexPI.Add(5);
+		indexPI.Add(7);
         indexPI.Add(8);
         indexPI.Add(9);
 
@@ -57,22 +60,22 @@ public class LevelMenu : MonoBehaviour
 				transform.position = pos[0].transform.position;
 				break;
 			case 7:
-				curentPIIndex = 1;
-				destPIIndex = 1;
+				curentPIIndex = 4;
+				destPIIndex = 4;
 				curentPosIndex = 7;
 				destPosIndex = 7;
 				transform.position = pos[7].transform.position;
 				break;
 			case 8:
-				curentPIIndex = 2;
-				destPIIndex = 2;
+				curentPIIndex = 5;
+				destPIIndex = 5;
 				curentPosIndex = 8;
 				destPosIndex = 8;
 				transform.position = pos[8].transform.position;
 				break;
 			case 9:
-				curentPIIndex = 3;
-				destPIIndex = 3;
+				curentPIIndex = 6;
+				destPIIndex = 6;
 				curentPosIndex = 9;
 				destPosIndex = 9;
 				transform.position = pos[9].transform.position;
@@ -97,39 +100,62 @@ public class LevelMenu : MonoBehaviour
         {
             if (curentPosIndex == destPosIndex)
             {
+				pos[curentPosIndex].transform.GetChild(0).gameObject.SetActive(true);
                 if ((Input.GetAxis("HorizontalP1") > Input.GetAxis("VerticalP1")) && destPIIndex < indexPI.Count - 1)
-                {
-                    destPIIndex++;
-                    destPosIndex = indexPI[destPIIndex];
-                }
-                
-                if ((Input.GetAxis("HorizontalP1") < Input.GetAxis("VerticalP1")) && destPIIndex > 0)
-                {
-                    destPIIndex--;
-                    destPosIndex = indexPI[destPIIndex];
-                }
-
-                if (Input.GetKeyDown(KeyCode.Joystick1Button0) || Input.GetKeyDown(KeyCode.Space))
 				{
-					soundEmitter.PlaySound(0);
+					pos[curentPosIndex].transform.GetChild(0).gameObject.SetActive(false);
+					destPIIndex++;
+                    destPosIndex = indexPI[destPIIndex];
+                }
+				else if ((Input.GetAxis("HorizontalP1") > Input.GetAxis("VerticalP1")) && destPIIndex >= indexPI.Count - 1)
+				{
+					soundEmitter.PlaySound(1);
+				}
+
+				if ((Input.GetAxis("HorizontalP1") < Input.GetAxis("VerticalP1")) && destPIIndex > 0)
+				{
+					pos[curentPosIndex].transform.GetChild(0).gameObject.SetActive(false);
+					destPIIndex--;
+                    destPosIndex = indexPI[destPIIndex];
+				}
+				else if ((Input.GetAxis("HorizontalP1") < Input.GetAxis("VerticalP1")) && destPIIndex <= 0)
+				{
+					soundEmitter.PlaySound(1);
+				}
+
+				if (Input.GetKeyDown(KeyCode.Joystick1Button0) || Input.GetKeyDown(KeyCode.Space))
+				{
 					switch (curentPIIndex)
                     {
                         case 0:
+							soundEmitter.PlaySound(0);
 							GameData.previousScene = 5;
 							GameData.nextSceneToLoad = 5;
 							StartCoroutine(FadeOut(4));
 							break;
-                        case 1:
+						case 1:
+							soundEmitter.PlaySound(1);
+							break;
+						case 2:
+							soundEmitter.PlaySound(1);
+							break;
+						case 3:
+							soundEmitter.PlaySound(1);
+							break;
+						case 4:
+							soundEmitter.PlaySound(0);
 							GameData.previousScene = 7;
 							GameData.nextSceneToLoad = 7;
 							StartCoroutine(FadeOut(4));
 							break;
-                        case 2:
+                        case 5:
+							soundEmitter.PlaySound(0);
 							GameData.previousScene = 8;
 							GameData.nextSceneToLoad = 8;
 							StartCoroutine(FadeOut(4));
 							break;
-                        case 3:
+                        case 6:
+							soundEmitter.PlaySound(0);
 							GameData.previousScene = 9;
 							GameData.nextSceneToLoad = 9;
 							StartCoroutine(FadeOut(4));
