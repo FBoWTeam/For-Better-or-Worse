@@ -48,7 +48,7 @@ public class PauseMenu : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (!GameManager.gameManager.isCutScene)
+        if (GameManager.gameManager.canActivatePauseMenu)
         {
             if (Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.Joystick1Button7))
             {

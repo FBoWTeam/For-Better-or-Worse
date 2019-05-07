@@ -52,9 +52,9 @@ public class Tutorial : MonoBehaviour
 
     IEnumerator TutorialCoroutine()
     {
-		Debug.Log("bonjour");
         GameManager.gameManager.isPaused = true;
-        bool readyPlayer1 = false;
+		GameManager.gameManager.canActivatePauseMenu = false;
+		bool readyPlayer1 = false;
         bool readyPlayer2 = false;
 
         tutorialCanvas.SetActive(true);
@@ -87,6 +87,7 @@ public class Tutorial : MonoBehaviour
 
         tutorialCanvas.SetActive(false);
         GameManager.gameManager.isPaused = false;
+		GameManager.gameManager.canActivatePauseMenu = true;
 		GameManager.gameManager.orb.GetComponent<OrbController>().FreezeOrb(0.5f);
 
         Destroy(gameObject);

@@ -33,6 +33,7 @@ public class MainMenu : MonoBehaviour
 		if (active)
 		{
 			soundEmitter.PlaySound(0);
+			GameData.previousScene = 2;
 			StartCoroutine(FadeOut(3));
 		}
 	}

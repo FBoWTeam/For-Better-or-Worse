@@ -13,6 +13,9 @@ public class TimeLineDeath : MonoBehaviour
     GameObject bossHealthBar;
     GameObject rockFall;
 
+	[HideInInspector]
+	public bool arena = false;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -23,7 +26,7 @@ public class TimeLineDeath : MonoBehaviour
 
     public void Initialize()
     {
-        GameManager.gameManager.isCutScene = true;
+        GameManager.gameManager.canActivatePauseMenu = false;
         GameManager.gameManager.orb.GetComponent<OrbController>().canHitPlayer = false;
 
         StartCoroutine(DeathPoofBoss());
@@ -49,8 +52,15 @@ public class TimeLineDeath : MonoBehaviour
 
     public void WhenEnded(PlayableDirector obj)
     {
-        GameManager.gameManager.isCutScene = false;
+        GameManager.gameManager.canActivatePauseMenu = true;
         GameData.previousScene = 9;
-        SceneManager.LoadScene(10);
+		if(ScoreManager.scoreManager.gameMode == ScoreManager.GameMode.Arena)
+		{
+			SceneManager.LoadScene(15);
+		}
+		else
+		{
+			SceneManager.LoadScene(10);
+		}
     }
 }

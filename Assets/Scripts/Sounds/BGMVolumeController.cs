@@ -14,13 +14,7 @@ public class BGMVolumeController : MonoBehaviour
 	{
 		AudioSource bgm = GameObject.Find("BGM").GetComponent<AudioSource>();
 
-		float maxVolume = 0.4f;
-		if(SceneManager.GetActiveScene().buildIndex == 9)
-		{
-			maxVolume = 0.5f;
-		}
-
-		while(bgm.volume <= maxVolume)
+		while(bgm.volume <= 0.6f)
 		{
 			bgm.volume += 0.01f;
 			yield return new WaitForEndOfFrame();

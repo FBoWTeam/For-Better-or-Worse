@@ -132,8 +132,6 @@ public class PowerController : MonoBehaviour
 	[DrawIf(new string[] { "editingPower" }, GameManager.PowerType.Fire)]
 	public float fireTickDurationBrazier = 5;
 	[DrawIf(new string[] { "editingPower" }, GameManager.PowerType.Fire)]
-	private float nextAttack = 0f;
-	[DrawIf(new string[] { "editingPower" }, GameManager.PowerType.Fire)]
 	public bool isActivatedByBrazier;
 	[DrawIf(new string[] { "editingPower" }, GameManager.PowerType.Fire)]
 	Coroutine actualFireDOTCoroutine;

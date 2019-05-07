@@ -29,7 +29,7 @@ public class GameManager : MonoBehaviour
     public bool isPaused;
 
     [HideInInspector]
-    public bool isCutScene = false;
+    public bool canActivatePauseMenu = false;
 
     [Header("[Distance Limits]")]
     public float minDistance;
@@ -111,13 +111,17 @@ public class GameManager : MonoBehaviour
         GameObject introScenario = GameObject.Find("IntroScenario");
         if (introScenario != null)
         {
-            if (GameData.introSkiped)
+			if(GameData.previousScene == 14 && SceneManager.GetActiveScene().buildIndex == 9)
+			{
+				GameData.introSkiped = true;
+			}
+			if (GameData.introSkiped)
             {
                 Destroy(introScenario);
             }
             else
             {
-                isCutScene = true;
+				canActivatePauseMenu = false;
                 UIManager.gameObject.SetActive(false);
                 player1.GetComponent<PlayerController>().active = false;
                 player2.GetComponent<PlayerController>().active = false;
@@ -128,7 +132,8 @@ public class GameManager : MonoBehaviour
         }
         if (introScenario == null || GameData.introSkiped)
         {
-            GameData.introSkiped = false;
+			canActivatePauseMenu = true;
+			GameData.introSkiped = false;
             GameObject.Find("DialogSystem").SetActive(false);
             blackBands.SetActive(false);
             player1.GetComponent<PlayerController>().active = true;

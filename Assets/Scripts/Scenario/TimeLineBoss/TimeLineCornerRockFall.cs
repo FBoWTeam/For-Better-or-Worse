@@ -60,7 +60,7 @@ public class TimeLineCornerRockFall : MonoBehaviour
 
     IEnumerator InitCoroutine()
     {
-        GameManager.gameManager.isCutScene = true;
+        GameManager.gameManager.canActivatePauseMenu = false;
         yield return new WaitForSeconds(1.5f);//fade out
         Boss.GetComponent<BossSystem>().isAttacking = true;
         Boss.GetComponent<BossSystem>().CleanProjectorList();
@@ -119,7 +119,7 @@ public class TimeLineCornerRockFall : MonoBehaviour
         Boss.GetComponent<Animator>().runtimeAnimatorController = RAC;
         Boss.GetComponent<BossSystem>().isAttacking = false;
         GameManager.gameManager.orb.GetComponent<OrbController>().canHitPlayer = GameData.worseModeActivated;
-        GameManager.gameManager.isCutScene = false;
+        GameManager.gameManager.canActivatePauseMenu = true;
     }
 
 }

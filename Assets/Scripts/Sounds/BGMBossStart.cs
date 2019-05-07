@@ -18,7 +18,7 @@ public class BGMBossStart : MonoBehaviour
 		bgm.Play();
 
 		bgm.volume = 0.01f;
-		while (bgm.volume <= 0.4f)
+		while (bgm.volume <= 0.6f)
 		{
 			bgm.volume += 0.01f;
 			yield return new WaitForEndOfFrame();

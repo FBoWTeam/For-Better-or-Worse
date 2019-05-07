@@ -66,13 +66,21 @@ public class ScoreDisplayer : MonoBehaviour
                 ScoreManager.scoreManager.score = ScoreManager.scoreManager.CalculateJungle2Score();
                 break;
             case 9:
-                levelName.GetComponent<TextMeshProUGUI>().text = I18n.Translate("menu.score.texte4");
-                ScoreManager.scoreManager.score = ScoreManager.scoreManager.CalculateBossScore();
-                foreach (GameObject go in gameObjectToHide)
-                {
-                    go.SetActive(false);
-                }
-                break;
+				if(ScoreManager.scoreManager.gameMode == ScoreManager.GameMode.Arena)
+				{
+					levelName.GetComponent<TextMeshProUGUI>().text = I18n.Translate("menu.score.texte18");
+					ScoreManager.scoreManager.score = ScoreManager.scoreManager.CalculateArenaScore();
+				}
+				else
+				{
+					levelName.GetComponent<TextMeshProUGUI>().text = I18n.Translate("menu.score.texte4");
+					ScoreManager.scoreManager.score = ScoreManager.scoreManager.CalculateBossScore();
+					foreach (GameObject go in gameObjectToHide)
+					{
+						go.SetActive(false);
+					}
+				}
+				break;
             case 12:
                 levelName.GetComponent<TextMeshProUGUI>().text = I18n.Translate("menu.score.texte15");
                 ScoreManager.scoreManager.score = ScoreManager.scoreManager.CalculateArenaScore();
@@ -81,11 +89,11 @@ public class ScoreDisplayer : MonoBehaviour
                 levelName.GetComponent<TextMeshProUGUI>().text = I18n.Translate("menu.score.texte16");
                 ScoreManager.scoreManager.score = ScoreManager.scoreManager.CalculateArenaScore();
                 break;
-            case 14:
-                levelName.GetComponent<TextMeshProUGUI>().text = I18n.Translate("menu.score.texte17");
-                ScoreManager.scoreManager.score = ScoreManager.scoreManager.CalculateArenaScore();
-                break;
-            default:
+			case 14:
+				levelName.GetComponent<TextMeshProUGUI>().text = I18n.Translate("menu.score.texte17");
+				ScoreManager.scoreManager.score = ScoreManager.scoreManager.CalculateArenaScore();
+				break;
+			default:
                 levelName.GetComponent<TextMeshProUGUI>().text = "not a normal scene";
                 break;
         }

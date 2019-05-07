@@ -7,8 +7,6 @@ public class FlammableObjects : MonoBehaviour, IActivable
     [Tooltip("time needed for the object to be destroyed when burning")]
     public float burnTime;
 
-    private bool isBurning;
-
     [HideInInspector]
     public bool isDestroyedByFire = false;
 
@@ -39,7 +37,6 @@ public class FlammableObjects : MonoBehaviour, IActivable
     {
 		soundEmitter.PlaySound(0);
         isActive = true;
-        isBurning = true;
 		transform.GetChild(0).gameObject.SetActive(true);
         //gameObject.GetComponent<Renderer>().material.color = Color.red;
         StartCoroutine(FireCoroutine());

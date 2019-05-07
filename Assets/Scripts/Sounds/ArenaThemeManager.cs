@@ -29,7 +29,7 @@ public class ArenaThemeManager : MonoBehaviour
 
 		bgm.clip = theme;
 		bgm.Play();
-		bgm.volume = 0.4f;
+		bgm.volume = 0.6f;
 
 		Destroy(this);
 	}

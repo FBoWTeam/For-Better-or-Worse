@@ -105,7 +105,6 @@ public class BossSystem : MonoBehaviour
     public GameObject shrinkRight;
     [HideInInspector]
     public bool isShrinkMysticLineCreated;
-    private bool isMysticLineCreated;
     private bool isShrinking;
     private bool isLeft;
     public float shrinkDuration;
@@ -178,7 +177,6 @@ public class BossSystem : MonoBehaviour
         isAttacking = false;
         actualPhase = 0;
         checkPhaseTransition();
-        isMysticLineCreated = false;
         isShrinkMysticLineCreated = false;
         anim = GetComponent<Animator>();
         originalDamage = collisionDamage;
@@ -262,7 +260,6 @@ public class BossSystem : MonoBehaviour
         {
             case 0:
                 actualPhase++;
-                Debug.Log("Passage phase 1");
                 probabilityTable = phase1;
                 nextAttack = Time.time + Random.Range(minWaitTime, maxWaitTime);
                 //scenaristic start
@@ -271,7 +268,6 @@ public class BossSystem : MonoBehaviour
                 if (hp <= phase2Threshold * baseHP)
                 {
                     actualPhase++;
-                    Debug.Log("Passage phase 2");
                     probabilityTable = phase2;
                     nextAttack = Time.time + Random.Range(minWaitTime, maxWaitTime);
                     //infinite mystic line same side / level shrink
@@ -286,7 +282,6 @@ public class BossSystem : MonoBehaviour
                 if (hp <= phase3Threshold * baseHP)
                 {
                     actualPhase++;
-                    Debug.Log("Passage phase 3");
                     probabilityTable = phase3;
                     nextAttack = Time.time + Random.Range(minWaitTime, maxWaitTime);
                     //infinite mystic line separation / etc
@@ -302,7 +297,6 @@ public class BossSystem : MonoBehaviour
                 if (hp <= phase4Threshold * baseHP)
                 {
                     actualPhase++;
-                    Debug.Log("Passage phase 4");
                     probabilityTable = phase4;
                     nextAttack = Time.time + Random.Range(minWaitTime, maxWaitTime);
                     //fall to ground / level shrink / rock fall activation
@@ -478,14 +472,11 @@ public class BossSystem : MonoBehaviour
         mysticLine.transform.LookAt(new Vector3(target.x, position.y, target.z));
         mysticLine.transform.localScale = new Vector3(mysticLineWidth / transform.localScale.x, mysticLineHeight / transform.localScale.y, length / transform.localScale.z);
 
-        isMysticLineCreated = true;
-
         mysticLineList.Add(mysticLine);
 
         yield return new WaitForSeconds(lifeTime);
 
         Destroy(mysticLine);
-        isMysticLineCreated = false;
     }
 
     //======================================================================================== SHRINK MYSTIC LINES
