@@ -86,14 +86,14 @@ public class PauseMenu : MonoBehaviour
                     eS.SetSelectedGameObject(mainMenuFirstSelected);
                 }
 
-                if (((Input.GetAxis("HorizontalP1") >= 0.5f) && !powerPanel.activeSelf) || Input.GetKeyDown(KeyCode.RightArrow))
+                if (((Input.GetAxis("HorizontalP1") >= 0.5f) && !powerPanel.activeSelf) || Input.GetKeyDown(KeyCode.D))
                 {
                     //print("Right");
                     soundEmitter.PlaySound(0);
                     mappingPanel.SetActive(false);
                     powerPanel.SetActive(true);
                 }
-                else if (((Input.GetAxis("HorizontalP1") <= -0.5f) && !mappingPanel.activeSelf) || Input.GetKeyDown(KeyCode.LeftArrow))
+                else if (((Input.GetAxis("HorizontalP1") <= -0.5f) && !mappingPanel.activeSelf) || Input.GetKeyDown(KeyCode.Q))
                 {
                     //sprint("Left");
                     soundEmitter.PlaySound(0);
