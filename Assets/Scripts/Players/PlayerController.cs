@@ -132,7 +132,7 @@ public class PlayerController : MonoBehaviour
     void CheckTaunt()
     {
         if (((player1 && (Input.GetKeyDown(KeyCode.Joystick1Button4) 
-            || Input.GetKeyDown(KeyCode.Space))) 
+            || Input.GetKeyDown(KeyCode.R))) 
             || (!player1 && (Input.GetKeyDown(KeyCode.Joystick2Button4) 
             || Input.GetKeyDown(KeyCode.Keypad0)))) && canTaunt)
         {
