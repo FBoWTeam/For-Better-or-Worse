@@ -354,9 +354,9 @@ public class GameManager : MonoBehaviour
         {
             isPaused = true;
 
-            player1.transform.position = actualCheckpoint.transform.GetChild(0).position + new Vector3(-5, 0, 0);
-            player2.transform.position = actualCheckpoint.transform.GetChild(0).position + new Vector3(5, 0, 0);
-			Camera.main.transform.parent.position = actualCheckpoint.transform.GetChild(0).position;
+            player1.transform.position = actualCheckpoint.transform.GetChild(0).position + new Vector3(5, 0, 0);
+            player2.transform.position = actualCheckpoint.transform.GetChild(0).position + new Vector3(-5, 0, 0);
+			Camera.main.transform.parent.position = actualCheckpoint.transform.GetChild(0).position + new Vector3(10, 16.32004f, 10);
 
 			damageTakenP1 = 0;
             damageTakenP2 = 0;
