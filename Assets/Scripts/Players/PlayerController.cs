@@ -134,7 +134,7 @@ public class PlayerController : MonoBehaviour
         if (((player1 && (Input.GetKeyDown(KeyCode.Joystick1Button4) 
             || Input.GetKeyDown(KeyCode.R))) 
             || (!player1 && (Input.GetKeyDown(KeyCode.Joystick2Button4) 
-            || Input.GetKeyDown(KeyCode.Keypad0)))) && canTaunt)
+            || Input.GetKeyDown(KeyCode.Keypad1)))) && canTaunt)
         {
 			soundEmitter.PlaySound(1);
             Taunt();
