@@ -242,21 +242,93 @@ public class PlayerController : MonoBehaviour
     void ApplyFXTail(GameManager.PowerType power)
     {
         if (power.CompareTo(GameManager.PowerType.Darkness) == 0)
+        {
             VFXTail.transform.GetChild(0).gameObject.SetActive(true);
+            VFXTail.transform.GetChild(1).gameObject.SetActive(false);
+            VFXTail.transform.GetChild(2).gameObject.SetActive(false);
+            VFXTail.transform.GetChild(3).gameObject.SetActive(false);
+            VFXTail.transform.GetChild(4).gameObject.SetActive(false);
+            VFXTail.transform.GetChild(5).gameObject.SetActive(false);
+            VFXTail.transform.GetChild(6).gameObject.SetActive(false);
+            VFXTail.transform.GetChild(7).gameObject.SetActive(false);
+        }
         else if (power.CompareTo(GameManager.PowerType.Fire) == 0)
+        {
+            VFXTail.transform.GetChild(0).gameObject.SetActive(false);
             VFXTail.transform.GetChild(1).gameObject.SetActive(true);
+            VFXTail.transform.GetChild(2).gameObject.SetActive(false);
+            VFXTail.transform.GetChild(3).gameObject.SetActive(false);
+            VFXTail.transform.GetChild(4).gameObject.SetActive(false);
+            VFXTail.transform.GetChild(5).gameObject.SetActive(false);
+            VFXTail.transform.GetChild(6).gameObject.SetActive(false);
+            VFXTail.transform.GetChild(7).gameObject.SetActive(false);
+        }
         else if (power.CompareTo(GameManager.PowerType.Electric) == 0)
+        {
+            VFXTail.transform.GetChild(0).gameObject.SetActive(false);
+            VFXTail.transform.GetChild(1).gameObject.SetActive(false);
             VFXTail.transform.GetChild(2).gameObject.SetActive(true);
+            VFXTail.transform.GetChild(3).gameObject.SetActive(false);
+            VFXTail.transform.GetChild(4).gameObject.SetActive(false);
+            VFXTail.transform.GetChild(5).gameObject.SetActive(false);
+            VFXTail.transform.GetChild(6).gameObject.SetActive(false);
+            VFXTail.transform.GetChild(7).gameObject.SetActive(false);
+        }
         else if (power.CompareTo(GameManager.PowerType.Ice) == 0)
+        {
+            VFXTail.transform.GetChild(0).gameObject.SetActive(false);
+            VFXTail.transform.GetChild(1).gameObject.SetActive(false);
+            VFXTail.transform.GetChild(2).gameObject.SetActive(false);
             VFXTail.transform.GetChild(3).gameObject.SetActive(true);
+            VFXTail.transform.GetChild(4).gameObject.SetActive(false);
+            VFXTail.transform.GetChild(5).gameObject.SetActive(false);
+            VFXTail.transform.GetChild(6).gameObject.SetActive(false);
+            VFXTail.transform.GetChild(7).gameObject.SetActive(false);
+        }
         else if (power.CompareTo(GameManager.PowerType.Vortex) == 0)
+        {
+            VFXTail.transform.GetChild(0).gameObject.SetActive(false);
+            VFXTail.transform.GetChild(1).gameObject.SetActive(false);
+            VFXTail.transform.GetChild(2).gameObject.SetActive(false);
+            VFXTail.transform.GetChild(3).gameObject.SetActive(false);
             VFXTail.transform.GetChild(4).gameObject.SetActive(true);
+            VFXTail.transform.GetChild(5).gameObject.SetActive(false);
+            VFXTail.transform.GetChild(6).gameObject.SetActive(false);
+            VFXTail.transform.GetChild(7).gameObject.SetActive(false);
+        }
         else if (power.CompareTo(GameManager.PowerType.LeechLife) == 0)
+        {
+            VFXTail.transform.GetChild(0).gameObject.SetActive(false);
+            VFXTail.transform.GetChild(1).gameObject.SetActive(false);
+            VFXTail.transform.GetChild(2).gameObject.SetActive(false);
+            VFXTail.transform.GetChild(3).gameObject.SetActive(false);
+            VFXTail.transform.GetChild(4).gameObject.SetActive(false);
             VFXTail.transform.GetChild(5).gameObject.SetActive(true);
+            VFXTail.transform.GetChild(6).gameObject.SetActive(false);
+            VFXTail.transform.GetChild(7).gameObject.SetActive(false);
+        }
         else if (power.CompareTo(GameManager.PowerType.Slug) == 0)
+        {
+            VFXTail.transform.GetChild(0).gameObject.SetActive(false);
+            VFXTail.transform.GetChild(1).gameObject.SetActive(false);
+            VFXTail.transform.GetChild(2).gameObject.SetActive(false);
+            VFXTail.transform.GetChild(3).gameObject.SetActive(false);
+            VFXTail.transform.GetChild(4).gameObject.SetActive(false);
+            VFXTail.transform.GetChild(5).gameObject.SetActive(false);
             VFXTail.transform.GetChild(6).gameObject.SetActive(true);
+            VFXTail.transform.GetChild(7).gameObject.SetActive(false);
+        }
         else if (power.CompareTo(GameManager.PowerType.LargeOrb) == 0)
+        {
+            VFXTail.transform.GetChild(0).gameObject.SetActive(false);
+            VFXTail.transform.GetChild(1).gameObject.SetActive(false);
+            VFXTail.transform.GetChild(2).gameObject.SetActive(false);
+            VFXTail.transform.GetChild(3).gameObject.SetActive(false);
+            VFXTail.transform.GetChild(4).gameObject.SetActive(false);
+            VFXTail.transform.GetChild(5).gameObject.SetActive(false);
+            VFXTail.transform.GetChild(6).gameObject.SetActive(false);
             VFXTail.transform.GetChild(7).gameObject.SetActive(true);
+        }
         else if (power.CompareTo(GameManager.PowerType.None) == 0)
         {
             for (int i = 0; i < VFXTail.transform.childCount; i++)
