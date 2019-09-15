@@ -41,7 +41,7 @@ public class VideoHandler : MonoBehaviour
 	IEnumerator PlayIntro()
 	{
 		player.Play();
-		yield return new WaitForSeconds(0.5f);
+		yield return new WaitForSeconds(2f);
 		yield return new WaitUntil(() => player.isPlaying == false);
 		SceneManager.LoadScene(2);
 	}
